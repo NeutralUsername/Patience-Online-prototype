@@ -6,6 +6,13 @@ const app = express();
 const server = http.createServer(app);
 const io = new socketio.Server(server);
 
+app.get('/script.js', (req, res) => {
+    res.sendFile(__dirname + '/script.js');
+});
+
+app.get('/node_modules/socket.io/client-dist/socket.io.js', (req, res) => {
+    res.sendFile(__dirname + '/node_modules/socket.io/client-dist/socket.io.js');
+});
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
