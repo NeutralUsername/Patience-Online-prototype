@@ -9,6 +9,7 @@ const io = new socketio.Server(server);
 var path = require('path');
 
 
+
 app.get('/script.js', (req, res) => {
     res.sendFile(__dirname + '/script.js');
 });
