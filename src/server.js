@@ -8,7 +8,7 @@ const io = new socketio.Server(server);
 
 
 app.get('/', (req, res) => {
-    res.sendFile('/Users/A/IdeaProjects/solitaire/src/index.html');
+    res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', (socket) => {
