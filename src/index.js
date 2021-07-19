@@ -74,7 +74,12 @@ class LandingPage extends React.Component {
 class NewGame extends React.Component {
     render() {
         return (
-            <div className="game"></div>
+            <form className="NewGame">
+                <input type ="text" className={"game-Seed"} readOnly ></input>
+                <input type="radio" className={"radio-black"}></input>
+                <input type="radio" className={"radio-red"}></input>
+                <input type="button"className={"game-ready"} value="Ready"></input>
+            </form>
         );
     }
 }
@@ -82,7 +87,7 @@ class NewGame extends React.Component {
 class Game extends React.Component {
     render() {
         return (
-            <div className="game">
+            <div className="Game">
                 <div className="Player-Side">
                     <div className={"Player Waste Stack"}></div>
                     <div className={"Player Stock Stack"}></div>
@@ -110,13 +115,11 @@ class Game extends React.Component {
                     <div className={"Right Field Sequence Two"}></div>
                     <div className={"Right Field Sequence Three"}></div>
                     <div className={"Right Field Sequence Four"}></div>
-
                 </div>
                 <div className="Opponent-Side">
                     <div className={"Opponent Malus Sequence"}></div>
                     <div className={"Opponent Stock Stack"}></div>
                     <div className={"Opponent Waste Stack"}></div>
-
                 </div>
                 <div className="Game-info">
                     <div className={"Player-Turn"}></div>
