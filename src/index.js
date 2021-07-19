@@ -54,18 +54,96 @@ function shuffle(deck) {
 }
 
 
-class SolitaireApp extends React.Component {
+class LandingPage extends React.Component {
     render() {
         return (
-            <input className="Player">
+            <form className={"LandingPage"}>
+                <input className="Chose-Name"></input>
 
-            </input>
+                <button className={"vsAI-Hot-join"}>AI Hot-Join</button>
+                <button className={"vsAI-Black"}>AI Black-Side</button>
+                <button className={"vsAI-Red"}>AI Red-Side</button>
+
+                <button className={"vsHuman-Hot-join"}>Human Hot-Join</button>
+                <button className={"vsHuman-New"}>Human New Game</button>
+                <button className={"vsHuman-Join"}>Human Join Game</button>
+            </form>)
+    }
+}
+
+class NewGame extends React.Component {
+    render() {
+        return (
+            <div className="game"></div>
         );
     }
 }
-// ========================================
+
+class Game extends React.Component {
+    render() {
+        return (
+            <div className="game">
+                <div className="Player-Side">
+                    <div className={"Player Waste Stack"}></div>
+                    <div className={"Player Stock Stack"}></div>
+                    <div className={"Player Malus Sequence"}></div>
+                </div>
+                <div className="Field">
+                    <div className={"Left Field Sequence One"}></div>
+                    <div className={"Left Field Sequence Two"}></div>
+                    <div className={"Left Field Sequence Three"}></div>
+                    <div className={"Left Field Sequence Four"}></div>
+
+
+                    <div className={"Left Field Stack One"}></div>
+                    <div className={"Left Field Stack Two"}></div>
+                    <div className={"Left Field Stack Three"}></div>
+                    <div className={"Left Field Stack Four"}></div>
+
+                    <div className={"Right Field Stack One"}></div>
+                    <div className={"Right Field Stack Two"}></div>
+                    <div className={"Right Field Stack Three"}></div>
+                    <div className={"Right Field Stack Four"}></div>
+
+
+                    <div className={"Right Field Sequence One"}></div>
+                    <div className={"Right Field Sequence Two"}></div>
+                    <div className={"Right Field Sequence Three"}></div>
+                    <div className={"Right Field Sequence Four"}></div>
+
+                </div>
+                <div className="Opponent-Side">
+                    <div className={"Opponent Malus Sequence"}></div>
+                    <div className={"Opponent Stock Stack"}></div>
+                    <div className={"Opponent Waste Stack"}></div>
+
+                </div>
+                <div className="Game-info">
+                    <div className={"Player-Turn"}></div>
+                    <div className={"Time"}></div>
+                </div>
+            </div>
+        );
+    }
+}
+
+class App extends React.Component {
+    render() {
+        return (
+            <div className="game">
+                <div className="game-board">
+
+                </div>
+                <div className="game-info">
+                    <div>{/* status */}</div>
+                </div>
+            </div>
+        );
+    }
+}
+// =====================================================================================================================
 
 ReactDOM.render(
-    <SolitaireApp />,
+    <LandingPage />,
     document.getElementById('root')
 );
