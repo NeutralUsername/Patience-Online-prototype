@@ -44,21 +44,19 @@ function distributeCards(){
     
 }
 
-function InitializeDecks()  {
-   return sets.map(set => {
-       shuffle(freshDeck(set));
-   })
-}
- 
 
-function freshDeck(set) {
-    
-    return Suits.map(suit => {
-        return Values.map(value => {
+console.log(freshDecks());
+
+function freshDecks() {
+    return sets.map(set => {
+        return Suits.flatMap(suit => {
+            return Values.map(value => {
                 return new Card(suit, value,set, false)
             });
         });
-    }
+    });
+}
+
 
 function shuffle(deck) {
     let currentIndex = deck.length,  randomIndex;
@@ -80,7 +78,7 @@ class LandingPage extends React.Component {
                 <button className={"vsAI-Hot-join"}>AI Hot-Join</button>
                 <button className={"vsAI-Black"}>AI Black-Side</button>
                 <button className={"vsAI-Red"}>AI Red-Side</button>
-
+                
                 <button className={"vsHuman-Hot-join"}>Human Hot-Join</button>
                 <button className={"vsHuman-New"}>Human New Game</button>
                 <button className={"vsHuman-Join"}>Human Join Game</button>
