@@ -126,7 +126,7 @@ class Game extends React.Component {
         );
     }
 }
-// Malus-Seuqence is a mirrored sequence ^
+
 class App extends React.Component {
     render() {
         return (
