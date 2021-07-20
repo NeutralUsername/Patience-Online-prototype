@@ -8,6 +8,8 @@ import './index.css';
 const Suits = ["♠", "♥", "♦", "♣"];
 const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 const sets = ["R", "B"];
+
+
 //                                      RULES
 //---------------------------------------------------------------------------------------
 const nrFieldSequenceCards = 3;
@@ -18,8 +20,22 @@ const canThrowOnWaste = true;
 //----------------------------------------------------------------------------------------
 
 
-class Card {
+function shuffle(decks) {
+    for(var i = 0; i< decks.length; i++) {
+        var currentIndex = decks[i].length,  randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [decks[i][currentIndex], decks[i][randomIndex]] = [
+            decks[i][randomIndex], decks[i][currentIndex]];
+        }
+    }
+    return decks;
+  }
+
+class Card extends React.Component {
     constructor(suit, value, set, faceUp) {
+        super(suit, value, set, faceUp);
         this.suit = suit;
         this.value = value;
         this.faceUp = faceUp;
@@ -27,37 +43,26 @@ class Card {
     }
 }
 
-class Sequence {
-    constructor(cards) {
-        this.sequence = cards;
-    }
-}
+console.log(freshDecks());
 
-class Stack {
-    constructor(cards) {
-        this.stack = cards;
-    }
-}
-
-console.log(shuffledDeck());
-
-function shuffledDeck() {
+function freshDecks() {
     return shuffle(sets.map(set => {
         return Suits.flatMap(suit => {
-            return Values.map(value => {
+            return Values. map(value => {
                 return new Card(suit, value,set, false)
             });
         });
     }));
 }
-
-
   
-function dealCards(decks) {
-    for(var i = 0 ; i< decks.length; i++) {
-
+function dealCards() {
+    for(var deck of freshDecks()) {
+        
     }
 }
+
+
+
 
 class LandingPage extends React.Component {
     render() {
@@ -89,14 +94,44 @@ class NewGame extends React.Component {
     }
 }
 
+function PlayerWaste() {
+
+}
+
+function PlayerStock() {
+
+}
+
+function PlayerMalus() {
+
+}
+
+function OpponentWaste() {
+
+}
+
+function OpponentStock() {
+
+}
+
+function OpponentMalus() {
+
+}
+
+
 class Game extends React.Component {
     render() {
         return (
             <div className="Game">
                 <div className="Player-Side">
-                    <div className={"Player-Waste-Stack Stack"}></div>
-                    <div className={"Player-Stock-Stack Stack"}></div>
-                    <div className={"Player-Malus-Sequence Right Sequence"}></div>
+                    <PlayerWaste/>
+                    <PlayerStock/>
+                    <PlayerMalus/>
+                </div>
+                <div className="Opponent-Side">
+                    <OpponentMalus/>
+                    <OpponentStock/>
+                    <OpponentWaste/> 
                 </div>
                 <div className="Stack-Field">
                     <div className={"Left-Stack-Field-One Stack"}></div>
@@ -117,11 +152,6 @@ class Game extends React.Component {
                     <div className={"Right-Sequence-Field-Two Right Sequence"}></div>
                     <div className={"Right-Sequence-Field-Three Right Sequence"}></div>
                     <div className={"Right-Sequence-Field-Four Right Sequence"}></div>
-                </div>
-                <div className="Opponent-Side">
-                    <div className={"Opponent-Malus-Sequence Left Sequence"}></div>  
-                    <div className={"Opponent-Stock-Stack Stack"}></div>
-                    <div className={"Opponent-Waste-Stack Stack"}></div>
                 </div>
                 <div className="Game-info">
                     <div className={"Player-Turn"}></div>
@@ -153,16 +183,3 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-
-function shuffle(decks) {
-    for(var i = 0; i< decks.length; i++) {
-        var currentIndex = decks[i].length,  randomIndex;
-        while (0 !== currentIndex) {
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex--;
-          [decks[i][currentIndex], decks[i][randomIndex]] = [
-            decks[i][randomIndex], decks[i][currentIndex]];
-        }
-    }
-    return decks;
-  }
