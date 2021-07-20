@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-
-
-//                                      RULES
+//                                    Constants
 //---------------------------------------------------------------------------------------
 const Suits = ["♠", "♥", "♦", "♣"];
 const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 const sets = ["R", "B"];
 
+
+//                                 Changeable Rules
+//---------------------------------------------------------------------------------------
 const nrFieldSequenceCards = 3;
 const nrMalusCards = 14;
 
@@ -26,52 +27,70 @@ class Card {
     }
 }
 
-class Sequence {
-    constructor(cards) {
-        this.sequence = cards;
-    }
-}
-
-class Stack {
-    constructor(cards) {
-        this.stack = cards;
-    }
-}
-
-
-
-function shuffleDecks(){
-    
-}
-
-
-console.log(shuffle(freshDecks()));
-
-function freshDecks() {
-    return sets.map(set => {
-        return Suits.flatMap(suit => {
+class Deck{
+    constructor(set) {
+        this.cards = Suits.flatMap(suit => {
             return Values.map(value => {
-                return new Card(suit, value,set, false)
+                return new Card(suit, value, set, false)
             });
         });
-    });
-}
-
-
-function shuffle(decks) {
-    for(var i = 0; i< decks.length; i++)
+    }
+    shuffle()
     {
-        var currentIndex = decks[i].length,  randomIndex;
+        var currentIndex = this.cards.length,  randomIndex;
         while (0 !== currentIndex) {
           randomIndex = Math.floor(Math.random() * currentIndex);
           currentIndex--;
-          [decks[i][currentIndex], decks[i][randomIndex]] = [
-            decks[i][randomIndex], decks[i][currentIndex]];
+          [this.cards[currentIndex], this.cards[randomIndex]] = [
+            this.cards[randomIndex], this.cards[currentIndex]];
         }
+        return this.cards;
     }
-    return decks;
-  }
-  
+}
+
+class PlayerBlack{
+    constructor()
+    {
+        this.deck = new Deck("B").shuffle();
+        console.log(this.deck);
+    }
+}
+
+class PlayerRed{
+    constructor()
+    {
+        this.deck = new Deck("R").shuffle();
+        console.log(this.deck);
+    }
+}
+
+new PlayerBlack();
+new PlayerRed();
+
+var cards = {a :new Card(), b: new Card() }
+class Field{
+    constructor()
+    {
+        this.BlackSequenceOne = cards;
+        this.BlackSequenceTwo = cards;
+        this.BlackSequenceThree = cards;
+        this.BlackSequenceFour = cards;
+
+        this.RedSequenceOne = cards;
+        this.RedSequenceTwo = cards;
+        this.RedSequenceThree = cards;
+        this.RedSequenceFour = cards;
+
+        this.stackOne = null;
+        this.stackTwo = null;
+        this.stackThree = null;
+        this.stackFour = null;
+        this.stackFive = null;
+        this.stackSix = null;
+        this.stackSeven = null;
+        this.stackEight = null;
+    }
+}
 
 class LandingPage extends React.Component {
     render() {
@@ -150,12 +169,7 @@ class App extends React.Component {
     render() {
         return (
             <div className="game">
-                <div className="game-board">
 
-                </div>
-                <div className="game-info">
-                    <div>{/* status */}</div>
-                </div>
             </div>
         );
     }
