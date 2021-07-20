@@ -78,7 +78,7 @@ class NewGame extends React.Component {
                 <input type ="text" className={"game-Seed"} readOnly ></input>
                 <input type="radio" className={"radio-black"}></input>
                 <input type="radio" className={"radio-red"}></input>
-                <input type="button"className={"game-ready"} value="Ready"></input>
+                <input type="button"className={"game-ready"} value="Ready" disabled = {true}></input> 
             </form>
         );
     }
@@ -93,28 +93,25 @@ class Game extends React.Component {
                     <div className={"Player Stock Stack"}></div>
                     <div className={"Player Malus Sequence"}></div>
                 </div>
-                <div className="Field">
-                    <div className={"Left Field Sequence One"}></div>
-                    <div className={"Left Field Sequence Two"}></div>
-                    <div className={"Left Field Sequence Three"}></div>
-                    <div className={"Left Field Sequence Four"}></div>
-
-
-                    <div className={"Left Field Stack One"}></div>
-                    <div className={"Left Field Stack Two"}></div>
-                    <div className={"Left Field Stack Three"}></div>
-                    <div className={"Left Field Stack Four"}></div>
-
-                    <div className={"Right Field Stack One"}></div>
-                    <div className={"Right Field Stack Two"}></div>
-                    <div className={"Right Field Stack Three"}></div>
-                    <div className={"Right Field Stack Four"}></div>
-
-
-                    <div className={"Right Field Sequence One"}></div>
-                    <div className={"Right Field Sequence Two"}></div>
-                    <div className={"Right Field Sequence Three"}></div>
-                    <div className={"Right Field Sequence Four"}></div>
+                <div className="Stack-Field">
+                    <div className={"Left Stack Field One"}></div>
+                    <div className={"Left Stack Field Two"}></div>
+                    <div className={"Left Stack Field Three"}></div>
+                    <div className={"Left Stack Field Four"}></div>
+                    <div className={"Right Stack Field One"}></div>
+                    <div className={"Right Stack Field Two"}></div>
+                    <div className={"Right Stack Field Three"}></div>
+                    <div className={"Right Stack Field Four"}></div>
+                </div>
+                <div className="Sequence-Field">
+                    <div className={"Left Sequence Field One"}></div>
+                    <div className={"Left Sequence Field Two"}></div>
+                    <div className={"Left Sequence Field Three"}></div>
+                    <div className={"Left Sequence Field Four"}></div>
+                    <div className={"Right Sequence Field One"}></div>
+                    <div className={"Right Sequence Field Two"}></div>
+                    <div className={"Right Sequence Field One"}></div>
+                    <div className={"Right Sequence Field Four"}></div>
                 </div>
                 <div className="Opponent-Side">
                     <div className={"Opponent Malus Sequence"}></div>
@@ -150,3 +147,13 @@ ReactDOM.render(
     <LandingPage />,
     document.getElementById('root')
 );
+
+
+function Square(props) {
+    return (
+      <button className="square" onClick={props.onClick}>
+        {props.value}
+      </button>
+    );
+  }
+  
