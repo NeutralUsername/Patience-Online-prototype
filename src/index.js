@@ -38,13 +38,6 @@ class Stack {
     }
 }
 
-
-
-function shuffleDecks(){
-    
-}
-
-
 console.log(shuffle(freshDecks()));
 
 function freshDecks() {
@@ -57,10 +50,8 @@ function freshDecks() {
     });
 }
 
-
 function shuffle(decks) {
-    for(var i = 0; i< decks.length; i++)
-    {
+    for(var i = 0; i< decks.length; i++) {
         var currentIndex = decks[i].length,  randomIndex;
         while (0 !== currentIndex) {
           randomIndex = Math.floor(Math.random() * currentIndex);
@@ -72,6 +63,11 @@ function shuffle(decks) {
     return decks;
   }
   
+function dealCards(decks) {
+    for(var i = 0 ; i< decks.length; i++) {
+
+    }
+}
 
 class LandingPage extends React.Component {
     render() {
