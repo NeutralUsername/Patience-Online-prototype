@@ -42,6 +42,7 @@ function freshDeck() {
         });
     });
 }
+
 function shuffle(deck) {
     let currentIndex = deck.length,  randomIndex;
     while (0 !== currentIndex) {
@@ -52,7 +53,6 @@ function shuffle(deck) {
     }
     return deck;
 }
-
 
 class LandingPage extends React.Component {
     render() {
@@ -89,34 +89,34 @@ class Game extends React.Component {
         return (
             <div className="Game">
                 <div className="Player-Side">
-                    <div className={"Player Waste Stack"}></div>
-                    <div className={"Player Stock Stack"}></div>
-                    <div className={"Player Malus Sequence"}></div>
+                    <div className={"Player-Waste-Stack Stack"}></div>
+                    <div className={"Player-Stock-Stack Stack"}></div>
+                    <div className={"Player-Malus-Sequence Right Sequence"}></div>
                 </div>
                 <div className="Stack-Field">
-                    <div className={"Left Stack Field One"}></div>
-                    <div className={"Left Stack Field Two"}></div>
-                    <div className={"Left Stack Field Three"}></div>
-                    <div className={"Left Stack Field Four"}></div>
-                    <div className={"Right Stack Field One"}></div>
-                    <div className={"Right Stack Field Two"}></div>
-                    <div className={"Right Stack Field Three"}></div>
-                    <div className={"Right Stack Field Four"}></div>
+                    <div className={"Left-Stack-Field-One Left Stack"}></div>
+                    <div className={"Left-Stack-Field-Two Left Stack"}></div>
+                    <div className={"Left-Stack-Field-Three Left Stack"}></div>
+                    <div className={"Left-Stack-Field-Four Left Stack"}></div>
+                    <div className={"Right-Stack-Field-One Right Stack"}></div>
+                    <div className={"Right-Stack-Field-Two Right Stack"}></div>
+                    <div className={"Right-Stack-Field-Three Right Stack"}></div>
+                    <div className={"Right-Stack-Field-Four Right Stack"}></div>
                 </div>
                 <div className="Sequence-Field">
-                    <div className={"Left Sequence Field One"}></div>
-                    <div className={"Left Sequence Field Two"}></div>
-                    <div className={"Left Sequence Field Three"}></div>
-                    <div className={"Left Sequence Field Four"}></div>
-                    <div className={"Right Sequence Field One"}></div>
-                    <div className={"Right Sequence Field Two"}></div>
-                    <div className={"Right Sequence Field One"}></div>
-                    <div className={"Right Sequence Field Four"}></div>
+                    <div className={"Left-Sequence-Field-One Left Sequence"}></div>
+                    <div className={"Left-Sequence-Field-Two Left Sequence"}></div>
+                    <div className={"Left-Sequence-Field-Three Left Sequence"}></div>
+                    <div className={"Left-Sequence-Field-Four Left Sequence"}></div>
+                    <div className={"Right-Sequence-Field-One Right Sequence"}></div>
+                    <div className={"Right-Sequence-Field-Two Right Sequence"}></div>
+                    <div className={"Right-Sequence-Field-Three Right Sequence"}></div>
+                    <div className={"Right-Sequence-Field-Four Right Sequence"}></div>
                 </div>
                 <div className="Opponent-Side">
-                    <div className={"Opponent Malus Sequence"}></div>
-                    <div className={"Opponent Stock Stack"}></div>
-                    <div className={"Opponent Waste Stack"}></div>
+                    <div className={"Opponent-Malus-Sequence Left Sequence"}></div>  
+                    <div className={"Opponent-Stock-Stack Stack"}></div>
+                    <div className={"Opponent-Waste-Stack Stack"}></div>
                 </div>
                 <div className="Game-info">
                     <div className={"Player-Turn"}></div>
@@ -126,7 +126,7 @@ class Game extends React.Component {
         );
     }
 }
-
+// Malus-Seuqence is a mirrored sequence ^
 class App extends React.Component {
     render() {
         return (
@@ -148,12 +148,3 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
-
-function Square(props) {
-    return (
-      <button className="square" onClick={props.onClick}>
-        {props.value}
-      </button>
-    );
-  }
-  
