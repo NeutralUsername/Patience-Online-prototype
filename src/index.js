@@ -3,12 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 
-//                                      RULES
+//                                    Constants
 //---------------------------------------------------------------------------------------
 const Suits = ["♠", "♥", "♦", "♣"];
 const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 const sets = ["R", "B"];
-
+//                                      RULES
+//---------------------------------------------------------------------------------------
 const nrFieldSequenceCards = 3;
 const nrMalusCards = 14;
 
@@ -38,30 +39,19 @@ class Stack {
     }
 }
 
-console.log(shuffle(freshDecks()));
+console.log(shuffledDeck());
 
-function freshDecks() {
-    return sets.map(set => {
+function shuffledDeck() {
+    return shuffle(sets.map(set => {
         return Suits.flatMap(suit => {
             return Values.map(value => {
                 return new Card(suit, value,set, false)
             });
         });
-    });
+    }));
 }
 
-function shuffle(decks) {
-    for(var i = 0; i< decks.length; i++) {
-        var currentIndex = decks[i].length,  randomIndex;
-        while (0 !== currentIndex) {
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex--;
-          [decks[i][currentIndex], decks[i][randomIndex]] = [
-            decks[i][randomIndex], decks[i][currentIndex]];
-        }
-    }
-    return decks;
-  }
+
   
 function dealCards(decks) {
     for(var i = 0 ; i< decks.length; i++) {
@@ -163,3 +153,16 @@ ReactDOM.render(
     document.getElementById('root')
 );
 
+
+function shuffle(decks) {
+    for(var i = 0; i< decks.length; i++) {
+        var currentIndex = decks[i].length,  randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [decks[i][currentIndex], decks[i][randomIndex]] = [
+            decks[i][randomIndex], decks[i][currentIndex]];
+        }
+    }
+    return decks;
+  }
