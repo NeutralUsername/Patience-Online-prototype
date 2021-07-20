@@ -3,6 +3,20 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 
+//                                      RULES
+//---------------------------------------------------------------------------------------
+const Suits = ["♠", "♥", "♦", "♣"];
+const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+const sets = ["R", "B"];
+
+const nrFieldSequenceCards = 3;
+const nrMalusCards = 14;
+
+const canThrowOnStock = true;
+const canThrowOnWaste = true;
+//----------------------------------------------------------------------------------------
+
+
 class Card {
     constructor(suit, value, set, faceUp) {
         this.suit = suit;
@@ -24,24 +38,27 @@ class Stack {
     }
 }
 
-class Deck  {
-    constructor() {
-        this.cards =  freshDeck();
-    }
+
+
+function distributeCards(){
+    
 }
 
-function freshDeck() {
-    const Suits = ["♠", "♥", "♦", "♣"];
-    const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-    const Sets = ["R", "B"];
+function InitializeDecks()  {
+   return sets.map(set => {
+       shuffle(freshDeck(set));
+   })
+}
+ 
+
+function freshDeck(set) {
+    
     return Suits.map(suit => {
         return Values.map(value => {
-            return Sets.map(set => {
-                return new Card(suit, value, set, false)
+                return new Card(suit, value,set, false)
             });
         });
-    });
-}
+    }
 
 function shuffle(deck) {
     let currentIndex = deck.length,  randomIndex;
@@ -74,12 +91,12 @@ class LandingPage extends React.Component {
 class NewGame extends React.Component {
     render() {
         return (
-            <form className="NewGame">
+            <div className="NewGame">
                 <input type ="text" className={"game-Seed"} readOnly ></input>
                 <input type="radio" className={"radio-black"}></input>
                 <input type="radio" className={"radio-red"}></input>
                 <input type="button"className={"game-ready"} value="Ready" disabled = {true}></input> 
-            </form>
+            </div>
         );
     }
 }
@@ -94,14 +111,14 @@ class Game extends React.Component {
                     <div className={"Player-Malus-Sequence Right Sequence"}></div>
                 </div>
                 <div className="Stack-Field">
-                    <div className={"Left-Stack-Field-One Left Stack"}></div>
-                    <div className={"Left-Stack-Field-Two Left Stack"}></div>
-                    <div className={"Left-Stack-Field-Three Left Stack"}></div>
-                    <div className={"Left-Stack-Field-Four Left Stack"}></div>
-                    <div className={"Right-Stack-Field-One Right Stack"}></div>
-                    <div className={"Right-Stack-Field-Two Right Stack"}></div>
-                    <div className={"Right-Stack-Field-Three Right Stack"}></div>
-                    <div className={"Right-Stack-Field-Four Right Stack"}></div>
+                    <div className={"Left-Stack-Field-One Stack"}></div>
+                    <div className={"Left-Stack-Field-Two  Stack"}></div>
+                    <div className={"Left-Stack-Field-Three Stack"}></div>
+                    <div className={"Left-Stack-Field-Four Stack"}></div>
+                    <div className={"Right-Stack-Field-One Stack"}></div>
+                    <div className={"Right-Stack-Field-Two Stack"}></div>
+                    <div className={"Right-Stack-Field-Three Stack"}></div>
+                    <div className={"Right-Stack-Field-Four Stack"}></div>
                 </div>
                 <div className="Sequence-Field">
                     <div className={"Left-Sequence-Field-One Left Sequence"}></div>
