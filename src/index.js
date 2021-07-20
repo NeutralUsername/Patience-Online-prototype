@@ -10,10 +10,10 @@ const sets = ["R", "B"];
 
 //                                 Changeable Rules
 //---------------------------------------------------------------------------------------
-const nrFieldSequenceCards = 3;
-const nrMalusCards = 14;
+const fieldSequenceCards = 3;
+const malusSequenceCards = 14;
 
-const canThrowOnStock = true;
+const canThrowOnMalus = true;
 const canThrowOnWaste = true;
 //----------------------------------------------------------------------------------------
 
