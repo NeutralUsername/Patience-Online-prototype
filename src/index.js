@@ -40,12 +40,12 @@ class Stack {
 
 
 
-function distributeCards(){
+function shuffleDecks(){
     
 }
 
 
-console.log(freshDecks());
+console.log(shuffle(freshDecks()));
 
 function freshDecks() {
     return sets.map(set => {
@@ -58,16 +58,20 @@ function freshDecks() {
 }
 
 
-function shuffle(deck) {
-    let currentIndex = deck.length,  randomIndex;
-    while (0 !== currentIndex) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-        [deck[currentIndex], deck[randomIndex]] = [
-            deck[randomIndex], deck[currentIndex]];
+function shuffle(decks) {
+    for(var i = 0; i< decks.length; i++)
+    {
+        var currentIndex = decks[i].length,  randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [decks[i][currentIndex], decks[i][randomIndex]] = [
+            decks[i][randomIndex], decks[i][currentIndex]];
+        }
     }
-    return deck;
-}
+    return decks;
+  }
+  
 
 class LandingPage extends React.Component {
     render() {
