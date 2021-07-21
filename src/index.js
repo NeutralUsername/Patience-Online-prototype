@@ -16,82 +16,74 @@ const nrMalusCards = 14;
 const canThrowOnStock = true;
 const canThrowOnWaste = true;
 //----------------------------------------------------------------------------------------
+ReactDOM.render(<Index />, document.getElementById('root'));
 
 console.log(freshDeck("R"));
 console.log(document.getElementById('root'));
-console.log(Sequence());
 
-function Index() {
 
+
+function Index () {
+    return (
+        <div className={"Index"}>
+            <Name></Name>
+            <AI></AI>
+            <Human></Human>
+        </div>
+    )          
+}
+
+function Name (props) {
     const[name, setName] = useState("");
     console.log(name);
-    
-   function handleClick(param) {
-        if(param === "Hot-join-AI") {
-            ReactDOM.render(<Game playerName = {name}/>, document.getElementById('root'));
-        }
-        if(param === "Red-AI") {
-            ReactDOM.render(<Game playerName = {name} />, document.getElementById('root'));
-        }
-        if(param === "Black-AI") {
-            ReactDOM.render(<Game playerName = {name} />, document.getElementById('root'));
-        }   
-        if(param === "Hot-join-Human") {
-            ReactDOM.render(<Game />, document.getElementById('root'));
-        }   
-        if(param === "New-Human") {
-            ReactDOM.render(<Game />, document.getElementById('root'));
-        }   
-        if(param === "Join-Human") {
-            ReactDOM.render(<Game />, document.getElementById('root'));
-        }   
-    }
     return (
-        <div className={"LandingPage"}>
+        <div className={"Name"}>
             <label htmlFor="Name">Display Name</label>
-            <input id = "Name" type="text" name="nameField" onChange={ event => setName(event.target.value)} value={name}></input>
-
-            <button className={"vsAI-Hot-join"} onClick={ () => handleClick("Hot-join-AI") }>AI Hot-Join</button>
-            <button className={"vsAI-Black"} onClick={ () => handleClick("Black-AI") }>AI Black-Side</button>
-            <button className={"vsAI-Red"} onClick={ () => handleClick("Red-AI") }>AI Red-Side</button>
-            <button className={"vsHuman-Hot-join"} onClick={ () => handleClick("Hot-join-Human") }>Human Hot-Join</button>
-            <button className={"vsHuman-New"} onClick={ () => handleClick("New-Human") }>Human New Game</button>
-            <button className={"vsHuman-Join"} onClick={ () => handleClick("Join-Human") }>Human Join Game</button>
-        </div>)       
-        
-}
-function Name(props) {
-
-}
-
-function AI(props) {
-
-}
-
-function Human(props) {
-
-}
-
-function Card(props) {
-    return (
-    <div 
-        className={props.suit+' '+props.value+' '+props.set+' '+(props.faceUp ? "faceUp" : "faceDown")} 
-        draggable ="true" 
-        onDragStart={props.onDragStart} 
-        onDrop={props.onDrop}
-    ></div>
+            <input id = "Name" type="text" name="nameField" onChange={ event => setName(event.target.value)} value={name}></input>  
+        </div>
     )
 }
 
-function Stack(props) {
+function AI (props) {
+    return (
+        <div className={"AI"}>
+            <button className={"AI.rnd"} onClick={ () => props.handleClick("AI.rnd") }>AI Hot-Join</button>
+            <button className={"AI-black"} onClick={ () => props.handleClick("AI-black") }>AI Black-Side</button>
+            <button className={"AI-red"} onClick={ () => props.handleClick("AI-red") }>AI Red-Side</button>
+        </div>
+    )
+}
+
+function Human (props) {
+    return (
+        <div className={"Human"}>
+            <button className={"Human-rnd"} onClick={ () => props.handleClick("Human-rnd") }>Human Hot-Join</button>
+            <button className={"Human-new"} onClick={ () => props.handleClick("Human-new") }>Human New Game</button>
+            <button className={"Human-join"} onClick={ () => props.handleClick("Human-join") }>Human Join Game</button>
+        </div>
+    )
+}
+
+function Card (props) {
+    return (
+        <div 
+            className={props.suit+' '+props.value+' '+props.set+' '+(props.faceUp ? "faceUp" : "faceDown")} 
+            draggable ="true" 
+            onDragStart={props.onDragStart} 
+            onDrop={props.onDrop}
+        ></div>
+    )
+}
+
+function Stack (props) {
 
 }
 
-function Sequence(props) {
+function Sequence (props) {
     return React.createElement("div", {id: 'someId', className: "someClass"}, "")
 }
 
-function Player(props) {
+function Player (props) {
     return (
         <div className="Player">
             <Stack></Stack>
@@ -101,7 +93,7 @@ function Player(props) {
     )
 }
 
-function Opponent(props) {
+function Opponent (props) {
     return (
         <div className="Opponent">
             <Stack></Stack>
@@ -120,7 +112,7 @@ function Field (props) {
     )
 }
 
-function Stacks(props) {
+function Stacks (props) {
     return (
         <div className="Stacks">
             <Stack></Stack>
@@ -135,7 +127,7 @@ function Stacks(props) {
     )
 }
 
-function Sequences(props) {
+function Sequences (props) {
     return (
         <div className="Stacks">
             <Sequence></Sequence>
@@ -161,8 +153,6 @@ function Game (props) {
 } 
 
 // =====================================================================================================================
-ReactDOM.render(<Index />, document.getElementById('root'));
-
 function shuffle(decks) {
     for(var i = 0; i< decks.length; i++) {
         var currentIndex = decks[i].length,  randomIndex;
