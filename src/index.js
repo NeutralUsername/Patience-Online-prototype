@@ -6,7 +6,7 @@ const Suits = ["♠", "♥", "♦", "♣"];
 const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 console.log(freshDeck("R"));
 console.log(document.getElementById('root'));
-
+//Passant
 ReactDOM.render(<Index />, document.getElementById('root'));
 
 function Index () {
@@ -94,7 +94,11 @@ function ThrowMalus () {
 }
 
 function Time () {
-    
+    return (
+        <div>
+            <input type = "checkbox" ></input>
+        </div>
+    )
 }
 
 function Name (props) {
