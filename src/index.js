@@ -2,14 +2,11 @@ import { render } from '@testing-library/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { DragEvent } from 'react';
-import { DragEventHandler } from 'react';
 
 //                                    Constants
 //---------------------------------------------------------------------------------------
 const Suits = ["♠", "♥", "♦", "♣"];
 const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-const Sets = ["R", "B"];
 var ActiveComponent ="Index"; // Starting Page
 
 //                                      RULES
@@ -21,83 +18,84 @@ const canThrowOnStock = true;
 const canThrowOnWaste = true;
 //----------------------------------------------------------------------------------------
 
-
-console.log(freshDecks());
+console.log(freshDeck("R"));
 console.log(ActiveComponent);
 
-function Card(props) {
-    this.suit = props.suit;
-    this.value = props.value;
-    this.set = props.set;
-    this.faceUp = props.faceUp;
-   
-    return (
-    <div className={this.suit+' '+this.value+' '+this.set+' '+this.faceUp}> 
-        
-    </div>
-    )
-}
 
-function shuffle(decks) {
-    for(var i = 0; i< decks.length; i++) {
-        var currentIndex = decks[i].length,  randomIndex;
-        while (0 !== currentIndex) {
-          randomIndex = Math.floor(Math.random() * currentIndex);
-          currentIndex--;
-          [decks[i][currentIndex], decks[i][randomIndex]] = [
-            decks[i][randomIndex], decks[i][currentIndex]];
-        }
+
+function freshDeck(set) {
+    function handleDrag() {
+
     }
-    return decks;
-  }
+    function handleDrop() {
 
-  function freshDecks() {
-    return shuffle(Sets.map(set => {
-        return Suits.flatMap(suit => {
-            return Values. map(value => {
-                return (
-                    <Card suit={suit} value={value} set={set} faceUp={false}></Card>
-                )
-            });
+    }
+    return Suits.flatMap(suit => {
+        return Values. map(value => {
+            return (
+                <Card 
+                    suit={suit} 
+                    value={value} 
+                    set={set} 
+                    faceUp={false} 
+                    onDragStart={() => handleDrag()} 
+                    onDrop={() => handleDrop()} 
+                ></Card>)
         });
-    }));
-}
+    });
+}  
 
-function dealCards() {
-    for(var deck of freshDecks()) {
-        
-    }
-}
-
-function Index() {
+function Card(props) {
     return (
-        <div className={"LandingPage"}>
-            <input className="Chose-Name"></input>
-
-            <button className={"vsAI-Hot-join"} onClick={Game} >AI Hot-Join</button>
-            <button className={"vsAI-Black"}>AI Black-Side</button>
-            <button className={"vsAI-Red"}>AI Red-Side</button>
-                
-            <button className={"vsHuman-Hot-join"}>Human Hot-Join</button>
-            <button className={"vsHuman-New"}>Human New Game</button>
-            <button className={"vsHuman-Join"}>Human Join Game</button>
-        </div>
+    <div 
+        className={props.suit+' '+props.value+' '+props.set+' '+(props.faceUp ? "faceUp" : "faceDown")} 
+        draggable ="true" 
+        onDragStart={props.onDragStart} 
+        onDrop={props.onDrop}
+    ></div>
     )
 }
 
-function NewGame() {
-    return (
-        <div className="NewGame">
-            <input type ="text" className={"game-Seed"} readOnly ></input>
-            <input type="radio" className={"radio-black"}></input>
-            <input type="radio" className={"radio-red"}></input>
-            <input type="button"className={"game-ready"} value="Ready" disabled = {true}></input> 
-        </div>
-    );
+class Index extends React.Component {
+   constructor() {
+       super()
+       this.state = {showComponent : true,}
+   };
+
+   handleClick() {
+    this.setState({
+        showComponent : false
+    })
+   }
+
+    render() {
+        if(this.state.showComponent== true)
+        {
+            return (
+            <div className={"LandingPage"}>
+                <input className="Chose-Name"></input>
+
+                <button className={"vsAI-Hot-join"} onClick={ () => this.handleClick() }>AI Hot-Join</button>
+                <button className={"vsAI-Black"}>AI Black-Side</button>
+                <button className={"vsAI-Red"}>AI Red-Side</button>
+                
+                <button className={"vsHuman-Hot-join"}>Human Hot-Join</button>
+                <button className={"vsHuman-New"}>Human New Game</button>
+                <button className={"vsHuman-Join"}>Human Join Game</button>
+            </div>)
+        }
+        else
+        return null;
+    }
 }
 
 class Game extends React.Component {
-    ActiveComponent ="Game";
+    constructor(props) {
+        this.color = props.color;
+        this.malus = props.malus;
+        this.sequence = props.sequence;
+        
+    }
     render() {
         return (
             <div className="Game">
@@ -167,6 +165,20 @@ class Game extends React.Component {
 }
 
 // =====================================================================================================================
-
+console.log(ReactDOM.render(<Index />, document.getElementById('root')));
 ReactDOM.render(<Index />, document.getElementById('root'));
 
+function shuffle(decks) {
+    for(var i = 0; i< decks.length; i++) {
+        var currentIndex = decks[i].length,  randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [decks[i][currentIndex], decks[i][randomIndex]] = [
+            decks[i][randomIndex], decks[i][currentIndex]];
+        }
+    }
+    return decks;
+  }
+
+  
