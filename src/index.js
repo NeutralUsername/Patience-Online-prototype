@@ -59,13 +59,13 @@ function Card(props) {
 class Index extends React.Component {
    constructor() {
        super()
-       this.state = {showComponent : true,}
+       this.state = {showComponent : true}
    };
 
-   handleClick() {
+   handleClick(param) {
     this.setState({
         showComponent : false
-    })
+    })  
    }
 
     render() {
@@ -75,7 +75,7 @@ class Index extends React.Component {
             <div className={"LandingPage"}>
                 <input className="Chose-Name"></input>
 
-                <button className={"vsAI-Hot-join"} onClick={ () => this.handleClick() }>AI Hot-Join</button>
+                <button className={"vsAI-Hot-join"} onClick={ () => this.handleClick("Hot-join-AI") }>AI Hot-Join</button>
                 <button className={"vsAI-Black"}>AI Black-Side</button>
                 <button className={"vsAI-Red"}>AI Red-Side</button>
                 
@@ -85,7 +85,7 @@ class Index extends React.Component {
             </div>)
         }
         else
-        return null;
+            return null;
     }
 }
 
