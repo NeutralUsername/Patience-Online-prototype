@@ -1,7 +1,7 @@
-import { render } from '@testing-library/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import  { useState } from 'react';
 
 //                                    Constants
 //---------------------------------------------------------------------------------------
@@ -18,6 +18,7 @@ const canThrowOnWaste = true;
 //----------------------------------------------------------------------------------------
 
 console.log(freshDeck("R"));
+console.log(document.getElementById('root'));
 
 
 
@@ -54,45 +55,53 @@ function Card(props) {
     )
 }
 
-class Index extends React.Component {
-   constructor() {
-       super()
-       this.state = {showComponent : true}
-   };
+function Index() {
 
-   handleClick(param) {
-    this.setState({
-        showComponent : false
-    })  
-   }
-
-    render() {
-        if(this.state.showComponent== true)
-        {
-            return (
-            <div className={"LandingPage"}>
-                <input className="Chose-Name"></input>
-
-                <button className={"vsAI-Hot-join"} onClick={ () => this.handleClick("Hot-join-AI") }>AI Hot-Join</button>
-                <button className={"vsAI-Black"}>AI Black-Side</button>
-                <button className={"vsAI-Red"}>AI Red-Side</button>
-                
-                <button className={"vsHuman-Hot-join"}>Human Hot-Join</button>
-                <button className={"vsHuman-New"}>Human New Game</button>
-                <button className={"vsHuman-Join"}>Human Join Game</button>
-            </div>)
+    const[name, setName] = useState("");
+    console.log(name);
+    
+   function handleClick(param) {
+        if(param === "Hot-join-AI") {
+            ReactDOM.render(<Game playerName = {name}/>, document.getElementById('root'));
         }
-        else
-            return null;
+        if(param === "Red-AI") {
+            ReactDOM.render(<Game playerName = {name} />, document.getElementById('root'));
+        }
+        if(param === "Black-AI") {
+            ReactDOM.render(<Game playerName = {name} />, document.getElementById('root'));
+        }   
+        if(param === "Hot-join-Human") {
+            ReactDOM.render(<Game />, document.getElementById('root'));
+        }   
+        if(param === "New-Human") {
+            ReactDOM.render(<Game />, document.getElementById('root'));
+        }   
+        if(param === "Join-Human") {
+            ReactDOM.render(<Game />, document.getElementById('root'));
+        }   
     }
+    return (
+        <div className={"LandingPage"}>
+            <label htmlFor="Name">Display Name</label>
+            <input type="text" name="nameField" onChange={ e => setName(e.target.value)} value={name}></input>
+
+            <button className={"vsAI-Hot-join"} onClick={ () => handleClick("Hot-join-AI") }>AI Hot-Join</button>
+            <button className={"vsAI-Black"} onClick={ () => handleClick("Black-AI") }>AI Black-Side</button>
+            <button className={"vsAI-Red"} onClick={ () => handleClick("Red-AI") }>AI Red-Side</button>
+            <button className={"vsHuman-Hot-join"} onClick={ () => handleClick("Hot-join-Human") }>Human Hot-Join</button>
+            <button className={"vsHuman-New"} onClick={ () => handleClick("New-Human") }>Human New Game</button>
+            <button className={"vsHuman-Join"} onClick={ () => handleClick("Join-Human") }>Human Join Game</button>
+        </div>)       
+        
 }
+
 
 class Game extends React.Component {
     constructor(props) {
+        super(props);
         this.color = props.color;
         this.malus = props.malus;
-        this.sequence = props.sequence;
-        
+        this.sequence = props.sequence;   
     }
     render() {
         return (
@@ -163,7 +172,6 @@ class Game extends React.Component {
 }
 
 // =====================================================================================================================
-console.log(ReactDOM.render(<Index />, document.getElementById('root')));
 ReactDOM.render(<Index />, document.getElementById('root'));
 
 function shuffle(decks) {
