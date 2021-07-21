@@ -19,6 +19,7 @@ const canThrowOnWaste = true;
 
 console.log(freshDeck("R"));
 console.log(document.getElementById('root'));
+console.log(Sequence());
 
 function Index() {
 
@@ -48,7 +49,7 @@ function Index() {
     return (
         <div className={"LandingPage"}>
             <label htmlFor="Name">Display Name</label>
-            <input type="text" name="nameField" onChange={ event => setName(event.target.value)} value={name}></input>
+            <input id = "Name" type="text" name="nameField" onChange={ event => setName(event.target.value)} value={name}></input>
 
             <button className={"vsAI-Hot-join"} onClick={ () => handleClick("Hot-join-AI") }>AI Hot-Join</button>
             <button className={"vsAI-Black"} onClick={ () => handleClick("Black-AI") }>AI Black-Side</button>
@@ -58,6 +59,17 @@ function Index() {
             <button className={"vsHuman-Join"} onClick={ () => handleClick("Join-Human") }>Human Join Game</button>
         </div>)       
         
+}
+function Name(props) {
+
+}
+
+function AI(props) {
+
+}
+
+function Human(props) {
+
 }
 
 function Card(props) {
@@ -76,7 +88,7 @@ function Stack(props) {
 }
 
 function Sequence(props) {
-    
+    return React.createElement("div", {id: 'someId', className: "someClass"}, "")
 }
 
 function Player(props) {
