@@ -20,41 +20,6 @@ const canThrowOnWaste = true;
 console.log(freshDeck("R"));
 console.log(document.getElementById('root'));
 
-
-
-function freshDeck(set) {
-    function handleDrag() {
-
-    }
-    function handleDrop() {
-
-    }
-    return Suits.flatMap(suit => {
-        return Values. map(value => {
-            return (
-                <Card 
-                    suit={suit} 
-                    value={value} 
-                    set={set} 
-                    faceUp={false} 
-                    onDragStart={() => handleDrag()} 
-                    onDrop={() => handleDrop()} 
-                ></Card>)
-        });
-    });
-}  
-
-function Card(props) {
-    return (
-    <div 
-        className={props.suit+' '+props.value+' '+props.set+' '+(props.faceUp ? "faceUp" : "faceDown")} 
-        draggable ="true" 
-        onDragStart={props.onDragStart} 
-        onDrop={props.onDrop}
-    ></div>
-    )
-}
-
 function Index() {
 
     const[name, setName] = useState("");
@@ -83,7 +48,7 @@ function Index() {
     return (
         <div className={"LandingPage"}>
             <label htmlFor="Name">Display Name</label>
-            <input type="text" name="nameField" onChange={ e => setName(e.target.value)} value={name}></input>
+            <input type="text" name="nameField" onChange={ event => setName(event.target.value)} value={name}></input>
 
             <button className={"vsAI-Hot-join"} onClick={ () => handleClick("Hot-join-AI") }>AI Hot-Join</button>
             <button className={"vsAI-Black"} onClick={ () => handleClick("Black-AI") }>AI Black-Side</button>
@@ -95,81 +60,93 @@ function Index() {
         
 }
 
-
-class Game extends React.Component {
-    constructor(props) {
-        super(props);
-        this.color = props.color;
-        this.malus = props.malus;
-        this.sequence = props.sequence;   
-    }
-    render() {
-        return (
-            <div className="Game">
-                <div className="Player-Side">
-                    {this.renderWaste("Player")}
-                    {this.renderStock("Player")}
-                    {this.renderMalus("Player")}
-                </div>
-                <div className="Opponent-Side">
-                    {this.renderWaste("Opponent")}
-                    {this.renderStock("Opponent")}
-                    {this.renderMalus("Opponent")}
-                </div>
-                <div className="Field-Stacks">
-                    {this.renderFieldStack(1)}
-                    {this.renderFieldStack(2)}
-                    {this.renderFieldStack(3)}
-                    {this.renderFieldStack(4)}
-                    {this.renderFieldStack(5)}
-                    {this.renderFieldStack(6)}
-                    {this.renderFieldStack(7)}
-                    {this.renderFieldStack(8)}
-                </div>
-                <div className="Field-Sequences">
-                    {this.renderFieldSequence(1)}
-                    {this.renderFieldSequence(2)}
-                    {this.renderFieldSequence(3)}
-                    {this.renderFieldSequence(4)}
-                    {this.renderFieldSequence(5)}
-                    {this.renderFieldSequence(6)}
-                    {this.renderFieldSequence(7)}
-                    {this.renderFieldSequence(8)}
-                </div>
-                <div className="Game-info">
-                    <div className={"Player-Turn"}></div>
-                    <div className={"Time"}></div>
-                </div>
-            </div>
-        )
-    } 
-    renderMalus(who)
-    {
-        
-    }
-
-    renderStock(who)
-    {
-        if(who =="Player") {
-
-        }
-    }
-
-    renderWaste(who)
-    {
-        
-    }
-
-    renderFieldStack(which)
-    {
-        
-    }
-
-    renderFieldSequence(which)
-    {
-       
-    }
+function Card(props) {
+    return (
+    <div 
+        className={props.suit+' '+props.value+' '+props.set+' '+(props.faceUp ? "faceUp" : "faceDown")} 
+        draggable ="true" 
+        onDragStart={props.onDragStart} 
+        onDrop={props.onDrop}
+    ></div>
+    )
 }
+
+function Stack(props) {
+
+}
+
+function Sequence(props) {
+    
+}
+
+function Player(props) {
+    return (
+        <div className="Player">
+            <Stack></Stack>
+            <Stack></Stack>
+            <Sequence></Sequence>
+        </div>
+    )
+}
+
+function Opponent(props) {
+    return (
+        <div className="Opponent">
+            <Stack></Stack>
+            <Stack></Stack>
+            <Sequence></Sequence>
+        </div>
+    )
+}
+
+function Field (props) {
+    return (
+        <div className="Field">
+            <Stacks></Stacks>
+            <Sequences></Sequences>
+        </div>
+    )
+}
+
+function Stacks(props) {
+    return (
+        <div className="Stacks">
+            <Stack></Stack>
+            <Stack></Stack>
+            <Stack></Stack>
+            <Stack></Stack>
+            <Stack></Stack>
+            <Stack></Stack>
+            <Stack></Stack>
+            <Stack></Stack>
+        </div>
+    )
+}
+
+function Sequences(props) {
+    return (
+        <div className="Stacks">
+            <Sequence></Sequence>
+            <Sequence></Sequence>
+            <Sequence></Sequence>
+            <Sequence></Sequence>
+            <Sequence></Sequence>
+            <Sequence></Sequence>
+            <Sequence></Sequence>
+            <Sequence></Sequence>
+        </div>
+    )
+}
+
+function Game (props) {
+    return (
+        <div className="Stacks">
+            <Player></Player>
+            <Opponent></Opponent>
+            <Field></Field>
+        </div>        
+    )
+} 
 
 // =====================================================================================================================
 ReactDOM.render(<Index />, document.getElementById('root'));
@@ -187,4 +164,24 @@ function shuffle(decks) {
     return decks;
   }
 
-  
+  function freshDeck(set) {
+    function handleDrag() {
+
+    }
+    function handleDrop() {
+
+    }
+    return Suits.flatMap(suit => {
+        return Values. map(value => {
+            return (
+                <Card 
+                    suit={suit} 
+                    value={value} 
+                    set={set} 
+                    faceUp={false} 
+                    onDragStart={() => handleDrag()} 
+                    onDrop={() => handleDrop()} 
+                ></Card>)
+        });
+    });
+}  
