@@ -1,14 +1,16 @@
+import { render } from '@testing-library/react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-
+import { DragEvent } from 'react';
+import { DragEventHandler } from 'react';
 
 //                                    Constants
 //---------------------------------------------------------------------------------------
 const Suits = ["♠", "♥", "♦", "♣"];
 const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-const sets = ["R", "B"];
-
+const Sets = ["R", "B"];
+var ActiveComponent ="Index"; // Starting Page
 
 //                                      RULES
 //---------------------------------------------------------------------------------------
@@ -19,6 +21,22 @@ const canThrowOnStock = true;
 const canThrowOnWaste = true;
 //----------------------------------------------------------------------------------------
 
+
+console.log(freshDecks());
+console.log(ActiveComponent);
+
+function Card(props) {
+    this.suit = props.suit;
+    this.value = props.value;
+    this.set = props.set;
+    this.faceUp = props.faceUp;
+   
+    return (
+    <div className={this.suit+' '+this.value+' '+this.set+' '+this.faceUp}> 
+        
+    </div>
+    )
+}
 
 function shuffle(decks) {
     for(var i = 0; i< decks.length; i++) {
@@ -33,153 +51,122 @@ function shuffle(decks) {
     return decks;
   }
 
-class Card extends React.Component {
-    constructor(suit, value, set, faceUp) {
-        super(suit, value, set, faceUp);
-        this.suit = suit;
-        this.value = value;
-        this.faceUp = faceUp;
-        this.set = set;
-    }
-}
-
-console.log(freshDecks());
-
-function freshDecks() {
-    return shuffle(sets.map(set => {
+  function freshDecks() {
+    return shuffle(Sets.map(set => {
         return Suits.flatMap(suit => {
             return Values. map(value => {
-                return new Card(suit, value,set, false)
+                return (
+                    <Card suit={suit} value={value} set={set} faceUp={false}></Card>
+                )
             });
         });
     }));
 }
-  
+
 function dealCards() {
     for(var deck of freshDecks()) {
         
     }
 }
 
+function Index() {
+    return (
+        <div className={"LandingPage"}>
+            <input className="Chose-Name"></input>
 
-
-
-class LandingPage extends React.Component {
-    render() {
-        return (
-            <form className={"LandingPage"}>
-                <input className="Chose-Name"></input>
-
-                <button className={"vsAI-Hot-join"}>AI Hot-Join</button>
-                <button className={"vsAI-Black"}>AI Black-Side</button>
-                <button className={"vsAI-Red"}>AI Red-Side</button>
+            <button className={"vsAI-Hot-join"} onClick={Game} >AI Hot-Join</button>
+            <button className={"vsAI-Black"}>AI Black-Side</button>
+            <button className={"vsAI-Red"}>AI Red-Side</button>
                 
-                <button className={"vsHuman-Hot-join"}>Human Hot-Join</button>
-                <button className={"vsHuman-New"}>Human New Game</button>
-                <button className={"vsHuman-Join"}>Human Join Game</button>
-            </form>)
-    }
+            <button className={"vsHuman-Hot-join"}>Human Hot-Join</button>
+            <button className={"vsHuman-New"}>Human New Game</button>
+            <button className={"vsHuman-Join"}>Human Join Game</button>
+        </div>
+    )
 }
 
-class NewGame extends React.Component {
-    render() {
-        return (
-            <div className="NewGame">
-                <input type ="text" className={"game-Seed"} readOnly ></input>
-                <input type="radio" className={"radio-black"}></input>
-                <input type="radio" className={"radio-red"}></input>
-                <input type="button"className={"game-ready"} value="Ready" disabled = {true}></input> 
-            </div>
-        );
-    }
+function NewGame() {
+    return (
+        <div className="NewGame">
+            <input type ="text" className={"game-Seed"} readOnly ></input>
+            <input type="radio" className={"radio-black"}></input>
+            <input type="radio" className={"radio-red"}></input>
+            <input type="button"className={"game-ready"} value="Ready" disabled = {true}></input> 
+        </div>
+    );
 }
-
-function PlayerWaste() {
-
-}
-
-function PlayerStock() {
-
-}
-
-function PlayerMalus() {
-
-}
-
-function OpponentWaste() {
-
-}
-
-function OpponentStock() {
-
-}
-
-function OpponentMalus() {
-
-}
-
 
 class Game extends React.Component {
+    ActiveComponent ="Game";
     render() {
         return (
             <div className="Game">
                 <div className="Player-Side">
-                    <PlayerWaste/>
-                    <PlayerStock/>
-                    <PlayerMalus/>
+                    {this.renderWaste("Player")}
+                    {this.renderStock("Player")}
+                    {this.renderMalus("Player")}
                 </div>
                 <div className="Opponent-Side">
-                    <OpponentMalus/>
-                    <OpponentStock/>
-                    <OpponentWaste/> 
+                    {this.renderWaste("Opponent")}
+                    {this.renderStock("Opponent")}
+                    {this.renderMalus("Opponent")}
                 </div>
-                <div className="Stack-Field">
-                    <div className={"Left-Stack-Field-One Stack"}></div>
-                    <div className={"Left-Stack-Field-Two  Stack"}></div>
-                    <div className={"Left-Stack-Field-Three Stack"}></div>
-                    <div className={"Left-Stack-Field-Four Stack"}></div>
-                    <div className={"Right-Stack-Field-One Stack"}></div>
-                    <div className={"Right-Stack-Field-Two Stack"}></div>
-                    <div className={"Right-Stack-Field-Three Stack"}></div>
-                    <div className={"Right-Stack-Field-Four Stack"}></div>
+                <div className="Field-Stacks">
+                    {this.renderFieldStack(1)}
+                    {this.renderFieldStack(2)}
+                    {this.renderFieldStack(3)}
+                    {this.renderFieldStack(4)}
+                    {this.renderFieldStack(5)}
+                    {this.renderFieldStack(6)}
+                    {this.renderFieldStack(7)}
+                    {this.renderFieldStack(8)}
                 </div>
-                <div className="Sequence-Field">
-                    <div className={"Left-Sequence-Field-One Left Sequence"}></div>
-                    <div className={"Left-Sequence-Field-Two Left Sequence"}></div>
-                    <div className={"Left-Sequence-Field-Three Left Sequence"}></div>
-                    <div className={"Left-Sequence-Field-Four Left Sequence"}></div>
-                    <div className={"Right-Sequence-Field-One Right Sequence"}></div>
-                    <div className={"Right-Sequence-Field-Two Right Sequence"}></div>
-                    <div className={"Right-Sequence-Field-Three Right Sequence"}></div>
-                    <div className={"Right-Sequence-Field-Four Right Sequence"}></div>
+                <div className="Field-Sequences">
+                    {this.renderFieldSequence(1)}
+                    {this.renderFieldSequence(2)}
+                    {this.renderFieldSequence(3)}
+                    {this.renderFieldSequence(4)}
+                    {this.renderFieldSequence(5)}
+                    {this.renderFieldSequence(6)}
+                    {this.renderFieldSequence(7)}
+                    {this.renderFieldSequence(8)}
                 </div>
                 <div className="Game-info">
                     <div className={"Player-Turn"}></div>
                     <div className={"Time"}></div>
                 </div>
             </div>
-        );
+        )
+    } 
+    renderMalus(who)
+    {
+        
+    }
+
+    renderStock(who)
+    {
+        if(who =="Player") {
+
+        }
+    }
+
+    renderWaste(who)
+    {
+        
+    }
+
+    renderFieldStack(which)
+    {
+        
+    }
+
+    renderFieldSequence(which)
+    {
+       
     }
 }
 
-class App extends React.Component {
-    render() {
-        return (
-            <div className="game">
-                <div className="game-board">
-
-                </div>
-                <div className="game-info">
-                    <div>{/* status */}</div>
-                </div>
-            </div>
-        );
-    }
-}
 // =====================================================================================================================
 
-ReactDOM.render(
-    <LandingPage />,
-    document.getElementById('root')
-);
+ReactDOM.render(<Index />, document.getElementById('root'));
 
