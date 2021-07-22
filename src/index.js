@@ -40,7 +40,7 @@ function MalusSize (props) {
     return (
         <div className="MalusSize">
             <label htmlFor={"MalusCountSelect"}> Malus Size</label>
-            <select value={input} onInput={e => setInput(e.target.value)} name={"MalusCountSelect"}>
+            <select value={input} onInput={e => setInput(e.target.value)} id={"MalusCountSelect"}>
                 <option value = "5">5</option>
                 <option value = "6">6</option>
                 <option value = "7">7</option>
@@ -68,7 +68,7 @@ function SecquenceSize (props) {
     return (
         <div className="SequenceSize">
             <label htmlFor={"SequenceSizeSelect"}> Sequence Size</label>
-            <select value={input} onInput={e => setInput(e.target.value)} name={"SequenceSizeSelect"} >
+            <select value={input} onInput={e => setInput(e.target.value)} id={"SequenceSizeSelect"} >
                 <option value = "1">1</option>
                 <option value = "2">2</option>
                 <option value = "3">3</option>
@@ -86,7 +86,7 @@ function ThrowOnStock (props) {
     return (
         <div className={"ThrowStock"}>
              <label htmlFor="ThrowStockCB" >Throw on Opponent Stock</label>
-             <input  checked={input} onChange={e => setInput(e.target.checked)} name={"ThrowStockCB"} type={"checkbox"}></input>
+             <input  checked={input} onChange={e => setInput(e.target.checked)} id={"ThrowStockCB"} type={"checkbox"}></input>
         </div>
     )
 }
@@ -97,7 +97,7 @@ function ThrowOnMalus (props) {
     return (
         <div className={"ThrowMalus"}>
             <label htmlFor="ThrowMalusCB" >Throw on Opponent Malus</label>
-            <input  defaultChecked={true} value={input} onChange={e => setInput(e.target.checked)} name={"ThrowMalusCB"} type={"checkbox"}></input>
+            <input  defaultChecked={true} value={input} onChange={e => setInput(e.target.checked)} id={"ThrowMalusCB"} type={"checkbox"}></input>
         </div>
     )
 }
@@ -119,9 +119,9 @@ function TimeTurn (props) {
     return (
         <div>
             <label htmlFor="TurnTimeCB">Limit time for each turn</label>
-            <input value={enabled} onChange={e => setEnabled(e.target.checked)} name={"TurnTimeCB"} type = "checkbox" ></input>  
-            <label htmlFor="">Duration:</label> 
-            <input value={input} onChange={e => setInput(e.target.value)} name={"TurnTimeValue"} type="text" ></input>
+            <input value={enabled} onChange={e => setEnabled(e.target.checked)} id={"TurnTimeCB"} type = "checkbox" ></input>  
+            <label htmlFor="TurnTimeValue">Duration:</label> 
+            <input value={input} onChange={e => setInput(e.target.value)} id={"TurnTimeValue"} type="text" ></input>
         </div>
     )
 }
@@ -134,9 +134,9 @@ function TimeRound (props) {
     return (
         <div>
             <label htmlFor="RoundTimeCB">Limit time for each round</label>
-            <input value={enabled} onChange={e => setEnabled(e.target.checked)} name={"RoundTimeCB"} type = "checkbox" ></input>  
-            <label htmlFor="">Duration:</label> 
-            <input value={input} onChange={e => setInput(e.target.value)}  name={"RoundTimeValue"} type="text" ></input>
+            <input value={enabled} onChange={e => setEnabled(e.target.checked)} id={"RoundTimeCB"} type = "checkbox" ></input>  
+            <label htmlFor="RoundTimeValue">Duration:</label> 
+            <input value={input} onChange={e => setInput(e.target.value)}  id={"RoundTimeValue"} type="text" ></input>
         </div>
     )
 }
@@ -147,7 +147,7 @@ function Name (props) {
     return (
         <div className={"Name"}>
             <label htmlFor="Name">Display Name</label>
-            <input id = "Name" type="text" name="nameField" onChange={ event => setName(event.target.value)} value={name}></input>  
+            <input id = "Name" type="text" onChange={ event => setName(event.target.value)} value={name}></input>  
         </div>
     )
 }
@@ -167,7 +167,7 @@ function Human (props) {
             <button className={"hotjoin"} onClick={ () => props.handleClick("hotjoin") }>Find</button>
             <button className={"Human-join"} onClick={ () => props.handleClick("Human-join") }>Join</button>
             <button className={"Human-new"} onClick={ () => props.handleClick("Human-new") }>Create</button>
-            <input type="checkbox" name ="privateGame"></input>
+            <input type="checkbox" id ="privateGame"></input>
             <label htmlFor="privateGame">private Lobby</label>
         </div>
     )
