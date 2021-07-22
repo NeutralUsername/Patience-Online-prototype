@@ -174,16 +174,27 @@ function AI (props) {
     }
     return (
         <div className={"ai"}>
-            <button onClick={e=> {getOptions()}} type="submit" className={"black-ai-button"} >AI Black-Side</button>
-            <button onClick={e=> {getOptions()}} type="submit" className={"red-ai-button"} >AI Red-Side</button>
+            <button onClick={e=> {getOptions()}} type="submit" className={"black-ai-button"} >AI</button>
         </div>
     )
 }
 
 function Human (props) {
+    function getOptions() {
+        console.log(window.MalusSize); 
+        console.log(window.SecquenceSize);
+        console.log(window.ThrowOnStock);
+        console.log(window.ThrowOnMalus);
+        console.log(window.TurnsTimed);
+        console.log(window.TimePerTurn); 
+        console.log(window.RoundsTimed);
+        console.log(window.TimePerRound);
+        console.log(window.Name);
+        console.log(window.PrivateLobby);       
+    }
     return (
         <div className={"human"}>
-            <button className={"hotjoin-button"} >Create Game</button>
+            <button onClick={e=> {getOptions()}} className={"hotjoin-button"} >Online</button>
         </div>
     )
 }
