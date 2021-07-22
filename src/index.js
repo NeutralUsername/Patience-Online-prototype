@@ -3,40 +3,30 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import  { useState } from 'react';
 
-const Suits = ["♠", "♥", "♦", "♣"];
-const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-
-console.log(freshDeck("R"));
-console.log(document.getElementById('root'));
-
 ReactDOM.render(<Index />, document.getElementById('root'));
+
 
 function Index (props) {
     return (
         <div className={"Index"}>
-            <Options></Options>
+            <MalusSize ></MalusSize>
+            <SecquenceSize></SecquenceSize>
+            <ThrowOnStock></ThrowOnStock>
+            <ThrowOnMalus></ThrowOnMalus>
+            <TurnsTimed></TurnsTimed>
+            <TimePerTurn></TimePerTurn>
+            <RoundsTimed></RoundsTimed>
+            <TimePerRound></TimePerRound>
+            <Name></Name>
             <Human></Human>
             <AI></AI>
         </div>
     )          
 }
 
-function Options (props) {
-    return (
-        <form className="Options">
-            <MalusSize></MalusSize>
-            <SecquenceSize></SecquenceSize>
-            <ThrowOnStock></ThrowOnStock>
-            <ThrowOnMalus></ThrowOnMalus>
-            <Time></Time>
-            <Name></Name>
-        </form>
-    )
-}
-
 function MalusSize (props) {
     const [input, setInput] = useState(14);
-    console.log(input);
+    window.MalusSize = input;
     return (
         <div className="MalusSize">
             <label htmlFor={"MalusCountSelect"}> Malus Size</label>
@@ -50,7 +40,7 @@ function MalusSize (props) {
                 <option value = "11">11</option>
                 <option value = "12">12</option>
                 <option value = "13">13</option>
-                <option  value = "14">14</option>
+                <option value = "14">14</option>
                 <option value = "15">15</option>
                 <option value = "16">16</option>
                 <option value = "17">17</option>
@@ -64,7 +54,7 @@ function MalusSize (props) {
 
 function SecquenceSize (props) {
     const [input, setInput] = useState(3);
-    console.log(input);
+    window.SecquenceSize = input;
     return (
         <div className="SequenceSize">
             <label htmlFor={"SequenceSizeSelect"}> Sequence Size</label>
@@ -82,7 +72,7 @@ function SecquenceSize (props) {
 
 function ThrowOnStock (props) {
     const [input, setInput] = useState(true);
-    console.log(input);
+    window.ThrowOnStock = input;
     return (
         <div className={"ThrowStock"}>
              <label htmlFor="ThrowStockCB" >Throw on Opponent Stock</label>
@@ -93,7 +83,7 @@ function ThrowOnStock (props) {
 
 function ThrowOnMalus (props) {
     const [input, setInput] = useState(true);
-    console.log(input);
+    window.ThrowOnMalus = input;
     return (
         <div className={"ThrowMalus"}>
             <label htmlFor="ThrowMalusCB" >Throw on Opponent Malus</label>
@@ -102,76 +92,97 @@ function ThrowOnMalus (props) {
     )
 }
 
-function Time (props) {
+function TurnsTimed (props) {
+    const [input, setInput] = useState(false);
+    window.TurnsTimed=input;
     return (
-        <div>
-            <TimeTurn></TimeTurn>
-            <TimeRound></TimeRound>
+        <div className={"ThrowMalus"}>
+            <label htmlFor="TurnsTimed">Limit time for each turn</label>
+            <input value={input} onChange={e => setInput(e.target.checked)} id={"TurnsTimed"} type = "checkbox" ></input>  
         </div>
     )
 }
 
-function TimeTurn (props) {
-    const [enabled, setEnabled] = useState(false);
+function TimePerTurn (props) {
     const [input, setInput] = useState(60);
-    console.log(enabled);
-    console.log(input);
+    window.TimePerTurn=input;
     return (
-        <div>
-            <label htmlFor="TurnTimeCB">Limit time for each turn</label>
-            <input value={enabled} onChange={e => setEnabled(e.target.checked)} id={"TurnTimeCB"} type = "checkbox" ></input>  
-            <label htmlFor="TurnTimeValue">Duration:</label> 
-            <input value={input} onChange={e => setInput(e.target.value)} id={"TurnTimeValue"} type="text" ></input>
+        <div className={"ThrowMalus"}>
+            <label htmlFor="TimePerTurn">Duration:</label> 
+            <input value={input} onChange={e => setInput(e.target.value)} id={"TimePerTurn"} type="text" ></input>
         </div>
     )
 }
 
-function TimeRound (props) {
-    const [enabled, setEnabled] = useState(false);
-    const [input, setInput] = useState(1200);
-    console.log(enabled);
-    console.log(input);
+function RoundsTimed (props) {
+    const [input, setInput] = useState(false);
+    window.RoundsTimed=input;
     return (
-        <div>
-            <label htmlFor="RoundTimeCB">Limit time for each round</label>
-            <input value={enabled} onChange={e => setEnabled(e.target.checked)} id={"RoundTimeCB"} type = "checkbox" ></input>  
-            <label htmlFor="RoundTimeValue">Duration:</label> 
-            <input value={input} onChange={e => setInput(e.target.value)}  id={"RoundTimeValue"} type="text" ></input>
+        <div className={"ThrowMalus"}>
+            <label htmlFor="RoundsTimed">Limit time for each round</label>
+            <input value={input} onChange={e => setInput(e.target.checked)} id={"RoundsTimed"} type = "checkbox" ></input>  
+        </div>
+    )
+}
+
+function TimePerRound (props) {
+    const [input, setInput] = useState(1200);
+    window.TimePerRound=input;
+    return (
+        <div className={"timeperround"}>
+            <label htmlFor="TimePerRound">Duration:</label> 
+            <input value={input} onChange={e => setInput(e.target.value)}  id={"TimePerRound"} type="text" ></input>
         </div>
     )
 }
 
 function Name (props) {
-    const[name, setName] = useState('Username');
-    console.log(name);
+    const[input, setInput] = useState('Username');
+    window.Name=input;
     return (
-        <div className={"Name"}>
-            <label htmlFor="Name">Display Name</label>
-            <input id = "Name" type="text" onChange={ event => setName(event.target.value)} value={name}></input>  
+        <div className={"name"}>
+            <label htmlFor="NameTF">Display Name</label>
+            <input id = "NameTF" type="text" onChange={ event => setInput(event.target.value)} value={input}></input>  
         </div>
     )
 }
 
 function AI (props) {
+    function getOptions() {
+        console.log(window.MalusSize); 
+        console.log(window.SecquenceSize);
+        console.log(window.ThrowOnStock);
+        console.log(window.ThrowOnMalus);
+        console.log(window.TurnsTimed);
+        console.log(window.TimePerTurn); 
+        console.log(window.RoundsTimed);
+        console.log(window.TimePerRound);
+        console.log(window.Name);
+        console.log(window.PrivateLobby);       
+    }
     return (
-        <div className={"AI"}>
-            <button type="submit" className={"AI-black"} >AI Black-Side</button>
-            <button type="submit" className={"AI-red"} >AI Red-Side</button>
+        <div className={"ai"}>
+            <button onClick={e=> {getOptions()}} type="submit" className={"black-ai-button"} >AI Black-Side</button>
+            <button onClick={e=> {getOptions()}} type="submit" className={"red-ai-button"} >AI Red-Side</button>
         </div>
     )
 }
 
 function Human (props) {
+    const [input, setInput] = useState(false);
+    window.PrivateLobby = input;
     return (
-        <div className={"Human"}>
-            <button className={"hotjoin"} onClick={ () => props.handleClick("hotjoin") }>Find</button>
-            <button className={"Human-join"} onClick={ () => props.handleClick("Human-join") }>Join</button>
-            <button className={"Human-new"} onClick={ () => props.handleClick("Human-new") }>Create</button>
-            <input type="checkbox" id ="privateGame"></input>
-            <label htmlFor="privateGame">private Lobby</label>
+        <div className={"human"}>
+            <button className={"hotjoin-button"} >Find</button>
+            <button className={"join-button"} >Join</button>
+            <button className={"new-button"}>Create</button>
+            <input value={input} onChange={e => setInput(e.target.checked)} type="checkbox" id ="PrivateGameCB"></input>
+            <label htmlFor="PrivateGameCB">private Lobby</label>
         </div>
     )
 }
+
+// =========================================================================================================================================================
 
 function Card (props) {
     return (
@@ -261,8 +272,6 @@ function Game (props) {
     )
 } 
 
-// =====================================================================================================================
-
 function shuffle(decks) {
     for(var i = 0; i< decks.length; i++) {
         var currentIndex = decks[i].length,  randomIndex;
@@ -275,8 +284,10 @@ function shuffle(decks) {
     }
     return decks;
   }
-
+ 
   function freshDeck(set) {
+    const Suits = ["♠", "♥", "♦", "♣"];
+    const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
     function handleDrag() {
 
     }
