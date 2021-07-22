@@ -1,1 +1,1 @@
-WIP 2 Player (PvP) Solitaire game called Gregaire which is the french antonym for Solitaire
+WIP 2 player (PvP) Solitaire-type game called Gregaire which is the antonym of the french word solitaire.
