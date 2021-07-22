@@ -18,6 +18,7 @@ function Index (props) {
             <RoundsTimed></RoundsTimed>
             <TimePerRound></TimePerRound>
             <Name></Name>
+            <PrivateLobby></PrivateLobby>
             <Human></Human>
             <AI></AI>
         </div>
@@ -147,6 +148,17 @@ function Name (props) {
     )
 }
 
+function PrivateLobby (props) {
+    const [input, setInput] = useState(false);
+    window.PrivateLobby = input;
+    return (
+        <div>
+            <input value={input} onChange={e => setInput(e.target.checked)} type="checkbox" id ="PrivateGameCB"></input>
+            <label htmlFor="PrivateGameCB">private Lobby</label>
+        </div>
+    )
+}
+
 function AI (props) {
     function getOptions() {
         console.log(window.MalusSize); 
@@ -169,15 +181,11 @@ function AI (props) {
 }
 
 function Human (props) {
-    const [input, setInput] = useState(false);
-    window.PrivateLobby = input;
     return (
         <div className={"human"}>
             <button className={"hotjoin-button"} >Find</button>
             <button className={"join-button"} >Join</button>
             <button className={"new-button"}>Create</button>
-            <input value={input} onChange={e => setInput(e.target.checked)} type="checkbox" id ="PrivateGameCB"></input>
-            <label htmlFor="PrivateGameCB">private Lobby</label>
         </div>
     )
 }
