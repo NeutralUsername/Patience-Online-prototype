@@ -13,6 +13,7 @@ function Index (props) {
             <SecquenceSize></SecquenceSize>
             <ThrowOnStock></ThrowOnStock>
             <ThrowOnMalus></ThrowOnMalus>
+            <Mode></Mode>
             <TurnsTimed></TurnsTimed>
             <TimePerTurn></TimePerTurn>
             <RoundsTimed></RoundsTimed>
@@ -89,6 +90,19 @@ function ThrowOnMalus (props) {
         <div className={"ThrowMalus"}>
             <label htmlFor="ThrowMalusCB" >Throw on Opponent Malus</label>
             <input  defaultChecked={true} value={input} onChange={e => setInput(e.target.checked)} id={"ThrowMalusCB"} type={"checkbox"}></input>
+        </div>
+    )
+}
+
+function Mode (props) {
+    const [input, setInput] = useState('Patience');
+    window.Mode = input;
+    return (
+        <div radioGroup={'radiogrp'} onChange={e => setInput(e.target.value)} >
+            <label>Patience Variant</label>
+            <input defaultChecked={true} name="radiogrp" value ='Patience' type ={"radio"} />
+            <label>Klondike Variant</label>
+            <input name="radiogrp" value ='Klondike' type ={"radio"} />
         </div>
     )
 }
@@ -170,7 +184,8 @@ function AI (props) {
         console.log(window.RoundsTimed);
         console.log(window.TimePerRound);
         console.log(window.Name);
-        console.log(window.PrivateLobby);       
+        console.log(window.PrivateLobby);      
+        console.log(window.Mode);    
     }
     return (
         <div className={"ai"}>
@@ -190,7 +205,8 @@ function Human (props) {
         console.log(window.RoundsTimed);
         console.log(window.TimePerRound);
         console.log(window.Name);
-        console.log(window.PrivateLobby);       
+        console.log(window.PrivateLobby);  
+        console.log(window.Mode);      
     }
     return (
         <div className={"human"}>
