@@ -152,9 +152,9 @@ function PrivateLobby (props) {
     const [input, setInput] = useState(false);
     window.PrivateLobby = input;
     return (
-        <div>
+        <div className={"privatelobby"}>
             <input value={input} onChange={e => setInput(e.target.checked)} type="checkbox" id ="PrivateGameCB"></input>
-            <label htmlFor="PrivateGameCB">private Lobby</label>
+            <label htmlFor="PrivateGameCB">create private game</label>
         </div>
     )
 }
@@ -183,9 +183,7 @@ function AI (props) {
 function Human (props) {
     return (
         <div className={"human"}>
-            <button className={"hotjoin-button"} >Find</button>
-            <button className={"join-button"} >Join</button>
-            <button className={"new-button"}>Create</button>
+            <button className={"hotjoin-button"} >Create Game</button>
         </div>
     )
 }
