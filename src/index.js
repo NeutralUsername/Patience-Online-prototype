@@ -4,7 +4,20 @@ import './index.css';
 import  { useState } from 'react';
 import { useCookies } from 'react-cookie';
 
+const express = require('express');
+const http = require('http');
+const socketio= require("socket.io");
+
+const app = express();
+const server = http.createServer(app).listen(4200, () => {console.log("listening on port 4200")});
+const io = new socketio.Server(server);
+
+
 ReactDOM.render(<Index />, document.getElementById('root'));
+
+
+
+
 
 
 function Index (props) {

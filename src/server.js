@@ -9,7 +9,7 @@ const io = new socketio.Server(server);
 
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.app(__dirname + '/index.js');
 });
 
 app.get('/script.js', (req, res) => {
