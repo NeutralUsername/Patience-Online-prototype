@@ -3,7 +3,7 @@ const http = require('http');
 const socketio= require("socket.io");
 
 const app = express();
-const server = http.createServer(app);
+const server = http.createServer(app).listen(4200, () => {console.log("listening on port 4200")});
 const io = new socketio.Server(server);
 
 
@@ -30,6 +30,3 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(4200, () => {
-    console.log("listening on port 4200");
-});

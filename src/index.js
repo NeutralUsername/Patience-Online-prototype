@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import  { useState } from 'react';
+import { useCookies } from 'react-cookie';
 
 ReactDOM.render(<Index />, document.getElementById('root'));
 
@@ -244,14 +245,15 @@ function Human (props) {
 function Game (props) {
     return (
         <div className="game">
-            <Player></Player>
-            <Opponent></Opponent>
-            <Field></Field>
-        </div>        
+            <Player MalusSize = {props.MalusSize} ></Player>
+            <Opponent MalusSize = {props.MalusSize} ></Opponent>
+            <Field SecquenceSize = {window.SecquenceSize} ></Field>
+        </div>
     )
 } 
 
 function Player (props) {
+    var deck = freshDeck();
     return (
         <div className="player">
             <Stack></Stack>
@@ -262,6 +264,7 @@ function Player (props) {
 }
 
 function Opponent (props) {
+    var deck = freshDeck();
     return (
         <div className="opponent">
             <Stack></Stack>
