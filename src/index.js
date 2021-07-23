@@ -8,7 +8,7 @@ ReactDOM.render(<Index />, document.getElementById('root'));
 
 function Index (props) {
     return (
-        <div className={"Index"}>
+        <div className={"index"}>
             <MalusSize ></MalusSize>
             <SecquenceSize></SecquenceSize>
             <ThrowOnStock></ThrowOnStock>
@@ -30,7 +30,7 @@ function MalusSize (props) {
     const [input, setInput] = useState(14);
     window.MalusSize = input;
     return (
-        <div className="MalusSize">
+        <div className="malussize">
             <label htmlFor={"MalusCountSelect"}> Malus Size</label>
             <select value={input} onInput={e => setInput(e.target.value)} id={"MalusCountSelect"}>
                 <option value = "5">5</option>
@@ -58,7 +58,7 @@ function SecquenceSize (props) {
     const [input, setInput] = useState(3);
     window.SecquenceSize = input;
     return (
-        <div className="SequenceSize">
+        <div className="sequencesize">
             <label htmlFor={"SequenceSizeSelect"}> Sequence Size</label>
             <select value={input} onInput={e => setInput(e.target.value)} id={"SequenceSizeSelect"} >
                 <option value = "1">1</option>
@@ -76,7 +76,7 @@ function ThrowOnStock (props) {
     const [input, setInput] = useState(true);
     window.ThrowOnStock = input;
     return (
-        <div className={"ThrowStock"}>
+        <div className={"throwonstock"}>
              <label htmlFor="ThrowStockCB" >Throw on Opponent Stock</label>
              <input  checked={input} onChange={e => setInput(e.target.checked)} id={"ThrowStockCB"} type={"checkbox"}></input>
         </div>
@@ -87,7 +87,7 @@ function ThrowOnMalus (props) {
     const [input, setInput] = useState(true);
     window.ThrowOnMalus = input;
     return (
-        <div className={"ThrowMalus"}>
+        <div className={"throwonmalus"}>
             <label htmlFor="ThrowMalusCB" >Throw on Opponent Malus</label>
             <input  defaultChecked={true} value={input} onChange={e => setInput(e.target.checked)} id={"ThrowMalusCB"} type={"checkbox"}></input>
         </div>
@@ -98,7 +98,7 @@ function Mode (props) {
     const [input, setInput] = useState('Patience');
     window.Mode = input;
     return (
-        <div radioGroup={'radiogrp'} onChange={e => setInput(e.target.value)} >
+        <div className={"mode"} radioGroup={'radiogrp'} onChange={e => setInput(e.target.value)} >
             <label>Patience Variant</label>
             <input defaultChecked={true} name="radiogrp" value ='Patience' type ={"radio"} />
             <label>Klondike Variant</label>
@@ -111,7 +111,7 @@ function TurnsTimed (props) {
     const [input, setInput] = useState(false);
     window.TurnsTimed=input;
     return (
-        <div className={"ThrowMalus"}>
+        <div className={"turnstimed"}>
             <label htmlFor="TurnsTimed">Limit time for each turn</label>
             <input value={input} onChange={e => setInput(e.target.checked)} id={"TurnsTimed"} type = "checkbox" ></input>  
         </div>
@@ -122,9 +122,18 @@ function TimePerTurn (props) {
     const [input, setInput] = useState(60);
     window.TimePerTurn=input;
     return (
-        <div className={"ThrowMalus"}>
+        <div className={"timeperturn"}>
             <label htmlFor="TimePerTurn">Duration:</label> 
-            <input value={input} onChange={e => setInput(e.target.value)} id={"TimePerTurn"} type="text" ></input>
+            <select value={input} onInput={e => setInput(e.target.value)} id={"TimePerTurn"} >
+                <option value = "15">15s</option>
+                <option value = "30">30s</option>
+                <option value = "45">45s</option>
+                <option value = "60">60s</option>
+                <option value = "90">90s</option>
+                <option value = "120">120s</option>
+                <option value = "180">180s</option>
+                <option value = "300">300s</option>
+            </select>
         </div>
     )
 }
@@ -133,7 +142,7 @@ function RoundsTimed (props) {
     const [input, setInput] = useState(false);
     window.RoundsTimed=input;
     return (
-        <div className={"ThrowMalus"}>
+        <div className={"roundstimed"}>
             <label htmlFor="RoundsTimed">Limit time for each round</label>
             <input value={input} onChange={e => setInput(e.target.checked)} id={"RoundsTimed"} type = "checkbox" ></input>  
         </div>
@@ -141,12 +150,20 @@ function RoundsTimed (props) {
 }
 
 function TimePerRound (props) {
-    const [input, setInput] = useState(1200);
+    const [input, setInput] = useState(1800);
     window.TimePerRound=input;
     return (
         <div className={"timeperround"}>
             <label htmlFor="TimePerRound">Duration:</label> 
-            <input value={input} onChange={e => setInput(e.target.value)}  id={"TimePerRound"} type="text" ></input>
+            <select value={input} onInput={e => setInput(e.target.value)} id={"TimePerRound"} >
+                <option value = "600">10min</option>
+                <option value = "900">15min</option>
+                <option value = "1200">20min</option>
+                <option value = "1500">25min</option>
+                <option value = "1800">30min</option>
+                <option value = "2700">45min</option>
+                <option value = "3600">60min</option>
+            </select>
         </div>
     )
 }
@@ -174,71 +191,69 @@ function PrivateLobby (props) {
 }
 
 function AI (props) {
-    function getOptions() {
-        console.log(window.MalusSize); 
-        console.log(window.SecquenceSize);
-        console.log(window.ThrowOnStock);
-        console.log(window.ThrowOnMalus);
-        console.log(window.TurnsTimed);
-        console.log(window.TimePerTurn); 
-        console.log(window.RoundsTimed);
-        console.log(window.TimePerRound);
-        console.log(window.Name);
-        console.log(window.PrivateLobby);      
-        console.log(window.Mode);    
+    function startGame() {
+        ReactDOM.render(
+            <Game 
+                MalusSize = {window.MalusSize} 
+                SecquenceSize={window.SecquenceSize} 
+                ThrowOnStock={window.ThrowOnStock} 
+                ThrowOnMalus={window.ThrowOnMalus} 
+                Mode={window.Mode} 
+                TurnsTimed={window.TurnsTimed} 
+                TimePerTurn={window.TimePerTurn} 
+                RoundsTimed={window.RoundsTimed} 
+                TimePerRound={window.TimePerRound} 
+                Name={window.Name} 
+            />, document.getElementById('root')
+        );
     }
     return (
         <div className={"ai"}>
-            <button onClick={e=> {getOptions()}} type="submit" className={"black-ai-button"} >AI</button>
+            <button onClick={e=> {startGame()}} className={"ai-button"} >AI</button>
         </div>
     )
 }
 
 function Human (props) {
-    function getOptions() {
-        console.log(window.MalusSize); 
-        console.log(window.SecquenceSize);
-        console.log(window.ThrowOnStock);
-        console.log(window.ThrowOnMalus);
-        console.log(window.TurnsTimed);
-        console.log(window.TimePerTurn); 
-        console.log(window.RoundsTimed);
-        console.log(window.TimePerRound);
-        console.log(window.Name);
-        console.log(window.PrivateLobby);  
-        console.log(window.Mode);      
+    function startGame() {
+        ReactDOM.render(
+            <Game 
+                MalusSize = {window.MalusSize} 
+                SecquenceSize={window.SecquenceSize} 
+                ThrowOnStock={window.ThrowOnStock} 
+                ThrowOnMalus={window.ThrowOnMalus} 
+                Mode={window.Mode} 
+                TurnsTimed={window.TurnsTimed} 
+                TimePerTurn={window.TimePerTurn} 
+                RoundsTimed={window.RoundsTimed} 
+                TimePerRound={window.TimePerRound} 
+                Name={window.Name} 
+                PrivateLobby={window.PrivateLobby} 
+            />, document.getElementById('root')
+        );
     }
     return (
-        <div className={"human"}>
-            <button onClick={e=> {getOptions()}} className={"hotjoin-button"} >Online</button>
+        <div className={"online"}>
+            <button onClick={e=> {startGame()}} className={"online-button"} >Online</button>
         </div>
     )
 }
 
 // =========================================================================================================================================================
 
-function Card (props) {
+function Game (props) {
     return (
-        <div 
-            className={props.suit+' '+props.value+' '+props.set+' '+(props.faceUp ? "faceUp" : "faceDown")} 
-            draggable ="true" 
-            onDragStart={props.onDragStart} 
-            onDrop={props.onDrop}
-        ></div>
+        <div className="game">
+            <Player></Player>
+            <Opponent></Opponent>
+            <Field></Field>
+        </div>        
     )
-}
-
-function Stack (props) {
-
-}
-
-function Sequence (props) {
-    return React.createElement("div", {id: 'someId', className: "someClass"}, "")
-}
+} 
 
 function Player (props) {
     return (
-        <div className="Player">
+        <div className="player">
             <Stack></Stack>
             <Stack></Stack>
             <Sequence></Sequence>
@@ -248,7 +263,7 @@ function Player (props) {
 
 function Opponent (props) {
     return (
-        <div className="Opponent">
+        <div className="opponent">
             <Stack></Stack>
             <Stack></Stack>
             <Sequence></Sequence>
@@ -258,7 +273,7 @@ function Opponent (props) {
 
 function Field (props) {
     return (
-        <div className="Field">
+        <div className="field">
             <Stacks></Stacks>
             <Sequences></Sequences>
         </div>
@@ -267,7 +282,7 @@ function Field (props) {
 
 function Stacks (props) {
     return (
-        <div className="Stacks">
+        <div className="stacks">
             <Stack></Stack>
             <Stack></Stack>
             <Stack></Stack>
@@ -282,7 +297,7 @@ function Stacks (props) {
 
 function Sequences (props) {
     return (
-        <div className="Stacks">
+        <div className="sequences">
             <Sequence></Sequence>
             <Sequence></Sequence>
             <Sequence></Sequence>
@@ -295,15 +310,33 @@ function Sequences (props) {
     )
 }
 
-function Game (props) {
+function Stack (props) {
     return (
-        <div className="Stacks">
-            <Player></Player>
-            <Opponent></Opponent>
-            <Field></Field>
-        </div>        
+        <div className="field">
+
+        </div>
     )
-} 
+}
+
+function Sequence (props) {
+    //return React.createElement("div", {id: 'someId', className: "someClass"}, "")
+    return (
+        <div className="field">
+
+        </div>
+    )
+}
+
+function Card (props) {
+    return (
+        <div 
+            className={props.suit+' '+props.value+' '+props.set+' '+(props.faceUp ? "faceUp" : "faceDown")} 
+            draggable ="true" 
+            onDragStart={props.onDragStart} 
+            onDrop={props.onDrop}
+        ></div>
+    )
+}
 
 function shuffle(decks) {
     for(var i = 0; i< decks.length; i++) {
