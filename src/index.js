@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import  { useState } from 'react';
-import { useCookies } from 'react-cookie';
 
 const express = require('express');
 const http = require('http');
