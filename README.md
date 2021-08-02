@@ -1,4 +1,12 @@
-npm start for both, frontend and backend
+new terminal:
+npm cd react-client
+npm install
+npm start
 
-frontend - 4k
-backend - 3k
+new terminal:
+npm cd nodejs-server
+npm install
+npm start
+
+frontend - :4000
+backend - :3000
