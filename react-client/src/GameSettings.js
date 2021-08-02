@@ -1,11 +1,15 @@
 import React from 'react';
+import socketIOClient from 'socket.io-client';
+import {useState} from 'react';
 import ReactDOM from 'react-dom';
-import  { useState } from 'react';
+import ServerTime from './ServerTime';
 
+export default class GameSettingsa extends React.Component {
 
-export default function Index (props) {
+    render(){
     return (
-        <div className={"index"}>
+        <div className={"GameSettings"}> 
+            <ServerTime></ServerTime>
             <MalusSize ></MalusSize>
             <SecquenceSize></SecquenceSize>
             <ThrowOnStock></ThrowOnStock>
@@ -20,12 +24,13 @@ export default function Index (props) {
             <Human></Human>
             <AI></AI>
         </div>
-    )          
+        );
+    }
 }
-
+ 
 function MalusSize (props) {
     const [input, setInput] = useState(14);
-   // window.MalusSize = input;
+    window.MalusSize = input;
     return (
         <div className="malussize">
             <label htmlFor={"MalusCountSelect"}> Malus Size</label>
@@ -53,7 +58,7 @@ function MalusSize (props) {
 
 function SecquenceSize (props) {
     const [input, setInput] = useState(3);
-   // window.SecquenceSize = input;
+    window.SecquenceSize = input;
     return (
         <div className="sequencesize">
             <label htmlFor={"SequenceSizeSelect"}> Sequence Size</label>
@@ -71,7 +76,7 @@ function SecquenceSize (props) {
 
 function ThrowOnStock (props) {
     const [input, setInput] = useState(true);
-   // window.ThrowOnStock = input;
+    window.ThrowOnStock = input;
     return (
         <div className={"throwonstock"}>
              <label htmlFor="ThrowStockCB" >Throw on Opponent Stock</label>
@@ -82,7 +87,7 @@ function ThrowOnStock (props) {
 
 function ThrowOnMalus (props) {
     const [input, setInput] = useState(true);
-  //  window.ThrowOnMalus = input;
+    window.ThrowOnMalus = input;
     return (
         <div className={"throwonmalus"}>
             <label htmlFor="ThrowMalusCB" >Throw on Opponent Malus</label>
@@ -93,7 +98,7 @@ function ThrowOnMalus (props) {
 
 function Mode (props) {
     const [input, setInput] = useState('Patience');
-  //  window.Mode = input;
+    window.Mode = input;
     return (
         <div className={"mode"} radioGroup={'radiogrp'} onChange={e => setInput(e.target.value)} >
             <label>Patience Variant</label>
@@ -106,7 +111,7 @@ function Mode (props) {
 
 function TurnsTimed (props) {
     const [input, setInput] = useState(false);
-  //  window.TurnsTimed=input;
+    window.TurnsTimed=input;
     return (
         <div className={"turnstimed"}>
             <label htmlFor="TurnsTimed">Limit time for each turn</label>
@@ -117,7 +122,7 @@ function TurnsTimed (props) {
 
 function TimePerTurn (props) {
     const [input, setInput] = useState(60);
-   //window.TimePerTurn=input;
+    window.TimePerTurn=input;
     return (
         <div className={"timeperturn"}>
             <label htmlFor="TimePerTurn">Duration:</label> 
@@ -137,7 +142,7 @@ function TimePerTurn (props) {
 
 function RoundsTimed (props) {
     const [input, setInput] = useState(false);
-  //  window.RoundsTimed=input;
+    window.RoundsTimed=input;
     return (
         <div className={"roundstimed"}>
             <label htmlFor="RoundsTimed">Limit time for each round</label>
@@ -148,7 +153,7 @@ function RoundsTimed (props) {
 
 function TimePerRound (props) {
     const [input, setInput] = useState(1800);
-  //  window.TimePerRound=input;
+    window.TimePerRound=input;
     return (
         <div className={"timeperround"}>
             <label htmlFor="TimePerRound">Duration:</label> 
@@ -167,7 +172,7 @@ function TimePerRound (props) {
 
 function Name (props) {
     const[input, setInput] = useState('Username');
-    //window.Name=input;
+    window.Name=input;
     return (
         <div className={"name"}>
             <label htmlFor="NameTF">Display Name</label>
@@ -178,7 +183,7 @@ function Name (props) {
 
 function PrivateLobby (props) {
     const [input, setInput] = useState(false);
-   // window.PrivateLobby = input;
+    window.PrivateLobby = input;
     return (
         <div className={"privatelobby"}>
             <input value={input} onChange={e => setInput(e.target.checked)} type="checkbox" id ="PrivateGameCB"></input>
@@ -189,7 +194,7 @@ function PrivateLobby (props) {
 
 function AI (props) {
     function startGame() {
-        ReactDOM.render(
+      /*  ReactDOM.render(
             <Game 
                 MalusSize = {window.MalusSize} 
                 SecquenceSize={window.SecquenceSize} 
@@ -203,6 +208,7 @@ function AI (props) {
                 Name={window.Name} 
             />, document.getElementById('root')
         );
+        */
     }
     return (
         <div className={"ai"}>
@@ -213,19 +219,23 @@ function AI (props) {
 
 function Human (props) {
     function startGame() {
-      return (
-        console.log(
-          props.MalusSize, 
-          props.SequenceSize, 
-          props.ThrowOnStock, 
-          props.ThrowOnMalus,
-          props.Mode, 
-          props.TurnsTimed, 
-          props.TimePerTurn, 
-          props.RoundsTimed, 
-          props.TimePerRound, 
-          props.Name
-          ))
+        /*
+        ReactDOM.render(
+            <Game 
+                MalusSize = {window.MalusSize} 
+                SecquenceSize={window.SecquenceSize} 
+                ThrowOnStock={window.ThrowOnStock} 
+                ThrowOnMalus={window.ThrowOnMalus} 
+                Mode={window.Mode} 
+                TurnsTimed={window.TurnsTimed} 
+                TimePerTurn={window.TimePerTurn} 
+                RoundsTimed={window.RoundsTimed} 
+                TimePerRound={window.TimePerRound} 
+                Name={window.Name} 
+                PrivateLobby={window.PrivateLobby} 
+            />, document.getElementById('root')
+        );
+        */
     }
     return (
         <div className={"online"}>
@@ -233,3 +243,141 @@ function Human (props) {
         </div>
     )
 }
+
+
+function Game (props) {
+    return (
+        <div className="game">
+            <Player MalusSize = {props.MalusSize} ></Player>
+            <Opponent MalusSize = {props.MalusSize} ></Opponent>
+            <Field SecquenceSize = {window.SecquenceSize} ></Field>
+        </div>
+    )
+} 
+
+function Player (props) {
+    var deck = freshDeck();
+    return (
+        <div className="player">
+            <Stack></Stack>
+            <Stack></Stack>
+            <Sequence></Sequence>
+        </div>
+    )
+}
+
+function Opponent (props) {
+    var deck = freshDeck();
+    return (
+        <div className="opponent">
+            <Stack></Stack>
+            <Stack></Stack>
+            <Sequence></Sequence>
+        </div>
+    )
+}
+
+function Field (props) {
+    return (
+        <div className="field">
+            <Stacks></Stacks>
+            <Sequences></Sequences>
+        </div>
+    )
+}
+
+function Stacks (props) {
+    return (
+        <div className="stacks">
+            <Stack></Stack>
+            <Stack></Stack>
+            <Stack></Stack>
+            <Stack></Stack>
+            <Stack></Stack>
+            <Stack></Stack>
+            <Stack></Stack>
+            <Stack></Stack>
+        </div>
+    )
+}
+
+function Sequences (props) {
+    return (
+        <div className="sequences">
+            <Sequence></Sequence>
+            <Sequence></Sequence>
+            <Sequence></Sequence>
+            <Sequence></Sequence>
+            <Sequence></Sequence>
+            <Sequence></Sequence>
+            <Sequence></Sequence>
+            <Sequence></Sequence>
+        </div>
+    )
+}
+
+function Stack (props) {
+    return (
+        <div className="field">
+
+        </div>
+    )
+}
+
+function Sequence (props) {
+    //return React.createElement("div", {id: 'someId', className: "someClass"}, "")
+    return (
+        <div className="field">
+
+        </div>
+    )
+}
+
+function Card (props) {
+    return (
+        <div 
+            className={props.suit+' '+props.value+' '+props.set+' '+(props.faceUp ? "faceUp" : "faceDown")} 
+            draggable ="true" 
+            onDragStart={props.onDragStart} 
+            onDrop={props.onDrop}
+        ></div>
+    )
+}
+
+function shuffle(decks) {
+    for(var i = 0; i< decks.length; i++) {
+        var currentIndex = decks[i].length,  randomIndex;
+        while (0 !== currentIndex) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [decks[i][currentIndex], decks[i][randomIndex]] = [
+            decks[i][randomIndex], decks[i][currentIndex]];
+        }
+    }
+    return decks;
+  }
+ 
+  function freshDeck(set) {
+    const Suits = ["♠", "♥", "♦", "♣"];
+    const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+    function handleDrag() {
+
+    }
+    function handleDrop() {
+
+    }
+    return Suits.flatMap(suit => {
+        return Values.map(value => {
+            return (
+                <Card 
+                    suit={suit} 
+                    value={value} 
+                    set={set} 
+                    faceUp={false} 
+                    onDragStart={() => handleDrag()} 
+                    onDrop={() => handleDrop()} 
+                ></Card>
+            )
+        });
+    });
+}  
