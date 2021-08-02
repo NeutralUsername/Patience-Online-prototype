@@ -1,16 +1,16 @@
 'use strict';
 require('dotenv').config({ path: '.env' });
 
-var controller = require('./controller');
-var express = require('express');
+
+var express = require('express'),
+  app = express(),
+  port = process.env.NS_PORT || 3000,
+  controller = require('./controller');
+
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
-var app = express();
-var port = process.env.NS_PORT;
-
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
-
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/testSocketConnection.html');
 });
