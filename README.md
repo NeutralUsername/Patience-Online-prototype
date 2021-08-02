@@ -1,4 +1,4 @@
-<b>start frontend</b>
+<b>start frontend</b> :4000
 
 
 new terminal:
@@ -9,7 +9,7 @@ npm install
 
 npm start
 _________
-<b>start backend</b>
+<b>start backend</b> :3000
 
 new terminal:
 
@@ -18,10 +18,3 @@ npm cd nodejs-server
 npm install
 
 npm start
-_________
-
-
-frontend - :4000
-
-backend - :3000
-_________
