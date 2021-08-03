@@ -13,13 +13,14 @@ class ServerTime extends React.Component {
   }
 
   componentDidMount() {
-    const { endpoint } = this.state;
-    const socket = socketIOClient(endpoint);
-    socket.emit('customevent', { data: 'some sample data' });
-    socket.on("FromAPI", data => {
-      this.setState({ response: data.data })
-    });
-  }
+    //const  endpoint  = this.state.endpoint; ==
+   const { endpoint } = this.state;
+   const socket = socketIOClient(endpoint);
+   socket.emit('customevent', { data: 'some sample data' });
+   socket.on("FromAPI", data => {
+     this.setState({ response: data.data })
+   });
+ }
 
   render() {
     return (

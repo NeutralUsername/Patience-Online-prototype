@@ -4,29 +4,144 @@ import {useState} from 'react';
 import ReactDOM from 'react-dom';
 import ServerTime from './ServerTime';
 
-export default class GameSettingsa extends React.Component {
+ /*
+        ReactDOM.render(
+            <Game 
+                MalusSize = {window.MalusSize} 
+                SecquenceSize={window.SecquenceSize} 
+                ThrowOnStock={window.ThrowOnStock} 
+                ThrowOnMalus={window.ThrowOnMalus} 
+                Variant={window.Variant} 
+                TurnsTimed={window.TurnsTimed} 
+                TimePerTurn={window.TimePerTurn} 
+                RoundsTimed={window.RoundsTimed} 
+                TimePerRound={window.TimePerRound} 
+                Name={window.Name} 
+                PrivateLobby={window.PrivateLobby} 
+            />, document.getElementById('root')
+        );
+        */
+
+export default class GameSettings extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.handleAIClick = this.handleAIClick.bind(this);
+        this.handleCreateClick = this.handleCreateClick.bind(this)
+        this.handleJoinClick = this.handleJoinClick.bind(this)
+        this.state = {
+            malusSize: 14, 
+            secquenceSize: 3,
+            throwOnStock:true, 
+            throwOnMalus: true, 
+            variant:"Patience",
+            turnsTimed:false,
+            timePerTurn:60, 
+            roundsTimed:false, 
+            timePerRound:1800, 
+            name:'',    
+        };
+    }
+
+    handleCreateClick(){
+
+    }
+
+    handleJoinClick() {
+
+    }
+
+    handleAIClick() {
+
+    }
 
     render(){
-    return (
-        <div className={"GameSettings"}> 
-            <ServerTime></ServerTime>
-            <MalusSize ></MalusSize>
-            <SecquenceSize></SecquenceSize>
-            <ThrowOnStock></ThrowOnStock>
-            <ThrowOnMalus></ThrowOnMalus>
-            <Mode></Mode>
-            <TurnsTimed></TurnsTimed>
-            <TimePerTurn></TimePerTurn>
-            <RoundsTimed></RoundsTimed>
-            <TimePerRound></TimePerRound>
-            <Name></Name>
-            <PrivateLobby></PrivateLobby>
-            <Human></Human>
-            <AI></AI>
-        </div>
+        return (
+            <div className={"GameSettings"}> 
+                <ServerTime></ServerTime>
+                <MalusSize malusSize={this.state.malusSize} ></MalusSize>
+                <SecquenceSize secquenceSize={this.state.secquenceSize}></SecquenceSize>
+                <ThrowOnStock throwOnStock={this.state.throwOnStock}></ThrowOnStock>
+                <ThrowOnMalus throwOnMalus={this.state.throwOnMalus}></ThrowOnMalus>
+                <Variant variant={this.state.variant}></Variant>
+                <TurnsTimed turnsTimed={this.state.turnsTimed}></TurnsTimed>
+                <TimePerTurn timePerTurn={this.state.timePerTurn}></TimePerTurn>
+                <RoundsTimed roundsTimed={this.state.roundsTimed}></RoundsTimed>
+                <TimePerRound timePerRound={this.state.timePerRound}></TimePerRound>
+                <Name name={this.state.name}></Name>
+                <Online handleCreateClick = {this.handleCreateClick} handleJoinClick = {this.handleJoinClick}></Online>
+                <AI handeClick={this.handleAIClick}> </AI>
+            </div>
         );
     }
 }
+//=========================================================================================
+
+class Calculator extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.handleCelsiusChange = this.handleCelsiusChange.bind(this);
+        this.handleFahrenheitChange = this.handleFahrenheitChange.bind(this);
+        this.state = {temperature: '', scale: 'c'};
+    }
+  
+    handleCelsiusChange(temperature) {
+        this.setState({scale: 'c', temperature});
+    }
+  
+    handleFahrenheitChange(temperature) {
+        this.setState({scale: 'f', temperature});
+    }
+  
+    render() {
+        const scale = this.state.scale;
+        const temperature = this.state.temperature;
+        const celsius = scale === 'f' ? tryConvert(temperature, toCelsius) : temperature;
+        const fahrenheit = scale === 'c' ? tryConvert(temperature, toFahrenheit) : temperature;
+        return (
+            <div>
+                <TemperatureInput
+                    scale="c"
+                    temperature={celsius}
+                    onTemperatureChange={this.handleCelsiusChange} />
+                <TemperatureInput
+                    scale="f"
+                    temperature={fahrenheit}
+                    onTemperatureChange={this.handleFahrenheitChange} />
+                <BoilingVerdict
+                    celsius={parseFloat(celsius)} />
+            </div>
+        );
+    }
+}
+
+class TemperatureInput extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        this.props.onTemperatureChange(e.target.value);
+    }
+  
+    render() {
+        const temperature = this.props.temperature;
+        const scale = this.props.scale;
+        return (
+            <fieldset>
+                <legend>Enter temperature in {scaleNames[scale]}:</legend>
+                <input 
+                    value={temperature} 
+                    onChange={this.handleChange} />
+            </fieldset>
+        );
+    }
+}
+  
+//=========================================================================================
  
 function MalusSize (props) {
     const [input, setInput] = useState(14);
@@ -34,7 +149,7 @@ function MalusSize (props) {
     return (
         <div className="malussize">
             <label htmlFor={"MalusCountSelect"}> Malus Size</label>
-            <select value={input} onInput={e => setInput(e.target.value)} id={"MalusCountSelect"}>
+            <select value={input} onChange={e => setInput(e.target.value)} id={"MalusCountSelect"}>
                 <option value = "5">5</option>
                 <option value = "6">6</option>
                 <option value = "7">7</option>
@@ -62,7 +177,7 @@ function SecquenceSize (props) {
     return (
         <div className="sequencesize">
             <label htmlFor={"SequenceSizeSelect"}> Sequence Size</label>
-            <select value={input} onInput={e => setInput(e.target.value)} id={"SequenceSizeSelect"} >
+            <select value={input} onChange={e => setInput(e.target.value)} id={"SequenceSizeSelect"} >
                 <option value = "1">1</option>
                 <option value = "2">2</option>
                 <option value = "3">3</option>
@@ -96,11 +211,11 @@ function ThrowOnMalus (props) {
     )
 }
 
-function Mode (props) {
+function Variant (props) {
     const [input, setInput] = useState('Patience');
     window.Mode = input;
     return (
-        <div className={"mode"} radioGroup={'radiogrp'} onChange={e => setInput(e.target.value)} >
+        <div className={"variant"} radioGroup={'radiogrp'} onChange={e => setInput(e.target.value)} >
             <label>Patience Variant</label>
             <input defaultChecked={true} name="radiogrp" value ='Patience' type ={"radio"} />
             <label>Klondike Variant</label>
@@ -126,7 +241,7 @@ function TimePerTurn (props) {
     return (
         <div className={"timeperturn"}>
             <label htmlFor="TimePerTurn">Duration:</label> 
-            <select value={input} onInput={e => setInput(e.target.value)} id={"TimePerTurn"} >
+            <select value={input} onChange={e => setInput(e.target.value)} id={"TimePerTurn"} >
                 <option value = "15">15s</option>
                 <option value = "30">30s</option>
                 <option value = "45">45s</option>
@@ -157,7 +272,7 @@ function TimePerRound (props) {
     return (
         <div className={"timeperround"}>
             <label htmlFor="TimePerRound">Duration:</label> 
-            <select value={input} onInput={e => setInput(e.target.value)} id={"TimePerRound"} >
+            <select value={input} onChange={e => setInput(e.target.value)} id={"TimePerRound"} >
                 <option value = "600">10min</option>
                 <option value = "900">15min</option>
                 <option value = "1200">20min</option>
@@ -181,65 +296,34 @@ function Name (props) {
     )
 }
 
-function PrivateLobby (props) {
-    const [input, setInput] = useState(false);
-    window.PrivateLobby = input;
-    return (
-        <div className={"privatelobby"}>
-            <input value={input} onChange={e => setInput(e.target.checked)} type="checkbox" id ="PrivateGameCB"></input>
-            <label htmlFor="PrivateGameCB">create private game</label>
-        </div>
-    )
-}
 
 function AI (props) {
     function startGame() {
-      /*  ReactDOM.render(
-            <Game 
-                MalusSize = {window.MalusSize} 
-                SecquenceSize={window.SecquenceSize} 
-                ThrowOnStock={window.ThrowOnStock} 
-                ThrowOnMalus={window.ThrowOnMalus} 
-                Mode={window.Mode} 
-                TurnsTimed={window.TurnsTimed} 
-                TimePerTurn={window.TimePerTurn} 
-                RoundsTimed={window.RoundsTimed} 
-                TimePerRound={window.TimePerRound} 
-                Name={window.Name} 
-            />, document.getElementById('root')
-        );
-        */
+
     }
+
     return (
         <div className={"ai"}>
-            <button onClick={e=> {startGame()}} className={"ai-button"} >AI</button>
+            <label> vs. AI:</label>
+            <button onClick={e=> {startGame()}} className={"ai-button"} >Start</button>
         </div>
     )
 }
 
-function Human (props) {
+function Online (props) {
     function startGame() {
-        /*
-        ReactDOM.render(
-            <Game 
-                MalusSize = {window.MalusSize} 
-                SecquenceSize={window.SecquenceSize} 
-                ThrowOnStock={window.ThrowOnStock} 
-                ThrowOnMalus={window.ThrowOnMalus} 
-                Mode={window.Mode} 
-                TurnsTimed={window.TurnsTimed} 
-                TimePerTurn={window.TimePerTurn} 
-                RoundsTimed={window.RoundsTimed} 
-                TimePerRound={window.TimePerRound} 
-                Name={window.Name} 
-                PrivateLobby={window.PrivateLobby} 
-            />, document.getElementById('root')
-        );
-        */
+        
     }
+
+    function joinGame() {
+
+    }
+
     return (
         <div className={"online"}>
-            <button onClick={e=> {startGame()}} className={"online-button"} >Online</button>
+            <label> vs. Player:</label>
+            <button onClick={e=> {startGame()}} className={"create-button"} >Create</button>
+            <button onClick={e=> {joinGame()}} className={"join-button"} >Join</button>
         </div>
     )
 }
@@ -248,6 +332,7 @@ function Human (props) {
 function Game (props) {
     return (
         <div className="game">
+             
             <Player MalusSize = {props.MalusSize} ></Player>
             <Opponent MalusSize = {props.MalusSize} ></Opponent>
             <Field SecquenceSize = {window.SecquenceSize} ></Field>
@@ -381,3 +466,49 @@ function shuffle(decks) {
         });
     });
 }  
+
+//__________________________________________________________________________________________________
+
+
+
+
+
+const scaleNames = {
+    c: 'Celsius',
+    f: 'Fahrenheit'
+  };
+  
+  function toCelsius(fahrenheit) {
+    return (fahrenheit - 32) * 5 / 9;
+  }
+  
+  function toFahrenheit(celsius) {
+    return (celsius * 9 / 5) + 32;
+  }
+  
+  function tryConvert(temperature, convert) {
+    const input = parseFloat(temperature);
+    if (Number.isNaN(input)) {
+      return '';
+    }
+    const output = convert(input);
+    const rounded = Math.round(output * 1000) / 1000;
+    return rounded.toString();
+  }
+  
+  function BoilingVerdict(props) {
+    if (props.celsius >= 100) {
+      return <p>The water would boil.</p>;
+    }
+    return <p>The water would not boil.</p>;
+  }
+  
+
+
+
+  
+ReactDOM.render(
+    <Calculator />,
+    document.getElementById('root')
+);
+  
