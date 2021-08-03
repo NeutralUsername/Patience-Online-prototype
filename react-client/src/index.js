@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import GameSettings from './GameSettings';
+import Options from './Options';
 import './index.css';
 
 ReactDOM.render(
-  <GameSettings />,
+  <Options />,
   document.getElementById('root')
 );
