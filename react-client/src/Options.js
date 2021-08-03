@@ -1,28 +1,10 @@
 import React from 'react';
 import socketIOClient from 'socket.io-client';
-import {useState} from 'react';
 import ReactDOM from 'react-dom';
 import ServerTime from './ServerTime';
 import Game from './Game';
- /*
-        ReactDOM.render(
-            <Game 
-                MalusSize = {window.MalusSize} 
-                SecquenceSize={window.SecquenceSize} 
-                ThrowOnStock={window.ThrowOnStock} 
-                ThrowOnMalus={window.ThrowOnMalus} 
-                Variant={window.Variant} 
-                TurnsTimed={window.TurnsTimed} 
-                TimePerTurn={window.TimePerTurn} 
-                RoundsTimed={window.RoundsTimed} 
-                TimePerRound={window.TimePerRound} 
-                Name={window.Name} 
-                PrivateLobby={window.PrivateLobby} 
-            />, document.getElementById('root')
-        );
-        */
 
-export default class GameSettings extends React.Component {
+export default class Options extends React.Component {
 
     constructor(props) {
         super(props);
@@ -43,21 +25,21 @@ export default class GameSettings extends React.Component {
         };
     }
 
-    handleCreateClick(){
+    handleCreateClick(state){
 
     }
 
-    handleJoinClick() {
+    handleJoinClick(state) {
 
     }
 
-    handleAIClick() {
+    handleAIClick(state) {
 
     }
 
     render(){
         return (
-            <div className={"GameSettings"}> 
+            <div className={"options"}> 
                 <ServerTime></ServerTime>
                 <MalusSize malusSize={this.state.malusSize} ></MalusSize>
                 <SecquenceSize secquenceSize={this.state.secquenceSize}></SecquenceSize>
@@ -75,9 +57,11 @@ export default class GameSettings extends React.Component {
         );
     }
 }
-//=========================================================================================
 
-class Calculator extends React.Component {
+
+ //=========================================================================================
+
+ class Calculator extends React.Component {
 
     constructor(props) {
         super(props);
@@ -143,41 +127,60 @@ class TemperatureInput extends React.Component {
   
 //=========================================================================================
  
-function MalusSize (props) {
-    const [input, setInput] = useState(14);
-    window.MalusSize = input;
-    return (
-        <div className="malussize">
-            <label htmlFor={"MalusCountSelect"}> Malus Size</label>
-            <select value={input} onChange={e => setInput(e.target.value)} id={"MalusCountSelect"}>
-                <option value = "5">5</option>
-                <option value = "6">6</option>
-                <option value = "7">7</option>
-                <option value = "8">8</option>
-                <option value = "9">9</option>
-                <option value = "10">10</option>
-                <option value = "11">11</option>
-                <option value = "12">12</option>
-                <option value = "13">13</option>
-                <option value = "14">14</option>
-                <option value = "15">15</option>
-                <option value = "16">16</option>
-                <option value = "17">17</option>
-                <option value = "18">18</option>
-                <option value = "19">19</option>
-                <option value = "20">20</option>
-            </select>
-        </div>
-    )
+class MalusSize extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        this.props.malusSize(e.target.value);
+    }
+
+    render(){
+        return (
+            <div className="malussize">
+                <label htmlFor={"MalusCountSelect"}> Malus Size</label>
+                <select  value={ this.props.malusSize} onChange={this.handleChange} id={"MalusCountSelect"}>
+                    <option value = "5">5</option>
+                    <option value = "6">6</option>
+                    <option value = "7">7</option>
+                    <option value = "8">8</option>
+                    <option value = "9">9</option>
+                    <option value = "10">10</option>
+                    <option value = "11">11</option>
+                    <option value = "12">12</option>
+                    <option value = "13">13</option>
+                    <option value = "14">14</option>
+                    <option value = "15">15</option>
+                    <option value = "16">16</option>
+                    <option value = "17">17</option>
+                    <option value = "18">18</option>
+                    <option value = "19">19</option>
+                    <option value = "20">20</option>
+                </select>
+            </div>
+        )
+    }
 }
 
-function SecquenceSize (props) {
-    const [input, setInput] = useState(3);
-    window.SecquenceSize = input;
-    return (
-        <div className="sequencesize">
+class SecquenceSize extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        this.props.secquenceSize(e.target.value);
+    }
+
+    render(){
+        return (
+            <div className="sequencesize">
             <label htmlFor={"SequenceSizeSelect"}> Sequence Size</label>
-            <select value={input} onChange={e => setInput(e.target.value)} id={"SequenceSizeSelect"} >
+            <select value={ this.props.secquenceSize}  onChange={this.handleChange} id={"SequenceSizeSelect"} >
                 <option value = "1">1</option>
                 <option value = "2">2</option>
                 <option value = "3">3</option>
@@ -185,63 +188,113 @@ function SecquenceSize (props) {
                 <option value = "5">5</option>
                 <option value = "6">6</option>
             </select>
-        </div>
-    )
+            </div>
+        )
+    }
 }
 
-function ThrowOnStock (props) {
-    const [input, setInput] = useState(true);
-    window.ThrowOnStock = input;
-    return (
-        <div className={"throwonstock"}>
-             <label htmlFor="ThrowStockCB" >Throw on Opponent Stock</label>
-             <input  checked={input} onChange={e => setInput(e.target.checked)} id={"ThrowStockCB"} type={"checkbox"}></input>
-        </div>
-    )
+class ThrowOnStock extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        this.props.secquenceSize(e.target.value);
+    }
+
+    render(){
+        return (
+            <div className={"throwonstock"}>
+            <label htmlFor="ThrowStockCB" >Throw on Opponent Stock</label>
+            <input  value={ this.props.throwOnStock}  onChange={this.handleChange} id={"ThrowStockCB"} type={"checkbox"}></input>
+            </div>
+        )
+    }
 }
 
-function ThrowOnMalus (props) {
-    const [input, setInput] = useState(true);
-    window.ThrowOnMalus = input;
-    return (
-        <div className={"throwonmalus"}>
+class ThrowOnMalus extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        this.props.secquenceSize(e.target.value);
+    }
+
+    render(){
+        return (
+            <div className={"throwonmalus"}>
             <label htmlFor="ThrowMalusCB" >Throw on Opponent Malus</label>
-            <input  defaultChecked={true} value={input} onChange={e => setInput(e.target.checked)} id={"ThrowMalusCB"} type={"checkbox"}></input>
-        </div>
-    )
+            <input  value={ this.props.throwOnMalus}  onChange={this.handleChange} id={"ThrowMalusCB"} type={"checkbox"}></input>
+            </div>
+        )
+    }
 }
 
-function Variant (props) {
-    const [input, setInput] = useState('Patience');
-    window.Mode = input;
-    return (
-        <div className={"variant"} radioGroup={'radiogrp'} onChange={e => setInput(e.target.value)} >
+class Variant extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        this.props.secquenceSize(e.target.value);
+    }
+
+    render(){
+        return (
+            <div className={"variant"} radioGroup={'radiogrp'}  >
             <label>Patience Variant</label>
-            <input defaultChecked={true} name="radiogrp" value ='Patience' type ={"radio"} />
+            <input  name="radiogrp" value = 'Patience' type ={"radio"} />
             <label>Klondike Variant</label>
             <input name="radiogrp" value ='Klondike' type ={"radio"} />
-        </div>
-    )
+            </div>
+        )
+    }
 }
 
-function TurnsTimed (props) {
-    const [input, setInput] = useState(false);
-    window.TurnsTimed=input;
-    return (
-        <div className={"turnstimed"}>
+class TurnsTimed extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        this.props.secquenceSize(e.target.value);
+    }
+
+    render(){
+        return (
+            <div className={"turnstimed"}>
             <label htmlFor="TurnsTimed">Limit time for each turn</label>
-            <input value={input} onChange={e => setInput(e.target.checked)} id={"TurnsTimed"} type = "checkbox" ></input>  
-        </div>
-    )
+            <input value={ this.props.turnsTimed}  onChange={this.handleChange} id={"TurnsTimed"} type = "checkbox" ></input>  
+            </div>
+        )
+    }
 }
 
-function TimePerTurn (props) {
-    const [input, setInput] = useState(60);
-    window.TimePerTurn=input;
-    return (
-        <div className={"timeperturn"}>
+class TimePerTurn extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        this.props.secquenceSize(e.target.value);
+    }
+
+    render(){
+        return (
+            <div className={"timeperturn"}>
             <label htmlFor="TimePerTurn">Duration:</label> 
-            <select value={input} onChange={e => setInput(e.target.value)} id={"TimePerTurn"} >
+            <select value={ this.props.timePerTurn}  onChange={this.handleChange} id={"TimePerTurn"} >
                 <option value = "15">15s</option>
                 <option value = "30">30s</option>
                 <option value = "45">45s</option>
@@ -251,28 +304,48 @@ function TimePerTurn (props) {
                 <option value = "180">180s</option>
                 <option value = "300">300s</option>
             </select>
-        </div>
-    )
+            </div>
+        )
+    }
 }
 
-function RoundsTimed (props) {
-    const [input, setInput] = useState(false);
-    window.RoundsTimed=input;
-    return (
-        <div className={"roundstimed"}>
+class RoundsTimed extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        this.props.secquenceSize(e.target.value);
+    }
+
+    render(){
+        return (
+            <div className={"roundstimed"}>
             <label htmlFor="RoundsTimed">Limit time for each round</label>
-            <input value={input} onChange={e => setInput(e.target.checked)} id={"RoundsTimed"} type = "checkbox" ></input>  
-        </div>
-    )
+            <input value={ this.props.roundsTimed}  onChange={this.handleChange} id={"RoundsTimed"} type = "checkbox" ></input>  
+            </div>
+        )
+    }
 }
 
-function TimePerRound (props) {
-    const [input, setInput] = useState(1800);
-    window.TimePerRound=input;
-    return (
-        <div className={"timeperround"}>
+class TimePerRound extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        this.props.secquenceSize(e.target.value);
+    }
+
+    render(){
+        return (
+            <div className={"timeperround"}>
             <label htmlFor="TimePerRound">Duration:</label> 
-            <select value={input} onChange={e => setInput(e.target.value)} id={"TimePerRound"} >
+            <select value={ this.props.timePerRound}  onChange={this.handleChange} id={"TimePerRound"} >
                 <option value = "600">10min</option>
                 <option value = "900">15min</option>
                 <option value = "1200">20min</option>
@@ -281,21 +354,31 @@ function TimePerRound (props) {
                 <option value = "2700">45min</option>
                 <option value = "3600">60min</option>
             </select>
-        </div>
-    )
+            </div>
+        )
+    }
 }
 
-function Name (props) {
-    const[input, setInput] = useState('Username');
-    window.Name=input;
-    return (
-        <div className={"name"}>
+class Name extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(e) {
+        this.props.secquenceSize(e.target.value);
+    }
+
+    render(){
+        return (
+            <div className={"name"}>
             <label htmlFor="NameTF">Display Name</label>
-            <input id = "NameTF" type="text" onChange={ event => setInput(event.target.value)} value={input}></input>  
-        </div>
-    )
+            <input id = "NameTF" type="text"  onChange={this.handleChange} value={ this.props.name}></input>  
+            </div>
+        )
+    }
 }
-
 
 function AI (props) {
     function startGame() {
@@ -305,7 +388,7 @@ function AI (props) {
     return (
         <div className={"ai"}>
             <label> vs. AI:</label>
-            <button onClick={e=> {startGame()}} className={"ai-button"} >Start</button>
+            <button  >Start</button>
         </div>
     )
 }
@@ -322,14 +405,17 @@ function Online (props) {
     return (
         <div className={"online"}>
             <label> vs. Player:</label>
-            <button onClick={e=> {startGame()}} className={"create-button"} >Create</button>
-            <button onClick={e=> {joinGame()}} className={"join-button"} >Join</button>
+            <button  >Create</button>
+            <button  >Join</button>
         </div>
     )
 }
 
-
 //__________________________________________________________________________________________________
+//__________________________________________________________________________________________________
+//__________________________________________________________________________________________________
+//__________________________________________________________________________________________________
+
 
 
 
@@ -373,4 +459,4 @@ ReactDOM.render(
     <Calculator />,
     document.getElementById('root')
 );
-  
+ 
