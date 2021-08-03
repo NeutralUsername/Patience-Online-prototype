@@ -5,7 +5,6 @@ import ServerTime from './ServerTime';
 import Game from './Game';
 
 export default class Options extends React.Component {
-
     constructor(props) {
         super(props);
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind(this);
@@ -18,6 +17,7 @@ export default class Options extends React.Component {
         this.handleRoundsTimedChange = this.handleRoundsTimedChange.bind(this);
         this.handleTimePerRoundChange = this.handleTimePerRoundChange.bind(this);
         this.handleTimePerRoundChange = this.handleTimePerRoundChange.bind(this);
+        this.handleNameChange = this.handleNameChange.bind(this);
         this.handleAIClick = this.handleAIClick.bind(this);
         this.handleCreateClick = this.handleCreateClick.bind(this)
         this.handleJoinClick = this.handleJoinClick.bind(this)
@@ -35,54 +35,46 @@ export default class Options extends React.Component {
         };
     }
 
-    handleTimePerRoundChange(state){
-
+    handleMalusSizeChange(malusSize){
+        this.setState({malusSize: malusSize })
     }
-
-    handleRoundsTimedChange(state){
-
+    handleSecquenceSizeChange(secquenceSize){
+        this.setState({secquenceSize: secquenceSize })
     }
-
-    handleTimePerTurnChange(state){
-
+    handleThrowOnStockChange(throwOnStock){
+        this.setState({throwOnStock: throwOnStock })
     }
-
-    handleTurnsTimedChange(state){
-
+    handleThrowOnMalusChange(throwOnMalus){
+        this.setState({throwOnMalus: throwOnMalus })
     }
-
-    handleVariantChange(state){
-
+    handleVariantChange(variant){
+        this.setState({variant: variant })
     }
-
-    handleThrowOnMalusChange(state){
-
+    handleTurnsTimedChange(turnsTimed){
+        this.setState({turnsTimed: turnsTimed })
     }
-
-    handleThrowOnStockChange(state){
-
+    handleTimePerTurnChange(timePerTurn){
+        this.setState({timePerTurn: timePerTurn })
     }
-
-    handleSecquenceSizeChange(state){
-
+    handleRoundsTimedChange(roundsTimed){
+        this.setState({roundsTimed: roundsTimed })
     }
-
-    handleMalusSizeChange(state){
-
+    handleTimePerRoundChange(timePerRound){
+        this.setState({timePerRound: timePerRound })
     }
-
+    handleNameChange(name){
+        this.setState({name: name })
+    }
     handleCreateClick(state){
 
     }
-
     handleJoinClick(state) {
 
     }
-
     handleAIClick(state) {
 
     }
-   
+
     render(){
         return (
             <div className={"options"}> 
@@ -93,35 +85,35 @@ export default class Options extends React.Component {
                 ></MalusSize>
                 <SecquenceSize 
                     secquenceSize={this.state.secquenceSize} 
-                    onChange={this.handleMalusSizeChange}
+                    onChange={this.handleSecquenceSizeChange}
                 ></SecquenceSize>
                 <ThrowOnStock 
                     throwOnStock={this.state.throwOnStock} 
-                    onChange={this.handleMalusSizeChange}
+                    onChange={this.handleThrowOnStockChange}
                 ></ThrowOnStock>
                 <ThrowOnMalus 
                     throwOnMalus={this.state.throwOnMalus} 
-                    onChange={this.handleMalusSizeChange}
+                    onChange={this.handleThrowOnMalusChange}
                 ></ThrowOnMalus>
                 <Variant 
                     variant={this.state.variant} 
-                    onChange={this.handleMalusSizeChange}
+                    onChange={this.handleVariantChange}
                 ></Variant>
                 <TimedTurns 
                     turnsTimed={this.state.turnsTimed} 
                     timePerTurn={this.state.timePerTurn} 
-                    onBoolChange={this.handleMalusSizeChange} 
-                    onValueChange={this.handleMalusSizeChange}
+                    onBoolChange={this.handleTurnsTimedChange} 
+                    onValueChange={this.handleTimePerTurnChange}
                 ></TimedTurns>
                 <TimedRounds 
                     roundsTimed={this.state.roundsTimed} 
+                    onBoolChange={this.handleRoundsTimedChange} 
                     timePerRound={this.state.timePerRound} 
-                    onBoolChange={this.handleMalusSizeChange} 
-                    onValueChange={this.handleMalusSizeChange}
+                    onValueChange={this.handleTimePerRoundChange}
                 ></TimedRounds>
                 <Name 
                     name={this.state.name} 
-                    onChange={this.handleMalusSizeChange}
+                    onChange={this.handleNameChange}
                 ></Name>
                 <Online 
                     handleCreateClick = {this.handleCreateClick} 
@@ -134,16 +126,14 @@ export default class Options extends React.Component {
         );
     }
 }
- 
 class MalusSize extends React.Component{
-
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(e) {
-        this.props.malusSize(e.target.value);
+    handleChange(HTMLElement) {
+        this.props.onChange(HTMLElement.target.value);
     }
 
     render(){
@@ -172,16 +162,14 @@ class MalusSize extends React.Component{
         )
     }
 }
-
 class SecquenceSize extends React.Component{
-
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(e) {
-        this.props.secquenceSize(e.target.value);
+    handleChange(HTMLElement) {
+        this.props.onChange(HTMLElement.target.value);
     }
 
     render(){
@@ -200,16 +188,14 @@ class SecquenceSize extends React.Component{
         )
     }
 }
-
 class ThrowOnStock extends React.Component{
-
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(e) {
-        this.props.throwOnStock(e.target.value);
+    handleChange(HTMLElement) {
+        this.props.onChange(HTMLElement.target.value);
     }
 
     render(){
@@ -221,16 +207,14 @@ class ThrowOnStock extends React.Component{
         )
     }
 }
-
 class ThrowOnMalus extends React.Component{
-
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(e) {
-        this.props.throwOnMalus(e.target.value);
+    handleChange(HTMLElement) {
+        this.props.onChange(HTMLElement.target.value);
     }
 
     render(){
@@ -242,44 +226,40 @@ class ThrowOnMalus extends React.Component{
         )
     }
 }
-
 class Variant extends React.Component{
-
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(e) {
-        this.props.variant(e.target.value);
+    handleChange(HTMLElement) {
+        this.props.onChange(HTMLElement.target.value);
     }
 
     render(){
         return (
-            <div className={"variant"}  >
+            <div className={"variant"} >
                 <label>Patience Variant</label>
-                <input defaultChecked name="variant" value = 'Patience' type ={"radio"} onChange={this.handleChange} />
+                <input name= 'variant' value = 'Patience' type ={"radio"} onChange={this.handleChange} defaultChecked  />
                 <label>Klondike Variant</label>
-                <input  name="variant" value ='Klondike' type ={"radio"} onChange={this.handleChange} />
+                <input name= 'variant' value = 'Klondike' type ={"radio"} onChange={this.handleChange} />
             </div>
         )
     }
 }
-
 class TimedTurns extends React.Component{
-
     constructor(props) {
         super(props);
         this.handleBoolChange = this.handleBoolChange.bind(this);
         this.handleValueChange = this.handleValueChange.bind(this);
     }
 
-    handleBoolChange(e) {
-        this.props.turnsTimed(e.target.value);
+    handleBoolChange(HTMLElement) {
+        this.props.onBoolChange(HTMLElement.target.value);
     }
 
-    handleValueChange(e) {
-        this.props.timePerTurn(e.target.value);
+    handleValueChange(HTMLElement) {
+        this.props.onValueChange(HTMLElement.target.value);
     }
 
     render(){
@@ -302,21 +282,19 @@ class TimedTurns extends React.Component{
         )
     }
 }
-
 class TimedRounds extends React.Component{
-
     constructor(props) {
         super(props);
         this.handleBoolChange = this.handleBoolChange.bind(this);
         this.handleValueChange = this.handleValueChange.bind(this);
     }
 
-    handleBoolChange(e) {
-        this.props.roundsTimed(e.target.value);
+    handleBoolChange(HTMLElement) {
+        this.props.onBoolChange(HTMLElement.target.value);
     }
 
-    handleValueChange(e) {
-        this.props.timePerRound(e.target.value);
+    handleValueChange(HTMLElement) {
+        this.props.onValueChange(HTMLElement.target.value);
     }
 
     render(){
@@ -338,66 +316,14 @@ class TimedRounds extends React.Component{
         )
     }
 }
-
-class RoundsTimed extends React.Component{
-
-    constructor(props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(e) {
-        this.props.roundsTimed(e.target.value);
-    }
-
-    render(){
-        return (
-            <div className={"roundstimed"}>
-                <label htmlFor="RoundsTimed">Limit time for each round</label>
-                <input value={ this.props.roundsTimed}  onChange={this.handleChange} id={"RoundsTimed"} type = "checkbox" ></input>  
-            </div>
-        )
-    }
-}
-
-class TimePerRound extends React.Component{
-
-    constructor(props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(e) {
-        this.props.timePerRound(e.target.value);
-    }
-
-    render(){
-        return (
-            <div className={"timeperround"}>
-                <label htmlFor="TimePerRound">Duration:</label> 
-                <select value={ this.props.timePerRound}  onChange={this.handleChange} id={"TimePerRound"} >
-                    <option value = "600">10min</option>
-                    <option value = "900">15min</option>
-                    <option value = "1200">20min</option>
-                    <option value = "1500">25min</option>
-                    <option value = "1800">30min</option>
-                    <option value = "2700">45min</option>
-                    <option value = "3600">60min</option>
-                </select>
-            </div>
-        )
-    }
-}
-
 class Name extends React.Component{
-
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(e) {
-        this.props.name(e.target.value);
+    handleChange(HTMLElement) {
+        this.props.onChange(HTMLElement.target.value);
     }
 
     render(){
@@ -409,7 +335,6 @@ class Name extends React.Component{
         )
     }
 }
-
 function AI (props) {
     function startGame() {
 
@@ -422,7 +347,6 @@ function AI (props) {
         </div>
     )
 }
-
 function Online (props) {
     function startGame() {
         
@@ -440,119 +364,3 @@ function Online (props) {
         </div>
     )
 }
-
-//__________________________________________________________________________________________________
-//__________________________________________________________________________________________________
-//__________________________________________________________________________________________________
-//__________________________________________________________________________________________________
-
-
-//=========================================================================================
-
-class Calculator extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.handleCelsiusChange = this.handleCelsiusChange.bind(this);
-        this.handleFahrenheitChange = this.handleFahrenheitChange.bind(this);
-        this.state = {temperature: '', scale: 'c'};
-    }
-  
-    handleCelsiusChange(temperature) {
-        this.setState({scale: 'c', temperature});
-    }
-  
-    handleFahrenheitChange(temperature) {
-        this.setState({scale: 'f', temperature});
-    }
-  
-    render() {
-        const scale = this.state.scale;
-        const temperature = this.state.temperature;
-        const celsius = scale === 'f' ? tryConvert(temperature, toCelsius) : temperature;
-        const fahrenheit = scale === 'c' ? tryConvert(temperature, toFahrenheit) : temperature;
-        return (
-            <div>
-                <TemperatureInput
-                    scale="c"
-                    temperature={celsius}
-                    onTemperatureChange={this.handleCelsiusChange} />
-                <TemperatureInput
-                    scale="f"
-                    temperature={fahrenheit}
-                    onTemperatureChange={this.handleFahrenheitChange} />
-                <BoilingVerdict
-                    celsius={parseFloat(celsius)} />
-            </div>
-        );
-    }
-}
-
-class TemperatureInput extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(e) {
-        this.props.onTemperatureChange(e.target.value);
-    }
-  
-    render() {
-        const temperature = this.props.temperature;
-        const scale = this.props.scale;
-        return (
-            <fieldset>
-                <legend>Enter temperature in {scaleNames[scale]}:</legend>
-                <input 
-                    value={temperature} 
-                    onChange={this.handleChange} />
-            </fieldset>
-        );
-    }
-}
-  
-//=========================================================================================
-
-
-
-const scaleNames = {
-    c: 'Celsius',
-    f: 'Fahrenheit'
-  };
-  
-  function toCelsius(fahrenheit) {
-    return (fahrenheit - 32) * 5 / 9;
-  }
-  
-  function toFahrenheit(celsius) {
-    return (celsius * 9 / 5) + 32;
-  }
-  
-  function tryConvert(temperature, convert) {
-    const input = parseFloat(temperature);
-    if (Number.isNaN(input)) {
-      return '';
-    }
-    const output = convert(input);
-    const rounded = Math.round(output * 1000) / 1000;
-    return rounded.toString();
-  }
-  
-  function BoilingVerdict(props) {
-    if (props.celsius >= 100) {
-      return <p>The water would boil.</p>;
-    }
-    return <p>The water would not boil.</p>;
-  }
-  
-
-
-
-  
-ReactDOM.render(
-    <Calculator />,
-    document.getElementById('root')
-);
- 
