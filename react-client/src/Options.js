@@ -18,6 +18,7 @@ export default class Options extends React.Component {
         this.handleTimePerRoundChange = this.handleTimePerRoundChange.bind(this);
         this.handleTimePerRoundChange = this.handleTimePerRoundChange.bind(this);
         this.handleNameChange = this.handleNameChange.bind(this);
+        this.handleRoomkeyChange = this.handleRoomkeyChange.bind(this);
         this.handleAIClick = this.handleAIClick.bind(this);
         this.handleCreateClick = this.handleCreateClick.bind(this)
         this.handleJoinClick = this.handleJoinClick.bind(this)
@@ -31,7 +32,8 @@ export default class Options extends React.Component {
             timePerTurn:60, 
             roundsTimed:false, 
             timePerRound:1800, 
-            name:'',    
+            name:'',  
+            roomKey:'',  
         };
     }
 
@@ -65,8 +67,12 @@ export default class Options extends React.Component {
     handleNameChange(name){
         this.setState({name: name })
     }
-    handleCreateClick(state){
+    handleRoomkeyChange(roomkey){
+        this.setState({roomkey: roomkey })
+    }
 
+    handleCreateClick(state){
+        
     }
     handleJoinClick(state) {
 
@@ -116,11 +122,13 @@ export default class Options extends React.Component {
                     onChange={this.handleNameChange}
                 ></Name>
                 <Online 
-                    handleCreateClick = {this.handleCreateClick} 
+                    handleNewClick = {this.handleCreateClick} 
                     handleJoinClick = {this.handleJoinClick}
+                    roomKey = {this.state.roomKey} 
+                    onChange={this.handleRoomkeyChange}
                 ></Online>
                 <AI 
-                    handeClick={this.handleAIClick}
+                    handleClick={this.handleAIClick}
                 ></AI>
             </div>
         );
@@ -132,8 +140,8 @@ class MalusSize extends React.Component{
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(HTMLElement) {
-        this.props.onChange(HTMLElement.target.value);
+    handleChange(event) {
+        this.props.onChange(event.target.value);
     }
 
     render(){
@@ -168,8 +176,8 @@ class SecquenceSize extends React.Component{
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(HTMLElement) {
-        this.props.onChange(HTMLElement.target.value);
+    handleChange(event) {
+        this.props.onChange(event.target.value);
     }
 
     render(){
@@ -194,8 +202,8 @@ class ThrowOnStock extends React.Component{
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(HTMLElement) {
-        this.props.onChange(HTMLElement.target.value);
+    handleChange(event) {
+        this.props.onChange(event.target.value);
     }
 
     render(){
@@ -213,8 +221,8 @@ class ThrowOnMalus extends React.Component{
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(HTMLElement) {
-        this.props.onChange(HTMLElement.target.value);
+    handleChange(event) {
+        this.props.onChange(event.target.value);
     }
 
     render(){
@@ -232,8 +240,8 @@ class Variant extends React.Component{
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(HTMLElement) {
-        this.props.onChange(HTMLElement.target.value);
+    handleChange(event) {
+        this.props.onChange(event.target.value);
     }
 
     render(){
@@ -254,12 +262,12 @@ class TimedTurns extends React.Component{
         this.handleValueChange = this.handleValueChange.bind(this);
     }
 
-    handleBoolChange(HTMLElement) {
-        this.props.onBoolChange(HTMLElement.target.value);
+    handleBoolChange(event) {
+        this.props.onBoolChange(event.target.value);
     }
 
-    handleValueChange(HTMLElement) {
-        this.props.onValueChange(HTMLElement.target.value);
+    handleValueChange(event) {
+        this.props.onValueChange(event.target.value);
     }
 
     render(){
@@ -289,12 +297,12 @@ class TimedRounds extends React.Component{
         this.handleValueChange = this.handleValueChange.bind(this);
     }
 
-    handleBoolChange(HTMLElement) {
+    handleBoolChange(event) {
         this.props.onBoolChange(HTMLElement.target.value);
     }
 
-    handleValueChange(HTMLElement) {
-        this.props.onValueChange(HTMLElement.target.value);
+    handleValueChange(event) {
+        this.props.onValueChange(event.target.value);
     }
 
     render(){
@@ -322,45 +330,47 @@ class Name extends React.Component{
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange(HTMLElement) {
-        this.props.onChange(HTMLElement.target.value);
+    handleChange(event) {
+        this.props.onChange(event.target.value);
     }
 
     render(){
         return (
             <div className={"name"}>
-                <label htmlFor="NameTF">Display Name</label>
-                <input id = "NameTF" type="text"  onChange={this.handleChange} value={ this.props.name}></input>  
+                <label htmlFor="nameTF">Display Name</label>
+                <input id = "nameTF" type="text"  onChange={this.handleChange} value={ this.props.name}></input>  
             </div>
         )
     }
 }
-function AI (props) {
-    function startGame() {
 
+class Online extends React.Component{
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
     }
 
+    handleChange(event) {
+        this.props.onChange(event.target.value);
+    }
+
+    render(){
+        return (
+            <div className={"online"}>
+                <label> vs. Player:</label>
+                <button onClick = {this.props.handleNewClick} >New</button>
+                <button onClick = {this.props.handleJoinClick} >Join</button>
+                <input id = "roomkey" type="text"  onChange={this.handleChange} value={ this.props.roomkey}></input>
+            </div>
+        )
+    }
+}
+
+function AI (props) {
     return (
         <div className={"ai"}>
             <label> vs. AI:</label>
-            <button  >Start</button>
-        </div>
-    )
-}
-function Online (props) {
-    function startGame() {
-        
-    }
-
-    function joinGame() {
-
-    }
-
-    return (
-        <div className={"online"}>
-            <label> vs. Player:</label>
-            <button  >Create</button>
-            <button  >Join</button>
+            <button onClick = {props.handleClick}  >Start</button>
         </div>
     )
 }
