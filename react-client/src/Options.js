@@ -33,8 +33,9 @@ export default class Options extends React.Component {
             roundsTimed:false, 
             timePerRound:1800, 
             name:'',  
-            roomKey:'',  
+            roomkey:'',  
         };
+        console.log(this.state);
     }
 
     handleMalusSizeChange(malusSize){
@@ -72,13 +73,24 @@ export default class Options extends React.Component {
     }
 
     handleCreateClick(state){
-        
+       console.log(this.state);
     }
     handleJoinClick(state) {
 
     }
     handleAIClick(state) {
+        return (
+            ReactDOM.unmountComponentAtNode(document.getElementById('root')),
+            ReactDOM.render(<Game />, document.getElementById('root'))
+        )   
+    }
 
+    componentDidMount() {
+        
+    }
+
+    componentWillUnmount(){
+        
     }
 
     render(){
@@ -134,6 +146,7 @@ export default class Options extends React.Component {
         );
     }
 }
+
 class MalusSize extends React.Component{
     constructor(props) {
         super(props);
@@ -170,6 +183,7 @@ class MalusSize extends React.Component{
         )
     }
 }
+
 class SecquenceSize extends React.Component{
     constructor(props) {
         super(props);
@@ -192,10 +206,11 @@ class SecquenceSize extends React.Component{
                     <option value = "5">5</option>
                     <option value = "6">6</option>
                 </select>
-                </div>
+            </div>
         )
     }
 }
+
 class ThrowOnStock extends React.Component{
     constructor(props) {
         super(props);
@@ -203,18 +218,19 @@ class ThrowOnStock extends React.Component{
     }
 
     handleChange(event) {
-        this.props.onChange(event.target.value);
+        this.props.onChange(event.target.checked);
     }
 
     render(){
         return (
             <div className={"throwonstock"}>
                 <label htmlFor="ThrowStockCB" >Throw on Opponent Stock</label>
-                <input  value={ this.props.throwOnStock}  onChange={this.handleChange} id={"ThrowStockCB"} type={"checkbox"}></input>
+                <input  checked={ this.props.throwOnStock}  onChange={this.handleChange} id={"ThrowStockCB"} type={"checkbox"}></input>
             </div>
         )
     }
 }
+
 class ThrowOnMalus extends React.Component{
     constructor(props) {
         super(props);
@@ -222,18 +238,19 @@ class ThrowOnMalus extends React.Component{
     }
 
     handleChange(event) {
-        this.props.onChange(event.target.value);
+        this.props.onChange(event.target.checked);
     }
 
     render(){
         return (
             <div className={"throwonmalus"}>
                 <label htmlFor="ThrowMalusCB" >Throw on Opponent Malus</label>
-                <input  value={ this.props.throwOnMalus}  onChange={this.handleChange} id={"ThrowMalusCB"} type={"checkbox"}></input>
+                <input  checked={ this.props.throwOnMalus}  onChange={this.handleChange} id={"ThrowMalusCB"} type={"checkbox"}></input>
             </div>
         )
     }
 }
+
 class Variant extends React.Component{
     constructor(props) {
         super(props);
@@ -255,6 +272,7 @@ class Variant extends React.Component{
         )
     }
 }
+
 class TimedTurns extends React.Component{
     constructor(props) {
         super(props);
@@ -263,7 +281,7 @@ class TimedTurns extends React.Component{
     }
 
     handleBoolChange(event) {
-        this.props.onBoolChange(event.target.value);
+        this.props.onBoolChange(event.target.checked);
     }
 
     handleValueChange(event) {
@@ -274,7 +292,7 @@ class TimedTurns extends React.Component{
         return (
             <div className={"turnstimed"}>
                 <label htmlFor="TurnsTimed">Limit time for each turn</label>
-                <input value={ this.props.turnsTimed}  onChange={this.handleBoolChange} id={"TurnsTimed"} type = "checkbox" ></input>  
+                <input checked={ this.props.turnsTimed}  onChange={this.handleBoolChange} id={"TurnsTimed"} type = "checkbox" ></input>  
                 <label htmlFor="TimePerTurn">Duration:</label> 
                 <select value={ this.props.timePerTurn}  onChange={this.handleValueChange} id={"TimePerTurn"} >
                     <option value = "15">15s</option>
@@ -290,6 +308,7 @@ class TimedTurns extends React.Component{
         )
     }
 }
+
 class TimedRounds extends React.Component{
     constructor(props) {
         super(props);
@@ -298,7 +317,7 @@ class TimedRounds extends React.Component{
     }
 
     handleBoolChange(event) {
-        this.props.onBoolChange(HTMLElement.target.value);
+        this.props.onBoolChange(event.target.checked);
     }
 
     handleValueChange(event) {
@@ -309,7 +328,7 @@ class TimedRounds extends React.Component{
         return (
             <div className={"turnstimed"}>
                 <label htmlFor="RoundsTimed">Limit time for each round</label>
-                <input value={ this.props.roundsTimed}  onChange={this.handleBoolChange} id={"RoundsTimed"} type = "checkbox" ></input>
+                <input checked={ this.props.roundsTimed}  onChange={this.handleBoolChange} id={"RoundsTimed"} type = "checkbox" ></input>
                 <label htmlFor="TimePerRound">Duration:</label> 
                 <select value={ this.props.timePerRound}  onChange={this.handleValueChange} id={"TimePerRound"} >
                     <option value = "600">10min</option>
@@ -324,6 +343,7 @@ class TimedRounds extends React.Component{
         )
     }
 }
+
 class Name extends React.Component{
     constructor(props) {
         super(props);

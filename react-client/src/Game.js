@@ -1,13 +1,20 @@
+import React from 'react';
+import socketIOClient from 'socket.io-client';
+import ReactDOM from 'react-dom';
 
-function Game (props) {
-    return (
-        <div className="game">
-             
-            <Player MalusSize = {props.MalusSize} ></Player>
-            <Opponent MalusSize = {props.MalusSize} ></Opponent>
-            <Field SecquenceSize = {window.SecquenceSize} ></Field>
-        </div>
-    )
+export default class Game extends React.Component{
+    constructor(props) {
+        super(props);
+    }
+    render(){
+        return (
+            <div className="game">
+                <Player  ></Player>
+                <Opponent  ></Opponent>
+                <Field  ></Field>
+            </div>
+        )
+    }
 } 
 
 function Player (props) {
