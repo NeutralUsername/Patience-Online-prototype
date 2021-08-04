@@ -6,7 +6,6 @@ import Game from './Game';
 export default class Options extends React.Component {
     constructor (props) {
         super (props);
-        this.mounted = false;
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
         this.handleSecquenceSizeChange = this.handleSecquenceSizeChange.bind (this);
         this.handleThrowOnStockChange = this.handleThrowOnStockChange.bind (this);
@@ -35,7 +34,7 @@ export default class Options extends React.Component {
             name : '',  
             roomkey : '',  
         };
-        console.log (this.state, this.mounted);
+        console.log (this.state);
     }
     handleMalusSizeChange (malusSize) {
         this.setState ({malusSize: malusSize })
@@ -71,7 +70,7 @@ export default class Options extends React.Component {
         this.setState ({roomkey: roomkey })
     }
     handleCreateClick () {
-       console.log (this.state, this.mounted);
+       console.log (this.state);
     }
     handleJoinClick () {
 
@@ -95,12 +94,6 @@ export default class Options extends React.Component {
                 document.getElementById ('root')
             )
         )   
-    }
-    componentDidMount () {
-        this.mounted = true;
-    }
-    componentWillUnmount () {
-        this.mounted = false;
     }
     render () {
         return (

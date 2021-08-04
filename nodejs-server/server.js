@@ -1,7 +1,6 @@
 'use strict';
 require('dotenv').config({ path: '.env' });
 
-
 var express = require('express'),
   app = express(),
   port = process.env.NS_PORT || 3000,
@@ -25,3 +24,18 @@ io.on('connection', function (socket) {
 
 app.route('/ping').get(controller.root);
 
+
+
+
+var mysql = require('mysql');
+
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "gregaire",
+  password: "password"
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
