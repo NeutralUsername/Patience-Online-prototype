@@ -1,30 +1,6 @@
 'use strict';
 require('dotenv').config({ path: '.env' });
 
-
-
-
-var express = require('express'),
-  app = express(),
-  port = process.env.NS_PORT || 3000,
-  controller = require('./controller');
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
-
-app.route('/ping').get(controller.root);
-server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/testSocketConnection.html');
-});
-
-io.on('connection', function (socket) {
-  socket.on('customevent', function (data) {
-    setInterval(function () {
-      socket.emit('FromAPI', { data: new Date() });
-    }, 96);
-  });
-});
-
 var mysql = require('mysql');
 var con = mysql.createConnection({
   host: "localhost",
@@ -120,3 +96,26 @@ con.connect(function() {
       console.log("Table 'actions' created in 'gregaire'");
   });
 });
+
+
+var express = require('express'),
+  app = express(),
+  port = process.env.NS_PORT || 3000,
+  controller = require('./controller');
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
+
+app.route('/ping').get(controller.root);
+server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/testSocketConnection.html');
+});
+
+io.on('connection', function (socket) {
+  socket.on('customevent', function (data) {
+    setInterval(function () {
+      socket.emit('FromAPI', { data: new Date() });
+    }, 96);
+  });
+});
+
