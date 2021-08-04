@@ -1,5 +1,7 @@
-<b>start frontend</b> :4000
 
+install mysql, nodejs
+_________
+<b>start frontend</b> :4000
 
 new terminal:
 
