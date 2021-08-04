@@ -3,9 +3,24 @@ import socketIOClient from 'socket.io-client';
 import ReactDOM from 'react-dom';
 import ServerTime from './ServerTime';
 import Game from './Game';
+
 export default class Options extends React.Component {
     constructor (props) {
         super (props);
+        this.state = {
+            malusSize : 14, 
+            secquenceSize : 3,
+            throwOnStock : true, 
+            throwOnMalus : true, 
+            variant : "Patience",
+            turnsTimed : false,
+            timePerTurn : 60, 
+            roundsTimed : false, 
+            timePerRound : 1800, 
+            name : '',  
+            roomkey : '',  
+            backendUrl : "http://127.0.0.1:3000"
+        };
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
         this.handleSecquenceSizeChange = this.handleSecquenceSizeChange.bind (this);
         this.handleThrowOnStockChange = this.handleThrowOnStockChange.bind (this);
@@ -21,20 +36,6 @@ export default class Options extends React.Component {
         this.handleAIClick = this.handleAIClick.bind (this);
         this.handleCreateClick = this.handleCreateClick.bind (this)
         this.handleJoinClick = this.handleJoinClick.bind (this)
-        this.state = {
-            malusSize : 14, 
-            secquenceSize : 3,
-            throwOnStock : true, 
-            throwOnMalus : true, 
-            variant : "Patience",
-            turnsTimed : false,
-            timePerTurn : 60, 
-            roundsTimed : false, 
-            timePerRound : 1800, 
-            name : '',  
-            roomkey : '',  
-            backendUrl : "http://127.0.0.1:3000"
-        };
         console.log (this.state);
     }
     handleMalusSizeChange (malusSize) {

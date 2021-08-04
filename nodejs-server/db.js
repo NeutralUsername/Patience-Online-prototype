@@ -6,8 +6,8 @@ var con = mysql.createConnection({
   database: "gregaire"
 });
 con.connect(function() {
-  console.log("Connected!");
-  con.query("CREATE DATABASE gregaire");
+  con.query(
+    "CREATE DATABASE gregaire");
   con.query(
     "CREATE TABLE cards ("
       +"id INT AUTO_INCREMENT PRIMARY KEY, "

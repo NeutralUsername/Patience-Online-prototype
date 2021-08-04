@@ -12,7 +12,6 @@ class ServerTime extends React.Component {
       endpoint: "http://127.0.0.1:3000"
     };
   }
-
   componentDidMount() {
     this.mounted = true;
     //const  endpoint  = this.state.endpoint; ==
@@ -22,13 +21,11 @@ class ServerTime extends React.Component {
     socket.on("FromAPI", data => {
       if(this.mounted === true)
         this.setState({ response: data.data })
-   });
- }
-
+    });
+  }
  componentWillUnmount() {
    this.mounted = false;
  }
-
   render() {
     return (
       <div className="ServerTime">
@@ -39,5 +36,4 @@ class ServerTime extends React.Component {
     );
   }
 }
-
 export default ServerTime;
