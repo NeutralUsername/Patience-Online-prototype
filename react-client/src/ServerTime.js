@@ -2,7 +2,6 @@ import React from 'react';
 import './ServerTime.css';
 import socketIOClient from 'socket.io-client';
 
-
 class ServerTime extends React.Component {
   constructor() {
     super();
