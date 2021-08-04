@@ -6,23 +6,23 @@ install mysql, nodejs
 
 
 
-<b>start frontend</b> :4000
+<b>start frontend</b> default port :4000
 
-new terminal:
+1) new terminal:
 
-npm cd react-client
+2) npm cd react-client
 
-npm install
+3) npm install (first time only)
 
-npm start
+4) npm start
   
-  
-<b>start backend</b> :3000
 
-new terminal:
+<b>start backend</b> default port :3000
 
-npm cd nodejs-server
+1) new terminal:
 
-npm install
+2) npm cd nodejs-server
 
-npm start
+3) npm install (first time only)
+
+4) npm start
