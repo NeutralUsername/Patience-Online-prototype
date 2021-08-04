@@ -1,4 +1,8 @@
 
+gregaire is a 2 player solitairetype card game
+it is played in alternating turns and consists of two 52 card decks
+______
+_______
 install mysql, nodejs
 _________
 <b>start frontend</b> :4000
