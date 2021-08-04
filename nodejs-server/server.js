@@ -119,3 +119,9 @@ io.on('connection', function (socket) {
   });
 });
 
+io.on('connection', function (socket) {
+  socket.on('newAIgameReq', function (data) {
+    //if(data....)
+    socket.emit('newAIgameRes', { res: true} );
+  });
+});
