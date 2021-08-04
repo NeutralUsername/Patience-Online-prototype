@@ -33,8 +33,7 @@ export default class Options extends React.Component {
             timePerRound : 1800, 
             name : '',  
             roomkey : '',  
-            response: false,
-            endpoint: "http://127.0.0.1:3000"
+            backendUrl : "http://127.0.0.1:3000"
         };
         console.log (this.state);
     }
@@ -79,8 +78,7 @@ export default class Options extends React.Component {
     }
     handleAIClick () {
 
-        const { endpoint } = this.state;
-        const socket = socketIOClient(endpoint);
+        const socket = socketIOClient(this.state.backendUrl);
         socket.emit('newAIgameReq', {
             malusSize : this.state.malusSize,
             secquenceSize : this.state.secquenceSize,
