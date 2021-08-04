@@ -6,6 +6,7 @@ import socketIOClient from 'socket.io-client';
 class ServerTime extends React.Component {
   constructor() {
     super();
+    this.mounted = false;
     this.state = {
       response: false,
       endpoint: "http://127.0.0.1:3000"
@@ -14,12 +15,18 @@ class ServerTime extends React.Component {
 
   componentDidMount() {
     //const  endpoint  = this.state.endpoint; ==
+    this.mounted = true;
    const { endpoint } = this.state;
    const socket = socketIOClient(endpoint);
-   socket.emit('customevent', { data: 'some sample data' });
+   socket.emit('customevent', { data: 'some sample data'});
    socket.on("FromAPI", data => {
-     this.setState({ response: data.data })
+     if(this.mounted === true)
+      this.setState({ response: data.data })
    });
+ }
+
+ componentWillUnmount() {
+   this.mounted = false;
  }
 
   render() {
