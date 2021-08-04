@@ -1,31 +1,31 @@
-var mysql = require('mysql');
+var mysql = require('mysql2');
 var con = mysql.createConnection({
   host: "localhost",
-  port: 3000,
   user: "gregaire",
   password: "password",
   database: "gregaire"
 });
+
 con.connect(function(err) {
   if (err) throw err;
-  con.query("REATE DATABASE gregaire", 
+  con.query("CREATE DATABASE IF NOT EXISTS gregaire", 
     function (err, result) {
       if (err) throw err;
   });
-  con.query("CREATE TABLE cards ("
+  con.query("CREATE TABLE IF NOT EXISTS cards ("
     +"id INT AUTO_INCREMENT PRIMARY KEY, "
     +"suit VARCHAR(10), "
     +"value VARCHAR(10))", 
     function (err, result) {
       if (err) throw err;
   });
-  con.query("CREATE TABLE users ("
+  con.query("CREATE TABLE IF NOT EXISTS users ("
     +"id INT AUTO_INCREMENT PRIMARY KEY, "
     +"name VARCHAR(20))", 
     function (err, result) {
       if (err) throw err;
   });
-  con.query("CREATE TABLE options ("
+  con.query("CREATE TABLE IF NOT EXISTS options ("
     +"id INT AUTO_INCREMENT PRIMARY KEY, "
     +"malussize INT, "
     +"sequencesize INT, "
@@ -39,18 +39,18 @@ con.connect(function(err) {
     function (err, result) {
       if (err) throw err;
   });
-  con.query("CREATE TABLE stacks ("
+  con.query("CREATE TABLE IF NOT EXISTS stacks ("
     +"id INT AUTO_INCREMENT PRIMARY KEY, "
     +"name VARCHAR(20))", 
     function (err, result) {
       if (err) throw err;
   });
-  con.query("CREATE TABLE decks ("
+  con.query("CREATE TABLE IF NOT EXISTS decks ("
     +"id INT AUTO_INCREMENT PRIMARY KEY)", 
   function (err, result) {
     if (err) throw err;
   });
-  con.query("CREATE TABLE shuffles ("
+  con.query("CREATE TABLE IF NOT EXISTS shuffles ("
     +"deckid INT, "
     +"cardid INT, "
     +"position INT, "
@@ -60,7 +60,7 @@ con.connect(function(err) {
     function (err, result) {
       if (err) throw err;
   });
-  con.query("CREATE TABLE games ("
+  con.query("CREATE TABLE IF NOT EXISTS games ("
     +"id INT AUTO_INCREMENT PRIMARY KEY, "
     +"deckid1 INT, deckid2 INT, "
     +"optionid INT, "
@@ -74,7 +74,7 @@ con.connect(function(err) {
     function (err, result) {
       if (err) throw err;
   });
-  con.query("CREATE TABLE actions ("
+  con.query("CREATE TABLE IF NOT EXISTS actions ("
     +"gameid INT, "
     +"actionnr INT, "
     +"fromstackid INT, "
@@ -88,5 +88,4 @@ con.connect(function(err) {
   });
 }); 
   
-con.commit();
 module.exports = con;

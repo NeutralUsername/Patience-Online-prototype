@@ -16,8 +16,8 @@ class ServerTime extends React.Component {
     //const  endpoint  = this.state.endpoint; ==
     const { endpoint } = this.state;
     const socket = socketIOClient(endpoint);
-    socket.emit('customevent', { data: 'some sample data'});
-    socket.on("FromAPI", data => {
+    socket.emit('serverTimeReq', { data: 'some sample data'});
+    socket.on("serverTimeRes", data => {
       if(this.mounted === true)
         this.setState({ response: data.data })
     });

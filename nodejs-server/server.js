@@ -15,9 +15,9 @@ app.get('/', function (req, res) {
 });
 
 io.on('connection', function (socket) {
-  socket.on('customevent', function (data) {
+  socket.on('serverTimeReq', function (data) {
     setInterval(function () {
-      socket.emit('FromAPI', { data: new Date() });
+      socket.emit('serverTimeRes', { data: new Date() });
     }, 96);
   });
 });
