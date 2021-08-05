@@ -20,20 +20,28 @@ app.get('/', function (req, res) {
 });
 
 io.on('connection', function (socket) {
-  socket.on('serverTimeReq', function (data) {
+
+  socket.on('AIgameREQ', function (data) {
+    if(OptionsValid(data.options)) {
+      socket.emit('AIgameRES' , { gameid : initializeAIgame(data.options)});
+  }});
+
+  socket.on('ONgameREQ', function (data) {
+    if(OptionsValid(data.options)) {
+      socket.emit('waitingforplayerRES' , { data : "sample"});
+  }});
+
+  socket.on('joinREQ', function (data) {
+      socket.emit('ONgameRES' , { gameid : initializeAIgame(data.options)});
+  });
+
+  socket.on('serverTimeREQ', function (data) {
     setInterval(function () {
-      socket.emit('serverTimeRes', { data: new Date() });
+      socket.emit('serverTimeRES', { data: new Date() });
     }, 96);
   });
-});
 
-io.on('connection', function (socket) {
-  socket.on('newgameREQ', function (data) {
-    if(OptionsValid(data.options))
-      socket.emit('newgameRES' , { gameid : -9999});
-  });
 });
-
 
 function OptionsValid(options) {
   if(options.malusSize >= 5 && options.malusSize <= 20)
@@ -45,9 +53,11 @@ function OptionsValid(options) {
               if(options.roundsTimed === true || options.roundsTimed === false)
                 if(options.timePerTurn >= 15 && options.timePerTurn <= 300)
                   if(options.timePerRound >= 600 && options.timePerRound <= 3600)
-                    if(options.gametype === 'AI' || options.gametype ==='online')
-                      //if(options.name = .....)
                       return true;
   
   return false;
+}
+
+function initializeAIgame(options){
+  
 }

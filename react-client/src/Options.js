@@ -19,7 +19,6 @@ export default class Options extends React.Component {
             timePerRound : 1800, 
             name : '',  
             roomkey : '',  
-            gametype : '',
             backendUrl : "http://127.0.0.1:3000"
         };
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
@@ -35,8 +34,8 @@ export default class Options extends React.Component {
         this.handleNameChange = this.handleNameChange.bind (this);
         this.handleRoomkeyChange = this.handleRoomkeyChange.bind (this);
         this.handleAIClick = this.handleAIClick.bind (this);
-        this.handleCreateClick = this.handleCreateClick.bind (this)
-        this.handleJoinClick = this.handleJoinClick.bind (this)
+        this.handleCreateClick = this.handleCreateClick.bind (this);
+        this.handleJoinClick = this.handleJoinClick.bind (this);
         console.log (this.state);
     }
     handleMalusSizeChange (malusSize) {
@@ -73,19 +72,17 @@ export default class Options extends React.Component {
         this.setState ({roomkey : roomkey })
     }
     handleCreateClick () {
-       console.log (this.state);
-    }
-    handleJoinClick () {
-        console.log (this.state);
-    }
-    handleAIClick () {
-        this.setState ({gametype : 'AI'}, () => {
+        this.setState ({gametype : 'online'}, () => {
             const socket = socketIOClient(this.state.backendUrl);
-            socket.emit('newgameREQ', {
+            socket.emit('ONgameREQ', {
                 options : this.state
             });
 
-            socket.on("newgameRES", data => {
+            socket.on("waitingforplayerRES", data => {
+                return 
+            });
+
+            socket.on("ONgameRES", data => {
                 return (
                     ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
                     ReactDOM.render (
@@ -97,6 +94,42 @@ export default class Options extends React.Component {
                     )
                 )   
             });
+        });
+    }
+    handleJoinClick () {
+        const socket = socketIOClient(this.state.backendUrl);
+        socket.emit('joinREQ', {
+            options : this.state
+        });
+        socket.on("ONgameRES", data => {
+            return (
+                ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
+                ReactDOM.render (
+                    <Game 
+                        options = {this.state} 
+                        gameid = {data.gameid}
+                    ></Game>,
+                    document.getElementById ('root')
+                )
+            )   
+        });
+    }
+    handleAIClick () {
+        const socket = socketIOClient(this.state.backendUrl);
+        socket.emit('AIgameREQ', {
+        options : this.state
+        });
+        socket.on("AIgameRES", data => {
+            return (
+                ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
+                ReactDOM.render (
+                    <Game 
+                        options = {this.state} 
+                        gameid = {data.gameid}
+                    ></Game>,
+                    document.getElementById ('root')
+                )
+            )   
         });
     }
     render () {
