@@ -9,7 +9,7 @@ export default class Options extends React.Component {
         super (props);
         this.state = {
             malusSize : 14, 
-            secquenceSize : 3,
+            sequenceSize : 3,
             throwOnStock : true, 
             throwOnMalus : true, 
             variant : "Patience",
@@ -19,8 +19,8 @@ export default class Options extends React.Component {
             timePerRound : 1800, 
             name : '',  
             roomkey : '',  
-            backendUrl : "http://127.0.0.1:3000"
         };
+        this.backendUrl = "http://127.0.0.1:3000";
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
         this.handleSecquenceSizeChange = this.handleSecquenceSizeChange.bind (this);
         this.handleThrowOnStockChange = this.handleThrowOnStockChange.bind (this);
@@ -78,42 +78,24 @@ export default class Options extends React.Component {
 
     }
     handleAIClick () {
-        const socket = socketIOClient(this.state.backendUrl);
+        const socket = socketIOClient(this.backendUrl);
         socket.emit('newAIgameReq', {
-            malusSize : this.state.malusSize,
-            sequenceSize : this.state.secquenceSize,
-            throwOnStock : this.state.throwOnStock,
-            throwOnMalus : this.state.throwOnMalus,
-            variant : this.state.variant,
-            turnsTimed : this.state.turnsTimed,
-            timePerTurn : this.state.timePerTurn,
-            roundsTimed : this.state.roundsTimed,
-            timePerRound : this.state.timePerRound,
-            name : this.state.name
+            options : this.state
         });
+        
         socket.on("newAIgameRes", data => {
-            console.log(data);
+            if(data.isValid) {
+                return (
+                    ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
+                    ReactDOM.render (
+                        <Game 
+                            options = {this.state} 
+                        ></Game>,
+                        document.getElementById ('root')
+                    )
+                )   
+            }
        });
-
-
-        return (
-            ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
-            ReactDOM.render (
-                <Game 
-                    malusSize = {this.state.malusSize} 
-                    secquenceSize = {this.state.secquenceSize} 
-                    throwOnStock = {this.state.throwOnStock} 
-                    throwOnMalus = {this.state.throwOnMalus} 
-                    variant = {this.state.variant} 
-                    turnsTimed = {this.state.turnsTimed} 
-                    timePerTurn = {this.state.timePerTurn} 
-                    roundsTimed = {this.state.roundsTimed} 
-                    onBoolChange = {this.handleRoundsTimedChange} 
-                    name = {this.state.name} 
-                ></Game>,
-                document.getElementById ('root')
-            )
-        )   
     }
     render () {
         return (

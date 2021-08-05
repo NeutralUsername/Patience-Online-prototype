@@ -30,23 +30,23 @@ io.on('connection', function (socket) {
 io.on('connection', function (socket) {
   socket.on('newAIgameReq', function (data) {
     var optionsValid = false;
-    if(validateOptions(data))
+    if(validateOptions(data.options))
       optionsValid = true;
-    socket.emit('newAIgameRes', { res: optionsValid} );
+    socket.emit('newAIgameRes', { isValid: optionsValid} );
   });
 });
 
-function validateOptions(data) {
-  if(data.malusSize >= 5 && data.malusSize <= 20)
-    if(data.sequenceSize >= 1 && data.sequenceSize <= 6)
-      if(data.throwOnStock === true || data.throwOnStock === false)
-        if(data.throwOnMalus === true || data.throwOnMalus === false)
-          if(data.variant === 'Patience' || data.variant === 'Klondike')
-            if(data.turnsTimed === true || data.turnsTimed === false)
-              if(data.roundsTimed === true || data.roundsTimed === false)
-                if(data.timePerTurn >= 15 && data.timePerTurn <= 300)
-                  if(data.timePerRound >= 600 && data.timePerRound <= 3600)
-                    //if(data.name = .....)
+function validateOptions(options) {
+  if(options.malusSize >= 5 && options.malusSize <= 20)
+    if(options.sequenceSize >= 1 && options.sequenceSize <= 6)
+      if(options.throwOnStock === true || options.throwOnStock === false)
+        if(options.throwOnMalus === true || options.throwOnMalus === false)
+          if(options.variant === 'Patience' || options.variant === 'Klondike')
+            if(options.turnsTimed === true || options.turnsTimed === false)
+              if(options.roundsTimed === true || options.roundsTimed === false)
+                if(options.timePerTurn >= 15 && options.timePerTurn <= 300)
+                  if(options.timePerRound >= 600 && options.timePerRound <= 3600)
+                    //if(options.name = .....)
                     return true;
   
   return false;
