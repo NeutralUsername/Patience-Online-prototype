@@ -30,7 +30,7 @@ io.on('connection', function (socket) {
 io.on('connection', function (socket) {
   socket.on('newgameREQ', function (data) {
     if(OptionsValid(data.options))
-      socket.emit('newgameRES' , { data : 'test'});
+      socket.emit('newgameRES' , { gameid : -9999});
   });
 });
 

@@ -37,7 +37,6 @@ export default class Options extends React.Component {
         this.handleAIClick = this.handleAIClick.bind (this);
         this.handleCreateClick = this.handleCreateClick.bind (this)
         this.handleJoinClick = this.handleJoinClick.bind (this)
-        this.newGame = this.newGame.bind (this);
         console.log (this.state);
     }
     handleMalusSizeChange (malusSize) {
@@ -80,26 +79,25 @@ export default class Options extends React.Component {
         console.log (this.state);
     }
     handleAIClick () {
-        this.setState ({gametype : 'AI'}, () => this.newGame() );
-    }
-    newGame () {
-        const socket = socketIOClient(this.state.backendUrl);
-        socket.emit('newgameREQ', {
-            options : this.state
-        });
+        this.setState ({gametype : 'AI'}, () => {
+            const socket = socketIOClient(this.state.backendUrl);
+            socket.emit('newgameREQ', {
+                options : this.state
+            });
 
-        socket.on("newgameRES", data => {
-            return (
-                ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
-                ReactDOM.render (
-                    <Game 
-                        options = {this.state} 
-                        gameid = {data.gameid}
-                    ></Game>,
-                    document.getElementById ('root')
-                )
-            )   
-       });
+            socket.on("newgameRES", data => {
+                return (
+                    ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
+                    ReactDOM.render (
+                        <Game 
+                            options = {this.state} 
+                            gameid = {data.gameid}
+                        ></Game>,
+                        document.getElementById ('root')
+                    )
+                )   
+            });
+        });
     }
     render () {
         return (
@@ -142,15 +140,15 @@ export default class Options extends React.Component {
                     name = {this.state.name} 
                     onChange = {this.handleNameChange}
                 ></Name>
+                <AI 
+                    handleClick = {this.handleAIClick}
+                ></AI>
                 <Online 
                     handleNewClick = {this.handleCreateClick} 
                     handleJoinClick = {this.handleJoinClick}
                     roomKey = {this.state.roomKey} 
                     onChange = {this.handleRoomkeyChange}
                 ></Online>
-                <AI 
-                    handleClick = {this.handleAIClick}
-                ></AI>
             </div>
         );
     }
