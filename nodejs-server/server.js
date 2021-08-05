@@ -28,14 +28,9 @@ io.on('connection', function (socket) {
 });
 
 io.on('connection', function (socket) {
-  socket.on('newGameReq', function (data) {
+  socket.on('optionsValidReq', function (data) {
     if(OptionsValid(data.options))
-      socket.emit('newGameRes', { 
-        isValid: true,
-        gameid : ''
-      });
-    else
-      socket.emit('newAIgameRes', { isValid: false} );
+      socket.emit('optionsValidRes');
   });
 });
 

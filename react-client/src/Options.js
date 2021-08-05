@@ -18,8 +18,8 @@ export default class Options extends React.Component {
             roundsTimed : false, 
             timePerRound : 1800, 
             name : '',  
-            gametype : '',
             roomkey : '',  
+            gametype : '',
             backendUrl : "http://127.0.0.1:3000"
         };
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
@@ -84,22 +84,21 @@ export default class Options extends React.Component {
     }
     newGame () {
         const socket = socketIOClient(this.state.backendUrl);
-        socket.emit('newGameReq', {
+        socket.emit('optionsValidReq', {
             options : this.state
         });
-        socket.on("newGameRes", data => {
-            if(data.isValid) {
-                return (
-                    ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
-                    ReactDOM.render (
-                        <Game 
-                            options = {this.state} 
-                            gameid = {data.gameid}
-                        ></Game>,
-                        document.getElementById ('root')
-                    )
-                )   
-            }
+
+        socket.on("optionsValidRes", data => {
+            return (
+                ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
+                ReactDOM.render (
+                    <Game 
+                        options = {this.state} 
+                        gameid = {data.gameid}
+                    ></Game>,
+                    document.getElementById ('root')
+                )
+            )   
        });
     }
     render () {

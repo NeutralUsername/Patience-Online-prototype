@@ -6,7 +6,6 @@ export default class Game extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            options : props.options, 
             playerRed : {},
             playerBlack : {},
             field : {},
