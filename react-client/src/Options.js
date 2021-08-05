@@ -19,6 +19,7 @@ export default class Options extends React.Component {
             timePerRound : 1800, 
             name : '',  
             roomkey : '',  
+            waitingForPlayer : false,
             backendUrl : "http://127.0.0.1:3000"
         };
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
@@ -36,7 +37,6 @@ export default class Options extends React.Component {
         this.handleAIClick = this.handleAIClick.bind (this);
         this.handleCreateClick = this.handleCreateClick.bind (this);
         this.handleJoinClick = this.handleJoinClick.bind (this);
-        console.log (this.state);
     }
     handleMalusSizeChange (malusSize) {
         this.setState ({malusSize : malusSize })
@@ -72,16 +72,11 @@ export default class Options extends React.Component {
         this.setState ({roomkey : roomkey })
     }
     handleCreateClick () {
-        this.setState ({gametype : 'online'}, () => {
+        this.setState ({waitingForPlayer : true}, () => {
             const socket = socketIOClient(this.state.backendUrl);
             socket.emit('ONgameREQ', {
                 options : this.state
             });
-
-            socket.on("waitingforplayerRES", data => {
-                return 
-            });
-
             socket.on("ONgameRES", data => {
                 return (
                     ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
@@ -98,12 +93,11 @@ export default class Options extends React.Component {
     }
     handleJoinClick () {
         const socket = socketIOClient(this.state.backendUrl);
-        socket.emit('joinREQ', {
+        socket.emit('ONgameREQ', {
             options : this.state
         });
         socket.on("ONgameRES", data => {
             return (
-                ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
                 ReactDOM.render (
                     <Game 
                         options = {this.state} 
@@ -117,11 +111,10 @@ export default class Options extends React.Component {
     handleAIClick () {
         const socket = socketIOClient(this.state.backendUrl);
         socket.emit('AIgameREQ', {
-        options : this.state
+            options : this.state,
         });
         socket.on("AIgameRES", data => {
             return (
-                ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
                 ReactDOM.render (
                     <Game 
                         options = {this.state} 
@@ -182,10 +175,24 @@ export default class Options extends React.Component {
                     roomKey = {this.state.roomKey} 
                     onChange = {this.handleRoomkeyChange}
                 ></Online>
+                <WaitingForPlayer
+                    visible = {this.state.waitingForPlayer}
+                ></WaitingForPlayer>
             </div>
         );
     }
 }
+class WaitingForPlayer extends React.Component {
+    constructor (props ) {
+        super (props);
+    }
+    render () {
+        return (
+            <label>{this.props.visible ? "Waiting for Player. Share join key with friend.":""}</label>
+        )
+    }
+}
+
 class MalusSize extends React.Component {
     constructor (props) {
         super (props);
