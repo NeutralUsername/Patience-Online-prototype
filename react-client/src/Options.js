@@ -84,11 +84,11 @@ export default class Options extends React.Component {
     }
     newGame () {
         const socket = socketIOClient(this.state.backendUrl);
-        socket.emit('optionsValidReq', {
+        socket.emit('newgameREQ', {
             options : this.state
         });
 
-        socket.on("optionsValidRes", data => {
+        socket.on("newgameRES", data => {
             return (
                 ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
                 ReactDOM.render (

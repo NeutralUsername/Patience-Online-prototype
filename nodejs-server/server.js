@@ -28,9 +28,9 @@ io.on('connection', function (socket) {
 });
 
 io.on('connection', function (socket) {
-  socket.on('optionsValidReq', function (data) {
+  socket.on('newgameREQ', function (data) {
     if(OptionsValid(data.options))
-      socket.emit('optionsValidRes');
+      socket.emit('newgameRES' , { data : 'test'});
   });
 });
 
