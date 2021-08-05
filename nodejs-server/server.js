@@ -1,12 +1,18 @@
 require('dotenv').config({ path: '.env' });
-var db = require('./db.js');
-
+var mysql = require('mysql2');
 var express = require('express'),
   app = express(),
   port = process.env.NS_PORT || 3000,
   controller = require('./controller');
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
+
+var dbCon = mysql.createConnection({
+  host: "localhost",
+  user: "gregaire",
+  password: "password",
+  database: "gregaire"
+});
 
 app.route('/ping').get(controller.root);
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
@@ -41,6 +47,7 @@ function validateOptions(data) {
               if(data.roundsTimed === true || data.roundsTimed === false)
                 if(data.timePerTurn >= 15 && data.timePerTurn <= 300)
                   if(data.timePerRound >= 600 && data.timePerRound <= 3600)
+                  //if(data.name = .....)
                     return true;
   
   return false;
