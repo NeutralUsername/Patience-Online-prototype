@@ -18,9 +18,10 @@ export default class Options extends React.Component {
             roundsTimed : false, 
             timePerRound : 1800, 
             name : '',  
+            gametype : '',
             roomkey : '',  
+            backendUrl : "http://127.0.0.1:3000"
         };
-        this.backendUrl = "http://127.0.0.1:3000";
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
         this.handleSecquenceSizeChange = this.handleSecquenceSizeChange.bind (this);
         this.handleThrowOnStockChange = this.handleThrowOnStockChange.bind (this);
@@ -36,60 +37,64 @@ export default class Options extends React.Component {
         this.handleAIClick = this.handleAIClick.bind (this);
         this.handleCreateClick = this.handleCreateClick.bind (this)
         this.handleJoinClick = this.handleJoinClick.bind (this)
+        this.newGame = this.newGame.bind (this);
         console.log (this.state);
     }
     handleMalusSizeChange (malusSize) {
-        this.setState ({malusSize: malusSize })
+        this.setState ({malusSize : malusSize })
     }
     handleSecquenceSizeChange (secquenceSize) {
-        this.setState ({secquenceSize: secquenceSize })
+        this.setState ({secquenceSize : secquenceSize })
     }
     handleThrowOnStockChange (throwOnStock) {
-        this.setState ({throwOnStock: throwOnStock })
+        this.setState ({throwOnStock : throwOnStock })
     }
     handleThrowOnMalusChange (throwOnMalus) {
-        this.setState ({throwOnMalus: throwOnMalus })
+        this.setState ({throwOnMalus : throwOnMalus })
     }
     handleVariantChange (variant) {
-        this.setState ({variant: variant })
+        this.setState ({variant : variant })
     }
     handleTurnsTimedChange (turnsTimed) {
-        this.setState ({turnsTimed: turnsTimed })
+        this.setState ({turnsTimed : turnsTimed })
     }
     handleTimePerTurnChange (timePerTurn) {
-        this.setState ({timePerTurn: timePerTurn })
+        this.setState ({timePerTurn : timePerTurn })
     }
     handleRoundsTimedChange (roundsTimed) {
-        this.setState ({roundsTimed: roundsTimed })
+        this.setState ({roundsTimed : roundsTimed })
     }
     handleTimePerRoundChange (timePerRound) {
-        this.setState ({timePerRound: timePerRound })
+        this.setState ({timePerRound : timePerRound })
     }
     handleNameChange (name) {
-        this.setState ({name: name })
+        this.setState ({name : name })
     }
     handleRoomkeyChange (roomkey) {
-        this.setState ({roomkey: roomkey })
+        this.setState ({roomkey : roomkey })
     }
     handleCreateClick () {
        console.log (this.state);
     }
     handleJoinClick () {
-
+        console.log (this.state);
     }
     handleAIClick () {
-        const socket = socketIOClient(this.backendUrl);
-        socket.emit('newAIgameReq', {
+        this.setState ({gametype : 'AI'}, () => this.newGame() );
+    }
+    newGame () {
+        const socket = socketIOClient(this.state.backendUrl);
+        socket.emit('newGameReq', {
             options : this.state
         });
-        
-        socket.on("newAIgameRes", data => {
+        socket.on("newGameRes", data => {
             if(data.isValid) {
                 return (
                     ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
                     ReactDOM.render (
                         <Game 
                             options = {this.state} 
+                            gameid = {data.gameid}
                         ></Game>,
                         document.getElementById ('root')
                     )

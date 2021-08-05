@@ -28,15 +28,19 @@ io.on('connection', function (socket) {
 });
 
 io.on('connection', function (socket) {
-  socket.on('newAIgameReq', function (data) {
-    var optionsValid = false;
-    if(validateOptions(data.options))
-      optionsValid = true;
-    socket.emit('newAIgameRes', { isValid: optionsValid} );
+  socket.on('newGameReq', function (data) {
+    if(OptionsValid(data.options))
+      socket.emit('newGameRes', { 
+        isValid: true,
+        gameid : ''
+      });
+    else
+      socket.emit('newAIgameRes', { isValid: false} );
   });
 });
 
-function validateOptions(options) {
+
+function OptionsValid(options) {
   if(options.malusSize >= 5 && options.malusSize <= 20)
     if(options.sequenceSize >= 1 && options.sequenceSize <= 6)
       if(options.throwOnStock === true || options.throwOnStock === false)
@@ -46,8 +50,9 @@ function validateOptions(options) {
               if(options.roundsTimed === true || options.roundsTimed === false)
                 if(options.timePerTurn >= 15 && options.timePerTurn <= 300)
                   if(options.timePerRound >= 600 && options.timePerRound <= 3600)
-                    //if(options.name = .....)
-                    return true;
+                    if(options.gametype === 'AI' || options.gametype ==='online')
+                      //if(options.name = .....)
+                      return true;
   
   return false;
 }
