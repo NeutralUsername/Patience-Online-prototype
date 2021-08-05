@@ -78,11 +78,10 @@ export default class Options extends React.Component {
 
     }
     handleAIClick () {
-
         const socket = socketIOClient(this.state.backendUrl);
         socket.emit('newAIgameReq', {
             malusSize : this.state.malusSize,
-            secquenceSize : this.state.secquenceSize,
+            sequenceSize : this.state.secquenceSize,
             throwOnStock : this.state.throwOnStock,
             throwOnMalus : this.state.throwOnMalus,
             variant : this.state.variant,
@@ -93,7 +92,7 @@ export default class Options extends React.Component {
             name : this.state.name
         });
         socket.on("newAIgameRes", data => {
-            console.log('test');
+            console.log(data);
        });
 
 

@@ -24,7 +24,24 @@ io.on('connection', function (socket) {
 
 io.on('connection', function (socket) {
   socket.on('newAIgameReq', function (data) {
-    //if(data....)
-    socket.emit('newAIgameRes', { res: true} );
+    var optionsValid = false;
+    if(validateOptions(data))
+      optionsValid = true;
+    socket.emit('newAIgameRes', { res: optionsValid} );
   });
 });
+
+function validateOptions(data) {
+  if(data.malusSize >= 5 && data.malusSize <= 20)
+    if(data.sequenceSize >= 1 && data.sequenceSize <= 6)
+      if(data.throwOnStock === true || data.throwOnStock === false)
+        if(data.throwOnMalus === true || data.throwOnMalus === false)
+          if(data.variant === 'Patience' || data.variant === 'Klondike')
+            if(data.turnsTimed === true || data.turnsTimed === false)
+              if(data.roundsTimed === true || data.roundsTimed === false)
+                if(data.timePerTurn >= 15 && data.timePerTurn <= 300)
+                  if(data.timePerRound >= 600 && data.timePerRound <= 3600)
+                    return true;
+  
+  return false;
+}
