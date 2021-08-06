@@ -64,8 +64,9 @@ function joinPendingRoom(socket, room) {
     if(pendingOnlineRooms.find( element => element.socketid === room)) {
       socket.join(room);
       io.to(room).emit('joinOnlineRoomRES', { testdata : "testdata" }); 
+      console.log(socket.id, room);
       removePendingRoom(room);
-      removePendingRoom(socket);
+      removePendingRoom(socket.id);
       updateAvailableRoomsCLIENT();
     }
 }

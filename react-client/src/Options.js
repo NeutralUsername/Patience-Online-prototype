@@ -18,7 +18,7 @@ export default class Options extends React.Component {
             roundsTimed : false, 
             timePerRound : 1800, 
             name : '',  
-            roomkey : '',  
+            roomName : '',  
             availableRooms : [],
         };
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
@@ -32,7 +32,7 @@ export default class Options extends React.Component {
         this.handleTimePerRoundChange = this.handleTimePerRoundChange.bind (this);
         this.handleTimePerRoundChange = this.handleTimePerRoundChange.bind (this);
         this.handleNameChange = this.handleNameChange.bind (this);
-        this.handleRoomkeyChange = this.handleRoomkeyChange.bind (this);
+        this.handleRoomNameChange = this.handleRoomNameChange.bind (this);
         this.handleAIClick = this.handleAIClick.bind (this);
         this.handleCreateClick = this.handleCreateClick.bind (this);
         this.handleJoinClick = this.handleJoinClick.bind (this);
@@ -96,8 +96,8 @@ export default class Options extends React.Component {
     handleNameChange (name) {
         this.setState ({name : name })
     }
-    handleRoomkeyChange (roomkey) {
-        this.setState ({roomkey : roomkey })
+    handleRoomNameChange (roomName) {
+        this.setState ({roomName : roomName })
     }
 
     handleCreateClick () {
@@ -106,9 +106,9 @@ export default class Options extends React.Component {
         });
     };
 
-    handleJoinClick () {
+    handleJoinClick (event) {
         this.props.socket.emit('joinOnlineRoomREQ', {
-            roomkey : this.state.roomkey
+            roomkey : event.target.value
         });
     }
 
@@ -166,12 +166,12 @@ export default class Options extends React.Component {
                 ></AI>
                 <Online 
                     handleNewClick = {this.handleCreateClick} 
-                    handleJoinClick = {this.handleJoinClick}
-                    roomkey = {this.state.roomkey} 
-                    onChange = {this.handleRoomkeyChange}
+                    roomName = {this.state.roomName} 
+                    onChange = {this.handleRoomNameChange}
                 ></Online>
                  <AvailableRooms
                     availableRooms = {this.state.availableRooms}
+                    handleClick = {this.handleJoinClick}
                 ></AvailableRooms>
             </div>
         );
@@ -185,14 +185,21 @@ class AvailableRooms extends React.Component {
     }
     render () {
         return (
-            <ul>
-                {this.props.availableRooms.map( (value) => <li key = {value} > {value.socketid} </li>)}
+            <ul> {this.props.availableRooms.map( (value) => 
+                <li 
+                    key = {value} > 
+                    {value.socketid} 
+                    <button 
+                        value = {value.socketid}
+                        onClick = {this.props.handleClick} > 
+                        join 
+                    </button> 
+                </li>)}
             </ul>
         )
     }
 }
 
-//  return React.createElement('li', null, "hi" ) 
 class MalusSize extends React.Component {
     constructor (props) {
         super (props);
@@ -489,15 +496,11 @@ class Online extends React.Component {
                     onClick = {this.props.handleNewClick} >
                     New
                 </button>
-                <button 
-                    onClick = {this.props.handleJoinClick} >
-                    Join
-                </button>
                 <input 
-                    id = 'roomkey' 
+                    id = 'roomName' 
                     type = 'text'  
                     onChange = {this.handleChange} 
-                    value = { this.props.roomkey} 
+                    value = { this.props.roomName} 
                 ></input>
             </div>
         )
