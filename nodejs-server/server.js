@@ -24,12 +24,14 @@ io.on('connection', function (socket) {
 
   socket.on('AIgameREQ', function (data) {
     if(OptionsValid(data.options)) {
+      
       socket.emit('AIgameRES' , { gameid : "gameid"});
   }});
 
   socket.on('ONgameREQ', function (data) {
     if(OptionsValid(data.options)) {
-      socket.emit('waitingforplayerRES' , { data : "sample"});
+      console.log(socket.id);
+      socket.emit('waitingforplayerRES' , { gameid : "gameid",  socketid : socket.id});
   }});
 
   socket.on('joinREQ', function (data) {

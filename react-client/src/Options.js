@@ -20,7 +20,6 @@ export default class Options extends React.Component {
             name : '',  
             roomkey : '',  
             waitingForPlayer : false,
-            backendUrl : "http://127.0.0.1:3000"
         };
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
         this.handleSecquenceSizeChange = this.handleSecquenceSizeChange.bind (this);
@@ -72,31 +71,29 @@ export default class Options extends React.Component {
         this.setState ({roomkey : roomkey })
     }
     handleCreateClick () {
-        this.setState ({waitingForPlayer : true}, () => {
-            const socket = socketIOClient(this.state.backendUrl);
-            socket.emit('ONgameREQ', {
-                options : this.state
-            });
-            socket.on("ONgameRES", data => {
-                return (
-                    ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
-                    ReactDOM.render (
-                        <Game 
-                            options = {this.state} 
-                            gameid = {data.gameid}
-                        ></Game>,
-                        document.getElementById ('root')
-                    )
-                )   
-            });
-        });
-    }
-    handleJoinClick () {
-        const socket = socketIOClient(this.state.backendUrl);
-        socket.emit('ONgameREQ', {
+        this.props.socket.emit('ONgameREQ', {
             options : this.state
         });
-        socket.on("ONgameRES", data => {
+        this.props.socket.on("ONgameRES", data => {
+            this.setState({roomkey : data.socketid});
+            return (
+                ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
+                ReactDOM.render (
+                    <Game 
+                        options = {this.state} 
+                        gameid = {data.gameid}
+                    ></Game>,
+                    document.getElementById ('root')
+                )
+            )   
+        });
+    };
+    
+    handleJoinClick () {
+        this.props.socket.emit('ONgameREQ', {
+            options : this.state
+        });
+        this.props.socket.on("ONgameRES", data => {
             return (
                 ReactDOM.render (
                     <Game 
@@ -109,11 +106,10 @@ export default class Options extends React.Component {
         });
     }
     handleAIClick () {
-        const socket = socketIOClient(this.state.backendUrl);
-        socket.emit('AIgameREQ', {
+        this.props.socket.emit('AIgameREQ', {
             options : this.state,
         });
-        socket.on("AIgameRES", data => {
+        this.props.socket.on("AIgameRES", data => {
             return (
                 ReactDOM.render (
                     <Game 
@@ -129,7 +125,9 @@ export default class Options extends React.Component {
         return (
             <div 
             className = {"options"} > 
-                <ServerTime></ServerTime>
+                <ServerTime
+                    socket = {this.props.socket}
+                ></ServerTime>
                 <MalusSize 
                     malusSize = {this.state.malusSize} 
                     onChange = {this.handleMalusSizeChange} 

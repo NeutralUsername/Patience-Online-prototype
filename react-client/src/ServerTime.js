@@ -3,8 +3,8 @@ import './ServerTime.css';
 import socketIOClient from 'socket.io-client';
 
 class ServerTime extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.mounted = false;
     this.state = {
       response: false,
@@ -15,9 +15,8 @@ class ServerTime extends React.Component {
     this.mounted = true;
     //const  endpoint  = this.state.endpoint; ==
     const { endpoint } = this.state;
-    const socket = socketIOClient(endpoint);
-    socket.emit('serverTimeREQ', { data: 'some sample data'});
-    socket.on("serverTimeRES", data => {
+    this.props.socket.emit('serverTimeREQ', { data: 'some sample data'});
+    this.props.socket.on("serverTimeRES", data => {
       if(this.mounted === true)
         this.setState({ response: data.data })
     });
