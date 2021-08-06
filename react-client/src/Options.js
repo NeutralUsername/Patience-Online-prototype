@@ -87,7 +87,7 @@ export default class Options extends React.Component {
                 });
         });
 
-        this.props.socket.on("startONLINEgame", data => {;
+        this.props.socket.on("joinONLINEgameRES", data => {;
             return (
                 ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
                 ReactDOM.render (
@@ -105,7 +105,7 @@ export default class Options extends React.Component {
             options : this.state
         });
 
-        this.props.socket.on("startONLINEgame", data => {
+        this.props.socket.on("joinONLINEgameRES", data => {
             return (
                 ReactDOM.render (
                     <Game 

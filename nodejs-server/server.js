@@ -45,8 +45,8 @@ io.on('connection', function (socket) {
   });
 
   socket.on('availableRES', function (data) {
-    io.to(data.socketid).emit('startONLINEgame', { socketid : socket.id });
-    io.to(socket.id).emit('startONLINEgame', { socketid : socket.id });
+    io.to(data.socketid).emit('joinONLINEgameRES', { socketid : socket.id });
+    io.to(socket.id).emit('joinONLINEgameRES', { socketid : socket.id });
   });
 });
 
