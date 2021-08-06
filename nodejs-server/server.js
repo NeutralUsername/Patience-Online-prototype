@@ -22,15 +22,12 @@ app.get('/', function (req, res) {
 const waitingClients = [];
 
 io.on('connection', function (socket) {
+  io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : waitingClients});
 
   socket.on('serverTimeREQ', function (data) {
     setInterval(function () {
       socket.emit('serverTimeRES', { data: new Date() });
     },96);
-  });
-
-  socket.on('UpdateAvailableRoomsREQ', function (data) {
-      io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : waitingClients});
   });
 
   socket.on('AIgameREQ', function (data) {
@@ -45,6 +42,7 @@ io.on('connection', function (socket) {
           socketid : socket.id, 
           options : data.options
         });
+        io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : waitingClients});
         socket.emit('lookingForPlayerRES' );
       }
     }

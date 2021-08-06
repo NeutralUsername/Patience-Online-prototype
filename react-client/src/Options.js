@@ -39,7 +39,6 @@ export default class Options extends React.Component {
         this.handleCreateClick = this.handleCreateClick.bind (this);
         this.handleJoinClick = this.handleJoinClick.bind (this);
 
-        this.props.socket.emit('UpdateAvailableRoomsREQ');
         this.props.socket.on("UpdateAvailableRoomsRES", data => {
             this.setState ({availableRooms : data.rooms });
         });
@@ -87,7 +86,6 @@ export default class Options extends React.Component {
         this.props.socket.on("lookingForPlayerRES", data => {
             this.setState ({statusMessage : 'copy key and share with friend'}),
             this.setState ({statusMessageVisible : true})
-            this.props.socket.emit('UpdateAvailableRoomsREQ');
         });
 
         this.props.socket.on("joinONLINEgameRES", data => {
