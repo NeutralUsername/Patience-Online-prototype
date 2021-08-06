@@ -19,7 +19,7 @@ export default class Options extends React.Component {
             timePerRound : 1800, 
             name : '',  
             roomName : '',  
-            availableRooms : [],
+            pendingRooms : [],
         };
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
         this.handleSecquenceSizeChange = this.handleSecquenceSizeChange.bind (this);
@@ -37,8 +37,8 @@ export default class Options extends React.Component {
         this.handleCreateClick = this.handleCreateClick.bind (this);
         this.handleJoinClick = this.handleJoinClick.bind (this);
 
-        this.props.socket.on("UpdateAvailableRoomsRES", data => {
-            this.setState ({availableRooms : data.rooms });
+        this.props.socket.on("UpdatePendingRoomsRES", data => {
+            this.setState ({pendingRooms : data.rooms });
         });
 
         this.props.socket.on("joinOnlineRoomRES", data => {
@@ -169,32 +169,24 @@ export default class Options extends React.Component {
                     roomName = {this.state.roomName} 
                     onChange = {this.handleRoomNameChange}
                 ></Online>
-                 <AvailableRooms
-                    availableRooms = {this.state.availableRooms}
+                 <PendingRooms
+                    pendingRooms = {this.state.pendingRooms}
                     handleClick = {this.handleJoinClick}
-                ></AvailableRooms>
+                ></PendingRooms>
             </div>
         );
     }
 }
 
 
-class AvailableRooms extends React.Component {
+class PendingRooms extends React.Component {
     constructor ( props ) {
         super (props);
     }
     render () {
         return (
-            <ul> {this.props.availableRooms.map( (value) => 
-                <li 
-                    key = {value} > 
-                    {value.socketid} 
-                    <button 
-                        value = {value.socketid}
-                        onClick = {this.props.handleClick} > 
-                        join 
-                    </button> 
-                </li>)}
+            <ul> 
+               
             </ul>
         )
     }

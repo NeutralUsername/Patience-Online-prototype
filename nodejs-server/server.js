@@ -22,7 +22,7 @@ const pendingOnlineRooms = [];
 const io = require('socket.io')(server);
 
 io.on('connection', function (socket) {
-  updateAvailableRoomsCLIENT();
+  updatePendingRoomsCLIENT();
 
   socket.on('serverTimeREQ',  () => {
     setInterval(function () {
@@ -56,7 +56,7 @@ function createPendingRoom(socket, options) {
         socketid : socket.id,
         options : options
       });
-      updateAvailableRoomsCLIENT();
+      updatePendingRoomsCLIENT();
     }
 }
 
@@ -68,19 +68,19 @@ function joinPendingRoom(socket, room) {
       console.log(socket.id, room);
       removePendingRoom(room);
       removePendingRoom(socket.id);
-      updateAvailableRoomsCLIENT();
+      updatePendingRoomsCLIENT();
     }
 }
 
 function removePendingRoom(sockedid) {
   if(pendingOnlineRooms.find(e => e.socketid == sockedid)) {
     pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.socketid == sockedid), 1);
-    updateAvailableRoomsCLIENT();
+    updatePendingRoomsCLIENT();
   }  
 }
 
-function updateAvailableRoomsCLIENT() {
-  io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : pendingOnlineRooms});
+function updatePendingRoomsCLIENT() {
+  io.sockets.emit('UpdatePendingRoomsRES' , { rooms : pendingOnlineRooms});
  }
 
 function OptionsValid(options) {
