@@ -15,7 +15,7 @@ class ServerTime extends React.Component {
     this.mounted = true;
     //const  endpoint  = this.state.endpoint; ==
     const { endpoint } = this.state;
-    this.props.socket.emit('serverTimeREQ', { data: 'some sample data'});
+    this.props.socket.emit('serverTimeREQ');
     this.props.socket.on("serverTimeRES", data => {
       if(this.mounted === true)
         this.setState({ response: data.data })

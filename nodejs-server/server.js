@@ -36,7 +36,7 @@ io.on('connection', function (socket) {
   }});
 
   socket.on('newOnlineRoomREQ', function (data) {
-      createPendingRoom(socket.id, data.options);
+    createPendingRoom(socket.id, data.options);
   });
 
   socket.on('joinOnlineRoomREQ', function (data) {
@@ -44,8 +44,7 @@ io.on('connection', function (socket) {
   });
 
   socket.on('disconnect', function () {
-      removePendingRoom(socket.id);
-      updateAvailableRoomsCLIENT();
+    removePendingRoom(socket.id);  
   });
 });
 
@@ -72,13 +71,15 @@ function joinPendingRoom(joiner, room) {
 }
 
 function removePendingRoom(room) {
-  if(pendingOnlineRooms.find(e => e.socketid == room))
+  if(pendingOnlineRooms.find(e => e.socketid == room)) {
     pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.socketid == room), 1);
+    updateAvailableRoomsCLIENT();
+  }  
 }
 
 function updateAvailableRoomsCLIENT() {
- io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : pendingOnlineRooms});
-}
+  io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : pendingOnlineRooms});
+ }
 
 function OptionsValid(options) {
   if(options.malusSize >= 5 && options.malusSize <= 20)
