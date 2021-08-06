@@ -37,7 +37,7 @@ io.on('connection', function (socket) {
   });
 
   socket.on('newOnlineRoomREQ', function (data) {
-    createPendingRoom(socket.id, data.options);
+    createPendingRoom(socket, data.options);
   });
 
   socket.on('joinOnlineRoomREQ', function (data) {
@@ -49,11 +49,11 @@ io.on('connection', function (socket) {
   });
 });
 
-function createPendingRoom(socketid, options) {
-  if(!pendingOnlineRooms.find(element=> element.socketid === socketid))
+function createPendingRoom(socket, options) {
+  if(!pendingOnlineRooms.find(element=> element.socketid === socket.id))
     if(OptionsValid(options)) {
       pendingOnlineRooms.push ({
-        socketid : socketid,
+        socketid : socket.id,
         options : options
       });
       updateAvailableRoomsCLIENT();
@@ -72,9 +72,9 @@ function joinPendingRoom(socket, room) {
     }
 }
 
-function removePendingRoom(room) {
-  if(pendingOnlineRooms.find(e => e.socketid == room)) {
-    pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.socketid == room), 1);
+function removePendingRoom(sockedid) {
+  if(pendingOnlineRooms.find(e => e.socketid == sockedid)) {
+    pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.socketid == sockedid), 1);
     updateAvailableRoomsCLIENT();
   }  
 }
