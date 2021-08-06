@@ -22,7 +22,7 @@ app.get('/', function (req, res) {
 const pendingOnlineRooms = [];
 
 io.on('connection', function (socket) {
-  io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : pendingOnlineRooms});
+  updateAvailableRoomsRES();
 
   socket.on('serverTimeREQ', function (data) {
     setInterval(function () {
@@ -32,18 +32,19 @@ io.on('connection', function (socket) {
 
   socket.on('AIgameREQ', function (data) {
     if(OptionsValid(data.options)) {
+
       socket.emit('AIgameRES' , { gameid : "gameid"});
   }});
 
   socket.on('newOnlineRoomREQ', function (data) {
     if(OptionsValid(data.options)) {
+      
       if(!pendingOnlineRooms.find(element=> element.socketid === socket.id)) {
         pendingOnlineRooms.push ({
           socketid : socket.id, 
           options : data.options
         });
-        io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : pendingOnlineRooms});
-        socket.emit('lookingForPlayerRES' );
+        updateAvailableRoomsRES();
       }
     }
   });
@@ -59,16 +60,20 @@ io.on('connection', function (socket) {
         pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(element => element.socketid === data.options.roomkey), 1,)
         if(pendingOnlineRooms.find(element => element.socketid === socket.id))
           pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(element => element.socketid === socket.id), 1,);
-
-        io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : pendingOnlineRooms});
+        updateAvailableRoomsRES();
       }
   });
 
   socket.on('disconnect', function () {
     if(pendingOnlineRooms.find(element => element.socketid === socket.id))
-        pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(element => element.socketid === socket.id), 1)
+        pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(element => element.socketid === socket.id), 1);
+    updateAvailableRoomsRES();
   });
 });
+
+function updateAvailableRoomsRES() {
+ io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : pendingOnlineRooms});
+}
 
 function OptionsValid(options) {
   if(options.malusSize >= 5 && options.malusSize <= 20)
