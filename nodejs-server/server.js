@@ -31,6 +31,7 @@ io.on('connection', function (socket) {
   });
   socket.on('AIgameREQ', function (data) {
     if(OptionsValid(data.options)) {
+      removePendingRoom(socket.id);
       socket.emit('AIgameRES' , { gameid : "gameid"});
     }
   });
