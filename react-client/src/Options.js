@@ -74,8 +74,10 @@ export default class Options extends React.Component {
         this.props.socket.emit('ONgameREQ', {
             options : this.state
         });
-        this.props.socket.on("ONgameRES", data => {
-            this.setState({roomkey : data.socketid});
+        this.props.socket.on("waitingRES", data => {
+            this.setState ({roomkey : data.socketid })
+        });
+        this.props.socket.on("ONgameRES", data => {;
             return (
                 ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
                 ReactDOM.render (
@@ -88,9 +90,8 @@ export default class Options extends React.Component {
             )   
         });
     };
-    
     handleJoinClick () {
-        this.props.socket.emit('ONgameREQ', {
+        this.props.socket.emit('joinREQ', {
             options : this.state
         });
         this.props.socket.on("ONgameRES", data => {
@@ -170,7 +171,7 @@ export default class Options extends React.Component {
                 <Online 
                     handleNewClick = {this.handleCreateClick} 
                     handleJoinClick = {this.handleJoinClick}
-                    roomKey = {this.state.roomKey} 
+                    roomkey = {this.state.roomkey} 
                     onChange = {this.handleRoomkeyChange}
                 ></Online>
                 <WaitingForPlayer
@@ -460,7 +461,7 @@ class Name extends React.Component {
                 </label>
                 <input 
                     id = "nametf" 
-                    type="text"  
+                    type = "text"  
                     onChange = {this.handleChange} 
                     value = { this.props.name} 
                 ></input>  
@@ -479,7 +480,7 @@ class Online extends React.Component {
     render () {
         return (
             <div 
-                className={"online"} >
+                className = {"online"} >
                 <label>
                     vs. Player:
                 </label>
