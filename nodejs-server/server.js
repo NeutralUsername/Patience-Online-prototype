@@ -57,9 +57,9 @@ io.on('connection', function (socket) {
         io.to(data.options.roomkey).emit('joinOnlineRoomRES', { socketid : socket.id });
         io.to(socket.id).emit('joinOnlineRoomRES', { socketid : socket.id });
 
-        pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(element => element.socketid === data.options.roomkey), 1,)
-        if(pendingOnlineRooms.find(element => element.socketid === socket.id))
-          pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(element => element.socketid === socket.id), 1,);
+        removePendingRoom(data.options.roomkey);
+        removePendingRoom(socket.id);
+
         updateAvailableRoomsRES();
       }
   });
@@ -70,6 +70,11 @@ io.on('connection', function (socket) {
     updateAvailableRoomsRES();
   });
 });
+
+function removePendingRoom(room){
+  if(pendingOnlineRooms.find(e => e.socketid == room))
+    pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.socketid == room), 1);
+}
 
 function updateAvailableRoomsRES() {
  io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : pendingOnlineRooms});
