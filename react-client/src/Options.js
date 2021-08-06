@@ -108,7 +108,7 @@ export default class Options extends React.Component {
 
     handleJoinClick () {
         this.props.socket.emit('joinOnlineRoomREQ', {
-            options : this.state
+            roomkey : this.state.roomkey
         });
     }
 

@@ -29,18 +29,18 @@ io.on('connection', function (socket) {
       socket.emit('serverTimeRES', { data: new Date() });
     },96);
   });
-
   socket.on('AIgameREQ', function (data) {
     if(OptionsValid(data.options)) {
       socket.emit('AIgameRES' , { gameid : "gameid"});
-  }});
+    }
+  });
 
   socket.on('newOnlineRoomREQ', function (data) {
     createPendingRoom(socket.id, data.options);
   });
 
   socket.on('joinOnlineRoomREQ', function (data) {
-    joinPendingRoom(socket.id, data.options.roomkey);
+    joinPendingRoom(socket, data.roomkey);
   });
 
   socket.on('disconnect', function () {
@@ -59,13 +59,13 @@ function createPendingRoom(socketid, options) {
     }
 }
 
-function joinPendingRoom(joiner, room) {
-  if(room != joiner) 
+function joinPendingRoom(socket, room) {
+  if(room != socket.id) 
     if(pendingOnlineRooms.find( element => element.socketid === room)) {
-      io.to(room).emit('joinOnlineRoomRES', { testdata : "testdata" });
+      socket.join(room);
+      io.to(room).emit('joinOnlineRoomRES', { testdata : "testdata" }); 
       removePendingRoom(room);
-      io.to(joiner).emit('joinOnlineRoomRES', { testdata : "testdata" });
-      removePendingRoom(joiner);
+      removePendingRoom(socket);
       updateAvailableRoomsCLIENT();
     }
 }
@@ -92,7 +92,6 @@ function OptionsValid(options) {
                 if(options.timePerTurn >= 15 && options.timePerTurn <= 300)
                   if(options.timePerRound >= 600 && options.timePerRound <= 3600)
                       return true;
-  
   return false;
 }
 
