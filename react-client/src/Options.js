@@ -80,6 +80,13 @@ export default class Options extends React.Component {
             this.setState ({roomkey : data.socketid})
         });
 
+        this.props.socket.on("availableREQ", data => {
+            if (this.state.waitingForPlayer)
+                this.props.socket.emit('availableRES', {
+                    socketid : data.socketid
+                });
+        });
+
         this.props.socket.on("startONLINEgame", data => {;
             return (
                 ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
