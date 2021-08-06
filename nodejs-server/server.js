@@ -36,11 +36,13 @@ io.on('connection', function (socket) {
 
   socket.on('lookingForPlayerREQ', function (data) {
     if(OptionsValid(data.options)) {
-      waitingClients.push ({
-        socketid : socket.id, 
-        options : data.options
-      });
-      socket.emit('lookingForPlayerRES' );
+      if(!waitingClients.find(element=> element.socketid === socket.id)) {
+        waitingClients.push ({
+          socketid : socket.id, 
+          options : data.options
+        });
+        socket.emit('lookingForPlayerRES' );
+      }
     }
   });
 
