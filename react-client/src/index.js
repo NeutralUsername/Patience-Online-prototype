@@ -4,9 +4,16 @@ import Options from './Options';
 import socketIOClient from 'socket.io-client';
 import './index.css';
 
+var socket = socketIOClient ("http://127.0.0.1:3000");
 
+socket.on('connect', () => {
+  ReactDOM.render(
+    <Options 
+      socket = {socket}
+      socketid = {socket.id}
+    ></Options>,
+    document.getElementById('root')
+  );
+  
+})
 
-ReactDOM.render(
-  <Options socket = {socketIOClient ("http://127.0.0.1:3000")}/>,
-  document.getElementById('root')
-);

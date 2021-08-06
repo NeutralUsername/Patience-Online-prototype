@@ -32,13 +32,11 @@ io.on('connection', function (socket) {
 
   socket.on('AIgameREQ', function (data) {
     if(OptionsValid(data.options)) {
-
       socket.emit('AIgameRES' , { gameid : "gameid"});
   }});
 
   socket.on('newOnlineRoomREQ', function (data) {
     if(OptionsValid(data.options)) {
-      
       if(!pendingOnlineRooms.find(element=> element.socketid === socket.id)) {
         pendingOnlineRooms.push ({
           socketid : socket.id, 
@@ -70,6 +68,10 @@ io.on('connection', function (socket) {
     updateAvailableRoomsRES();
   });
 });
+
+function createPendingRoom(client) {
+  
+}
 
 function removePendingRoom(room){
   if(pendingOnlineRooms.find(e => e.socketid == room))

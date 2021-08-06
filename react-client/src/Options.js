@@ -21,7 +21,7 @@ export default class Options extends React.Component {
             roomkey : '',  
             statusMessageVisible : false,
             statusMessage : 'test',
-            availableRooms : []
+            availableRooms : [],
         };
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
         this.handleSecquenceSizeChange = this.handleSecquenceSizeChange.bind (this);
