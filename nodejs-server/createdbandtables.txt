@@ -4,7 +4,6 @@ con.connect(function(err) {
     function (err, result) {
       if (err) throw err;
   });
-  
 }); 
 
 con.connect(function(err) {
@@ -56,8 +55,8 @@ con.connect(function(err) {
     +"id          INT AUTO_INCREMENT PRIMARY KEY, "
     +"deckid1     INT, deckid2 INT, "
     +"optionid    INT, "
-    +"userid1     INT, "
-    +"userid2     INT, "
+    +"userid1     VARCHAR(20), "
+    +"userid2     VARCHAR(20), "
     +"CONSTRAINT `deck1`  FOREIGN KEY (`deckid1`)  REFERENCES `decks`(`id`), "
     +"CONSTRAINT `deck2`  FOREIGN KEY (`deckid2`)  REFERENCES `decks`(`id`), "
     +"CONSTRAINT `option` FOREIGN KEY (`optionid`) REFERENCES `options`(`id`))", 
