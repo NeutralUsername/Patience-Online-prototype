@@ -26,7 +26,6 @@ con.connect(function(err) {
     +"turntime     INT, "
     +"roundstimed  BOOLEAN, "
     +"roundtime    INT, "
-    +"gametype     VARCHAR(20))", 
     function (err, result) {
       if (err) throw err;
   });
