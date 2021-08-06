@@ -20,7 +20,8 @@ export default class Options extends React.Component {
             name : '',  
             roomkey : '',  
             statusMessageVisible : false,
-            statusMessage : 'test'
+            statusMessage : 'test',
+            availableRooms : []
         };
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
         this.handleSecquenceSizeChange = this.handleSecquenceSizeChange.bind (this);
@@ -37,7 +38,13 @@ export default class Options extends React.Component {
         this.handleAIClick = this.handleAIClick.bind (this);
         this.handleCreateClick = this.handleCreateClick.bind (this);
         this.handleJoinClick = this.handleJoinClick.bind (this);
-    }
+
+        this.props.socket.on("UpdateAvailableRoomsRES", data => {
+            this.setState ({availableRooms : data.rooms });
+        });
+    } 
+        
+    
     handleMalusSizeChange (malusSize) {
         this.setState ({malusSize : malusSize })
     }
@@ -79,6 +86,7 @@ export default class Options extends React.Component {
         this.props.socket.on("lookingForPlayerRES", data => {
             this.setState ({statusMessage : 'copy key and share with friend'}),
             this.setState ({statusMessageVisible : true})
+            this.props.socket.emit('UpdateAvailableRoomsREQ');
         });
 
         this.props.socket.on("joinONLINEgameRES", data => {;
@@ -135,6 +143,9 @@ export default class Options extends React.Component {
                 <ServerTime
                     socket = {this.props.socket}
                 ></ServerTime>
+                <AvailableRooms
+                    availableRooms = {this.state.availableRooms}
+                ></AvailableRooms>
                 <MalusSize 
                     malusSize = {this.state.malusSize} 
                     onChange = {this.handleMalusSizeChange} 
@@ -188,17 +199,22 @@ export default class Options extends React.Component {
         );
     }
 }
-class StatusMessage extends React.Component {
-    constructor (props ) {
+
+
+class AvailableRooms extends React.Component {
+    constructor ( props ) {
         super (props);
     }
     render () {
         return (
-            <label>{this.props.visible ? this.props.message:""}</label>
+            <ul>
+                {this.props.availableRooms.map( (value) => <li key = {value} > {value.socketid} </li>)}
+            </ul>
         )
     }
 }
 
+//  return React.createElement('li', null, "hi" ) 
 class MalusSize extends React.Component {
     constructor (props) {
         super (props);
@@ -521,5 +537,10 @@ function AI (props) {
                 Start
             </button>
         </div>
+    )
+}
+function StatusMessage(props) {
+    return (
+        <label>{props.visible ? props.message:""}</label>
     )
 }

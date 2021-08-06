@@ -29,6 +29,10 @@ io.on('connection', function (socket) {
     },96);
   });
 
+  socket.on('UpdateAvailableRoomsREQ', function (data) {
+      io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : waitingClients});
+  });
+
   socket.on('AIgameREQ', function (data) {
     if(OptionsValid(data.options)) {
       socket.emit('AIgameRES' , { gameid : "gameid"});
