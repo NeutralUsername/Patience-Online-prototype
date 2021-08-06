@@ -75,11 +75,12 @@ export default class Options extends React.Component {
             options : this.state
         });
 
-        this.props.socket.on("waitingForPlayerRES", data => {
+        this.props.socket.on("newONLINEgameRES", data => {
             this.setState ({waitingForPlayer : true}),
             this.setState ({roomkey : data.socketid})
         });
-        this.props.socket.on("ONLINEgameRES", data => {;
+        
+        this.props.socket.on("startONLINEgame", data => {;
             return (
                 ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
                 ReactDOM.render (
@@ -97,7 +98,7 @@ export default class Options extends React.Component {
             options : this.state
         });
 
-        this.props.socket.on("ONLINEgameRES", data => {
+        this.props.socket.on("startONLINEgame", data => {
             return (
                 ReactDOM.render (
                     <Game 

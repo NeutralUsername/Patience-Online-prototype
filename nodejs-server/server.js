@@ -21,6 +21,11 @@ app.get('/', function (req, res) {
 
 io.on('connection', function (socket) {
   console.log(Object.keys(io.sockets.sockets));
+  socket.on('serverTimeREQ', function (data) {
+    setInterval(function () {
+      socket.emit('serverTimeRES', { data: new Date() });
+    },96);
+  });
 
   socket.on('AIgameREQ', function (data) {
     if(OptionsValid(data.options)) {
@@ -29,17 +34,11 @@ io.on('connection', function (socket) {
 
   socket.on('newONLINEgameREQ', function (data) {
     if(OptionsValid(data.options)) {
-      socket.emit('waitingForPlayerRES' , { gameid : "gameid", socketid : socket.id});
+      socket.emit('newONLINEgameRES' , { gameid : "gameid", socketid : socket.id});
   }});
 
   socket.on('joinONLINEgameREQ', function (data) {
-      socket.emit('ONLINEgameRES' , { gameid : "gameid"});
-  });
-
-  socket.on('serverTimeREQ', function (data) {
-    setInterval(function () {
-      socket.emit('serverTimeRES', { data: new Date() });
-    },96);
+      
   });
 });
 
