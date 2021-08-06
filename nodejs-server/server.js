@@ -27,13 +27,13 @@ io.on('connection', function (socket) {
       socket.emit('AIgameRES' , { gameid : "gameid"});
   }});
 
-  socket.on('ONgameREQ', function (data) {
+  socket.on('newONLINEgameREQ', function (data) {
     if(OptionsValid(data.options)) {
-      socket.emit('waitingRES' , { gameid : "gameid", socketid : socket.id});
+      socket.emit('waitingForPlayerRES' , { gameid : "gameid", socketid : socket.id});
   }});
 
-  socket.on('joinREQ', function (data) {
-      socket.emit('ONgameRES' , { gameid : "gameid"});
+  socket.on('joinONLINEgameREQ', function (data) {
+      socket.emit('ONLINEgameRES' , { gameid : "gameid"});
   });
 
   socket.on('serverTimeREQ', function (data) {

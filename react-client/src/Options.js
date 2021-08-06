@@ -71,13 +71,15 @@ export default class Options extends React.Component {
         this.setState ({roomkey : roomkey })
     }
     handleCreateClick () {
-        this.props.socket.emit('ONgameREQ', {
+        this.props.socket.emit('newONLINEgameREQ', {
             options : this.state
         });
-        this.props.socket.on("waitingRES", data => {
-            this.setState ({roomkey : data.socketid })
+
+        this.props.socket.on("waitingForPlayerRES", data => {
+            this.setState ({waitingForPlayer : true}),
+            this.setState ({roomkey : data.socketid})
         });
-        this.props.socket.on("ONgameRES", data => {;
+        this.props.socket.on("ONLINEgameRES", data => {;
             return (
                 ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
                 ReactDOM.render (
@@ -91,10 +93,11 @@ export default class Options extends React.Component {
         });
     };
     handleJoinClick () {
-        this.props.socket.emit('joinREQ', {
+        this.props.socket.emit('joinONLINEgameREQ', {
             options : this.state
         });
-        this.props.socket.on("ONgameRES", data => {
+
+        this.props.socket.on("ONLINEgameRES", data => {
             return (
                 ReactDOM.render (
                     <Game 
@@ -110,6 +113,7 @@ export default class Options extends React.Component {
         this.props.socket.emit('AIgameREQ', {
             options : this.state,
         });
+
         this.props.socket.on("AIgameRES", data => {
             return (
                 ReactDOM.render (
