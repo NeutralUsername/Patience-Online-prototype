@@ -40,19 +40,16 @@ io.on('connection', function (socket) {
         socketid : socket.id, 
         options : data.options
       });
-      socket.emit('lookingForPlayerRES' , { socketid : socket.id });
+      socket.emit('lookingForPlayerRES' );
     }
   });
 
   socket.on('joinONLINEgameREQ', function (data) {
-    if(data.options.roomkey != socket.id) {
-      io.to(data.options.roomkey).emit('availableREQ', { socketid : socket.id });
-    }
-  });
-
-  socket.on('availableRES', function (data) {
-    io.to(data.socketid).emit('joinONLINEgameRES', { socketid : socket.id });
-    io.to(socket.id).emit('joinONLINEgameRES', { socketid : socket.id });
+    if(data.options.roomkey != socket.id) 
+      if(waitingClients.find( element => element.socketid === data.options.roomkey)) {
+        io.to(data.options.roomkey).emit('joinONLINEgameRES', { socketid : socket.id });
+        io.to(socket.id).emit('joinONLINEgameRES', { socketid : socket.id });
+      }
   });
 
   socket.on('disconnect', function () {

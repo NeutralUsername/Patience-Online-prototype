@@ -76,15 +76,7 @@ export default class Options extends React.Component {
         });
 
         this.props.socket.on("lookingForPlayerRES", data => {
-            this.setState ({waitingForPlayer : true}),
-            this.setState ({roomkey : data.socketid})
-        });
-
-        this.props.socket.on("availableREQ", data => {
-            if (this.state.waitingForPlayer)
-                this.props.socket.emit('availableRES', {
-                    socketid : data.socketid
-                });
+            this.setState ({waitingForPlayer : true})
         });
 
         this.props.socket.on("joinONLINEgameRES", data => {;
