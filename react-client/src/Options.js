@@ -19,7 +19,8 @@ export default class Options extends React.Component {
             timePerRound : 1800, 
             name : '',  
             roomkey : '',  
-            waitingForPlayer : false,
+            statusMessageVisible : false,
+            statusMessage : 'test'
         };
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
         this.handleSecquenceSizeChange = this.handleSecquenceSizeChange.bind (this);
@@ -76,7 +77,8 @@ export default class Options extends React.Component {
         });
 
         this.props.socket.on("lookingForPlayerRES", data => {
-            this.setState ({waitingForPlayer : true})
+            this.setState ({statusMessage : 'copy key and share with friend'}),
+            this.setState ({statusMessageVisible : true})
         });
 
         this.props.socket.on("joinONLINEgameRES", data => {;
@@ -178,20 +180,21 @@ export default class Options extends React.Component {
                     roomkey = {this.state.roomkey} 
                     onChange = {this.handleRoomkeyChange}
                 ></Online>
-                <WaitingForPlayer
-                    visible = {this.state.waitingForPlayer}
-                ></WaitingForPlayer>
+                <StatusMessage
+                    visible = {this.state.statusMessageVisible}
+                    message = {this.state.statusMessage}
+                ></StatusMessage>
             </div>
         );
     }
 }
-class WaitingForPlayer extends React.Component {
+class StatusMessage extends React.Component {
     constructor (props ) {
         super (props);
     }
     render () {
         return (
-            <label>{this.props.visible ? "Waiting for Player. Share join key with friend.":""}</label>
+            <label>{this.props.visible ? this.props.message:""}</label>
         )
     }
 }
