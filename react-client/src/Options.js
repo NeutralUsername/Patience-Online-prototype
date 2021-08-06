@@ -79,7 +79,7 @@ export default class Options extends React.Component {
             this.setState ({waitingForPlayer : true}),
             this.setState ({roomkey : data.socketid})
         });
-        
+
         this.props.socket.on("startONLINEgame", data => {;
             return (
                 ReactDOM.unmountComponentAtNode (document.getElementById ('root')),

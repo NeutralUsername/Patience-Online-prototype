@@ -34,12 +34,15 @@ io.on('connection', function (socket) {
 
   socket.on('newONLINEgameREQ', function (data) {
     if(OptionsValid(data.options)) {
-      socket.emit('newONLINEgameRES' , { gameid : "gameid", socketid : socket.id});
+      socket.emit('newONLINEgameRES' , { socketid : socket.id });
   }});
 
   socket.on('joinONLINEgameREQ', function (data) {
-      
-  });
+      if(data.options.roomkey != socket.id) {
+        io.to(data.options.roomkey).emit('startONLINEgame', { socketid : socket.id });
+        io.to(socket.id).emit('startONLINEgame', { socketid : socket.id });
+      }
+    });
 });
 
 function OptionsValid(options) {
