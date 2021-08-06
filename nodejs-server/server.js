@@ -22,7 +22,7 @@ app.get('/', function (req, res) {
 const pendingOnlineRooms = [];
 
 io.on('connection', function (socket) {
-  updateAvailableRoomsRES();
+  updateAvailableRoomsCLIENT();
 
   socket.on('serverTimeREQ', function (data) {
     setInterval(function () {
@@ -36,49 +36,48 @@ io.on('connection', function (socket) {
   }});
 
   socket.on('newOnlineRoomREQ', function (data) {
-    if(OptionsValid(data.options)) {
-      if(!pendingOnlineRooms.find(element=> element.socketid === socket.id)) {
-        pendingOnlineRooms.push ({
-          socketid : socket.id, 
-          options : data.options
-        });
-        updateAvailableRoomsRES();
-      }
-    }
+      createPendingRoom(socket.id, data.options);
   });
 
   socket.on('joinOnlineRoomREQ', function (data) {
-    
-    if(data.options.roomkey != socket.id) 
-      if(pendingOnlineRooms.find( element => element.socketid === data.options.roomkey)) {
-        // todo: create room for both people playing instead of addressing them separately
-        io.to(data.options.roomkey).emit('joinOnlineRoomRES', { socketid : socket.id });
-        io.to(socket.id).emit('joinOnlineRoomRES', { socketid : socket.id });
-
-        removePendingRoom(data.options.roomkey);
-        removePendingRoom(socket.id);
-
-        updateAvailableRoomsRES();
-      }
+    joinPendingRoom(socket.id, data.options.roomkey);
   });
 
   socket.on('disconnect', function () {
-    if(pendingOnlineRooms.find(element => element.socketid === socket.id))
-        pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(element => element.socketid === socket.id), 1);
-    updateAvailableRoomsRES();
+      removePendingRoom(socket.id);
+      updateAvailableRoomsCLIENT();
   });
 });
 
-function createPendingRoom(client) {
-  
+function createPendingRoom(socketid, options) {
+  if(!pendingOnlineRooms.find(element=> element.socketid === socketid))
+    if(OptionsValid(options)) {
+      pendingOnlineRooms.push ({
+        socketid : socketid,
+        options : options
+      });
+      updateAvailableRoomsCLIENT();
+    }
 }
 
-function removePendingRoom(room){
+function joinPendingRoom(joiner, room) {
+  if(room != joiner) 
+    if(pendingOnlineRooms.find( element => element.socketid === room)) {
+      io.to(room).emit('joinOnlineRoomRES', { testdata : "testdata" });
+      removePendingRoom(room);
+      io.to(joiner).emit('joinOnlineRoomRES', { testdata : "testdata" });
+      removePendingRoom(joiner);
+      updateAvailableRoomsCLIENT();
+    }
+}
+
+
+function removePendingRoom(room) {
   if(pendingOnlineRooms.find(e => e.socketid == room))
     pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.socketid == room), 1);
 }
 
-function updateAvailableRoomsRES() {
+function updateAvailableRoomsCLIENT() {
  io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : pendingOnlineRooms});
 }
 

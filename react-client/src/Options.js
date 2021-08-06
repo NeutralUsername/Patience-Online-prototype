@@ -19,8 +19,6 @@ export default class Options extends React.Component {
             timePerRound : 1800, 
             name : '',  
             roomkey : '',  
-            statusMessageVisible : false,
-            statusMessage : 'test',
             availableRooms : [],
         };
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
@@ -127,9 +125,6 @@ export default class Options extends React.Component {
                 <ServerTime
                     socket = {this.props.socket}
                 ></ServerTime>
-                <AvailableRooms
-                    availableRooms = {this.state.availableRooms}
-                ></AvailableRooms>
                 <MalusSize 
                     malusSize = {this.state.malusSize} 
                     onChange = {this.handleMalusSizeChange} 
@@ -175,10 +170,9 @@ export default class Options extends React.Component {
                     roomkey = {this.state.roomkey} 
                     onChange = {this.handleRoomkeyChange}
                 ></Online>
-                <StatusMessage
-                    visible = {this.state.statusMessageVisible}
-                    message = {this.state.statusMessage}
-                ></StatusMessage>
+                 <AvailableRooms
+                    availableRooms = {this.state.availableRooms}
+                ></AvailableRooms>
             </div>
         );
     }
@@ -521,10 +515,5 @@ function AI (props) {
                 Start
             </button>
         </div>
-    )
-}
-function StatusMessage(props) {
-    return (
-        <label>{props.visible ? props.message:""}</label>
     )
 }
