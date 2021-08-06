@@ -79,7 +79,7 @@ export default class Options extends React.Component {
         this.setState ({roomkey : roomkey })
     }
     handleCreateClick () {
-        this.props.socket.emit('lookingForPlayerREQ', {
+        this.props.socket.emit('newOnlineRoomREQ', {
             options : this.state
         });
 
@@ -88,7 +88,7 @@ export default class Options extends React.Component {
             this.setState ({statusMessageVisible : true})
         });
 
-        this.props.socket.on("joinONLINEgameRES", data => {
+        this.props.socket.on("joinOnlineRoomRES", data => {
             return (
                 ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
                 ReactDOM.render (
@@ -102,11 +102,11 @@ export default class Options extends React.Component {
         });
     };
     handleJoinClick () {
-        this.props.socket.emit('joinONLINEgameREQ', {
+        this.props.socket.emit('joinOnlineRoomREQ', {
             options : this.state
         });
 
-        this.props.socket.on("joinONLINEgameRES", data => {
+        this.props.socket.on("joinOnlineRoomRES", data => {
             return (
                 ReactDOM.render (
                     <Game 
