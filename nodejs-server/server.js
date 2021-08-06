@@ -3,7 +3,12 @@ var express = require('express'),
   port = 3000,
   controller = require('./controller');
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
+
+app.route('/ping').get(controller.root);
+server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/testSocketConnection.html');
+});
 
 var mysql = require('mysql2');
 var dbCon = mysql.createConnection({
@@ -13,18 +18,13 @@ var dbCon = mysql.createConnection({
   database: "gregaire"
 });
 
-app.route('/ping').get(controller.root);
-server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/testSocketConnection.html');
-});
-
 const pendingOnlineRooms = [];
+const io = require('socket.io')(server);
 
 io.on('connection', function (socket) {
   updateAvailableRoomsCLIENT();
 
-  socket.on('serverTimeREQ', function (data) {
+  socket.on('serverTimeREQ',  () => {
     setInterval(function () {
       socket.emit('serverTimeRES', { data: new Date() });
     },96);
@@ -71,7 +71,6 @@ function joinPendingRoom(joiner, room) {
     }
 }
 
-
 function removePendingRoom(room) {
   if(pendingOnlineRooms.find(e => e.socketid == room))
     pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.socketid == room), 1);
@@ -96,6 +95,3 @@ function OptionsValid(options) {
   return false;
 }
 
-function initializeAIgame(options){
-  
-}
