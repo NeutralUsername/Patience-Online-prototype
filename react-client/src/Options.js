@@ -90,7 +90,7 @@ export default class Options extends React.Component {
             this.props.socket.emit('UpdateAvailableRoomsREQ');
         });
 
-        this.props.socket.on("joinONLINEgameRES", data => {;
+        this.props.socket.on("joinONLINEgameRES", data => {
             return (
                 ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
                 ReactDOM.render (

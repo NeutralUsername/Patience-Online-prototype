@@ -55,7 +55,7 @@ io.on('connection', function (socket) {
       if(waitingClients.find( element => element.socketid === data.options.roomkey)) {
         io.to(data.options.roomkey).emit('joinONLINEgameRES', { socketid : socket.id });
         io.to(socket.id).emit('joinONLINEgameRES', { socketid : socket.id });
-        waitingClients.splice(waitingClients.findIndex(element => element.socketid === data.options.roomkey), 1,)
+        waitingClients.splice(waitingClients.findIndex(element => element.socketid === data.options.roomkey), 1,);
         io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : waitingClients});
       }
   });
