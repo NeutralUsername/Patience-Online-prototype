@@ -71,11 +71,11 @@ export default class Options extends React.Component {
         this.setState ({roomkey : roomkey })
     }
     handleCreateClick () {
-        this.props.socket.emit('newONLINEgameREQ', {
+        this.props.socket.emit('lookingForPlayerREQ', {
             options : this.state
         });
 
-        this.props.socket.on("newONLINEgameRES", data => {
+        this.props.socket.on("lookingForPlayerRES", data => {
             this.setState ({waitingForPlayer : true}),
             this.setState ({roomkey : data.socketid})
         });

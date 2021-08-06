@@ -19,8 +19,10 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/testSocketConnection.html');
 });
 
+const waitingClients = [];
+
 io.on('connection', function (socket) {
-  console.log(Object.keys(io.sockets.sockets));
+
   socket.on('serverTimeREQ', function (data) {
     setInterval(function () {
       socket.emit('serverTimeRES', { data: new Date() });
@@ -32,9 +34,13 @@ io.on('connection', function (socket) {
       socket.emit('AIgameRES' , { gameid : "gameid"});
   }});
 
-  socket.on('newONLINEgameREQ', function (data) {
+  socket.on('lookingForPlayerREQ', function (data) {
     if(OptionsValid(data.options)) {
-      socket.emit('newONLINEgameRES' , { socketid : socket.id });
+      waitingClients.push ({
+        socketid : socket.id, 
+        options : data.options
+      });
+      socket.emit('lookingForPlayerRES' , { socketid : socket.id });
     }
   });
 
@@ -47,6 +53,12 @@ io.on('connection', function (socket) {
   socket.on('availableRES', function (data) {
     io.to(data.socketid).emit('joinONLINEgameRES', { socketid : socket.id });
     io.to(socket.id).emit('joinONLINEgameRES', { socketid : socket.id });
+  });
+
+  socket.on('disconnect', function () {
+    waitingClients.forEach(e=> console.log(e.socketid));
+    if(waitingClients.find(element => element.socketid === socket.id))
+      waitingClients.splice(waitingClients.findIndex(element => element.socketid === socket.id), 1)
   });
 });
 
