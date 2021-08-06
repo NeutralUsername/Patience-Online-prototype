@@ -42,9 +42,20 @@ export default class Options extends React.Component {
         this.props.socket.on("UpdateAvailableRoomsRES", data => {
             this.setState ({availableRooms : data.rooms });
         });
+
+        this.props.socket.on("joinOnlineRoomRES", data => {
+            return (
+                ReactDOM.render (
+                    <Game 
+                        options = {this.state} 
+                        gameid = {data.gameid}
+                    ></Game>,
+                    document.getElementById ('root')
+                )
+            )   
+        });
     } 
         
-    
     handleMalusSizeChange (malusSize) {
         this.setState ({malusSize : malusSize })
     }
@@ -78,51 +89,23 @@ export default class Options extends React.Component {
     handleRoomkeyChange (roomkey) {
         this.setState ({roomkey : roomkey })
     }
+
     handleCreateClick () {
         this.props.socket.emit('newOnlineRoomREQ', {
             options : this.state
         });
-
-        this.props.socket.on("lookingForPlayerRES", data => {
-            this.setState ({statusMessage : 'copy key and share with friend'}),
-            this.setState ({statusMessageVisible : true})
-        });
-
-        this.props.socket.on("joinOnlineRoomRES", data => {
-            return (
-                ReactDOM.unmountComponentAtNode (document.getElementById ('root')),
-                ReactDOM.render (
-                    <Game 
-                        options = {this.state} 
-                        gameid = {data.gameid}
-                    ></Game>,
-                    document.getElementById ('root')
-                )
-            )   
-        });
     };
+
     handleJoinClick () {
         this.props.socket.emit('joinOnlineRoomREQ', {
             options : this.state
         });
-
-        this.props.socket.on("joinOnlineRoomRES", data => {
-            return (
-                ReactDOM.render (
-                    <Game 
-                        options = {this.state} 
-                        gameid = {data.gameid}
-                    ></Game>,
-                    document.getElementById ('root')
-                )
-            )   
-        });
     }
+
     handleAIClick () {
         this.props.socket.emit('AIgameREQ', {
             options : this.state,
         });
-
         this.props.socket.on("AIgameRES", data => {
             return (
                 ReactDOM.render (
@@ -135,6 +118,7 @@ export default class Options extends React.Component {
             )   
         });
     }
+
     render () {
         return (
             <div 
