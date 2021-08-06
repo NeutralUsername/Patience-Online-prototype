@@ -54,6 +54,18 @@ export default class Options extends React.Component {
                 )
             )   
         });
+        
+        this.props.socket.on("AIgameRES", data => {
+            return (
+                ReactDOM.render (
+                    <Game 
+                        options = {this.state} 
+                        gameid = {data.gameid}
+                    ></Game>,
+                    document.getElementById ('root')
+                )
+            )   
+        });
     } 
         
     handleMalusSizeChange (malusSize) {
@@ -105,17 +117,6 @@ export default class Options extends React.Component {
     handleAIClick () {
         this.props.socket.emit('AIgameREQ', {
             options : this.state,
-        });
-        this.props.socket.on("AIgameRES", data => {
-            return (
-                ReactDOM.render (
-                    <Game 
-                        options = {this.state} 
-                        gameid = {data.gameid}
-                    ></Game>,
-                    document.getElementById ('root')
-                )
-            )   
         });
     }
 
