@@ -1,5 +1,4 @@
 import React from 'react';
-import socketIOClient from 'socket.io-client';
 import ReactDOM from 'react-dom';
 import ServerTime from './ServerTime';
 import Game from './Game';
@@ -20,6 +19,7 @@ export default class Options extends React.Component {
             roomName : '',
             availableRooms : [],
         };
+        this.mounted = false;
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
         this.handleSecquenceSizeChange = this.handleSecquenceSizeChange.bind (this);
         this.handleThrowOnStockChange = this.handleThrowOnStockChange.bind (this);
@@ -36,7 +36,8 @@ export default class Options extends React.Component {
         this.handleJoinClick = this.handleJoinClick.bind (this);
 
         this.props.socket.on("UpdateAvailableRoomsRES", data => {
-            this.setState ({availableRooms : data.rooms });
+            if(this.mounted)
+                this.setState ({availableRooms : data.rooms });
         });
 
         this.props.socket.on("joinOnlineRoomRES", data => {
@@ -45,6 +46,8 @@ export default class Options extends React.Component {
                     <Game
                         options = {this.state}
                         gameid = {data.gameid}
+                        socket = {this.props.socket}
+                        socketid = {this.props.socket.id}
                     ></Game>,
                     document.getElementById ('root')
                 )
@@ -57,13 +60,20 @@ export default class Options extends React.Component {
                     <Game
                         options = {this.state}
                         gameid = {data.gameid}
+                        socket = {this.props.socket}
+                        socketid = {this.props.socket.id}
                     ></Game>,
                     document.getElementById ('root')
                 )
             )
         });
     }
-
+    componentDidMount () {
+        this.mounted = true;
+    }
+    componentWillUnmount() {
+        this.mounted = false;
+    }
     handleMalusSizeChange (malusSize) {
         this.setState ({malusSize : malusSize })
     }
@@ -112,6 +122,8 @@ export default class Options extends React.Component {
             options : this.state,
         });
     }
+
+    
 
     render () {
         return (
@@ -178,7 +190,7 @@ class AvailableRooms extends React.Component {
         return (
             <ul> {this.props.availableRooms.map( (value) =>
                 <li
-                    key = {value} >
+                    key = {value.socketid} >
                     <button className= "testbutton"
                         value = {value.socketid}
                         onClick = {this.props.handleClick} >
