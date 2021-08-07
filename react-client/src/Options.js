@@ -17,7 +17,7 @@ export default class Options extends React.Component {
             roundsTimed : false,
             timePerRound : 1800,
             roomName : '',
-            availableRooms : [],
+            pendingRooms : [],
         };
         this.mounted = false;
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
@@ -38,7 +38,7 @@ export default class Options extends React.Component {
 
         this.props.socket.on("UpdateAvailableRoomsRES", data => {
             if(this.mounted)
-                this.setState ({availableRooms : data.pendingRooms });
+                this.setState ({pendingRooms : data.pendingRooms });
         });
 
         this.props.socket.on("joinOnlineRoomRES", data => {
@@ -186,24 +186,24 @@ export default class Options extends React.Component {
                     roomName = {this.state.roomName}
                     onChange = {this.handleRoomNameChange}
                 ></Online>
-                <AvailableRooms
-                    availableRooms = {this.state.availableRooms}
+                <PendingRooms
+                    pendingRooms = {this.state.pendingRooms}
                     handleClick = {this.handleJoinClick}
                     updateState = {this.updateState}
-                ></AvailableRooms>
+                ></PendingRooms>
             </div>
         );
     }
 }
 
 
-class AvailableRooms extends React.Component {
+class PendingRooms extends React.Component {
     constructor ( props ) {
         super (props);
     }
     render () {
         return (
-            <ul> {this.props.availableRooms.map( (value) =>
+            <ul> {this.props.pendingRooms.map( (value) =>
                 <li
                     key = {value.socketid} >
                     <button className= "testbutton"
