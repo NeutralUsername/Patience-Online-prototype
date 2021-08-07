@@ -188,12 +188,12 @@ class AvailableRooms extends React.Component {
             <ul> {this.props.availableRooms.map( (value) =>
                 <li
                     key = {value} >
-                    {value.socketid}
-                    <button
+                    <button className= "testbutton"
                         value = {value.socketid}
                         onClick = {this.props.handleClick} >
                         join
                     </button>
+                    {(!value.options.roomName.replace(/\s/g, '').length) ? value.socketid : value.options.roomName  }
                 </li>)}
             </ul>
         )

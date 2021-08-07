@@ -50,8 +50,18 @@ io.on('connection', function (socket) {
 });
 
 function createPendingRoom(socketid, options) {
-  if(!pendingOnlineRooms.find(element=> element.socketid === socketid))
-    if(OptionsValid(options)) {
+  if( OptionsValid (options) )
+    if( pendingOnlineRooms.find ( element => element.socketid === socketid) ) {
+      if(OptionsAreDifferent( pendingOnlineRooms.find ( element => element.socketid === socketid).options , options)) {
+        removePendingRoom(socketid);
+        pendingOnlineRooms.push ({
+          socketid : socketid,
+          options : options
+        });
+        updateAvailableRoomsCLIENT();
+      }
+    }
+    else {
       pendingOnlineRooms.push ({
         socketid : socketid,
         options : options
@@ -59,6 +69,8 @@ function createPendingRoom(socketid, options) {
       updateAvailableRoomsCLIENT();
     }
 }
+
+
 
 function joinPendingRoom(socket, room) {
   if(room != socket.id)
@@ -72,9 +84,9 @@ function joinPendingRoom(socket, room) {
     }
 }
 
-function removePendingRoom(room) {
-  if(pendingOnlineRooms.find(e => e.socketid == room)) {
-    pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.socketid == room), 1);
+function removePendingRoom(socketid) {
+  if(pendingOnlineRooms.find(e => e.socketid == socketid)) {
+    pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.socketid == socketid), 1);
     updateAvailableRoomsCLIENT();
   }
 }
@@ -95,4 +107,20 @@ function OptionsValid(options) {
                   if(options.timePerRound >= 600 && options.timePerRound <= 3600)
                     return true;
   return false;
+}
+
+function OptionsAreDifferent(options1, options2) {
+  if(options1.malusSize == options2.malusSize)
+    if(options1.sequenceSize == options2.sequenceSize)
+      if(options1.throwOnStock == options2.throwOnStock)
+        if(options1.throwOnMalus == options2.throwOnMalus)
+          if(options1.variant == options2.variant)
+            if(options1.turnsTimed == options2.turnsTimed)
+              if(options1.roundsTimed == options2.roundsTimed)  
+                if(options1.timePerTurn == options2.timePerTurn)
+                  if(options1.timePerRound == options2.timePerRound)
+                    if(options1.name == options2.name)
+                      if(options1.roomName == options2.roomName)
+                        return false;
+  return true;
 }
