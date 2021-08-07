@@ -10,5 +10,6 @@ body {
   /*optional*/
   /*input has OS specific font-family*/
   text-decoration: underline;
+  font-size: medium;
   cursor: pointer;
 }

@@ -21,7 +21,7 @@ export default class Options extends React.Component {
         };
         this.mounted = false;
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
-        this.handleSecquenceSizeChange = this.handleSecquenceSizeChange.bind (this);
+        this.handleSequenceSizeChange = this.handleSequenceSizeChange.bind (this);
         this.handleThrowOnStockChange = this.handleThrowOnStockChange.bind (this);
         this.handleThrowOnMalusChange = this.handleThrowOnMalusChange.bind (this);
         this.handleVariantChange = this.handleVariantChange.bind (this);
@@ -81,8 +81,8 @@ export default class Options extends React.Component {
     handleMalusSizeChange (malusSize) {
         this.setState ({malusSize : malusSize })
     }
-    handleSecquenceSizeChange (secquenceSize) {
-        this.setState ({secquenceSize : secquenceSize })
+    handleSequenceSizeChange (sequenceSize) {
+        this.setState ({sequenceSize : sequenceSize })
     }
     handleThrowOnStockChange (throwOnStock) {
         this.setState ({throwOnStock : throwOnStock })
@@ -153,10 +153,10 @@ export default class Options extends React.Component {
                     malusSize = {this.state.malusSize}
                     onChange = {this.handleMalusSizeChange}
                 ></MalusSize>
-                <SecquenceSize
-                    secquenceSize = {this.state.secquenceSize}
-                    onChange = {this.handleSecquenceSizeChange}
-                ></SecquenceSize>
+                <SequenceSize
+                    sequenceSize = {this.state.sequenceSize}
+                    onChange = {this.handleSequenceSizeChange}
+                ></SequenceSize>
                 <ThrowOnStock
                     throwOnStock = {this.state.throwOnStock}
                     onChange = {this.handleThrowOnStockChange}
@@ -270,7 +270,7 @@ class MalusSize extends React.Component {
         )
     }
 }
-class SecquenceSize extends React.Component {
+class SequenceSize extends React.Component {
     constructor (props) {
         super (props);
         this.handleChange = this.handleChange.bind (this);
@@ -287,7 +287,7 @@ class SecquenceSize extends React.Component {
                     Sequence Size
                 </label>
                 <select
-                    value = { this.props.secquenceSize}
+                    value = { this.props.sequenceSize}
                     onChange = {this.handleChange}
                     id = {"sequencesizeselect"} >
                     <option value = {1} >1</option>
