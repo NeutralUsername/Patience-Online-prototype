@@ -75,18 +75,20 @@ export default class Options extends React.Component {
     componentWillUnmount() {
         this.mounted = false;
     }
-    updateState(options) {
-        this.setState({
-            malusSize : options.malusSize , 
-            sequenceSize : options.sequenceSize,
-            throwOnStock : options.throwOnStock,
-            throwOnMalus : options.throwOnMalus,
-            variant : options.variant,
-            turnsTimed : options.turnsTimed,
-            timePerTurn : options.timePerTurn,
-            roundsTimed : options.roundsTimed,
-            timePerRound : options.timePerRound,
-         })
+    updateState(socketid) {
+        if(this.state.pendingRooms.find(e=>e.socketid = socketid))
+        var options = this.state.pendingRooms.find(e=>e.socketid = socketid).options ;
+            this.setState({
+                malusSize : options.malusSize , 
+                sequenceSize : options.sequenceSize,
+                throwOnStock : options.throwOnStock,
+                throwOnMalus : options.throwOnMalus,
+                variant : options.variant,
+                turnsTimed : options.turnsTimed,
+                timePerTurn : options.timePerTurn,
+                roundsTimed : options.roundsTimed,
+                timePerRound : options.timePerRound,
+            })
     }
     handleMalusSizeChange (malusSize) {
         this.setState ({malusSize : malusSize })
@@ -200,6 +202,10 @@ export default class Options extends React.Component {
 class PendingRooms extends React.Component {
     constructor ( props ) {
         super (props);
+        this.updateState = this.updateState.bind (this);
+    }
+    updateState (event) {
+        this.props.updateState (event.target.value);
     }
     render () {
         return (
@@ -211,7 +217,7 @@ class PendingRooms extends React.Component {
                         onClick = {this.props.handleClick} >
                         join
                     </button>
-                    <button  >{(!value.options.roomName.replace(/\s/g, '').length) ? value.socketid : value.options.roomName  }</button>
+                    <button onClick={this.updateState} value = {value.socketid} >{(!value.options.roomName.replace(/\s/g, '').length) ? value.socketid : value.options.roomName  }</button>
                 </li>)}
             </ul>
         )
@@ -362,7 +368,7 @@ class Variant extends React.Component {
                     value = 'Patience'
                     type = {"radio"}
                     onChange = {this.handleChange}
-                    defaultChecked
+                    checked = {this.props.variant === "Patience"}
                 ></input>
                 <label>
                     Klondike Variant
@@ -372,6 +378,7 @@ class Variant extends React.Component {
                     value = 'Klondike'
                     type = {"radio"}
                     onChange = {this.handleChange}
+                    checked = {this.props.variant === "Klondike"}
                 ></input>
             </div>
         )
