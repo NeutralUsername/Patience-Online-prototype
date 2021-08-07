@@ -17,7 +17,6 @@ export default class Options extends React.Component {
             timePerTurn : 60,
             roundsTimed : false,
             timePerRound : 1800,
-            name : '',
             roomName : '',
             availableRooms : [],
         };
@@ -31,7 +30,6 @@ export default class Options extends React.Component {
         this.handleRoundsTimedChange = this.handleRoundsTimedChange.bind (this);
         this.handleTimePerRoundChange = this.handleTimePerRoundChange.bind (this);
         this.handleTimePerRoundChange = this.handleTimePerRoundChange.bind (this);
-        this.handleNameChange = this.handleNameChange.bind (this);
         this.handleRoomNameChange = this.handleRoomNameChange.bind (this);
         this.handleAIClick = this.handleAIClick.bind (this);
         this.handleCreateClick = this.handleCreateClick.bind (this);
@@ -92,9 +90,6 @@ export default class Options extends React.Component {
     }
     handleTimePerRoundChange (timePerRound) {
         this.setState ({timePerRound : timePerRound })
-    }
-    handleNameChange (name) {
-        this.setState ({name : name })
     }
     handleRoomNameChange (roomName) {
         this.setState ({roomName : roomName })
@@ -157,10 +152,6 @@ export default class Options extends React.Component {
                     timePerRound = {this.state.timePerRound}
                     onValueChange = {this.handleTimePerRoundChange}
                 ></TimedRounds>
-                <Name
-                    name = {this.state.name}
-                    onChange = {this.handleNameChange}
-                ></Name>
                 <AI
                     handleClick = {this.handleAIClick}
                 ></AI>
@@ -193,7 +184,7 @@ class AvailableRooms extends React.Component {
                         onClick = {this.props.handleClick} >
                         join
                     </button>
-                    {(!value.options.roomName.replace(/\s/g, '').length) ? value.socketid : value.options.roomName  }
+                    <button  >{(!value.options.roomName.replace(/\s/g, '').length) ? value.socketid : value.options.roomName  }</button>
                 </li>)}
             </ul>
         )
@@ -386,7 +377,7 @@ class TimedTurns extends React.Component {
                     type = "checkbox" ></input>
                 <label
                     htmlFor = "timeperturn" >
-                    Duration:
+                    Duration
                 </label>
                 <select
                     value = { this.props.timePerTurn}
@@ -433,7 +424,7 @@ class TimedRounds extends React.Component {
                 ></input>
                 <label
                     htmlFor="timeperround">
-                    Duration:
+                    Duration
                 </label>
                 <select
                     value = { this.props.timePerRound}
@@ -451,32 +442,7 @@ class TimedRounds extends React.Component {
         )
     }
 }
-class Name extends React.Component {
-    constructor (props) {
-        super (props);
-        this.handleChange = this.handleChange.bind (this);
-    }
-    handleChange (event) {
-        this.props.onChange (event.target.value);
-    }
-    render () {
-        return (
-            <div
-                className = {"name"} >
-                <label
-                    htmlFor = "nametf" >
-                    Display Name
-                </label>
-                <input
-                    id = "nametf"
-                    type = "text"
-                    onChange = {this.handleChange}
-                    value = { this.props.name}
-                ></input>
-            </div>
-        )
-    }
-}
+
 class Online extends React.Component {
     constructor (props) {
         super (props);
@@ -490,12 +456,15 @@ class Online extends React.Component {
             <div
                 className = {"online"} >
                 <label>
-                    vs. Player:
+                    vs. Player
                 </label>
                 <button
                     onClick = {this.props.handleNewClick} >
                     New
                 </button>
+                <label>
+                    Roomname
+                </label>
                 <input
                     id = 'roomName'
                     type = 'text'
@@ -511,7 +480,7 @@ function AI (props) {
         <div
             className = {"ai"} >
             <label>
-                vs. AI:
+                vs. AI
             </label>
             <button
                 onClick = {props.handleClick} >
