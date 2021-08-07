@@ -1,7 +1,7 @@
 var express = require('express'),
-  app = express(),
-  port = 3000,
-  controller = require('./controller');
+    app = express(),
+    port = 3000,
+    controller = require('./controller');
 const server = require('http').Server(app);
 
 app.route('/ping').get(controller.root);
@@ -22,7 +22,7 @@ const pendingOnlineRooms = [];
 const io = require('socket.io')(server);
 
 io.on('connection', function (socket) {
-  updatePendingRoomsCLIENT();
+  updateAvailableRoomsCLIENT();
 
   socket.on('serverTimeREQ',  () => {
     setInterval(function () {
@@ -37,7 +37,7 @@ io.on('connection', function (socket) {
   });
 
   socket.on('newOnlineRoomREQ', function (data) {
-    createPendingRoom(socket, data.options);
+    createPendingRoom(socket.id, data.options);
   });
 
   socket.on('joinOnlineRoomREQ', function (data) {
@@ -45,43 +45,43 @@ io.on('connection', function (socket) {
   });
 
   socket.on('disconnect', function () {
-    removePendingRoom(socket.id);  
+    removePendingRoom(socket.id);
   });
 });
 
-function createPendingRoom(socket, options) {
-  if(!pendingOnlineRooms.find(element=> element.socketid === socket.id))
+function createPendingRoom(socketid, options) {
+  if(!pendingOnlineRooms.find(element=> element.socketid === socketid))
     if(OptionsValid(options)) {
       pendingOnlineRooms.push ({
-        socketid : socket.id,
+        socketid : socketid,
         options : options
       });
-      updatePendingRoomsCLIENT();
+      updateAvailableRoomsCLIENT();
     }
 }
 
 function joinPendingRoom(socket, room) {
-  if(room != socket.id) 
+  if(room != socket.id)
     if(pendingOnlineRooms.find( element => element.socketid === room)) {
       socket.join(room);
-      io.to(room).emit('joinOnlineRoomRES', { testdata : "testdata" }); 
+      io.to(room).emit('joinOnlineRoomRES', { testdata : "testdata" });
       console.log(socket.id, room);
       removePendingRoom(room);
       removePendingRoom(socket.id);
-      updatePendingRoomsCLIENT();
+      updateAvailableRoomsCLIENT();
     }
 }
 
-function removePendingRoom(sockedid) {
-  if(pendingOnlineRooms.find(e => e.socketid == sockedid)) {
-    pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.socketid == sockedid), 1);
-    updatePendingRoomsCLIENT();
-  }  
+function removePendingRoom(room) {
+  if(pendingOnlineRooms.find(e => e.socketid == room)) {
+    pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.socketid == room), 1);
+    updateAvailableRoomsCLIENT();
+  }
 }
 
-function updatePendingRoomsCLIENT() {
-  io.sockets.emit('UpdatePendingRoomsRES' , { rooms : pendingOnlineRooms});
- }
+function updateAvailableRoomsCLIENT() {
+  io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : pendingOnlineRooms});
+}
 
 function OptionsValid(options) {
   if(options.malusSize >= 5 && options.malusSize <= 20)
@@ -93,7 +93,6 @@ function OptionsValid(options) {
               if(options.roundsTimed === true || options.roundsTimed === false)
                 if(options.timePerTurn >= 15 && options.timePerTurn <= 300)
                   if(options.timePerRound >= 600 && options.timePerRound <= 3600)
-                      return true;
+                    return true;
   return false;
 }
-

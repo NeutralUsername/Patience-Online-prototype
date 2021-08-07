@@ -8,18 +8,18 @@ export default class Options extends React.Component {
     constructor (props) {
         super (props);
         this.state = {
-            malusSize : 14, 
+            malusSize : 14,
             sequenceSize : 3,
-            throwOnStock : true, 
-            throwOnMalus : true, 
+            throwOnStock : true,
+            throwOnMalus : true,
             variant : "Patience",
             turnsTimed : false,
-            timePerTurn : 60, 
-            roundsTimed : false, 
-            timePerRound : 1800, 
-            name : '',  
-            roomName : '',  
-            pendingRooms : [],
+            timePerTurn : 60,
+            roundsTimed : false,
+            timePerRound : 1800,
+            name : '',
+            roomName : '',
+            availableRooms : [],
         };
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
         this.handleSecquenceSizeChange = this.handleSecquenceSizeChange.bind (this);
@@ -37,35 +37,35 @@ export default class Options extends React.Component {
         this.handleCreateClick = this.handleCreateClick.bind (this);
         this.handleJoinClick = this.handleJoinClick.bind (this);
 
-        this.props.socket.on("UpdatePendingRoomsRES", data => {
-            this.setState ({pendingRooms : data.rooms });
+        this.props.socket.on("UpdateAvailableRoomsRES", data => {
+            this.setState ({availableRooms : data.rooms });
         });
 
         this.props.socket.on("joinOnlineRoomRES", data => {
             return (
                 ReactDOM.render (
-                    <Game 
-                        options = {this.state} 
+                    <Game
+                        options = {this.state}
                         gameid = {data.gameid}
                     ></Game>,
                     document.getElementById ('root')
                 )
-            )   
+            )
         });
-        
+
         this.props.socket.on("AIgameRES", data => {
             return (
                 ReactDOM.render (
-                    <Game 
-                        options = {this.state} 
+                    <Game
+                        options = {this.state}
                         gameid = {data.gameid}
                     ></Game>,
                     document.getElementById ('root')
                 )
-            )   
+            )
         });
-    } 
-        
+    }
+
     handleMalusSizeChange (malusSize) {
         this.setState ({malusSize : malusSize })
     }
@@ -120,73 +120,81 @@ export default class Options extends React.Component {
 
     render () {
         return (
-            <div 
-            className = {"options"} > 
+            <div
+                className = {"options"} >
                 <ServerTime
                     socket = {this.props.socket}
                 ></ServerTime>
-                <MalusSize 
-                    malusSize = {this.state.malusSize} 
-                    onChange = {this.handleMalusSizeChange} 
+                <MalusSize
+                    malusSize = {this.state.malusSize}
+                    onChange = {this.handleMalusSizeChange}
                 ></MalusSize>
-                <SecquenceSize 
-                    secquenceSize = {this.state.secquenceSize} 
+                <SecquenceSize
+                    secquenceSize = {this.state.secquenceSize}
                     onChange = {this.handleSecquenceSizeChange}
                 ></SecquenceSize>
-                <ThrowOnStock 
-                    throwOnStock = {this.state.throwOnStock} 
+                <ThrowOnStock
+                    throwOnStock = {this.state.throwOnStock}
                     onChange = {this.handleThrowOnStockChange}
                 ></ThrowOnStock>
-                <ThrowOnMalus 
-                    throwOnMalus = {this.state.throwOnMalus} 
+                <ThrowOnMalus
+                    throwOnMalus = {this.state.throwOnMalus}
                     onChange = {this.handleThrowOnMalusChange}
                 ></ThrowOnMalus>
-                <Variant 
-                    variant = {this.state.variant} 
+                <Variant
+                    variant = {this.state.variant}
                     onChange = {this.handleVariantChange}
                 ></Variant>
-                <TimedTurns 
-                    turnsTimed = {this.state.turnsTimed} 
-                    timePerTurn = {this.state.timePerTurn} 
-                    onBoolChange = {this.handleTurnsTimedChange} 
+                <TimedTurns
+                    turnsTimed = {this.state.turnsTimed}
+                    timePerTurn = {this.state.timePerTurn}
+                    onBoolChange = {this.handleTurnsTimedChange}
                     onValueChange = {this.handleTimePerTurnChange}
                 ></TimedTurns>
-                <TimedRounds 
-                    roundsTimed = {this.state.roundsTimed} 
-                    onBoolChange = {this.handleRoundsTimedChange} 
-                    timePerRound = {this.state.timePerRound} 
+                <TimedRounds
+                    roundsTimed = {this.state.roundsTimed}
+                    onBoolChange = {this.handleRoundsTimedChange}
+                    timePerRound = {this.state.timePerRound}
                     onValueChange = {this.handleTimePerRoundChange}
                 ></TimedRounds>
-                <Name 
-                    name = {this.state.name} 
+                <Name
+                    name = {this.state.name}
                     onChange = {this.handleNameChange}
                 ></Name>
-                <AI 
+                <AI
                     handleClick = {this.handleAIClick}
                 ></AI>
-                <Online 
-                    handleNewClick = {this.handleCreateClick} 
-                    roomName = {this.state.roomName} 
+                <Online
+                    handleNewClick = {this.handleCreateClick}
+                    roomName = {this.state.roomName}
                     onChange = {this.handleRoomNameChange}
                 ></Online>
-                 <PendingRooms
-                    pendingRooms = {this.state.pendingRooms}
+                <AvailableRooms
+                    availableRooms = {this.state.availableRooms}
                     handleClick = {this.handleJoinClick}
-                ></PendingRooms>
+                ></AvailableRooms>
             </div>
         );
     }
 }
 
 
-class PendingRooms extends React.Component {
+class AvailableRooms extends React.Component {
     constructor ( props ) {
         super (props);
     }
     render () {
         return (
-            <ul> 
-               
+            <ul> {this.props.availableRooms.map( (value) =>
+                <li
+                    key = {value} >
+                    {value.socketid}
+                    <button
+                        value = {value.socketid}
+                        onClick = {this.props.handleClick} >
+                        join
+                    </button>
+                </li>)}
             </ul>
         )
     }
@@ -202,15 +210,15 @@ class MalusSize extends React.Component {
     }
     render () {
         return (
-            <div 
+            <div
                 className = "malussize">
-                <label 
+                <label
                     htmlFor = {"maluscountselect"} >
                     Malus Size
                 </label>
-                <select 
-                    value = { this.props.malusSize} 
-                    onChange = {this.handleChange} 
+                <select
+                    value = { this.props.malusSize}
+                    onChange = {this.handleChange}
                     id = {"maluscountselect"} >
                     <option value = {5} >5</option>
                     <option value = {6} >6</option>
@@ -243,15 +251,15 @@ class SecquenceSize extends React.Component {
     }
     render () {
         return (
-            <div 
-            className = "sequencesize" >
-                <label 
+            <div
+                className = "sequencesize" >
+                <label
                     htmlFor = {"sequencesizeselect"} >
                     Sequence Size
                 </label>
-                <select 
-                    value = { this.props.secquenceSize} 
-                    onChange = {this.handleChange} 
+                <select
+                    value = { this.props.secquenceSize}
+                    onChange = {this.handleChange}
                     id = {"sequencesizeselect"} >
                     <option value = {1} >1</option>
                     <option value = {2} >2</option>
@@ -274,17 +282,17 @@ class ThrowOnStock extends React.Component {
     }
     render () {
         return (
-            <div 
+            <div
                 className = {"throwonstock"} >
-                <label 
+                <label
                     htmlFor = "throwstockcb" >
                     Throw on Opponent Stock
                 </label>
-                <input 
-                    checked = { this.props.throwOnStock} 
-                    onChange = {this.handleChange} 
-                    id = {"throwstockcb"} 
-                    type = {"checkbox"} 
+                <input
+                    checked = { this.props.throwOnStock}
+                    onChange = {this.handleChange}
+                    id = {"throwstockcb"}
+                    type = {"checkbox"}
                 ></input>
             </div>
         )
@@ -300,17 +308,17 @@ class ThrowOnMalus extends React.Component {
     }
     render () {
         return (
-            <div 
-            className = {"throwonmalus"} >
-                <label 
+            <div
+                className = {"throwonmalus"} >
+                <label
                     htmlFor = "throwmaluscb" >
                     Throw on Opponent Malus
                 </label>
-                <input 
-                    checked = { this.props.throwOnMalus}  
-                    onChange = {this.handleChange} 
-                    id = {"throwmaluscb"} 
-                    type = {"checkbox"} 
+                <input
+                    checked = { this.props.throwOnMalus}
+                    onChange = {this.handleChange}
+                    id = {"throwmaluscb"}
+                    type = {"checkbox"}
                 ></input>
             </div>
         )
@@ -326,26 +334,26 @@ class Variant extends React.Component {
     }
     render () {
         return (
-            <div 
+            <div
                 className = {"variant"} >
                 <label>
                     Patience Variant
                 </label>
-                <input 
-                    name = 'variant' 
-                    value = 'Patience' 
-                    type = {"radio"} 
-                    onChange = {this.handleChange} 
-                    defaultChecked 
+                <input
+                    name = 'variant'
+                    value = 'Patience'
+                    type = {"radio"}
+                    onChange = {this.handleChange}
+                    defaultChecked
                 ></input>
                 <label>
                     Klondike Variant
                 </label>
-                <input 
-                    name = 'variant' 
-                    value = 'Klondike' 
-                    type = {"radio"} 
-                    onChange = {this.handleChange} 
+                <input
+                    name = 'variant'
+                    value = 'Klondike'
+                    type = {"radio"}
+                    onChange = {this.handleChange}
                 ></input>
             </div>
         )
@@ -365,24 +373,24 @@ class TimedTurns extends React.Component {
     }
     render () {
         return (
-            <div 
+            <div
                 className = {"turnstimed"} >
-                <label 
+                <label
                     htmlFor="turnstimed" >
                     Limit time for each turn
                 </label>
-                <input 
-                    checked = { this.props.turnsTimed} 
-                    onChange = {this.handleBoolChange} 
-                    id = {"turnstimed"} 
-                    type = "checkbox" ></input>  
-                <label 
+                <input
+                    checked = { this.props.turnsTimed}
+                    onChange = {this.handleBoolChange}
+                    id = {"turnstimed"}
+                    type = "checkbox" ></input>
+                <label
                     htmlFor = "timeperturn" >
                     Duration:
-                </label> 
-                <select 
-                    value = { this.props.timePerTurn} 
-                    onChange = {this.handleValueChange} 
+                </label>
+                <select
+                    value = { this.props.timePerTurn}
+                    onChange = {this.handleValueChange}
                     id = {"timeperturn"} >
                     <option value = {15} >15s</option>
                     <option value = {30} >30s</option>
@@ -411,25 +419,25 @@ class TimedRounds extends React.Component {
     }
     render () {
         return (
-            <div 
+            <div
                 className = {"turnstimed"} >
-                <label 
+                <label
                     htmlFor = "roundstimed" >
                     Limit time for each round
                 </label>
-                <input 
-                    checked = { this.props.roundsTimed} 
-                    onChange = {this.handleBoolChange} 
-                    id = {"roundstimed"} 
-                    type = "checkbox" 
+                <input
+                    checked = { this.props.roundsTimed}
+                    onChange = {this.handleBoolChange}
+                    id = {"roundstimed"}
+                    type = "checkbox"
                 ></input>
-                <label 
+                <label
                     htmlFor="timeperround">
                     Duration:
-                </label> 
-                <select 
-                    value = { this.props.timePerRound} 
-                    onChange = {this.handleValueChange} 
+                </label>
+                <select
+                    value = { this.props.timePerRound}
+                    onChange = {this.handleValueChange}
                     id = {"timeperround"} >
                     <option value = {600} >10min</option>
                     <option value = {900} >15min</option>
@@ -438,7 +446,7 @@ class TimedRounds extends React.Component {
                     <option value = {1800} >30min</option>
                     <option value = {2700} >45min</option>
                     <option value = {3600} >60min</option>
-                </select>  
+                </select>
             </div>
         )
     }
@@ -453,18 +461,18 @@ class Name extends React.Component {
     }
     render () {
         return (
-            <div 
+            <div
                 className = {"name"} >
-                <label 
+                <label
                     htmlFor = "nametf" >
                     Display Name
                 </label>
-                <input 
-                    id = "nametf" 
-                    type = "text"  
-                    onChange = {this.handleChange} 
-                    value = { this.props.name} 
-                ></input>  
+                <input
+                    id = "nametf"
+                    type = "text"
+                    onChange = {this.handleChange}
+                    value = { this.props.name}
+                ></input>
             </div>
         )
     }
@@ -479,20 +487,20 @@ class Online extends React.Component {
     }
     render () {
         return (
-            <div 
+            <div
                 className = {"online"} >
                 <label>
                     vs. Player:
                 </label>
-                <button 
+                <button
                     onClick = {this.props.handleNewClick} >
                     New
                 </button>
-                <input 
-                    id = 'roomName' 
-                    type = 'text'  
-                    onChange = {this.handleChange} 
-                    value = { this.props.roomName} 
+                <input
+                    id = 'roomName'
+                    type = 'text'
+                    onChange = {this.handleChange}
+                    value = { this.props.roomName}
                 ></input>
             </div>
         )
@@ -500,12 +508,12 @@ class Online extends React.Component {
 }
 function AI (props) {
     return (
-        <div 
+        <div
             className = {"ai"} >
             <label>
                 vs. AI:
             </label>
-            <button 
+            <button
                 onClick = {props.handleClick} >
                 Start
             </button>
