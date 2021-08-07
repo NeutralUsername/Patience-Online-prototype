@@ -76,11 +76,7 @@ export default class Options extends React.Component {
     componentWillUnmount() {
         this.mounted = false;
     }
-    handleOptionClick(event) {
-       console.log(event.target.value);
-       console.log(this.state.pendingRooms.find(e=> e.socketid === event.target.value));
-    }
-
+   
     handleMalusSizeChange (malusSize) {
         this.setState ({malusSize : malusSize })
     }
@@ -130,6 +126,23 @@ export default class Options extends React.Component {
         });
     }
 
+    handleOptionClick(event) {
+        console.log(event.target.value);
+        console.log(this.state.pendingRooms.find(e=> e.socketid === event.target.value));
+
+        this.setState({
+            malusSize : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.malusSize ,
+            sequenceSize : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.sequenceSize,
+            throwOnStock : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.throwOnStock,
+            throwOnMalus : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.throwOnMalus,
+            variant : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.variant,
+            turnsTimed : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.turnsTimed,
+            timePerTurn : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.timePerTurn,
+            roundsTimed : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.roundsTimed,
+            timePerRound : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.timePerRound,
+        
+        })
+     }
     render () {
         return (
             <div
