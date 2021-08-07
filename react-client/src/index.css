@@ -3,3 +3,12 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+.pendingrooms-roomname {
+  background: none!important;
+  border: none;
+  padding-left :10px;
+  /*optional*/
+  /*input has OS specific font-family*/
+  text-decoration: underline;
+  cursor: pointer;
+}

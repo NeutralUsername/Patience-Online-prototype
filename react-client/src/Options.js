@@ -128,16 +128,17 @@ export default class Options extends React.Component {
     }
 
     handleOptionClick(event) {
+        var options = this.state.pendingRooms.find(e=> e.socketid === event.target.value).options
         this.setState({
-            malusSize : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.malusSize ,
-            sequenceSize : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.sequenceSize,
-            throwOnStock : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.throwOnStock,
-            throwOnMalus : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.throwOnMalus,
-            variant : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.variant,
-            turnsTimed : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.turnsTimed,
-            timePerTurn : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.timePerTurn,
-            roundsTimed : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.roundsTimed,
-            timePerRound : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.timePerRound,
+            malusSize : options.malusSize ,
+            sequenceSize : options.sequenceSize,
+            throwOnStock : options.throwOnStock,
+            throwOnMalus : options.throwOnMalus,
+            variant : options.variant,
+            turnsTimed : options.turnsTimed,
+            timePerTurn : options.timePerTurn,
+            roundsTimed : options.roundsTimed,
+            timePerRound : options.timePerRound,
         })
      }
      
@@ -216,6 +217,7 @@ class PendingRooms extends React.Component {
                             Join
                         </button>
                         <button 
+                            className="pendingrooms-roomname" 
                             value = {room.socketid}
                             onClick = {this.props.handleOptionClick} >
                             {(!room.options.roomName.replace(/\s/g, '').length) ? room.socketid : room.options.roomName  }
