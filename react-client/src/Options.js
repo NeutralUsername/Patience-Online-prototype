@@ -42,7 +42,7 @@ export default class Options extends React.Component {
             }
         });
 
-        this.props.socket.on("joinOnlineRoomRES", data => {
+        this.props.socket.on("joinOnlineGameRES", data => {
             return (
                 ReactDOM.render (
                     <Game
@@ -70,6 +70,7 @@ export default class Options extends React.Component {
             )
         });
     }
+
     componentDidMount () {
         this.mounted = true;
     }
@@ -127,9 +128,6 @@ export default class Options extends React.Component {
     }
 
     handleOptionClick(event) {
-        console.log(event.target.value);
-        console.log(this.state.pendingRooms.find(e=> e.socketid === event.target.value));
-
         this.setState({
             malusSize : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.malusSize ,
             sequenceSize : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.sequenceSize,
@@ -140,9 +138,9 @@ export default class Options extends React.Component {
             timePerTurn : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.timePerTurn,
             roundsTimed : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.roundsTimed,
             timePerRound : this.state.pendingRooms.find(e=> e.socketid === event.target.value).options.timePerRound,
-        
         })
      }
+     
     render () {
         return (
             <div
@@ -207,17 +205,24 @@ class PendingRooms extends React.Component {
     }
     render () {
         return (
-            <ul> {this.props.pendingRooms.map( (room) =>
-                <li
-                    key = {room.socketid} >
-                    <button 
-                        value = {room.socketid}
-                        onClick = {this.props.handleJoinClick} >
-                        join
-                    </button>
-                    <button onClick = {this.props.handleOptionClick} value = {room.socketid} >{(!room.options.roomName.replace(/\s/g, '').length) ? room.socketid : room.options.roomName  }</button>
-                </li>)}
-            </ul>
+            <div className ="pendingrooms">
+                <label>{this.props.pendingRooms.length > 0 ? "Pending Rooms :" : ""}</label>
+                <ul> {this.props.pendingRooms.map( (room) =>
+                    <li
+                        key = {room.socketid} >
+                        <button 
+                            value = {room.socketid}
+                            onClick = {this.props.handleJoinClick} >
+                            Join
+                        </button>
+                        <button 
+                            value = {room.socketid}
+                            onClick = {this.props.handleOptionClick} >
+                            {(!room.options.roomName.replace(/\s/g, '').length) ? room.socketid : room.options.roomName  }
+                        </button>
+                    </li>)}
+                </ul>
+            </div>
         )
     }
 }
