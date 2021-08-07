@@ -45,10 +45,10 @@ export default class Options extends React.Component {
             return (
                 ReactDOM.render (
                     <Game
-                        options = {this.state}
+                        options = {data.options}
                         gameid = {data.gameid}
                         socket = {this.props.socket}
-                        socketid = {this.props.socket.id}
+                        socketid = {this.props.socketid}
                     ></Game>,
                     document.getElementById ('root')
                 )
@@ -59,10 +59,10 @@ export default class Options extends React.Component {
             return (
                 ReactDOM.render (
                     <Game
-                        options = {this.state}
+                        options = {data.state}
                         gameid = {data.gameid}
                         socket = {this.props.socket}
-                        socketid = {this.props.socket.id}
+                        socketid = {this.props.socketid}
                     ></Game>,
                     document.getElementById ('root')
                 )
@@ -77,17 +77,16 @@ export default class Options extends React.Component {
     }
     updateState(socketid) {
         if(this.state.pendingRooms.find(e=>e.socketid = socketid))
-        var options = this.state.pendingRooms.find(e=>e.socketid = socketid).options ;
             this.setState({
-                malusSize : options.malusSize , 
-                sequenceSize : options.sequenceSize,
-                throwOnStock : options.throwOnStock,
-                throwOnMalus : options.throwOnMalus,
-                variant : options.variant,
-                turnsTimed : options.turnsTimed,
-                timePerTurn : options.timePerTurn,
-                roundsTimed : options.roundsTimed,
-                timePerRound : options.timePerRound,
+                malusSize :  this.state.pendingRooms.find(e=>e.socketid = socketid).options.malusSize , 
+                sequenceSize :  this.state.pendingRooms.find(e=>e.socketid = socketid).options.sequenceSize,
+                throwOnStock :  this.state.pendingRooms.find(e=>e.socketid = socketid).options.throwOnStock,
+                throwOnMalus :  this.state.pendingRooms.find(e=>e.socketid = socketid).options.throwOnMalus,
+                variant :  this.state.pendingRooms.find(e=>e.socketid = socketid).options.variant,
+                turnsTimed :  this.state.pendingRooms.find(e=>e.socketid = socketid).options.turnsTimed,
+                timePerTurn :  this.state.pendingRooms.find(e=>e.socketid = socketid).options.timePerTurn,
+                roundsTimed :  this.state.pendingRooms.find(e=>e.socketid = socketid).options.roundsTimed,
+                timePerRound :  this.state.pendingRooms.find(e=>e.socketid = socketid).options.timePerRound,
             })
     }
     handleMalusSizeChange (malusSize) {
@@ -212,12 +211,12 @@ class PendingRooms extends React.Component {
             <ul> {this.props.pendingRooms.map( (value) =>
                 <li
                     key = {value.socketid} >
-                    <button className= "testbutton"
+                    <button 
                         value = {value.socketid}
                         onClick = {this.props.handleClick} >
                         join
                     </button>
-                    <button onClick={this.updateState} value = {value.socketid} >{(!value.options.roomName.replace(/\s/g, '').length) ? value.socketid : value.options.roomName  }</button>
+                    <button onClick = {this.updateState} value = {value.socketid} >{(!value.options.roomName.replace(/\s/g, '').length) ? value.socketid : value.options.roomName  }</button>
                 </li>)}
             </ul>
         )
