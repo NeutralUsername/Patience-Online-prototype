@@ -90,7 +90,7 @@ function removePendingRoom(socketid) {
 }
 
 function updateAvailableRoomsCLIENT() {
-  io.sockets.emit('UpdateAvailableRoomsRES' , { rooms : pendingOnlineRooms});
+  io.sockets.emit('UpdateAvailableRoomsRES' , { pendingRooms : pendingOnlineRooms});
 }
 
 function OptionsValid(options) {

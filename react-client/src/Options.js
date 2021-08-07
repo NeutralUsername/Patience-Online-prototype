@@ -34,10 +34,11 @@ export default class Options extends React.Component {
         this.handleAIClick = this.handleAIClick.bind (this);
         this.handleCreateClick = this.handleCreateClick.bind (this);
         this.handleJoinClick = this.handleJoinClick.bind (this);
+        this.updateState = this.updateState.bind (this);
 
         this.props.socket.on("UpdateAvailableRoomsRES", data => {
             if(this.mounted)
-                this.setState ({availableRooms : data.rooms });
+                this.setState ({availableRooms : data.pendingRooms });
         });
 
         this.props.socket.on("joinOnlineRoomRES", data => {
@@ -73,6 +74,19 @@ export default class Options extends React.Component {
     }
     componentWillUnmount() {
         this.mounted = false;
+    }
+    updateState(options) {
+        this.setState({
+            malusSize : options.malusSize , 
+            sequenceSize : options.sequenceSize,
+            throwOnStock : options.throwOnStock,
+            throwOnMalus : options.throwOnMalus,
+            variant : options.variant,
+            turnsTimed : options.turnsTimed,
+            timePerTurn : options.timePerTurn,
+            roundsTimed : options.roundsTimed,
+            timePerRound : options.timePerRound,
+         })
     }
     handleMalusSizeChange (malusSize) {
         this.setState ({malusSize : malusSize })
@@ -175,6 +189,7 @@ export default class Options extends React.Component {
                 <AvailableRooms
                     availableRooms = {this.state.availableRooms}
                     handleClick = {this.handleJoinClick}
+                    updateState = {this.updateState}
                 ></AvailableRooms>
             </div>
         );
