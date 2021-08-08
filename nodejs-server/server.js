@@ -56,12 +56,32 @@ io.on('connection', function (socket) {
   socket.on('joinOnlineRoomREQ', async function (data) {
     try {
       await rateLimiter.consume(socket.handshake.address);
-      joinPendingRoom(socket, data.roomkey);
+      if(data.roomkey != socket.id)
+        if(returnPendingRoomIfExists(data.roomkey)) {
+          if(returnPendingRoomIfExists(data.roomkey).options.roomPassword.length  == 0) {
+            startPendingRoom(socket, data.roomkey);
+          }
+          else {
+            socket.emit('roomPasswordREQ', {room : data.roomkey});
+          }
+        }
     } 
     catch(rejRes) {
       console.log("flood protection");
     }
   });
+
+  socket.on('roomPasswordRES' , async function ( data) {
+    try {
+      await rateLimiter.consume(socket.handshake.address);
+      if(returnPendingRoomIfExists(data.roomkey).options.roomPassword == data.password) {
+        startPendingRoom(socket, data.roomkey);
+      }
+    } 
+    catch(rejRes) {
+      console.log("flood protection");
+    }
+  })
 
   socket.on('disconnect', function () {
     removePendingRoom(socket.id);
@@ -88,16 +108,13 @@ function createPendingRoom(socketid, options) {
   }
 }
 
-function joinPendingRoom(socket, room) {
-  if(room != socket.id)
-    if(returnPendingRoomIfExists(room)) {
-      socket.join(room);
-      io.to(room).emit('joinOnlineGameRES', { options : returnPendingRoomIfExists(room).options });
-      console.log(socket.id, room);
-      removePendingRoom(room);
-      removePendingRoom(socket.id);
-      updatePendingRoomsCLIENT();
-    }
+function startPendingRoom (socket, room) {
+  socket.join(room);
+  io.to(room).emit('joinOnlineGameRES', { options : returnPendingRoomIfExists(room).options });
+  console.log(socket.id, room);
+  removePendingRoom(room);
+  removePendingRoom(socket.id);
+  updatePendingRoomsCLIENT();
 }
 
 function removePendingRoom(socketid) {

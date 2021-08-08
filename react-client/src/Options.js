@@ -37,6 +37,10 @@ export default class Options extends React.Component {
         this.handleCreateClick = this.handleCreateClick.bind (this);
         this.handleJoinClick = this.handleJoinClick.bind (this);
         this.handleInspectOptionsClick = this.handleInspectOptionsClick.bind (this);
+    }
+
+    componentDidMount () {
+        this.mounted = true;
 
         this.props.socket.on("AIgameRES", data => {
             return (
@@ -68,10 +72,14 @@ export default class Options extends React.Component {
                 )
             )
         });
-    }
 
-    componentDidMount () {
-        this.mounted = true;
+        this.props.socket.on("roomPasswordREQ",  data => {
+            console.log("aaaaa");
+            this.props.socket.emit('roomPasswordRES', {
+                password : prompt("Enter Room Password"),
+                roomkey : data.roomkey,
+            });
+        });
     }
     componentWillUnmount() {
         this.mounted = false;
@@ -93,6 +101,7 @@ export default class Options extends React.Component {
         this.props.socket.emit('joinOnlineRoomREQ', {
             roomkey : socketid
         });
+      
     }
 
     handleInspectOptionsClick(socketid) {
