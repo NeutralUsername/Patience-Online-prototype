@@ -9,7 +9,7 @@ const io = require('socket.io')(server);
 const { RateLimiterMemory } = require('rate-limiter-flexible');
 const rateLimiter = new RateLimiterMemory(
   {
-    points:1,
+    points: 4,
     duration: 1,
   });
 
@@ -39,7 +39,7 @@ io.on('connection', function (socket) {
       socket.emit('AIgameRES' , { gameid : "gameid"});
     } 
     catch(rejRes) {
-      console.log("flood protection");
+      console.log("flood protection1");
     }
   });
 
@@ -49,7 +49,7 @@ io.on('connection', function (socket) {
       createPendingRoom(socket.id, data.options);
     } 
     catch(rejRes) {
-      console.log("flood protection");
+      console.log("flood protection2");
     }
   });
 
@@ -62,25 +62,20 @@ io.on('connection', function (socket) {
             startPendingRoom(socket, data.roomkey);
           }
           else {
-            socket.emit('roomPasswordREQ', {room : data.roomkey});
+            socket.emit('roomPasswordREQ', {roomkey : data.roomkey});
           }
         }
     } 
     catch(rejRes) {
-      console.log("flood protection");
+      console.log("flood protection3");
     }
   });
 
   socket.on('roomPasswordRES' , async function ( data) {
-    try {
-      await rateLimiter.consume(socket.handshake.address);
+   
       if(returnPendingRoomIfExists(data.roomkey).options.roomPassword == data.password) {
         startPendingRoom(socket, data.roomkey);
       }
-    } 
-    catch(rejRes) {
-      console.log("flood protection");
-    }
   })
 
   socket.on('disconnect', function () {

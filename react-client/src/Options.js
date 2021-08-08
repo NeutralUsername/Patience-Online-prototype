@@ -73,8 +73,8 @@ export default class Options extends React.Component {
             )
         });
 
-        this.props.socket.on("roomPasswordREQ",  data => {
-            console.log("aaaaa");
+        this.props.socket.on("roomPasswordREQ", (data) => {
+            console.log(data.roomkey);
             this.props.socket.emit('roomPasswordRES', {
                 password : prompt("Enter Room Password"),
                 roomkey : data.roomkey,
