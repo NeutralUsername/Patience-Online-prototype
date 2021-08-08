@@ -3,19 +3,15 @@ var express = require('express'),
     port = 3000,
     controller = require('./controller');
 const server = require('http').Server(app);
+
+const io = require('socket.io')(server);
+
 const { RateLimiterMemory } = require('rate-limiter-flexible');
 const rateLimiter = new RateLimiterMemory(
   {
-    points: 1, // 5 points
+    points:1, // 5 points
     duration: 1, // per second
   });
-
-
-app.route('/ping').get(controller.root);
-server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/testSocketConnection.html');
-});
 
 var mysql = require('mysql2');
 var dbCon = mysql.createConnection({
@@ -26,7 +22,6 @@ var dbCon = mysql.createConnection({
 });
 
 const pendingOnlineRooms = [];
-const io = require('socket.io')(server);
 
 io.on('connection', function (socket) {
   updateAvailableRoomsCLIENT();
@@ -66,7 +61,6 @@ io.on('connection', function (socket) {
     catch(rejRes) {
       console.log("flood protection");
     }
-    
   });
 
   socket.on('disconnect', function () {
@@ -152,3 +146,14 @@ function returnPendingRoomIfExists(socketid) {
   else
     return false;
 }
+
+
+
+
+
+// ===== keeping just in case i need the templates
+app.route('/ping').get(controller.root);
+server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/testSocketConnection.html');
+});
