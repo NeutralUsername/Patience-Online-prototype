@@ -211,22 +211,28 @@ class PendingRooms extends React.Component {
     render () {
         return (
             <div className ="pendingrooms">
-                <label>{this.props.pendingRooms.length > 0 ? "Pending Rooms :" : ""}</label>
-                <ul> {this.props.pendingRooms.map( (room) =>
-                    <li
-                        key = {room.socketid} >
-                        <button 
-                            value = {room.socketid}
-                            onClick = {this.handleJoinClick} >
-                            Join
-                        </button>
-                        <button 
-                            className="pendingrooms-roomname" 
-                            value = {room.socketid}
-                            onClick = {this.handleOptionClick} >
-                            {(!room.options.roomName.replace(/\s/g, '').length) ? room.socketid : room.options.roomName  }
-                        </button>
-                    </li>)}
+                <label> 
+                    {this.props.pendingRooms.length > 0 ? "Pending Rooms :" : ""} 
+                </label>
+                <ul className="pendingrooms-list" > 
+                    {this.props.pendingRooms.map( (room) =>
+                        {
+                            <li className="pendingrooms-listitem" key = {room.socketid} >
+                                <button 
+                                    className="pendingrooms-join" 
+                                    value = {room.socketid}
+                                    onClick = {this.handleJoinClick} >
+                                    Join
+                                </button>
+                                <button 
+                                    className="pendingrooms-roomname" 
+                                    value = {room.socketid}
+                                    onClick = {this.handleOptionClick} >
+                                    {(!room.options.roomName.replace(/\s/g, '').length) ? room.socketid : room.options.roomName  }
+                                </button>
+                            </li>
+                        }
+                    )}
                 </ul>
             </div>
         )
