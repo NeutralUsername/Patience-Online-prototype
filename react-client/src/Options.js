@@ -34,7 +34,7 @@ export default class Options extends React.Component {
         this.handleAIClick = this.handleAIClick.bind (this);
         this.handleCreateClick = this.handleCreateClick.bind (this);
         this.handleJoinClick = this.handleJoinClick.bind (this);
-        this.handleOptionClick = this.handleOptionClick.bind (this);
+        this.handleOptionClick = this.handleInspectOptionsClick.bind (this);
 
         this.props.socket.on("UpdatePendingRoomsRES", data => {
             if(this.mounted){
@@ -112,7 +112,7 @@ export default class Options extends React.Component {
         });
     }
 
-    handleOptionClick(socketid) {
+    handleInspectOptionsClick(socketid) {
         var options = this.state.pendingRooms.find(e=> e.socketid === socketid).options
         this.setState({
             malusSize : options.malusSize ,
@@ -189,13 +189,12 @@ export default class Options extends React.Component {
                 <PendingRooms
                     pendingRooms = {this.state.pendingRooms}
                     handleJoinClick = {this.handleJoinClick}
-                    handleOptionClick = {this.handleOptionClick}
+                    handleOptionClick = {this.handleInspectOptionsClick}
                 ></PendingRooms>
             </div>
         );
     }
 }
-
 
 class PendingRooms extends React.Component {
     constructor ( props ) {
@@ -203,7 +202,6 @@ class PendingRooms extends React.Component {
         this.handleJoinClick = this.handleJoinClick.bind (this);
         this.handleOptionClick = this.handleOptionClick.bind (this);
     }
-
     handleJoinClick (event) {
         this.props.handleJoinClick (event.target.value);
     }
