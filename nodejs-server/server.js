@@ -88,7 +88,7 @@ function createPendingRoom(socketid, options) {
     if(optionsAreDifferent( returnPendingRoomIfExists(socketid).options , options)) {
       removePendingRoom(socketid);
       pendingOnlineRooms.push ({
-        socketid : socketid,
+        roomkey : socketid,
         options : options
       });
       updatePendingRoomsCLIENT();
@@ -96,7 +96,7 @@ function createPendingRoom(socketid, options) {
   }
   else {
     pendingOnlineRooms.push ({
-      socketid : socketid,
+      roomkey : socketid,
       options : options
     });
     updatePendingRoomsCLIENT();
@@ -105,16 +105,16 @@ function createPendingRoom(socketid, options) {
 
 function startPendingRoom (socket, room) {
   socket.join(room);
-  io.to(room).emit('joinOnlineGameRES', { options : returnPendingRoomIfExists(room).options });
+  io.to(room).emit('startOnlineGameRES', { options : returnPendingRoomIfExists(room).options });
   console.log(socket.id, room);
   removePendingRoom(room);
   removePendingRoom(socket.id);
   updatePendingRoomsCLIENT();
 }
 
-function removePendingRoom(socketid) {
-  if( returnPendingRoomIfExists(socketid)) {
-    pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.socketid == socketid), 1);
+function removePendingRoom(roomkey) {
+  if( returnPendingRoomIfExists(roomkey)) {
+    pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.roomkey == roomkey), 1);
     updatePendingRoomsCLIENT();
   }
 }
@@ -139,9 +139,9 @@ function optionsAreDifferent(options1, options2) {
   return true;
 }
 
-function returnPendingRoomIfExists(socketid) {
-  if( pendingOnlineRooms.find ( element => element.socketid === socketid) )
-    return pendingOnlineRooms.find ( element => element.socketid === socketid);
+function returnPendingRoomIfExists(roomkey) {
+  if( pendingOnlineRooms.find ( e => e.roomkey === roomkey) )
+    return pendingOnlineRooms.find ( e => e.roomkey === roomkey);
   else
     return false;
 }

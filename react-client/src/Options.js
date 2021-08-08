@@ -60,7 +60,7 @@ export default class Options extends React.Component {
             }
         });
 
-        this.props.socket.on("joinOnlineGameRES", data => {
+        this.props.socket.on("startOnlineGameRES", data => {
             return (
                 ReactDOM.render (
                     <Game
@@ -74,7 +74,6 @@ export default class Options extends React.Component {
         });
 
         this.props.socket.on("roomPasswordREQ", (data) => {
-            console.log(data.roomkey);
             this.props.socket.emit('roomPasswordRES', {
                 password : prompt("Enter Room Password"),
                 roomkey : data.roomkey,
@@ -97,15 +96,15 @@ export default class Options extends React.Component {
         });
     };
 
-    handleJoinClick (socketid) {
+    handleJoinClick (roomkey) {
         this.props.socket.emit('joinOnlineRoomREQ', {
-            roomkey : socketid
+            roomkey : roomkey
         });
       
     }
 
-    handleInspectOptionsClick(socketid) {
-        var options = this.state.pendingRooms.find(e=> e.socketid === socketid).options
+    handleInspectOptionsClick(roomkey) {
+        var options = this.state.pendingRooms.find(e=> e.roomkey === roomkey).options
         this.setState({
             malusSize : options.malusSize ,
             sequenceSize : options.sequenceSize,
@@ -116,7 +115,7 @@ export default class Options extends React.Component {
             timePerTurn : options.timePerTurn,
             roundsTimed : options.roundsTimed,
             timePerRound : options.timePerRound,
-            roomName : (!options.roomName.replace(/\s/g, '').length) ? socketid : options.roomName  
+            roomName : (!options.roomName.replace(/\s/g, '').length) ? roomkey : options.roomName  
         })
      }
 
@@ -234,18 +233,18 @@ class PendingRooms extends React.Component {
                     {this.props.pendingRooms.length > 0 ? "Pending Rooms :" : ""} 
                 </label>
                 <ul className="pendingrooms-list" > {this.props.pendingRooms.map( (room) =>
-                    <li className="pendingrooms-listitem" key = {room.socketid} >
+                    <li className="pendingrooms-listitem" key = {room.roomkey} >
                         <button 
                             className="pendingrooms-join" 
-                            value = {room.socketid}
+                            value = {room.roomkey}
                             onClick = {this.handleJoinClick} >
                             Join
                         </button>
                         <button 
                             className="pendingrooms-roomname" 
-                            value = {room.socketid}
+                            value = {room.roomkey}
                             onClick = {this.handleOptionClick} >
-                            {(!room.options.roomName.replace(/\s/g, '').length) ? room.socketid : room.options.roomName  }   
+                            {(!room.options.roomName.replace(/\s/g, '').length) ? room.roomkey : room.options.roomName  }   
                         </button>
                         <label hidden = {! room.options.roomPassword > 0}>🔒</label>
                     </li>)}
