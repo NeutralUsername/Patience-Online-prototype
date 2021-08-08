@@ -34,7 +34,7 @@ export default class Options extends React.Component {
         this.handleAIClick = this.handleAIClick.bind (this);
         this.handleCreateClick = this.handleCreateClick.bind (this);
         this.handleJoinClick = this.handleJoinClick.bind (this);
-        this.handleOptionClick = this.handleInspectOptionsClick.bind (this);
+        this.handleInspectOptionsClick = this.handleInspectOptionsClick.bind (this);
 
         this.props.socket.on("AIgameRES", data => {
             return (
