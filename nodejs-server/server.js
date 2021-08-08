@@ -9,8 +9,8 @@ const io = require('socket.io')(server);
 const { RateLimiterMemory } = require('rate-limiter-flexible');
 const rateLimiter = new RateLimiterMemory(
   {
-    points:1, // 5 points
-    duration: 1, // per second
+    points:1,
+    duration: 1,
   });
 
 var mysql = require('mysql2');
