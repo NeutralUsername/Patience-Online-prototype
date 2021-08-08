@@ -106,26 +106,14 @@ export default class Options extends React.Component {
         this.setState ({roomName : roomName })
     }
 
-    handleAIClick () {
-        this.props.socket.emit('AIgameREQ', {
-            options : this.state,
-        });
-    }
-
-    handleCreateClick () {
-        this.props.socket.emit('newOnlineRoomREQ', {
-            options : this.state
-        });
-    };
-
     handleJoinClick (socketid) {
         this.props.socket.emit('joinOnlineRoomREQ', {
             roomkey : socketid
         });
     }
 
-    handleOptionClick(event) {
-        var options = this.state.pendingRooms.find(e=> e.socketid === event.target.value).options
+    handleOptionClick(socketid) {
+        var options = this.state.pendingRooms.find(e=> e.socketid === socketid).options
         this.setState({
             malusSize : options.malusSize ,
             sequenceSize : options.sequenceSize,
@@ -138,7 +126,19 @@ export default class Options extends React.Component {
             timePerRound : options.timePerRound,
         })
      }
-     
+
+     handleAIClick () {
+        this.props.socket.emit('AIgameREQ', {
+            options : this.state,
+        });
+    }
+
+    handleCreateClick () {
+        this.props.socket.emit('newOnlineRoomREQ', {
+            options : this.state
+        });
+    };
+    
     render () {
         return (
             <div
@@ -201,10 +201,14 @@ class PendingRooms extends React.Component {
     constructor ( props ) {
         super (props);
         this.handleJoinClick = this.handleJoinClick.bind (this);
+        this.handleOptionClick = this.handleOptionClick.bind (this);
     }
 
     handleJoinClick (event) {
         this.props.handleJoinClick (event.target.value);
+    }
+    handleOptionClick (event) {
+        this.props.handleOptionClick (event.target.value);
     }
     render () {
         return (
@@ -221,7 +225,7 @@ class PendingRooms extends React.Component {
                         <button 
                             className="pendingrooms-roomname" 
                             value = {room.socketid}
-                            onClick = {this.props.handleOptionClick} >
+                            onClick = {this.handleOptionClick} >
                             {(!room.options.roomName.replace(/\s/g, '').length) ? room.socketid : room.options.roomName  }
                         </button>
                     </li>)}
