@@ -124,7 +124,7 @@ function updatePendingRoomsCLIENT() {
 function optionsAreDifferent(options1, options2) {
   if(options1.malusSize == options2.malusSize)
     if(options1.sequenceSize == options2.sequenceSize)
-      if(options1.throwOnStock == options2.throwOnStock)
+      if(options1.throwOnWaste == options2.throwOnWaste)
         if(options1.throwOnMalus == options2.throwOnMalus)
           if(options1.variant == options2.variant)
             if(options1.turnsTimed == options2.turnsTimed)
@@ -152,7 +152,7 @@ function optionsAreDifferent(options1, options2) {
 function optionsValid(options) {
   if(options.malusSize >= 5 && options.malusSize <= 20)
     if(options.sequenceSize >= 1 && options.sequenceSize <= 6)
-      if(options.throwOnStock === true || options.throwOnStock === false)
+      if(options.throwOnWaste === true || options.throwOnWaste === false)
         if(options.throwOnMalus === true || options.throwOnMalus === false)
           if(options.variant === 'Patience' || options.variant === 'Klondike')
             if(options.turnsTimed === true || options.turnsTimed === false)

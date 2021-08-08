@@ -9,13 +9,13 @@ export default class Options extends React.Component {
         this.state = {
             malusSize : 14,
             sequenceSize : 3,
-            throwOnStock : true,
+            throwOnWaste : true,
             throwOnMalus : true,
             variant : "Patience",
             turnsTimed : false,
-            timePerTurn : 60,
+            timePerTurn : 90,
             roundsTimed : false,
-            timePerRound : 1800,
+            timePerRound : 2700,
             roomName : '',
             roomPassword : '',
             pendingRooms : [],
@@ -23,7 +23,7 @@ export default class Options extends React.Component {
         this.mounted = false;
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
         this.handleSequenceSizeChange = this.handleSequenceSizeChange.bind (this);
-        this.handleThrowOnStockChange = this.handleThrowOnStockChange.bind (this);
+        this.handleThrowOnWasteChange = this.handleThrowOnWasteChange.bind (this);
         this.handleThrowOnMalusChange = this.handleThrowOnMalusChange.bind (this);
         this.handleVariantChange = this.handleVariantChange.bind (this);
         this.handleTurnsTimedChange = this.handleTurnsTimedChange.bind (this);
@@ -108,7 +108,7 @@ export default class Options extends React.Component {
         this.setState({
             malusSize : options.malusSize ,
             sequenceSize : options.sequenceSize,
-            throwOnStock : options.throwOnStock,
+            throwOnWaste : options.throwOnWaste,
             throwOnMalus : options.throwOnMalus,
             variant : options.variant,
             turnsTimed : options.turnsTimed,
@@ -125,8 +125,8 @@ export default class Options extends React.Component {
     handleSequenceSizeChange (sequenceSize) {
         this.setState ({sequenceSize : sequenceSize })
     }
-    handleThrowOnStockChange (throwOnStock) {
-        this.setState ({throwOnStock : throwOnStock })
+    handleThrowOnWasteChange (throwOnWaste) {
+        this.setState ({throwOnWaste : throwOnWaste })
     }
     handleThrowOnMalusChange (throwOnMalus) {
         this.setState ({throwOnMalus : throwOnMalus })
@@ -168,10 +168,10 @@ export default class Options extends React.Component {
                     sequenceSize = {this.state.sequenceSize}
                     onChange = {this.handleSequenceSizeChange}
                 ></SequenceSize>
-                <ThrowOnStock
-                    throwOnStock = {this.state.throwOnStock}
-                    onChange = {this.handleThrowOnStockChange}
-                ></ThrowOnStock>
+                <ThrowOnWaste
+                    throwOnWaste = {this.state.throwOnWaste}
+                    onChange = {this.handleThrowOnWasteChange}
+                ></ThrowOnWaste>
                 <ThrowOnMalus
                     throwOnMalus = {this.state.throwOnMalus}
                     onChange = {this.handleThrowOnMalusChange}
@@ -268,7 +268,7 @@ class MalusSize extends React.Component {
                 className = "malussize">
                 <label
                     htmlFor = {"maluscountselect"} >
-                    Malus Size
+                    Malus Sequence Size
                 </label>
                 <select
                     value = { this.props.malusSize}
@@ -309,7 +309,7 @@ class SequenceSize extends React.Component {
                 className = "sequencesize" >
                 <label
                     htmlFor = {"sequencesizeselect"} >
-                    Sequence Size
+                    Tableau Sequence Size
                 </label>
                 <select
                     value = { this.props.sequenceSize}
@@ -326,7 +326,7 @@ class SequenceSize extends React.Component {
         )
     }
 }
-class ThrowOnStock extends React.Component {
+class ThrowOnWaste extends React.Component {
     constructor (props) {
         super (props);
         this.handleChange = this.handleChange.bind (this);
@@ -337,15 +337,15 @@ class ThrowOnStock extends React.Component {
     render () {
         return (
             <div
-                className = {"throwonstock"} >
+                className = {"throwonWaste"} >
                 <label
-                    htmlFor = "throwstockcb" >
-                    Throw on Opponent Stock
+                    htmlFor = "throwonWaste-cb" >
+                    Throw on Opponent Waste Pile
                 </label>
                 <input
-                    checked = { this.props.throwOnStock}
+                    checked = { this.props.throwOnWaste}
                     onChange = {this.handleChange}
-                    id = {"throwstockcb"}
+                    id = {"throwonWastecb"}
                     type = {"checkbox"}
                 ></input>
             </div>
@@ -366,7 +366,7 @@ class ThrowOnMalus extends React.Component {
                 className = {"throwonmalus"} >
                 <label
                     htmlFor = "throwmaluscb" >
-                    Throw on Opponent Malus
+                    Throw on Opponent Malus Sequence 
                 </label>
                 <input
                     checked = { this.props.throwOnMalus}
@@ -453,7 +453,9 @@ class TimedTurns extends React.Component {
                     <option value = {60} >60s</option>
                     <option value = {90} >90s</option>
                     <option value = {120} >120s</option>
+                    <option value = {150} >150s</option>
                     <option value = {180} >180s</option>
+                    <option value = {240} >240s</option>
                     <option value = {300} >300s</option>
                 </select>
             </div>
@@ -494,13 +496,17 @@ class TimedRounds extends React.Component {
                     value = { this.props.timePerRound}
                     onChange = {this.handleValueChange}
                     id = {"timeperround"} >
+                    <option value = {300} >5min</option>
                     <option value = {600} >10min</option>
                     <option value = {900} >15min</option>
                     <option value = {1200} >20min</option>
                     <option value = {1500} >25min</option>
                     <option value = {1800} >30min</option>
+                    <option value = {2100} >35min</option>
+                    <option value = {2400} >40min</option>
                     <option value = {2700} >45min</option>
                     <option value = {3600} >60min</option>
+                    <option value = {5400} >90min</option>
                 </select>
             </div>
         )
