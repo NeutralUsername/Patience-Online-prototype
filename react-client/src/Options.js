@@ -214,25 +214,21 @@ class PendingRooms extends React.Component {
                 <label> 
                     {this.props.pendingRooms.length > 0 ? "Pending Rooms :" : ""} 
                 </label>
-                <ul className="pendingrooms-list" > 
-                    {this.props.pendingRooms.map( (room) =>
-                        {
-                            <li className="pendingrooms-listitem" key = {room.socketid} >
-                                <button 
-                                    className="pendingrooms-join" 
-                                    value = {room.socketid}
-                                    onClick = {this.handleJoinClick} >
-                                    Join
-                                </button>
-                                <button 
-                                    className="pendingrooms-roomname" 
-                                    value = {room.socketid}
-                                    onClick = {this.handleOptionClick} >
-                                    {(!room.options.roomName.replace(/\s/g, '').length) ? room.socketid : room.options.roomName  }
-                                </button>
-                            </li>
-                        }
-                    )}
+                <ul className="pendingrooms-list" > {this.props.pendingRooms.map( (room) =>
+                    {<li className="pendingrooms-listitem" key = {room.socketid} >
+                        <button 
+                            className="pendingrooms-join" 
+                            value = {room.socketid}
+                            onClick = {this.handleJoinClick} >
+                            Join
+                        </button>
+                        <button 
+                            className="pendingrooms-roomname" 
+                            value = {room.socketid}
+                            onClick = {this.handleOptionClick} >
+                            {(!room.options.roomName.replace(/\s/g, '').length) ? room.socketid : room.options.roomName  }
+                        </button>
+                    </li>})}
                 </ul>
             </div>
         )
