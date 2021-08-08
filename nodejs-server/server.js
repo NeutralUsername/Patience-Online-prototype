@@ -3,6 +3,13 @@ var express = require('express'),
     port = 3000,
     controller = require('./controller');
 const server = require('http').Server(app);
+const { RateLimiterMemory } = require('rate-limiter-flexible');
+const rateLimiter = new RateLimiterMemory(
+  {
+    points: 1, // 5 points
+    duration: 1, // per second
+  });
+
 
 app.route('/ping').get(controller.root);
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
@@ -29,19 +36,37 @@ io.on('connection', function (socket) {
       socket.emit('serverTimeRES', { data: new Date() });
     },96);
   });
-  socket.on('AIgameREQ', function (data) {
-    if(optionsValid(data.options)) {
+
+  socket.on('AIgameREQ', async function (data) {
+    try {
+      await rateLimiter.consume(socket.handshake.address);
       removePendingRoom(socket.id);
       socket.emit('AIgameRES' , { gameid : "gameid"});
+    } 
+    catch(rejRes) {
+      console.log("flood protection");
     }
   });
 
-  socket.on('newOnlineRoomREQ', function (data) {
-    createPendingRoom(socket.id, data.options);
+  socket.on('newOnlineRoomREQ', async function (data){
+    try {
+      await rateLimiter.consume(socket.handshake.address);
+      createPendingRoom(socket.id, data.options);
+    } 
+    catch(rejRes) {
+      console.log("flood protection");
+    }
   });
 
-  socket.on('joinOnlineRoomREQ', function (data) {
-    joinPendingRoom(socket, data.roomkey);
+  socket.on('joinOnlineRoomREQ', async function (data) {
+    try {
+      await rateLimiter.consume(socket.handshake.address);
+      joinPendingRoom(socket, data.roomkey);
+    } 
+    catch(rejRes) {
+      console.log("flood protection");
+    }
+    
   });
 
   socket.on('disconnect', function () {
@@ -50,24 +75,23 @@ io.on('connection', function (socket) {
 });
 
 function createPendingRoom(socketid, options) {
-  if( optionsValid (options) )
-    if( returnPendingRoomIfExists(socketid) ) {
-      if(optionsAreDifferent( returnPendingRoomIfExists(socketid).options , options)) {
-        removePendingRoom(socketid);
-        pendingOnlineRooms.push ({
-          socketid : socketid,
-          options : options
-        });
-        updateAvailableRoomsCLIENT();
-      }
-    }
-    else {
+  if( returnPendingRoomIfExists(socketid) ) {
+    if(optionsAreDifferent( returnPendingRoomIfExists(socketid).options , options)) {
+      removePendingRoom(socketid);
       pendingOnlineRooms.push ({
         socketid : socketid,
         options : options
       });
       updateAvailableRoomsCLIENT();
     }
+  }
+  else {
+    pendingOnlineRooms.push ({
+      socketid : socketid,
+      options : options
+    });
+    updateAvailableRoomsCLIENT();
+  }
 }
 
 function joinPendingRoom(socket, room) {
