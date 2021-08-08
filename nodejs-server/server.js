@@ -30,7 +30,7 @@ io.on('connection', function (socket) {
     },96);
   });
   socket.on('AIgameREQ', function (data) {
-    if(OptionsValid(data.options)) {
+    if(optionsValid(data.options)) {
       removePendingRoom(socket.id);
       socket.emit('AIgameRES' , { gameid : "gameid"});
     }
@@ -50,9 +50,9 @@ io.on('connection', function (socket) {
 });
 
 function createPendingRoom(socketid, options) {
-  if( OptionsValid (options) )
-    if( pendingOnlineRooms.find ( element => element.socketid === socketid) ) {
-      if(OptionsAreDifferent( pendingOnlineRooms.find ( element => element.socketid === socketid).options , options)) {
+  if( optionsValid (options) )
+    if( returnPendingRoomIfExists(socketid) ) {
+      if(optionsAreDifferent( returnPendingRoomIfExists(socketid).options , options)) {
         removePendingRoom(socketid);
         pendingOnlineRooms.push ({
           socketid : socketid,
@@ -72,9 +72,9 @@ function createPendingRoom(socketid, options) {
 
 function joinPendingRoom(socket, room) {
   if(room != socket.id)
-    if(pendingOnlineRooms.find( element => element.socketid === room)) {
+    if(returnPendingRoomIfExists(room)) {
       socket.join(room);
-      io.to(room).emit('joinOnlineGameRES', { options : pendingOnlineRooms.find(e => e.socketid == room).options });
+      io.to(room).emit('joinOnlineGameRES', { options : returnPendingRoomIfExists(room).options });
       console.log(socket.id, room);
       removePendingRoom(room);
       removePendingRoom(socket.id);
@@ -83,7 +83,7 @@ function joinPendingRoom(socket, room) {
 }
 
 function removePendingRoom(socketid) {
-  if(pendingOnlineRooms.find(e => e.socketid == socketid)) {
+  if( returnPendingRoomIfExists(socketid)) {
     pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.socketid == socketid), 1);
     updateAvailableRoomsCLIENT();
   }
@@ -93,7 +93,7 @@ function updateAvailableRoomsCLIENT() {
   io.sockets.emit('UpdateAvailableRoomsRES' , { pendingRooms : pendingOnlineRooms});
 }
 
-function OptionsValid(options) {
+function optionsValid(options) {
   if(options.malusSize >= 5 && options.malusSize <= 20)
     if(options.sequenceSize >= 1 && options.sequenceSize <= 6)
       if(options.throwOnStock === true || options.throwOnStock === false)
@@ -107,7 +107,7 @@ function OptionsValid(options) {
   return false;
 }
 
-function OptionsAreDifferent(options1, options2) {
+function optionsAreDifferent(options1, options2) {
   if(options1.malusSize == options2.malusSize)
     if(options1.sequenceSize == options2.sequenceSize)
       if(options1.throwOnStock == options2.throwOnStock)
@@ -120,4 +120,11 @@ function OptionsAreDifferent(options1, options2) {
                       if(options1.roomName == options2.roomName)
                         return false;
   return true;
+}
+
+function returnPendingRoomIfExists(socketid) {
+  if( pendingOnlineRooms.find ( element => element.socketid === socketid) )
+    return pendingOnlineRooms.find ( element => element.socketid === socketid);
+  else
+    return false;
 }
