@@ -36,6 +36,18 @@ export default class Options extends React.Component {
         this.handleJoinClick = this.handleJoinClick.bind (this);
         this.handleOptionClick = this.handleInspectOptionsClick.bind (this);
 
+        this.props.socket.on("AIgameRES", data => {
+            return (
+                ReactDOM.render (
+                    <Game
+                        gameid = {data.gameid}
+                        socket = {this.props.socket}
+                    ></Game>,
+                    document.getElementById ('root')
+                )
+            )
+        });
+
         this.props.socket.on("UpdatePendingRoomsRES", data => {
             if(this.mounted){
                 this.setState ({pendingRooms : data.pendingRooms });
@@ -54,18 +66,6 @@ export default class Options extends React.Component {
                 )
             )
         });
-
-        this.props.socket.on("AIgameRES", data => {
-            return (
-                ReactDOM.render (
-                    <Game
-                        gameid = {data.gameid}
-                        socket = {this.props.socket}
-                    ></Game>,
-                    document.getElementById ('root')
-                )
-            )
-        });
     }
 
     componentDidMount () {
@@ -74,7 +74,40 @@ export default class Options extends React.Component {
     componentWillUnmount() {
         this.mounted = false;
     }
-   
+
+    handleAIClick () {
+        this.props.socket.emit('AIgameREQ', {
+            options : this.state,
+        });
+    };
+
+    handleCreateClick () {
+        this.props.socket.emit('newOnlineRoomREQ', {
+            options : this.state
+        });
+    };
+
+    handleJoinClick (socketid) {
+        this.props.socket.emit('joinOnlineRoomREQ', {
+            roomkey : socketid
+        });
+    }
+
+    handleInspectOptionsClick(socketid) {
+        var options = this.state.pendingRooms.find(e=> e.socketid === socketid).options
+        this.setState({
+            malusSize : options.malusSize ,
+            sequenceSize : options.sequenceSize,
+            throwOnStock : options.throwOnStock,
+            throwOnMalus : options.throwOnMalus,
+            variant : options.variant,
+            turnsTimed : options.turnsTimed,
+            timePerTurn : options.timePerTurn,
+            roundsTimed : options.roundsTimed,
+            timePerRound : options.timePerRound,
+        })
+     }
+
     handleMalusSizeChange (malusSize) {
         this.setState ({malusSize : malusSize })
     }
@@ -105,40 +138,7 @@ export default class Options extends React.Component {
     handleRoomNameChange (roomName) {
         this.setState ({roomName : roomName })
     }
-
-    handleJoinClick (socketid) {
-        this.props.socket.emit('joinOnlineRoomREQ', {
-            roomkey : socketid
-        });
-    }
-
-    handleInspectOptionsClick(socketid) {
-        var options = this.state.pendingRooms.find(e=> e.socketid === socketid).options
-        this.setState({
-            malusSize : options.malusSize ,
-            sequenceSize : options.sequenceSize,
-            throwOnStock : options.throwOnStock,
-            throwOnMalus : options.throwOnMalus,
-            variant : options.variant,
-            turnsTimed : options.turnsTimed,
-            timePerTurn : options.timePerTurn,
-            roundsTimed : options.roundsTimed,
-            timePerRound : options.timePerRound,
-        })
-     }
-
-     handleAIClick () {
-        this.props.socket.emit('AIgameREQ', {
-            options : this.state,
-        });
-    }
-
-    handleCreateClick () {
-        this.props.socket.emit('newOnlineRoomREQ', {
-            options : this.state
-        });
-    };
-    
+  
     render () {
         return (
             <div
@@ -226,7 +226,7 @@ class PendingRooms extends React.Component {
                             className="pendingrooms-roomname" 
                             value = {room.socketid}
                             onClick = {this.handleOptionClick} >
-                            {(!room.options.roomName.replace(/\s/g, '').length) ? room.socketid : room.options.roomName  }
+                            {(!room.options.roomName.replace(/\s/g, '').length) ? room.socketid : room.options.roomName  }   
                         </button>
                     </li>})}
                 </ul>
