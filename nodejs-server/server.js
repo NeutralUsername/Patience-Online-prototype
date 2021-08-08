@@ -9,7 +9,7 @@ const io = require('socket.io')(server);
 const { RateLimiterMemory } = require('rate-limiter-flexible');
 const rateLimiter = new RateLimiterMemory(
   {
-    points: 4,
+    points: 3,
     duration: 1,
   });
 
@@ -46,7 +46,14 @@ io.on('connection', function (socket) {
   socket.on('newOnlineRoomREQ', async function (data){
     try {
       await rateLimiter.consume(socket.handshake.address);
-      createPendingRoom(socket.id, data.options);
+      if( returnPendingRoomIfExists(socket.id) ) {
+        if(optionsAreDifferent( returnPendingRoomIfExists(socket.id).options , data.options)) {
+          removePendingRoom(socket.id);
+          addPendingRoom(socket, data.options) ;
+        }
+      }
+      else 
+        addPendingRoom(socket, data.options) ;
     } 
     catch(rejRes) {
       console.log("flood protection2");
@@ -58,12 +65,10 @@ io.on('connection', function (socket) {
       await rateLimiter.consume(socket.handshake.address);
       if(data.roomkey != socket.id)
         if(returnPendingRoomIfExists(data.roomkey)) {
-          if(returnPendingRoomIfExists(data.roomkey).options.roomPassword.length  == 0) {
+          if(returnPendingRoomIfExists(data.roomkey).options.roomPassword.length  == 0) 
             startPendingRoom(socket, data.roomkey);
-          }
-          else {
+          else 
             socket.emit('roomPasswordREQ', {roomkey : data.roomkey});
-          }
         }
     } 
     catch(rejRes) {
@@ -72,10 +77,8 @@ io.on('connection', function (socket) {
   });
 
   socket.on('roomPasswordRES' , async function ( data) {
-   
-      if(returnPendingRoomIfExists(data.roomkey).options.roomPassword == data.password) {
+      if(returnPendingRoomIfExists(data.roomkey).options.roomPassword == data.password) 
         startPendingRoom(socket, data.roomkey);
-      }
   })
 
   socket.on('disconnect', function () {
@@ -83,24 +86,12 @@ io.on('connection', function (socket) {
   });
 });
 
-function createPendingRoom(socketid, options) {
-  if( returnPendingRoomIfExists(socketid) ) {
-    if(optionsAreDifferent( returnPendingRoomIfExists(socketid).options , options)) {
-      removePendingRoom(socketid);
-      pendingOnlineRooms.push ({
-        roomkey : socketid,
-        options : options
-      });
-      updatePendingRoomsCLIENT();
-    }
-  }
-  else {
-    pendingOnlineRooms.push ({
-      roomkey : socketid,
-      options : options
-    });
-    updatePendingRoomsCLIENT();
-  }
+function addPendingRoom(socket, options) {
+  pendingOnlineRooms.push ({
+    roomkey : socket.id,
+    options : options
+  });
+  updatePendingRoomsCLIENT();
 }
 
 function startPendingRoom (socket, room) {
@@ -117,6 +108,13 @@ function removePendingRoom(roomkey) {
     pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.roomkey == roomkey), 1);
     updatePendingRoomsCLIENT();
   }
+}
+
+function returnPendingRoomIfExists(roomkey) {
+  if( pendingOnlineRooms.find ( e => e.roomkey === roomkey) )
+    return pendingOnlineRooms.find ( e => e.roomkey === roomkey);
+  else
+    return false;
 }
 
 function updatePendingRoomsCLIENT() {
@@ -139,12 +137,6 @@ function optionsAreDifferent(options1, options2) {
   return true;
 }
 
-function returnPendingRoomIfExists(roomkey) {
-  if( pendingOnlineRooms.find ( e => e.roomkey === roomkey) )
-    return pendingOnlineRooms.find ( e => e.roomkey === roomkey);
-  else
-    return false;
-}
 
 
 
