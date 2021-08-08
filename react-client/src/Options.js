@@ -143,9 +143,6 @@ export default class Options extends React.Component {
         return (
             <div
                 className = {"options"} >
-                <button 
-                    onClick = { () => {{console.log(this.props.socket.request.headers.cookie)} }} 
-                ></button>
                 <ServerTime
                     socket = {this.props.socket}
                 ></ServerTime>
