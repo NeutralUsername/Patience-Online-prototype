@@ -107,6 +107,7 @@ export default class Options extends React.Component {
             timePerTurn : options.timePerTurn,
             roundsTimed : options.roundsTimed,
             timePerRound : options.timePerRound,
+            roomName : (!options.roomName.replace(/\s/g, '').length) ? socketid : options.roomName  
         })
      }
 
