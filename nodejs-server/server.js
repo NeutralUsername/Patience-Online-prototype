@@ -122,6 +122,7 @@ function optionsAreDifferent(options1, options2) {
                 if(options1.timePerTurn == options2.timePerTurn)
                   if(options1.timePerRound == options2.timePerRound)
                       if(options1.roomName == options2.roomName)
+                      if(options1.roomPassword == options2.roomPassword)
                         return false;
   return true;
 }

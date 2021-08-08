@@ -238,6 +238,7 @@ class PendingRooms extends React.Component {
                             onClick = {this.handleOptionClick} >
                             {(!room.options.roomName.replace(/\s/g, '').length) ? room.socketid : room.options.roomName  }   
                         </button>
+                        <label hidden = {! room.options.roomPassword > 0}>🔒</label>
                     </li>)}
                 </ul>
             </div>
