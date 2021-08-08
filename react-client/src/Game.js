@@ -10,13 +10,11 @@ export default class Game extends React.Component{
                 drawpile : 'stack',
                 discardpile : 'stack',
                 malussequence : 'sequence',
-                socket : {}
             },
             black : {
                 drawpile : 'stack',
                 discardpile : 'stack',
                 malussequence : 'sequence',
-                socket : {}
             },
             field : {
                 foundation1 : 'stack',

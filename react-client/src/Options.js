@@ -138,11 +138,14 @@ export default class Options extends React.Component {
     handleRoomNameChange (roomName) {
         this.setState ({roomName : roomName })
     }
-  
+
     render () {
         return (
             <div
                 className = {"options"} >
+                <button 
+                    onClick = { () => {{console.log(this.props.socket.request.headers.cookie)} }} 
+                ></button>
                 <ServerTime
                     socket = {this.props.socket}
                 ></ServerTime>
