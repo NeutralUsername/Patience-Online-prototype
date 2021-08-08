@@ -233,7 +233,7 @@ class PendingRooms extends React.Component {
                     {this.props.pendingRooms.length > 0 ? "Pending Rooms :" : ""} 
                 </label>
                 <ul className="pendingrooms-list" > {this.props.pendingRooms.map( (room) =>
-                    <li className="pendingrooms-listitem" key = {room.roomkey} >
+                    <li className="pendingrooms-listitem" key = {room.roomkey} > 
                         <button 
                             className="pendingrooms-join" 
                             value = {room.roomkey}
@@ -246,7 +246,7 @@ class PendingRooms extends React.Component {
                             onClick = {this.handleOptionClick} >
                             {(!room.options.roomName.replace(/\s/g, '').length) ? room.roomkey : room.options.roomName  }   
                         </button>
-                        <label hidden = {! room.options.roomPassword > 0}>🔒</label>
+                        <label className="pendingrooms-lock" hidden = {! room.options.roomPassword > 0}>🔒</label>
                     </li>)}
                 </ul>
             </div>

@@ -17,3 +17,7 @@ body {
 .pendingrooms {
    padding-top : 20px
 }
+
+.pendingrooms-lock{
+  font-size: smaller;
+}
