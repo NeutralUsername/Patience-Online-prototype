@@ -24,7 +24,7 @@ var dbCon = mysql.createConnection({
 const pendingOnlineRooms = [];
 
 io.on('connection', function (socket) {
-  updateAvailableRoomsCLIENT();
+  updatePendingRoomsCLIENT();
 
   socket.on('serverTimeREQ',  () => {
     setInterval(function () {
@@ -76,7 +76,7 @@ function createPendingRoom(socketid, options) {
         socketid : socketid,
         options : options
       });
-      updateAvailableRoomsCLIENT();
+      updatePendingRoomsCLIENT();
     }
   }
   else {
@@ -84,7 +84,7 @@ function createPendingRoom(socketid, options) {
       socketid : socketid,
       options : options
     });
-    updateAvailableRoomsCLIENT();
+    updatePendingRoomsCLIENT();
   }
 }
 
@@ -96,33 +96,19 @@ function joinPendingRoom(socket, room) {
       console.log(socket.id, room);
       removePendingRoom(room);
       removePendingRoom(socket.id);
-      updateAvailableRoomsCLIENT();
+      updatePendingRoomsCLIENT();
     }
 }
 
 function removePendingRoom(socketid) {
   if( returnPendingRoomIfExists(socketid)) {
     pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.socketid == socketid), 1);
-    updateAvailableRoomsCLIENT();
+    updatePendingRoomsCLIENT();
   }
 }
 
-function updateAvailableRoomsCLIENT() {
-  io.sockets.emit('UpdateAvailableRoomsRES' , { pendingRooms : pendingOnlineRooms});
-}
-
-function optionsValid(options) {
-  if(options.malusSize >= 5 && options.malusSize <= 20)
-    if(options.sequenceSize >= 1 && options.sequenceSize <= 6)
-      if(options.throwOnStock === true || options.throwOnStock === false)
-        if(options.throwOnMalus === true || options.throwOnMalus === false)
-          if(options.variant === 'Patience' || options.variant === 'Klondike')
-            if(options.turnsTimed === true || options.turnsTimed === false)
-              if(options.roundsTimed === true || options.roundsTimed === false)
-                if(options.timePerTurn >= 15 && options.timePerTurn <= 300)
-                  if(options.timePerRound >= 600 && options.timePerRound <= 3600)
-                    return true;
-  return false;
+function updatePendingRoomsCLIENT() {
+  io.sockets.emit('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms});
 }
 
 function optionsAreDifferent(options1, options2) {
@@ -151,7 +137,27 @@ function returnPendingRoomIfExists(socketid) {
 
 
 
+
+
+
+
+
 // ===== keeping just in case i need the templates
+
+function optionsValid(options) {
+  if(options.malusSize >= 5 && options.malusSize <= 20)
+    if(options.sequenceSize >= 1 && options.sequenceSize <= 6)
+      if(options.throwOnStock === true || options.throwOnStock === false)
+        if(options.throwOnMalus === true || options.throwOnMalus === false)
+          if(options.variant === 'Patience' || options.variant === 'Klondike')
+            if(options.turnsTimed === true || options.turnsTimed === false)
+              if(options.roundsTimed === true || options.roundsTimed === false)
+                if(options.timePerTurn >= 15 && options.timePerTurn <= 300)
+                  if(options.timePerRound >= 600 && options.timePerRound <= 3600)
+                    return true;
+  return false;
+}
+
 app.route('/ping').get(controller.root);
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
 app.get('/', function (req, res) {

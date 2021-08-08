@@ -36,7 +36,7 @@ export default class Options extends React.Component {
         this.handleJoinClick = this.handleJoinClick.bind (this);
         this.handleOptionClick = this.handleOptionClick.bind (this);
 
-        this.props.socket.on("UpdateAvailableRoomsRES", data => {
+        this.props.socket.on("UpdatePendingRoomsRES", data => {
             if(this.mounted){
                 this.setState ({pendingRooms : data.pendingRooms });
             }
