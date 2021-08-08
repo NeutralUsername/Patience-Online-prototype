@@ -106,21 +106,21 @@ export default class Options extends React.Component {
         this.setState ({roomName : roomName })
     }
 
+    handleAIClick () {
+        this.props.socket.emit('AIgameREQ', {
+            options : this.state,
+        });
+    }
+
     handleCreateClick () {
         this.props.socket.emit('newOnlineRoomREQ', {
             options : this.state
         });
     };
 
-    handleJoinClick (event) {
+    handleJoinClick (socketid) {
         this.props.socket.emit('joinOnlineRoomREQ', {
-            roomkey : event.target.value
-        });
-    }
-
-    handleAIClick () {
-        this.props.socket.emit('AIgameREQ', {
-            options : this.state,
+            roomkey : socketid
         });
     }
 
@@ -200,6 +200,11 @@ export default class Options extends React.Component {
 class PendingRooms extends React.Component {
     constructor ( props ) {
         super (props);
+        this.handleJoinClick = this.handleJoinClick.bind (this);
+    }
+
+    handleJoinClick (event) {
+        this.props.handleJoinClick (event.target.value);
     }
     render () {
         return (
@@ -210,7 +215,7 @@ class PendingRooms extends React.Component {
                         key = {room.socketid} >
                         <button 
                             value = {room.socketid}
-                            onClick = {this.props.handleJoinClick} >
+                            onClick = {this.handleJoinClick} >
                             Join
                         </button>
                         <button 
@@ -494,9 +499,9 @@ class Online extends React.Component {
                 <label>
                     vs. Player
                 </label>
-                <button
+                <button className = {"create"}
                     onClick = {this.props.handleNewClick} >
-                    New
+                    Create
                 </button>
                 <label>
                     Roomname
