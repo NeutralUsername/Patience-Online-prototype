@@ -35,11 +35,11 @@ io.on('connection', function (socket) {
   socket.on('AIgameREQ', async function (data) {
     try {
       await rateLimiter.consume(socket.handshake.address);
-      removePendingRoom(socket.id);
+      removePendingRoomIfExists(socket.id);
       socket.emit('AIgameRES' , { gameid : "gameid"});
     } 
     catch(rejRes) {
-      console.log("flood protection1");
+      console.log("flood protection => AI Game");
     }
   });
 
@@ -48,7 +48,7 @@ io.on('connection', function (socket) {
       await rateLimiter.consume(socket.handshake.address);
       if( returnPendingRoomIfExists(socket.id) ) {
         if(optionsAreDifferent( returnPendingRoomIfExists(socket.id).options , data.options)) {
-          removePendingRoom(socket.id);
+          removePendingRoomIfExists(socket.id);
           addPendingRoom(socket, data.options) ;
         }
       }
@@ -56,7 +56,7 @@ io.on('connection', function (socket) {
         addPendingRoom(socket, data.options) ;
     } 
     catch(rejRes) {
-      console.log("flood protection2");
+      console.log("flood protection => new pending Room");
     }
   });
 
@@ -72,7 +72,7 @@ io.on('connection', function (socket) {
         }
     } 
     catch(rejRes) {
-      console.log("flood protection3");
+      console.log("flood protection => join pending Room");
     }
   });
 
@@ -82,7 +82,7 @@ io.on('connection', function (socket) {
   })
 
   socket.on('disconnect', function () {
-    removePendingRoom(socket.id);
+    removePendingRoomIfExists(socket.id);
   });
 });
 
@@ -98,12 +98,12 @@ function startPendingRoom (socket, room) {
   socket.join(room);
   io.to(room).emit('startOnlineGameRES', { options : returnPendingRoomIfExists(room).options });
   console.log(socket.id, room);
-  removePendingRoom(room);
-  removePendingRoom(socket.id);
+  removePendingRoomIfExists(room);
+  removePendingRoomIfExists(socket.id);
   updatePendingRoomsCLIENT();
 }
 
-function removePendingRoom(roomkey) {
+function removePendingRoomIfExists(roomkey) {
   if( returnPendingRoomIfExists(roomkey)) {
     pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.roomkey == roomkey), 1);
     updatePendingRoomsCLIENT();
