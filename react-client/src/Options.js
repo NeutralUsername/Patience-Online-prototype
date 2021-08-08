@@ -46,10 +46,9 @@ export default class Options extends React.Component {
             return (
                 ReactDOM.render (
                     <Game
-                        options = {data.options}
+                        color = {data.color}
                         gameid = {data.gameid}
-                        socket = {this.props.socket}
-                        socketid = {this.props.socketid}
+                        socket = {this.props.socket}              
                     ></Game>,
                     document.getElementById ('root')
                 )
@@ -60,10 +59,8 @@ export default class Options extends React.Component {
             return (
                 ReactDOM.render (
                     <Game
-                        options = {data.state}
                         gameid = {data.gameid}
                         socket = {this.props.socket}
-                        socketid = {this.props.socketid}
                     ></Game>,
                     document.getElementById ('root')
                 )

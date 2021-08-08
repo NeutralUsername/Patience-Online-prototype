@@ -6,15 +6,17 @@ export default class Game extends React.Component{
     constructor(props) {
         super(props);
         this.state = {
-            player : {
+            red : {
                 drawpile : 'stack',
                 discardpile : 'stack',
-                malussequence : 'sequence'
+                malussequence : 'sequence',
+                socket : {}
             },
-            opponent : {
+            black : {
                 drawpile : 'stack',
                 discardpile : 'stack',
-                malussequence : 'sequence'
+                malussequence : 'sequence',
+                socket : {}
             },
             field : {
                 foundation1 : 'stack',
