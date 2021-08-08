@@ -17,6 +17,7 @@ export default class Options extends React.Component {
             roundsTimed : false,
             timePerRound : 1800,
             roomName : '',
+            roomPassword : '',
             pendingRooms : [],
         };
         this.mounted = false;
@@ -31,6 +32,7 @@ export default class Options extends React.Component {
         this.handleTimePerRoundChange = this.handleTimePerRoundChange.bind (this);
         this.handleTimePerRoundChange = this.handleTimePerRoundChange.bind (this);
         this.handleRoomNameChange = this.handleRoomNameChange.bind (this);
+        this.handleRoomPasswordChange = this.handleRoomPasswordChange.bind (this);
         this.handleAIClick = this.handleAIClick.bind (this);
         this.handleCreateClick = this.handleCreateClick.bind (this);
         this.handleJoinClick = this.handleJoinClick.bind (this);
@@ -138,6 +140,9 @@ export default class Options extends React.Component {
     handleRoomNameChange (roomName) {
         this.setState ({roomName : roomName })
     }
+    handleRoomPasswordChange (roomPassword) {
+        this.setState ({roomPassword : roomPassword })
+    }
 
     render () {
         return (
@@ -178,14 +183,18 @@ export default class Options extends React.Component {
                     timePerRound = {this.state.timePerRound}
                     onValueChange = {this.handleTimePerRoundChange}
                 ></TimedRounds>
+                <Room 
+                    onNameChange = {this.handleRoomNameChange}
+                    onPasswordChange = {this.handleRoomPasswordChange}
+                    roomName = {this.state.roomName}
+                    roomPassword = {this.state.roomPassword}>
+                </Room>
+                <Online
+                    handleNewClick = {this.handleCreateClick}         
+                ></Online>
                 <AI
                     handleClick = {this.handleAIClick}
                 ></AI>
-                <Online
-                    handleNewClick = {this.handleCreateClick}
-                    roomName = {this.state.roomName}
-                    onChange = {this.handleRoomNameChange}
-                ></Online>
                 <PendingRooms
                     pendingRooms = {this.state.pendingRooms}
                     handleJoinClick = {this.handleJoinClick}
@@ -488,38 +497,44 @@ class TimedRounds extends React.Component {
     }
 }
 
-class Online extends React.Component {
-    constructor (props) {
+class Room extends React.Component {
+    constructor ( props ) {
         super (props);
-        this.handleChange = this.handleChange.bind (this);
+        this.handleRoomNameChange = this.handleRoomNameChange.bind (this);
+        this.handleRoomPasswordChange = this.handleRoomPasswordChange.bind (this);
     }
-    handleChange (event) {
-        this.props.onChange (event.target.value);
+    handleRoomNameChange (event) {
+        this.props.onNameChange (event.target.value);
+    }
+    handleRoomPasswordChange (event) {
+        this.props.onPasswordChange (event.target.value);
     }
     render () {
         return (
-            <div
-                className = {"online"} >
+            <div>
                 <label>
-                    vs. Player
-                </label>
-                <button className = {"create"}
-                    onClick = {this.props.handleNewClick} >
-                    Create
-                </button>
-                <label>
-                    Roomname
+                    Room Name
                 </label>
                 <input
-                    id = 'roomName'
+                    id = 'roomname'
                     type = 'text'
-                    onChange = {this.handleChange}
+                    onChange = {this.handleRoomNameChange}
                     value = { this.props.roomName}
+                ></input>
+                <label>
+                    Room Password
+                </label>
+                <input
+                    id = 'roompassword'
+                    type = 'password'
+                    onChange = {this.handleRoomPasswordChange}
+                    value = { this.props.roomPassword}
                 ></input>
             </div>
         )
     }
 }
+
 function AI (props) {
     return (
         <div
@@ -530,6 +545,21 @@ function AI (props) {
             <button
                 onClick = {props.handleClick} >
                 Start
+            </button>
+        </div>
+    )
+}
+
+function Online (props) {
+    return (
+        <div
+            className = {"online"} >
+            <label>
+                vs. Player
+            </label>
+            <button className = {"create"}
+                onClick = {props.handleNewClick} >
+                Create
             </button>
         </div>
     )
