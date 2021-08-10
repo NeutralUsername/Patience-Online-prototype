@@ -50,11 +50,11 @@ io.on('connection', function (socket) {
       if( returnPendingRoomIfExists(socket.id) ) {
         if(optionsAreDifferent( returnPendingRoomIfExists(socket.id).options , data.options)) {
           removePendingRoomIfExists(socket.id);
-          addPendingRoom(socket, data.options) ;
+          addPendingRoom(socket.id, data.options) ;
         }
       }
       else 
-        addPendingRoom(socket, data.options) ;
+        addPendingRoom(socket.id, data.options) ;
     } 
     catch(rejRes) {
       console.log("flood protection => new pending Room");
@@ -67,7 +67,7 @@ io.on('connection', function (socket) {
       if(data.roomkey != socket.id)
         if(returnPendingRoomIfExists(data.roomkey)) {
           if(returnPendingRoomIfExists(data.roomkey).options.roomPassword.length  == 0) 
-            startPendingRoom(socket, data.roomkey);
+            startPendingRoom(data.roomkey, socket.id);
           else 
             socket.emit('roomPasswordREQ', {roomkey : data.roomkey});
         }
@@ -79,7 +79,7 @@ io.on('connection', function (socket) {
 
   socket.on('roomPasswordRES' , async function ( data) {
       if(returnPendingRoomIfExists(data.roomkey).options.roomPassword == data.password) 
-        startPendingRoom(socket, data.roomkey);
+        startPendingRoom(data.roomkey, socket.id);
   })
 
   socket.on('disconnect', function () {
@@ -87,27 +87,27 @@ io.on('connection', function (socket) {
   });
 });
 
-function addPendingRoom(socket, options) {
+function addPendingRoom(roomkey, options) {
   pendingOnlineRooms.push ({
-    roomkey : socket.id,
+    roomkey : roomkey,
     options : options
   });
   updatePendingRoomsCLIENT();
 }
 
-async function startPendingRoom (socket, room) {
-  removePendingRoomIfExists(room);
-  removePendingRoomIfExists(socket.id);
+async function startPendingRoom (red, black) {
+  const gameid = initGame(red, black, returnPendingRoomIfExists(red).options);
+  removePendingRoomIfExists(red);
+  removePendingRoomIfExists(black);
 
-  const gameid = 0;
-  io.to(room).emit('startOnlineGameRES', { gameid : gameid });
-  io.to(socket.id).emit('startOnlineGameRES' , {  gameid : gameid });
+  io.to(red).emit('startOnlineGameRES', { gameid : gameid });
+  io.to(black).emit('startOnlineGameRES' , {  gameid : gameid });
   
-  console.log(socket.id," vs. ", room, " gameid: ", gameid);
+  console.log(red," vs. ", black, " gameid: ", gameid);
   updatePendingRoomsCLIENT();
 }
 
-function initGame () {
+function initGame (red, black, options) {
   dbCon.connect(function(err) {
     if (err) throw err;
     dbCon.query("INSERT INTO customers (name, address) VALUES ('Company Inc', 'Highway 37')", function (err, result) {

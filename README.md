@@ -4,7 +4,7 @@ it consists of two 52 card decks and is played in alternating turns against each
 _______
 install mysql, nodejs
 
-create db (mysql) -> /nodejs-server -> createdbandtables.txt
+"nodejs-server / DBcreateAndInsert.txt" for db
 
 
 
