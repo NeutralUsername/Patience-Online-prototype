@@ -1,184 +1,181 @@
-var express = require('express'),
-    app = express(),
+var express = require ('express'),
+    app = express (),
     port = 3000,
-    controller = require('./controller');
-const server = require('http').Server(app);
+    controller = require ('./controller');
+const server = require ('http').Server(app);
 
-const io = require('socket.io')(server);
+const io = require ('socket.io') (server);
 
-const { RateLimiterMemory } = require('rate-limiter-flexible');
-const rateLimiter = new RateLimiterMemory(
-  {
+const { RateLimiterMemory } = require ('rate-limiter-flexible');
+const rateLimiter = new RateLimiterMemory ({
     points: 3,
     duration: 1,
-  });
+});
 
-var mysql = require('mysql2');
-var dbCon = mysql.createConnection({
-  host: "localhost",
-  user: "gregaire",
-  password: "password",
-  database: "gregaire"
+var mysql = require ('mysql2');
+var dbCon = mysql.createConnection ({
+    host: "localhost",
+    user: "gregaire",
+    password: "password",
+    database: "gregaire"
 });
 
 
 const pendingOnlineRooms = [];
 
-io.on('connection', function (socket) {
-  updatePendingRoomsCLIENT();
+io.on ('connection', function (socket) {
+    updatePendingRoomsCLIENT ();
 
-  socket.on('serverTimeREQ',  () => {
-    setInterval(function () {
-      socket.emit('serverTimeRES', { data: new Date() });
-    },96);
-  });
+    socket.on('serverTimeREQ',  () => {
+        setInterval(function () {
+            socket.emit ('serverTimeRES', { data: new Date () });
+        },96);
+    });
 
-  socket.on('startAIgameREQ', async function (data) {
-    try {
-      await rateLimiter.consume(socket.handshake.address);
-      removePendingRoomIfExists(socket.id);
-      socket.emit('startAIgameRES' , { gameid : "gameid"});
-    } 
-    catch(rejRes) {
-      console.log("flood protection => AI Game");
-    }
-  });
-
-  socket.on('createOnlineRoomREQ', async function (data){
-    try {
-      await rateLimiter.consume(socket.handshake.address);
-      if( returnPendingRoomIfExists(socket.id) ) {
-        if(optionsAreDifferent( returnPendingRoomIfExists(socket.id).options , data.options)) {
-          removePendingRoomIfExists(socket.id);
-          addPendingRoom(socket.id, data.options) ;
+    socket.on ('startAIgameREQ', async function (data) {
+        try {
+            await rateLimiter.consume (socket.handshake.address);
+            removePendingRoomIfExists (socket.id);
+            socket.emit('startAIgameRES' , { gameid : "gameid"});
+        }    
+        catch (rejRes) {
+            console.log("flood protection => AI Game");
         }
-      }
-      else 
-        addPendingRoom(socket.id, data.options) ;
-    } 
-    catch(rejRes) {
-      console.log("flood protection => new pending Room");
-    }
-  });
+        });
 
-  socket.on('joinOnlineRoomREQ', async function (data) {
-    try {
-      await rateLimiter.consume(socket.handshake.address);
-      if(data.roomkey != socket.id)
-        if(returnPendingRoomIfExists(data.roomkey)) {
-          if(returnPendingRoomIfExists(data.roomkey).options.roomPassword.length  == 0) 
-            startPendingRoom(data.roomkey, socket.id);
-          else 
-            socket.emit('roomPasswordREQ', {roomkey : data.roomkey});
+    socket.on ('createOnlineRoomREQ', async function (data){
+        try {
+            await rateLimiter.consume (socket.handshake.address);
+            if( returnPendingRoomIfExists (socket.id) ) {
+                if(optionsAreDifferent( returnPendingRoomIfExists (socket.id).options , data.options)) {
+                    removePendingRoomIfExists (socket.id);
+                    addPendingRoom (socket.id, data.options) ;
+                }
+            }
+            else 
+                addPendingRoom (socket.id, data.options) ;
+        }        
+        catch (rejRes) {
+            console.log ("flood protection => new pending Room");
         }
-    } 
-    catch(rejRes) {
-      console.log("flood protection => join pending Room");
-    }
-  });
+    });
 
-  socket.on('roomPasswordRES' , async function ( data) {
-      if(returnPendingRoomIfExists(data.roomkey).options.roomPassword == data.password) 
-        startPendingRoom(data.roomkey, socket.id);
-  })
+    socket.on ('joinOnlineRoomREQ', async function (data) {
+        try {
+            await rateLimiter.consume (socket.handshake.address);
+            if (data.roomkey != socket.id)
+                if (returnPendingRoomIfExists (data.roomkey)) {
+                    if (returnPendingRoomIfExists (data.roomkey).options.roomPassword.length  == 0) 
+                        startPendingRoom (data.roomkey, socket.id);
+                    else 
+                        socket.emit ('roomPasswordREQ', {roomkey : data.roomkey});
+                }
+        }    
+        catch (rejRes) {
+            console.log ("flood protection => join pending Room");
+        }   
+    });
 
-  socket.on('disconnect', function () {
-    removePendingRoomIfExists(socket.id);
-  });
+    socket.on ('roomPasswordRES' , async function ( data) {
+        if (returnPendingRoomIfExists (data.roomkey).options.roomPassword == data.password) 
+            startPendingRoom (data.roomkey, socket.id);
+    })
+
+    socket.on ('disconnect', function () {
+        removePendingRoomIfExists (socket.id);
+    });
 });
 
-function addPendingRoom(roomkey, options) {
-  pendingOnlineRooms.push ({
-    roomkey : roomkey,
-    options : options
-  });
-  updatePendingRoomsCLIENT();
+function addPendingRoom (roomkey, options) {
+     pendingOnlineRooms.push ({
+        roomkey : roomkey,
+        options : options
+     });
+    updatePendingRoomsCLIENT ();
 }
 
 async function startPendingRoom (red, black) {
-  const gameid = initGame(red, black, returnPendingRoomIfExists(red).options);
-  removePendingRoomIfExists(red);
-  removePendingRoomIfExists(black);
+    const gameid = 0//initGame (red, black, returnPendingRoomIfExists (red).options);
+    removePendingRoomIfExists (red);
+    removePendingRoomIfExists (black);
 
-  io.to(red).emit('startOnlineGameRES', { gameid : gameid });
-  io.to(black).emit('startOnlineGameRES' , {  gameid : gameid });
-  
-  console.log(red," vs. ", black, " gameid: ", gameid);
-  updatePendingRoomsCLIENT();
+    io.to (red).emit ('startOnlineGameRES', { gameid : gameid });
+    io.to (black).emit ('startOnlineGameRES' , {  gameid : gameid });
+    
+    console.log (red," vs. ", black, " gameid: ", gameid);
+    updatePendingRoomsCLIENT ();
 }
 
-function initGame (red, black, options) {
-  dbCon.connect(function(err) {
-    if (err) throw err;
-    dbCon.query("INSERT INTO customers (name, address) VALUES ('Company Inc', 'Highway 37')", function (err, result) {
-      if (err) throw err;
-      console.log("1 record inserted");
-    });
-  });
-  return -1337;
+function removePendingRoomIfExists (roomkey) {
+    if (returnPendingRoomIfExists (roomkey)) {
+        pendingOnlineRooms.splice (pendingOnlineRooms.findIndex (e => e.roomkey == roomkey), 1);
+        updatePendingRoomsCLIENT ();
+    }
 }
 
-function removePendingRoomIfExists(roomkey) {
-  if( returnPendingRoomIfExists(roomkey)) {
-    pendingOnlineRooms.splice(pendingOnlineRooms.findIndex(e => e.roomkey == roomkey), 1);
-    updatePendingRoomsCLIENT();
-  }
+function returnPendingRoomIfExists (roomkey) {
+    if (pendingOnlineRooms.find (e => e.roomkey === roomkey) )
+        return pendingOnlineRooms.find (e => e.roomkey === roomkey);
+    else
+        return false;
 }
 
-function returnPendingRoomIfExists(roomkey) {
-  if( pendingOnlineRooms.find ( e => e.roomkey === roomkey) )
-    return pendingOnlineRooms.find ( e => e.roomkey === roomkey);
-  else
-    return false;
+function updatePendingRoomsCLIENT () {
+    io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms});
 }
 
-function updatePendingRoomsCLIENT() {
-  io.sockets.emit('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms});
-}
-
-function optionsAreDifferent(options1, options2) {
-  if(options1.malusSize == options2.malusSize)
-    if(options1.sequenceSize == options2.sequenceSize)
-      if(options1.throwOnWaste == options2.throwOnWaste)
-        if(options1.throwOnMalus == options2.throwOnMalus)
-          if(options1.variant == options2.variant)
-            if(options1.turnsTimed == options2.turnsTimed)
-              if(options1.roundsTimed == options2.roundsTimed)  
-                if(options1.timePerTurn == options2.timePerTurn)
-                  if(options1.timePerRound == options2.timePerRound)
-                      if(options1.roomName == options2.roomName)
-                      if(options1.roomPassword == options2.roomPassword)
+function optionsAreDifferent (options1, options2) {
+  if (options1.malusSize == options2.malusSize)
+    if (options1.sequenceSize == options2.sequenceSize)
+      if (options1.throwOnWaste == options2.throwOnWaste)
+        if (options1.throwOnMalus == options2.throwOnMalus)
+          if (options1.variant == options2.variant)
+            if (options1.turnsTimed == options2.turnsTimed)
+              if (options1.roundsTimed == options2.roundsTimed)  
+                if (options1.timePerTurn == options2.timePerTurn)
+                  if (options1.timePerRound == options2.timePerRound)
+                    if (options1.roomName == options2.roomName)
+                      if (options1.roomPassword == options2.roomPassword)
                         return false;
   return true;
 }
 
+function initGame (red, black, options) {
+    dbCon.connect(function(err) { if (err) throw err;
+        dbCon.query("INSERT INTO customers (name, address) VALUES ('Company Inc', 'Highway 37')", function (err, result) { if (err) throw err;
+            console.log("1 record inserted");
+        });
+    });
+    return -1337;
+}
+
 class Card {
-  constructor (set, suit, value) { 
-    this.set = set;
-    this.suit = suit;
-    this.value = value;
-  }
+    constructor (set, suit, value) { 
+        this.set = set;
+        this.suit = suit;
+        this.value = value;
+    }
 }
 
 function freshDeck(set) {
-  const Suits = ["♥", "♠", "♦", "♣"];
-  const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-  return Suits.flatMap(suit => {
-      return Values.map(value => {
-         return new Card (set, suit, value)
-      });
-  });
+    const Suits = ["♥", "♠", "♦", "♣"];
+    const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+    return Suits.flatMap(suit => {
+        return Values.map(value => {
+            return new Card (set, suit, value)
+        });
+    });
 }  
 
 function shuffle(deck) {
-  var currentIndex = deck.length,  randomIndex;
-  while (0 !== currentIndex) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-    [deck[currentIndex], deck[randomIndex]] = [
-      deck[randomIndex], deck[currentIndex]];
-  }
-  return decks;
+    var currentIndex = deck.length,  randomIndex;
+    while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [deck[currentIndex], deck[randomIndex]] = [
+            deck[randomIndex], deck[currentIndex]];
+    } 
+    return decks;
 }
 
 
