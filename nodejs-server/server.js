@@ -32,18 +32,18 @@ io.on('connection', function (socket) {
     },96);
   });
 
-  socket.on('AIgameREQ', async function (data) {
+  socket.on('startAIgameREQ', async function (data) {
     try {
       await rateLimiter.consume(socket.handshake.address);
       removePendingRoomIfExists(socket.id);
-      socket.emit('AIgameRES' , { gameid : "gameid"});
+      socket.emit('startAIgameRES' , { gameid : "gameid"});
     } 
     catch(rejRes) {
       console.log("flood protection => AI Game");
     }
   });
 
-  socket.on('newOnlineRoomREQ', async function (data){
+  socket.on('createOnlineRoomREQ', async function (data){
     try {
       await rateLimiter.consume(socket.handshake.address);
       if( returnPendingRoomIfExists(socket.id) ) {
@@ -94,13 +94,70 @@ function addPendingRoom(socket, options) {
   updatePendingRoomsCLIENT();
 }
 
-function startPendingRoom (socket, room) {
-  socket.join(room);
-  io.to(room).emit('startOnlineGameRES', { options : returnPendingRoomIfExists(room).options });
-  console.log(socket.id, room);
+async function startPendingRoom (socket, room) {
   removePendingRoomIfExists(room);
   removePendingRoomIfExists(socket.id);
+  io.to(room).emit('startOnlineGameRES', { gameid : "gameid" });
+  io.to(socket.id).emit('startOnlineGameRES' , {  gameid : "gameid" });
+  
+  console.log(socket.id, room);
+  
   updatePendingRoomsCLIENT();
+}
+
+class Game {
+  constructor(gameid) {
+    this.gameid = "gameid";
+    this.options = {
+      malusSize : "malusSize",
+      sequenceSize : "sequenceSize",
+      throwOnWaste : "throwOnWaste",
+      throwOnMalus : "throwOnMalus",
+      variant : "variant",
+      turnsTimed : "turnsTimed",
+      timePerTurn : "timePerTurn",
+      roundsTimed : "roundsTimed",
+      timePerRound : "timePerRound",
+      roomName : "roomName",
+      roomPassword : "roomPassword",
+    }
+    this.decks = {
+      redDeck : [],
+      blackDeck : [],
+    }
+    this.stacks = {
+      red : {
+        drawpile : 'stack',
+        discardpile : 'stack',
+        malussequence : 'sequence',
+      },
+      black : {
+        drawpile : 'stack',
+        discardpile : 'stack',
+        malussequence : 'sequence',
+      },
+      field :  {
+      foundation1 : 'stack',
+      foundation2 : 'stack',
+      foundation3 : 'stack',
+      foundation4 : 'stack',
+      foundation5 : 'stack',
+      foundation6 : 'stack',
+      foundation7 : 'stack',
+      foundation8 : 'stack',
+      tableau1 : 'sequence',
+      tableau2 : 'sequence',
+      tableau3 : 'sequence',
+      tableau4 : 'sequence',
+      tableau5 : 'sequence',
+      tableau6 : 'sequence',
+      tableau7 : 'sequence',
+      tableau8 : 'sequence'
+      }
+    }
+    
+    this.actions = [];
+  }
 }
 
 function removePendingRoomIfExists(roomkey) {
@@ -137,8 +194,47 @@ function optionsAreDifferent(options1, options2) {
   return true;
 }
 
+function Stack (props) {
 
+}
 
+function Sequence (props) {
+  //return React.createElement("div", {id: 'someId', className: "someClass"}, "")
+  
+}
+
+function Card (props) {
+ 
+}
+
+function shuffle(decks) {
+  for(var i = 0; i< decks.length; i++) {
+      var currentIndex = decks[i].length,  randomIndex;
+      while (0 !== currentIndex) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [decks[i][currentIndex], decks[i][randomIndex]] = [
+          decks[i][randomIndex], decks[i][currentIndex]];
+      }
+  }
+  return decks;
+}
+
+function freshDeck(set) {
+  const Suits = ["♠", "♥", "♦", "♣"];
+  const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+  function handleDrag() {
+
+  }
+  function handleDrop() {
+
+  }
+  return Suits.flatMap(suit => {
+      return Values.map(value => {
+         
+      });
+  });
+}  
 
 
 

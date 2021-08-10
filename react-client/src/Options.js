@@ -42,7 +42,7 @@ export default class Options extends React.Component {
     componentDidMount () {
         this.mounted = true;
 
-        this.props.socket.on("AIgameRES", data => {
+        this.props.socket.on("startAIgameRES", data => {
             return (
                 ReactDOM.render (
                     <Game
@@ -64,7 +64,6 @@ export default class Options extends React.Component {
             return (
                 ReactDOM.render (
                     <Game
-                        color = {data.color}
                         gameid = {data.gameid}
                         socket = {this.props.socket}              
                     ></Game>,
@@ -85,13 +84,13 @@ export default class Options extends React.Component {
     }
 
     handleAIClick () {
-        this.props.socket.emit('AIgameREQ', {
+        this.props.socket.emit('startAIgameREQ', {
             options : this.state,
         });
     };
 
     handleCreateClick () {
-        this.props.socket.emit('newOnlineRoomREQ', {
+        this.props.socket.emit('createOnlineRoomREQ', {
             options : this.state
         });
     };
