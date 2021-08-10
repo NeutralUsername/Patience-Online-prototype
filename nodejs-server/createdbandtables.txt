@@ -1,20 +1,37 @@
-con.connect(function(err) {
+var createDBcon = mysql.createConnection({
+  host: "localhost",
+  user: "gregaire",
+  password: "password",
+  
+});
+
+createDBcon.connect(function(err) {
   if (err) throw err;
-  con.query("CREATE DATABASE IF NOT EXISTS gregaire", 
+  createDBcon.query("CREATE DATABASE IF NOT EXISTS gregaire", 
     function (err, result) {
       if (err) throw err;
   });
 }); 
 
+
+var dbCon = mysql.createConnection({
+  host: "localhost",
+  user: "gregaire",
+  password: "password",
+  database: "gregaire"
+});
+
 dbCon.connect(function(err) {
   if (err) throw err;
   dbCon.query("CREATE TABLE IF NOT EXISTS cards ("
-    +"id     INT AUTO_INCREMENT PRIMARY KEY, "
-    +"suit   VARCHAR(10), "
-    +"value  VARCHAR(10))", 
+    +"id      INT AUTO_INCREMENT PRIMARY KEY, "
+    +"color   VARCHAR(10), "
+    +"suit    VARCHAR(10), "
+    +"value   VARCHAR(10))", 
     function (err, result) {
       if (err) throw err;
   });
+
   dbCon.query("CREATE TABLE IF NOT EXISTS options ("
     +"id           INT AUTO_INCREMENT PRIMARY KEY, "
     +"malussize    INT, "
@@ -25,52 +42,52 @@ dbCon.connect(function(err) {
     +"turnstimed   BOOLEAN, "
     +"turntime     INT, "
     +"roundstimed  BOOLEAN, "
-    +"roundtime    INT) ",
+    +"roundtime    INT, "
+    +"roomname      VARCHAR(20), "
+    +"roompassword  VARCHAR(20))",
     function (err, result) {
       if (err) throw err;
   });
+
+    dbCon.query("CREATE TABLE IF NOT EXISTS games ("
+    +"id            INT AUTO_INCREMENT PRIMARY KEY, "
+    +"optionid      INT, "
+    +"redid         VARCHAR(20), "
+    +"blackid       VARCHAR(20), "
+    +"CONSTRAINT `option` FOREIGN KEY (`optionid`) REFERENCES `options`(`id`))", 
+    function (err, result) {
+      if (err) throw err;
+  });
+
+  dbCon.query("CREATE TABLE IF NOT EXISTS decks ("
+    +"gameid       INT, "
+    +"cardid       INT, "
+    +"position     INT, "
+    +"PRIMARY KEY (cardid, position), "
+    +"CONSTRAINT  `cardid` FOREIGN KEY (`cardid`) REFERENCES `cards`(`id`))" , 
+    +"CONSTRAINT  `gameid` FOREIGN KEY (`gameid`) REFERENCES `games`(`id`))" , 
+    function (err, result) {
+      if (err) throw err;
+  });
+
   dbCon.query("CREATE TABLE IF NOT EXISTS stacks ("
     +"id     INT AUTO_INCREMENT PRIMARY KEY, "
     +"name   VARCHAR(20))", 
     function (err, result) {
       if (err) throw err;
   });
-  dbCon.query("CREATE TABLE IF NOT EXISTS decks ("
-    +"id     INT AUTO_INCREMENT PRIMARY KEY)", 
-  function (err, result) {
-    if (err) throw err;
-  });
-  dbCon.query("CREATE TABLE IF NOT EXISTS shuffles ("
-    +"deckid       INT, "
-    +"cardid       INT, "
-    +"position     INT, "
-    +"PRIMARY KEY (deckid, cardid, position), "
-    +"CONSTRAINT  `deck` FOREIGN KEY (`deckid`) REFERENCES `decks`(`id`), "
-    +"CONSTRAINT  `card` FOREIGN KEY (`cardid`) REFERENCES `cards`(`id`))", 
-    function (err, result) {
-      if (err) throw err;
-  });
-  dbCon.query("CREATE TABLE IF NOT EXISTS games ("
-    +"id          INT AUTO_INCREMENT PRIMARY KEY, "
-    +"deckid1     INT, deckid2 INT, "
-    +"optionid    INT, "
-    +"userid1     VARCHAR(20), "
-    +"userid2     VARCHAR(20), "
-    +"CONSTRAINT `deck1`  FOREIGN KEY (`deckid1`)  REFERENCES `decks`(`id`), "
-    +"CONSTRAINT `deck2`  FOREIGN KEY (`deckid2`)  REFERENCES `decks`(`id`), "
-    +"CONSTRAINT `option` FOREIGN KEY (`optionid`) REFERENCES `options`(`id`))", 
-    function (err, result) {
-      if (err) throw err;
-  });
+
   dbCon.query("CREATE TABLE IF NOT EXISTS actions ("
+    +"id           INT, "
     +"gameid       INT, "
-    +"actionnr     INT, "
     +"fromstackid  INT, "
     +"tostackid    INT, "
-    +"PRIMARY KEY (gameid, actionnr), "
-    +"CONSTRAINT  `game`      FOREIGN KEY (`gameid`)      REFERENCES `games`(`id`), "
-    +"CONSTRAINT  `stackfrom` FOREIGN KEY (`fromstackid`) REFERENCES `stacks`(`id`), "
-    +"CONSTRAINT  `stackto`   FOREIGN KEY (`tostackid`)   REFERENCES `stacks`(`id`))", 
+    +"turntime     DECIMAL(8,2), "
+    +"roundtimer   DECIMAL(8,2), "
+    +"faceup       BOOLEAN, "
+    +"CONSTRAINT  `game`        FOREIGN KEY (`gameid`)        REFERENCES `games`(`id`), "
+    +"CONSTRAINT  `fromstackid` FOREIGN KEY (`fromstackid`) REFERENCES `stacks`(`id`), "
+    +"CONSTRAINT  `tostackid`   FOREIGN KEY (`tostackid`)   REFERENCES `stacks`(`id`))", 
     function (err, result) {
       if (err) throw err;
   });
@@ -79,4 +96,153 @@ dbCon.connect(function(err) {
 
 
 
+dbCon.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+  var sql = "INSERT INTO stacks (name) VALUES ?";
+  var values = [
+    ['red_drawpile'],
+    ['red_wastepile'],
+    ['red_malussequence'],
+    ['black_drawpile'],
+    ['black_wastepile'],
+    ['black_malussequence'],
+    ['1_foundation'],
+    ['2_foundation'],
+    ['3_foundation'],
+    ['4_foundation'],
+    ['5_foundation'],
+    ['6_foundation'],
+    ['7_foundation'],
+    ['8_foundation'],
+    ['1_tableau'],
+    ['2_tableau'],
+    ['3_tableau'],
+    ['4_tableau'],
+    ['5_tableau'],
+    ['6_tableau'],
+    ['7_tableau'],
+    ['8_tableau'],
+  ];
+  con.query(sql, [values], function (err, result) {
+    if (err) throw err;
+    console.log("Number of records inserted: " + result.affectedRows);
+  });
+});
 
+
+dbCon.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+  var sql = "INSERT INTO cards (color, suit, value) VALUES ?";
+  var values = [
+    ['red', 'hearts', '1'],
+    ['red', 'hearts', '2'],
+    ['red', 'hearts', '3'],
+    ['red', 'hearts', '4'],
+    ['red', 'hearts', '5'],
+    ['red', 'hearts', '6'],
+    ['red', 'hearts', '7'],
+    ['red', 'hearts', '8'],
+    ['red', 'hearts', '9'],
+    ['red', 'hearts', '10'],
+    ['red', 'hearts', 'Jack'],
+    ['red', 'hearts', 'Queen'],
+    ['red', 'hearts', 'King'],
+    ['red', 'diamonds', '1'],
+    ['red', 'diamonds', '2'],
+    ['red', 'diamonds', '3'],
+    ['red', 'diamonds', '4'],
+    ['red', 'diamonds', '5'],
+    ['red', 'diamonds', '6'],
+    ['red', 'diamonds', '7'],
+    ['red', 'diamonds', '8'],
+    ['red', 'diamonds', '9'],
+    ['red', 'diamonds', '10'],
+    ['red', 'diamonds', 'Jack'],
+    ['red', 'diamonds', 'Queen'],
+    ['red', 'diamonds', 'King'],
+    ['red', 'spades', '1'],
+    ['red', 'spades', '2'],
+    ['red', 'spades', '3'],
+    ['red', 'spades', '4'],
+    ['red', 'spades', '5'],
+    ['red', 'spades', '6'],
+    ['red', 'spades', '7'],
+    ['red', 'spades', '8'],
+    ['red', 'spades', '9'],
+    ['red', 'spades', '10'],
+    ['red', 'spades', 'Jack'],
+    ['red', 'spades', 'Queen'],
+    ['red', 'spades', 'King'],
+    ['red', 'clubs', '1'],
+    ['red', 'clubs', '2'],
+    ['red', 'clubs', '3'],
+    ['red', 'clubs', '4'],
+    ['red', 'clubs', '5'],
+    ['red', 'clubs', '6'],
+    ['red', 'clubs', '7'],
+    ['red', 'clubs', '8'],
+    ['red', 'clubs', '9'],
+    ['red', 'clubs', '10'],
+    ['red', 'clubs', 'Jack'],
+    ['red', 'clubs', 'Queen'],
+    ['red', 'clubs', 'King'],
+    ['black', 'hearts', '1'],
+    ['black', 'hearts', '2'],
+    ['black', 'hearts', '3'],
+    ['black', 'hearts', '4'],
+    ['black', 'hearts', '5'],
+    ['black', 'hearts', '6'],
+    ['black', 'hearts', '7'],
+    ['black', 'hearts', '8'],
+    ['black', 'hearts', '9'],
+    ['black', 'hearts', '10'],
+    ['black', 'hearts', 'Jack'],
+    ['black', 'hearts', 'Queen'],
+    ['black', 'hearts', 'King'],
+    ['black', 'diamonds', '1'],
+    ['black', 'diamonds', '2'],
+    ['black', 'diamonds', '3'],
+    ['black', 'diamonds', '4'],
+    ['black', 'diamonds', '5'],
+    ['black', 'diamonds', '6'],
+    ['black', 'diamonds', '7'],
+    ['black', 'diamonds', '8'],
+    ['black', 'diamonds', '9'],
+    ['black', 'diamonds', '10'],
+    ['black', 'diamonds', 'Jack'],
+    ['black', 'diamonds', 'Queen'],
+    ['black', 'diamonds', 'King'],
+    ['black', 'spades', '1'],
+    ['black', 'spades', '2'],
+    ['black', 'spades', '3'],
+    ['black', 'spades', '4'],
+    ['black', 'spades', '5'],
+    ['black', 'spades', '6'],
+    ['black', 'spades', '7'],
+    ['black', 'spades', '8'],
+    ['black', 'spades', '9'],
+    ['black', 'spades', '10'],
+    ['black', 'spades', 'Jack'],
+    ['black', 'spades', 'Queen'],
+    ['black', 'spades', 'King'],
+    ['black', 'clubs', '1'],
+    ['black', 'clubs', '2'],
+    ['black', 'clubs', '3'],
+    ['black', 'clubs', '4'],
+    ['black', 'clubs', '5'],
+    ['black', 'clubs', '6'],
+    ['black', 'clubs', '7'],
+    ['black', 'clubs', '8'],
+    ['black', 'clubs', '9'],
+    ['black', 'clubs', '10'],
+    ['black', 'clubs', 'Jack'],
+    ['black', 'clubs', 'Queen'],
+    ['black', 'clubs', 'King'],
+  ];
+  dbCon.query(sql, [values], function (err, result) {
+    if (err) throw err;
+    console.log("Number of records inserted: " + result.affectedRows);
+  });
+});

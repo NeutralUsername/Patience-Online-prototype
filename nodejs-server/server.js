@@ -21,6 +21,7 @@ var dbCon = mysql.createConnection({
   database: "gregaire"
 });
 
+
 const pendingOnlineRooms = [];
 
 io.on('connection', function (socket) {
@@ -97,67 +98,24 @@ function addPendingRoom(socket, options) {
 async function startPendingRoom (socket, room) {
   removePendingRoomIfExists(room);
   removePendingRoomIfExists(socket.id);
-  io.to(room).emit('startOnlineGameRES', { gameid : "gameid" });
-  io.to(socket.id).emit('startOnlineGameRES' , {  gameid : "gameid" });
+
+  const gameid = initGame();
+  io.to(room).emit('startOnlineGameRES', { gameid : gameid });
+  io.to(socket.id).emit('startOnlineGameRES' , {  gameid : gameid });
   
-  console.log(socket.id, room);
-  
+  console.log(socket.id," vs. ", room, " gameid: ", gameid);
   updatePendingRoomsCLIENT();
 }
 
-class Game {
-  constructor(gameid) {
-    this.gameid = "gameid";
-    this.options = {
-      malusSize : "malusSize",
-      sequenceSize : "sequenceSize",
-      throwOnWaste : "throwOnWaste",
-      throwOnMalus : "throwOnMalus",
-      variant : "variant",
-      turnsTimed : "turnsTimed",
-      timePerTurn : "timePerTurn",
-      roundsTimed : "roundsTimed",
-      timePerRound : "timePerRound",
-      roomName : "roomName",
-      roomPassword : "roomPassword",
-    }
-    this.decks = {
-      redDeck : [],
-      blackDeck : [],
-    }
-    this.stacks = {
-      red : {
-        drawpile : 'stack',
-        discardpile : 'stack',
-        malussequence : 'sequence',
-      },
-      black : {
-        drawpile : 'stack',
-        discardpile : 'stack',
-        malussequence : 'sequence',
-      },
-      field :  {
-      foundation1 : 'stack',
-      foundation2 : 'stack',
-      foundation3 : 'stack',
-      foundation4 : 'stack',
-      foundation5 : 'stack',
-      foundation6 : 'stack',
-      foundation7 : 'stack',
-      foundation8 : 'stack',
-      tableau1 : 'sequence',
-      tableau2 : 'sequence',
-      tableau3 : 'sequence',
-      tableau4 : 'sequence',
-      tableau5 : 'sequence',
-      tableau6 : 'sequence',
-      tableau7 : 'sequence',
-      tableau8 : 'sequence'
-      }
-    }
-    
-    this.actions = [];
-  }
+function initGame () {
+  dbCon.connect(function(err) {
+    if (err) throw err;
+    dbCon.query("INSERT INTO customers (name, address) VALUES ('Company Inc', 'Highway 37')", function (err, result) {
+      if (err) throw err;
+      console.log("1 record inserted");
+    });
+  });
+  return -1337;
 }
 
 function removePendingRoomIfExists(roomkey) {
@@ -194,48 +152,34 @@ function optionsAreDifferent(options1, options2) {
   return true;
 }
 
-function Stack (props) {
-
-}
-
-function Sequence (props) {
-  //return React.createElement("div", {id: 'someId', className: "someClass"}, "")
-  
-}
-
-function Card (props) {
- 
-}
-
-function shuffle(decks) {
-  for(var i = 0; i< decks.length; i++) {
-      var currentIndex = decks[i].length,  randomIndex;
-      while (0 !== currentIndex) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-        [decks[i][currentIndex], decks[i][randomIndex]] = [
-          decks[i][randomIndex], decks[i][currentIndex]];
-      }
+class Card {
+  constructor (suit, value, set) { 
+    this.suit = suit;
+    this.value = value;
+    this.set = set;
   }
-  return decks;
 }
 
 function freshDeck(set) {
-  const Suits = ["♠", "♥", "♦", "♣"];
+  const Suits = ["♥", "♠", "♦", "♣"];
   const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-  function handleDrag() {
-
-  }
-  function handleDrop() {
-
-  }
   return Suits.flatMap(suit => {
       return Values.map(value => {
-         
+         return new Card (suit, value)
       });
   });
 }  
 
+function shuffle(deck) {
+  var currentIndex = deck.length,  randomIndex;
+  while (0 !== currentIndex) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+    [deck[currentIndex], deck[randomIndex]] = [
+      deck[randomIndex], deck[currentIndex]];
+  }
+  return decks;
+}
 
 
 
