@@ -4,7 +4,6 @@ var createDBcon = mysql.createConnection({
   password: "password",
   
 });
-
 createDBcon.connect(function(err) {
   if (err) throw err;
   createDBcon.query("CREATE DATABASE IF NOT EXISTS gregaire", 
@@ -14,13 +13,13 @@ createDBcon.connect(function(err) {
 }); 
 
 
+
 var dbCon = mysql.createConnection({
   host: "localhost",
   user: "gregaire",
   password: "password",
   database: "gregaire"
 });
-
 dbCon.connect(function(err) {
   if (err) throw err;
   dbCon.query("CREATE TABLE IF NOT EXISTS cards ("
@@ -31,7 +30,6 @@ dbCon.connect(function(err) {
     function (err, result) {
       if (err) throw err;
   });
-
   dbCon.query("CREATE TABLE IF NOT EXISTS options ("
     +"id           INT AUTO_INCREMENT PRIMARY KEY, "
     +"malussize    INT, "
@@ -48,7 +46,6 @@ dbCon.connect(function(err) {
     function (err, result) {
       if (err) throw err;
   });
-
     dbCon.query("CREATE TABLE IF NOT EXISTS games ("
     +"id            INT AUTO_INCREMENT PRIMARY KEY, "
     +"optionid      INT, "
@@ -58,7 +55,6 @@ dbCon.connect(function(err) {
     function (err, result) {
       if (err) throw err;
   });
-
   dbCon.query("CREATE TABLE IF NOT EXISTS decks ("
     +"gameid       INT, "
     +"cardid       INT, "
@@ -69,25 +65,21 @@ dbCon.connect(function(err) {
     function (err, result) {
       if (err) throw err;
   });
-
   dbCon.query("CREATE TABLE IF NOT EXISTS stacks ("
     +"id     INT AUTO_INCREMENT PRIMARY KEY, "
     +"name   VARCHAR(20))", 
     function (err, result) {
       if (err) throw err;
   });
-
   dbCon.query("CREATE TABLE IF NOT EXISTS actions ("
     +"id           INT, "
     +"gameid       INT, "
-    +"fromstackid  INT, "
-    +"tostackid    INT, "
+    +"fromstackid  VARCHAR(20), "
+    +"tostackid    VARCHAR(20), "
     +"turntime     DECIMAL(8,2), "
     +"roundtimer   DECIMAL(8,2), "
     +"faceup       BOOLEAN, "
-    +"CONSTRAINT  `game`        FOREIGN KEY (`gameid`)        REFERENCES `games`(`id`), "
-    +"CONSTRAINT  `fromstackid` FOREIGN KEY (`fromstackid`) REFERENCES `stacks`(`id`), "
-    +"CONSTRAINT  `tostackid`   FOREIGN KEY (`tostackid`)   REFERENCES `stacks`(`id`))", 
+    +"CONSTRAINT  `game`        FOREIGN KEY (`gameid`)        REFERENCES `games`(`id`)) ",
     function (err, result) {
       if (err) throw err;
   });
@@ -96,39 +88,7 @@ dbCon.connect(function(err) {
 
 
 
-dbCon.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
-  var sql = "INSERT INTO stacks (name) VALUES ?";
-  var values = [
-    ['red_drawpile'],
-    ['red_wastepile'],
-    ['red_malussequence'],
-    ['black_drawpile'],
-    ['black_wastepile'],
-    ['black_malussequence'],
-    ['1_foundation'],
-    ['2_foundation'],
-    ['3_foundation'],
-    ['4_foundation'],
-    ['5_foundation'],
-    ['6_foundation'],
-    ['7_foundation'],
-    ['8_foundation'],
-    ['1_tableau'],
-    ['2_tableau'],
-    ['3_tableau'],
-    ['4_tableau'],
-    ['5_tableau'],
-    ['6_tableau'],
-    ['7_tableau'],
-    ['8_tableau'],
-  ];
-  con.query(sql, [values], function (err, result) {
-    if (err) throw err;
-    console.log("Number of records inserted: " + result.affectedRows);
-  });
-});
+
 
 
 dbCon.connect(function(err) {

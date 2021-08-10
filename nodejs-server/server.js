@@ -99,7 +99,7 @@ async function startPendingRoom (socket, room) {
   removePendingRoomIfExists(room);
   removePendingRoomIfExists(socket.id);
 
-  const gameid = initGame();
+  const gameid = 0;
   io.to(room).emit('startOnlineGameRES', { gameid : gameid });
   io.to(socket.id).emit('startOnlineGameRES' , {  gameid : gameid });
   
@@ -153,10 +153,10 @@ function optionsAreDifferent(options1, options2) {
 }
 
 class Card {
-  constructor (suit, value, set) { 
+  constructor (set, suit, value) { 
+    this.set = set;
     this.suit = suit;
     this.value = value;
-    this.set = set;
   }
 }
 
@@ -165,7 +165,7 @@ function freshDeck(set) {
   const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
   return Suits.flatMap(suit => {
       return Values.map(value => {
-         return new Card (suit, value)
+         return new Card (set, suit, value)
       });
   });
 }  
