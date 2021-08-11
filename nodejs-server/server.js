@@ -95,7 +95,7 @@ function addPendingRoom (roomkey, options) {
 }
 
 async function startPendingRoom (red, black) {
-    const gameid = initGame (red, black, returnPendingRoomIfExists (red).options);
+    var gameid =  await initGame (red, black, returnPendingRoomIfExists (red).options);
     removePendingRoomIfExists (red);
     removePendingRoomIfExists (black);
 
@@ -140,36 +140,38 @@ function optionsAreDifferent (options1, options2) {
   return true;
 }
 
-async function initGame (red, black, options) {
-    var game;
-    dbCon.connect(function(err) { if (err) throw err;
-        dbCon.query("INSERT INTO options "
-            +"VALUES ("
-            +"0 ,"
-            + options.malusSize + ", "
-            + options.sequenceSize +", "
-            + options.throwOnWaste +", "
-            + options.throwOnMalus +", "
-            + "'"+options.variant+"'" +", "
-            + options.turnsTimed +", "
-            + options.timePerTurn +", "
-            + options.roundsTimed +", "
-            + options.timePerRound +", "
-            + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
-            + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
-        function (err, optionid) { if (err) throw err;
-            dbCon.query("INSERT INTO games "
+function initGame (red, black, options) {
+    return new Promise((resolve) => {
+        var gameid;
+        dbCon.connect(function(err) { if (err) throw err;
+            dbCon.query("INSERT INTO options "
                 +"VALUES ("
                 +"0 ,"
-                + optionid.insertId + ", "
-                + "'"+red+"'" + ", "
-                + "'"+black+"'" +");", 
-            function (err, gameid) { if (err) throw err;
-                game = gameid.insertId;
+                + options.malusSize + ", "
+                + options.sequenceSize +", "
+                + options.throwOnWaste +", "
+                + options.throwOnMalus +", "
+                + "'"+options.variant+"'" +", "
+                + options.turnsTimed +", "
+                + options.timePerTurn +", "
+                + options.roundsTimed +", "
+                + options.timePerRound +", "
+                + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
+                + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
+            function (err, option) { if (err) throw err;
+                dbCon.query("INSERT INTO games "
+                    +"VALUES ("
+                    +"0 ,"
+                    + option.insertId + ", "
+                    + "'"+red+"'" + ", "
+                    + "'"+black+"'" +");", 
+                function (err, game) { if (err) throw err;
+                    console.log(game.insertId);
+                    resolve( game.insertId);
+                });
             });
         });
-    });
-    return game;
+    })
 }
 
 class Card {
