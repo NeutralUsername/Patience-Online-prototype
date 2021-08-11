@@ -145,17 +145,17 @@ function initGame (red, black, options) {
     return new Promise((resolve) => {
         dbCon.connect(function(err) { if (err) throw err;
             dbCon.query("SELECT id FROM options WHERE ( "
-            +"malussize = " + options.malusSize + " AND "
-            +"sequencesize = " + options.sequenceSize +" AND "
-            +"throwonwaste = " + options.throwOnWaste +" AND "
-            +"throwonmalus = " + options.throwOnMalus +" AND "
-            +"variant = " + "'"+options.variant+"'" +" AND "
-            +"turnstimed = " + options.turnsTimed +" AND "
-            +"turntime = " + options.timePerTurn +" AND "
-            +"roundstimed = " + options.roundsTimed +" AND "
-            +"roundtime = " + options.timePerRound +" AND "
-            +"roomname " + (options.roomName     != "" ?"= "+ "'"+options.roomName+"'"     : "is null" )+" AND "
-            +"roompassword " + (options.roomPassword != "" ? "= "+"'"+options.roomPassword+"'" : "is null" ) +");", 
+                +"malussize = " + options.malusSize + " AND "
+                +"sequencesize = " + options.sequenceSize +" AND "
+                +"throwonwaste = " + options.throwOnWaste +" AND "
+                +"throwonmalus = " + options.throwOnMalus +" AND "
+                +"variant = " + "'"+options.variant+"'" +" AND "
+                +"turnstimed = " + options.turnsTimed +" AND "
+                +"turntime = " + options.timePerTurn +" AND "
+                +"roundstimed = " + options.roundsTimed +" AND "
+                +"roundtime = " + options.timePerRound +" AND "
+                +"roomname " + (options.roomName     != "" ?"= '"+options.roomName+"'"     : "is null" )+" AND "
+                +"roompassword " + (options.roomPassword != "" ? "= '"+options.roomPassword+"'" : "is null" ) +");", 
             function (err, option) { if (err) throw err;  
                 if(option.length === 1) {
                     dbCon.query("INSERT INTO games VALUES ( "
