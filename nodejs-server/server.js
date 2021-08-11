@@ -90,7 +90,19 @@ io.on ('connection', function (socket) {
 function addPendingRoom (roomkey, options) {
      pendingOnlineRooms.push ({
         roomkey : roomkey,
-        options : options
+        options : {
+            malusSize : options.malusSize,
+            sequenceSize : options.sequenceSize,
+            throwOnWaste : options.throwOnWaste,
+            throwOnMalus : options.throwOnMalus,
+            variant : options.variant,
+            turnsTimed : options.turnsTimed,
+            timePerTurn : options.timePerTurn,
+            roundsTimed : options.roundsTimed,
+            timePerRound : options.timePerRound,
+            roomName : options.roomName,
+            roomPassword : options.roomPassword,
+        }
      });
     updatePendingRoomsCLIENT ();
 }
