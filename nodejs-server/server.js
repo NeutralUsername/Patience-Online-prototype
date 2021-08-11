@@ -20,6 +20,7 @@ var dbCon = mysql.createConnection ({
     database: "gregaire"
 });
 
+
 const pendingOnlineRooms = [];
 const activeGames = [];
 io.on ('connection', function (socket) {
@@ -157,7 +158,6 @@ async function initGame (red, black, options) {
             + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
             + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
         function (err, optionid) { if (err) throw err;
-
             dbCon.query("INSERT INTO games "
                 +"VALUES ("
                 +"0 ,"

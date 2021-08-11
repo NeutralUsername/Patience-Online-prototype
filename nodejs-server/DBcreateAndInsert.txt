@@ -97,7 +97,6 @@ var dbCon = mysql.createConnection ({
     password: "password",
     database: "gregaire"
 });
-
 dbCon.connect(function(err) {
     if (err) throw err;
     console.log("Connected!");
@@ -207,6 +206,39 @@ dbCon.connect(function(err) {
       ['black', 'clubs', 'Jack'],
       ['black', 'clubs', 'Queen'],
       ['black', 'clubs', 'King'],
+    ];
+    dbCon.query(sql, [values], function (err, result) {
+      if (err) throw err;
+      console.log("Number of records inserted: " + result.affectedRows);
+    });
+  });
+dbCon.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected!");
+    var sql = "INSERT INTO stacks (name) VALUES ?";
+    var values = [
+      ['Red_Stock'],
+      ['Black_Stock'],
+      ['Red_Waste'],
+      ['Black_waste'],
+      ['Red_Malus'],
+      ['Black_Malus'],
+      ['Foundation_1'],
+      ['Foundation_2'],
+      ['Foundation_3'],
+      ['Foundation_4'],
+      ['Foundation_5'],
+      ['Foundation_6'],
+      ['Foundation_7'],
+      ['Foundation_8'],
+      ['tableau_1'],
+      ['tableau_2'],
+      ['tableau_3'],
+      ['tableau_4'],
+      ['tableau_5'],
+      ['tableau_6'],
+      ['tableau_7'],
+      ['tableau_8'],
     ];
     dbCon.query(sql, [values], function (err, result) {
       if (err) throw err;
