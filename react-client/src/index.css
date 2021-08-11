@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  font-size: x-large;
+  font-size:  larger;
 }
 .pendingrooms-roomname {
   background: none!important;
@@ -30,6 +30,8 @@ body {
 .pendingrooms-lock{
   font-size: smaller;
 }
+
+
 
 .pendingrooms-info{
   font-size: medium;
