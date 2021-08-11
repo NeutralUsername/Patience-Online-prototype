@@ -15,10 +15,31 @@ body {
   cursor: pointer;
 }
 
+.pendingrooms::before {
+  content: "";
+  display: block;
+  position: absolute;
+  height: 2px;
+  width: 682px;
+  background: black;
+}
 .pendingrooms {
-   padding-top : 20px
+   padding-top : 30px
 }
 
 .pendingrooms-lock{
   font-size: smaller;
+}
+
+.pendingrooms-info{
+  font-size: medium;
+  white-space: nowrap;
+}
+
+#roomname {
+  width: 222px;
+}
+
+#roompassword {
+  width: 129px;
 }

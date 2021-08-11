@@ -558,7 +558,7 @@ class PendingRooms extends React.Component {
         return (
             <div className ="pendingrooms">
                 <label> 
-                    {this.props.pendingRooms.length > 0 ? <div><b>Pending Rooms </b> : <small>(click <i>Room Name</i> to inspect options)</small></div> : ""} 
+                    { <div><b>Pending Rooms : </b><article className="pendingrooms-info">(click <i>Room Name</i> to inspect options)</article></div> } 
                 </label>
                 <ul className="pendingrooms-list" > {this.props.pendingRooms.map( (room) =>
                     <li className="pendingrooms-listitem" key = {room.roomkey} > 
