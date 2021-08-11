@@ -146,10 +146,12 @@ export default class Options extends React.Component {
         this.setState ({timePerRound : timePerRound })
     }
     handleRoomNameChange (roomName) {
-        this.setState ({roomName : roomName })
+        if(roomName.length <= 20)
+            this.setState ({roomName : roomName })
     }
     handleRoomPasswordChange (roomPassword) {
-        this.setState ({roomPassword : roomPassword })
+        if(roomPassword.length <= 20)
+            this.setState ({roomPassword : roomPassword })
     }
 
     render () {
