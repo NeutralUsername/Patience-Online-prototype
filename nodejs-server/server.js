@@ -8,7 +8,7 @@ const io = require ('socket.io') (server);
 
 const { RateLimiterMemory } = require ('rate-limiter-flexible');
 const rateLimiter = new RateLimiterMemory ({
-    points: 3,
+    points: 1,
     duration: 1,
 });
 
@@ -94,7 +94,7 @@ function addPendingRoom (roomkey, options) {
 }
 
 async function startPendingRoom (red, black) {
-    const gameid = 0//initGame (red, black, returnPendingRoomIfExists (red).options);
+    const gameid = initGame (red, black, returnPendingRoomIfExists (red).options);
     removePendingRoomIfExists (red);
     removePendingRoomIfExists (black);
 
@@ -139,10 +139,25 @@ function optionsAreDifferent (options1, options2) {
   return true;
 }
 
-function initGame (red, black, options) {
+async function initGame (red, black, options) {
     dbCon.connect(function(err) { if (err) throw err;
-        dbCon.query("INSERT INTO customers (name, address) VALUES ('Company Inc', 'Highway 37')", function (err, result) { if (err) throw err;
-            console.log("1 record inserted");
+
+        dbCon.query("INSERT INTO options "
+        +"VALUES ("
+        +"0 ,"
+        + options.malusSize + ", "
+        + options.sequenceSize +", "
+        + options.throwOnWaste +", "
+        + options.throwOnMalus +", "
+        + "'"+options.variant+"'" +", "
+        + options.turnsTimed +", "
+        + options.timePerTurn +", "
+        + options.roundsTimed +", "
+        + options.timePerRound +", "
+        + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
+        + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
+        function (err, result) { if (err) throw err;
+            console.log(result.insertId);
         });
     });
     return -1337;
