@@ -140,27 +140,36 @@ function optionsAreDifferent (options1, options2) {
 }
 
 async function initGame (red, black, options) {
+    var game;
     dbCon.connect(function(err) { if (err) throw err;
-
         dbCon.query("INSERT INTO options "
-        +"VALUES ("
-        +"0 ,"
-        + options.malusSize + ", "
-        + options.sequenceSize +", "
-        + options.throwOnWaste +", "
-        + options.throwOnMalus +", "
-        + "'"+options.variant+"'" +", "
-        + options.turnsTimed +", "
-        + options.timePerTurn +", "
-        + options.roundsTimed +", "
-        + options.timePerRound +", "
-        + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
-        + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
-        function (err, result) { if (err) throw err;
-            console.log(result.insertId);
+            +"VALUES ("
+            +"0 ,"
+            + options.malusSize + ", "
+            + options.sequenceSize +", "
+            + options.throwOnWaste +", "
+            + options.throwOnMalus +", "
+            + "'"+options.variant+"'" +", "
+            + options.turnsTimed +", "
+            + options.timePerTurn +", "
+            + options.roundsTimed +", "
+            + options.timePerRound +", "
+            + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
+            + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
+        function (err, optionid) { if (err) throw err;
+
+            dbCon.query("INSERT INTO games "
+                +"VALUES ("
+                +"0 ,"
+                + optionid.insertId + ", "
+                + "'"+red+"'" + ", "
+                + "'"+black+"'" +");", 
+            function (err, gameid) { if (err) throw err;
+                game = gameid.insertId;
+            });
         });
     });
-    return -1337;
+    return game;
 }
 
 class Card {
