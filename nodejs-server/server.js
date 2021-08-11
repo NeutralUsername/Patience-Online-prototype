@@ -154,9 +154,9 @@ function optionsAreDifferent (options1, options2) {
 }
 
 function initGame (red, black, options) {
-    return new Promise((resolve) => {
-        dbCon.connect(function(err) { if (err) throw err;
-            dbCon.query("SELECT id FROM options WHERE ( "
+    return new Promise ((resolve) => {
+        dbCon.connect (function(err) { if (err) throw err;
+            dbCon.query ("SELECT id FROM options WHERE ( "
                 +"malussize = " + options.malusSize + " AND "
                 +"sequencesize = " + options.sequenceSize +" AND "
                 +"throwonwaste = " + options.throwOnWaste +" AND "
@@ -169,15 +169,15 @@ function initGame (red, black, options) {
                 +"roomname " + (options.roomName     != "" ?"= '"+options.roomName+"'"     : "is null" )+" AND "
                 +"roompassword " + (options.roomPassword != "" ? "= '"+options.roomPassword+"'" : "is null" ) +");", 
             function (err, option) { if (err) throw err;  
-                if(option.length === 1) {
-                    dbCon.query("INSERT INTO games VALUES ( "
+                if (option.length === 1) {
+                    dbCon.query ("INSERT INTO games VALUES ( "
                         +"0 ,"
                         + option[0].id + ", "
                         + "'"+red+"'" + ", "
                         + "'"+black+"'" +");", 
                     function (err, game) { if (err) throw err;
-                        console.log(game.insertId, option[0].id);
-                        resolve( game.insertId);
+                        console.log (game.insertId, option[0].id);
+                        resolve (game.insertId);
                     });
                 }
                 else {
@@ -195,14 +195,14 @@ function initGame (red, black, options) {
                         + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
                         + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
                     function (err, option) { if (err) throw err;
-                        dbCon.query("INSERT INTO games VALUES ( "
+                        dbCon.query ("INSERT INTO games VALUES ( "
                             +"0 ,"
                             + option.insertId + ", "
                             + "'"+red+"'" + ", "
                             + "'"+black+"'" +");", 
                         function (err, game) { if (err) throw err;
-                            console.log(game.insertId, option.insertId);
-                            resolve( game.insertId);
+                            console.log (game.insertId, option.insertId);
+                            resolve (game.insertId);
                         });
                     })
                 }   
@@ -219,7 +219,7 @@ class Card {
     }
 }
 
-function freshDeck(set) {
+function freshDeck (set) {
     const Suits = ["♥", "♠", "♦", "♣"];
     const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
     return Suits.flatMap(suit => {
@@ -229,7 +229,7 @@ function freshDeck(set) {
     });
 }  
 
-function shuffle(deck) {
+function shuffle (deck) {
     var currentIndex = deck.length,  randomIndex;
     while (0 !== currentIndex) {
         randomIndex = Math.floor(Math.random() * currentIndex);
