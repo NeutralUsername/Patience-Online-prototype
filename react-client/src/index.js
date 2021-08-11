@@ -10,7 +10,6 @@ socket.on('connect', () => {
   ReactDOM.render(
     <Options 
       socket = {socket}
-      socketid = {socket.id}
     ></Options>,
     document.getElementById('root')
   );

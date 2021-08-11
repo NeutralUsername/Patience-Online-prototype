@@ -213,46 +213,6 @@ export default class Options extends React.Component {
     }
 }
 
-class PendingRooms extends React.Component {
-    constructor ( props ) {
-        super (props);
-        this.handleJoinClick = this.handleJoinClick.bind (this);
-        this.handleOptionClick = this.handleOptionClick.bind (this);
-    }
-    handleJoinClick (event) {
-        this.props.handleJoinClick (event.target.value);
-    }
-    handleOptionClick (event) {
-        this.props.handleOptionClick (event.target.value);
-    }
-    render () {
-        return (
-            <div className ="pendingrooms">
-                <label> 
-                    {this.props.pendingRooms.length > 0 ? "Pending Rooms :" : ""} 
-                </label>
-                <ul className="pendingrooms-list" > {this.props.pendingRooms.map( (room) =>
-                    <li className="pendingrooms-listitem" key = {room.roomkey} > 
-                        <button 
-                            className="pendingrooms-join" 
-                            value = {room.roomkey}
-                            onClick = {this.handleJoinClick} >
-                            Join
-                        </button>
-                        <button 
-                            className="pendingrooms-roomname" 
-                            value = {room.roomkey}
-                            onClick = {this.handleOptionClick} >
-                            {(!room.options.roomName.replace(/\s/g, '').length) ? room.roomkey : room.options.roomName  }   
-                        </button>
-                        <label className="pendingrooms-lock" hidden = {! room.options.roomPassword > 0}>🔒</label>
-                    </li>)}
-                </ul>
-            </div>
-        )
-    }
-}
-
 class MalusSize extends React.Component {
     constructor (props) {
         super (props);
@@ -578,4 +538,44 @@ function Online (props) {
             </button>
         </div>
     )
+}
+
+class PendingRooms extends React.Component {
+    constructor ( props ) {
+        super (props);
+        this.handleJoinClick = this.handleJoinClick.bind (this);
+        this.handleOptionClick = this.handleOptionClick.bind (this);
+    }
+    handleJoinClick (event) {
+        this.props.handleJoinClick (event.target.value);
+    }
+    handleOptionClick (event) {
+        this.props.handleOptionClick (event.target.value);
+    }
+    render () {
+        return (
+            <div className ="pendingrooms">
+                <label> 
+                    {this.props.pendingRooms.length > 0 ? <div><b>Pending Rooms </b> : <small>(click room-name to inspect options)</small></div> : ""} 
+                </label>
+                <ul className="pendingrooms-list" > {this.props.pendingRooms.map( (room) =>
+                    <li className="pendingrooms-listitem" key = {room.roomkey} > 
+                        <button 
+                            className="pendingrooms-join" 
+                            value = {room.roomkey}
+                            onClick = {this.handleJoinClick} >
+                            Join
+                        </button>
+                        <button 
+                            className="pendingrooms-roomname" 
+                            value = {room.roomkey}
+                            onClick = {this.handleOptionClick} >
+                            {(!room.options.roomName.replace(/\s/g, '').length) ? room.roomkey : room.options.roomName  }   
+                        </button>
+                        <label className="pendingrooms-lock" hidden = {! room.options.roomPassword > 0}>🔒</label>
+                    </li>)}
+                </ul>
+            </div>
+        )
+    }
 }

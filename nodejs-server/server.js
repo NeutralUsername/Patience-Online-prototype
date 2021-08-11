@@ -20,9 +20,8 @@ var dbCon = mysql.createConnection ({
     database: "gregaire"
 });
 
-
 const pendingOnlineRooms = [];
-
+const activeGames = [];
 io.on ('connection', function (socket) {
     updatePendingRoomsCLIENT ();
 
