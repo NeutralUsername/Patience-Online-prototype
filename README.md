@@ -10,7 +10,7 @@ install mysql, nodejs
 
 1) new terminal:
 
-2) npm cd react-client
+2) cd react-client
 
 3) npm install (first time only)
 
@@ -21,7 +21,7 @@ install mysql, nodejs
 
 1) new terminal:
 
-2) npm cd nodejs-server
+2) cd nodejs-server
 
 3) npm install (first time only)
 
