@@ -29,38 +29,47 @@ module.exports = {
         database: "gregaire"
       });
     return new Promise ((resolve) => {
-      dbCon.connect (function(err) { if (err) throw err;
-        dbCon.query ("SELECT id FROM options WHERE ( "
-            +"malussize = " + options.malusSize + " AND "
-            +"sequencesize = " + options.sequenceSize +" AND "
-            +"throwonwaste = " + options.throwOnWaste +" AND "
-            +"throwonmalus = " + options.throwOnMalus +" AND "
-            +"variant = " + "'"+options.variant+"'" +" AND "
-            +"turnstimed = " + options.turnsTimed +" AND "
-            +"turntime = " + options.timePerTurn +" AND "
-            +"roundstimed = " + options.roundsTimed +" AND "
-            +"roundtime = " + options.timePerRound +" AND "
-            +"roomname " + (options.roomName     != "" ?"= '"+options.roomName+"'"     : "is null" )+" AND "
-            +"roompassword " + (options.roomPassword != "" ? "= '"+options.roomPassword+"'" : "is null" ) +");", 
-          function (err, option) { if (err) throw err;  
-            if (option.length === 1) {
-              dbCon.query ("INSERT INTO games VALUES ( "
-                  +"0 ,"
-                  + option[0].id + ", "
-                  + "'"+red+"'" + ", "
-                  + "'"+black+"'" +");", 
-                function (err, game) { if (err) throw err;
-                  console.log (game.insertId, option[0].id);
-                  resolve ({
-                    id : game.insertId , 
-                    redDeck : "redDeck",
-                    blackDeck : "redDeck",
-                  });
-                }
-              );
-            }
-            else {
-              dbCon.query("INSERT INTO options VALUES ( "
+      dbCon.connect (
+
+        function(err) { if (err) throw err;
+          dbCon.query ("SELECT id FROM options WHERE ( "
+              +"malussize = " + options.malusSize + " AND "
+              +"sequencesize = " + options.sequenceSize +" AND "
+              +"throwonwaste = " + options.throwOnWaste +" AND "
+              +"throwonmalus = " + options.throwOnMalus +" AND "
+              +"variant = " + "'"+options.variant+"'" +" AND "
+              +"turnstimed = " + options.turnsTimed +" AND "
+              +"turntime = " + options.timePerTurn +" AND "
+              +"roundstimed = " + options.roundsTimed +" AND "
+              +"roundtime = " + options.timePerRound +" AND "
+              +"roomname " + (options.roomName     != "" ?"= '"+options.roomName+"'"     : "is null" )+" AND "
+              +"roompassword " + (options.roomPassword != "" ? "= '"+options.roomPassword+"'" : "is null" ) +");", 
+
+            function (err, option) { if (err) throw err;  
+              if (option.length === 1) {
+                dbCon.query ("INSERT INTO games VALUES ( "
+                    +"0 ,"
+                    + option[0].id + ", "
+                    + "'"+red+"'" + ", "
+                    + "'"+black+"'" +");", 
+
+                  function (err, game) { if (err) throw err;
+                    dbCon.query ("INSERT INTO decks VALUES ( "
+                        +"0 ,"
+                        + option.insertId + ", "
+                        + "'"+red+"'" + ", "
+                        + "'"+black+"'" +");", 
+
+                      function (err, decks) { if (err) throw err;
+                        console.log (game.insertId, option[0].id);
+                        resolve ({ id : game.insertId });
+                      }
+                    )
+                  }
+                );
+              }
+              else {
+                dbCon.query("INSERT INTO options VALUES ( "
                     +"0 ,"
                     + options.malusSize + ", "
                     + options.sequenceSize +", "
@@ -73,21 +82,28 @@ module.exports = {
                     + options.timePerRound +", "
                     + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
                     + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
+
                   function (err, option) { if (err) throw err;
                     dbCon.query ("INSERT INTO games VALUES ( "
                         +"0 ,"
                         + option.insertId + ", "
                         + "'"+red+"'" + ", "
                         + "'"+black+"'" +");", 
+
                       function (err, game) { if (err) throw err;
-                        console.log (game.insertId, option.insertId);
-                        resolve ({
-                          id : game.insertId , 
-                          redDeck : "redDeck",
-                          blackDeck : "redDeck",
-                        });
+                        dbCon.query ("INSERT INTO decks VALUES ( "
+                            +"0 ,"
+                            + option.insertId + ", "
+                            + "'"+red+"'" + ", "
+                            + "'"+black+"'" +");", 
+                            
+                          function (err, decks) { if (err) throw err;
+                            console.log (game.insertId, option.insertId);
+                            resolve ({ id : game.insertId })
+                          }
+                        )
                       }
-                    );
+                    )
                   }
                 )
               }   
@@ -95,8 +111,8 @@ module.exports = {
           )
         }
       )
-    }
-  )}
+    })
+  }
 }
 
 function DBexists(name) {
@@ -115,7 +131,6 @@ function DBexists(name) {
         }); 
     })
 }
-
 
 function insertTablesAndDataIntoDB() {
     var dbCon = mysql.createConnection({
@@ -161,9 +176,9 @@ function insertTablesAndDataIntoDB() {
         });
         dbCon.query("CREATE TABLE IF NOT EXISTS decks ("
           +"gameid       INT, "
-          +"cardid       INT, "
           +"position     INT, "
-          +"PRIMARY KEY (cardid, position, gameid), "
+          +"cardid       INT, "
+          +"PRIMARY KEY (gameid, position), "
           +"CONSTRAINT  `cardid` FOREIGN KEY (`cardid`) REFERENCES `cards`(`id`))" , 
           +"CONSTRAINT  `gameid` FOREIGN KEY (`gameid`) REFERENCES `games`(`id`))" , 
           function (err, result) {
