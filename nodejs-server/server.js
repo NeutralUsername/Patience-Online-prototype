@@ -100,15 +100,14 @@ function addPendingRoom (roomkey, options) {
 }
 
 async function startPendingRoom (red, black) {
-    var game = [];
-    game[0] =  await db.insertGame (red, black, shuffle(freshDeck("red")), shuffle(freshDeck("black")), returnPendingRoomIfExists(red).options );
+    var game = await db.insertGame (red, black, shuffle(freshDeck("red")), shuffle(freshDeck("black")), returnPendingRoomIfExists(red).options ); 
     removePendingRoomIfExists (red);
     removePendingRoomIfExists (black);
 
-    io.to (red).emit ('startOnlineGameRES', { gameid : game[0] });
-    io.to (black).emit ('startOnlineGameRES' , {  gameid : game[0] });
+    io.to (red).emit ('startOnlineGameRES', { gameid : game.id });
+    io.to (black).emit ('startOnlineGameRES' , {  gameid : game.id });
     
-    console.log (red," vs. ", black, " gameid: ", game[0]);
+    console.log (red," vs. ", black, " gameid: ", game.id);
     updatePendingRoomsCLIENT ();
 }
 

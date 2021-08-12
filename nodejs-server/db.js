@@ -51,7 +51,11 @@ module.exports = {
                   + "'"+black+"'" +");", 
                 function (err, game) { if (err) throw err;
                   console.log (game.insertId, option[0].id);
-                  resolve (game.insertId);
+                  resolve ({
+                    id : game.insertId , 
+                    redDeck : "redDeck",
+                    blackDeck : "redDeck",
+                  });
                 }
               );
             }
@@ -77,7 +81,11 @@ module.exports = {
                         + "'"+black+"'" +");", 
                       function (err, game) { if (err) throw err;
                         console.log (game.insertId, option.insertId);
-                        resolve (game.insertId);
+                        resolve ({
+                          id : game.insertId , 
+                          redDeck : "redDeck",
+                          blackDeck : "redDeck",
+                        });
                       }
                     );
                   }
