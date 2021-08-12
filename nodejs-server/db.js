@@ -1,24 +1,33 @@
 var mysql = require ('mysql2');
 module.exports = {
+
   createDBifNotExists : async function () {
     if(await DBexists("gregaire") === 1) 
       return;
     else {
-        var createDBcon = mysql.createConnection({
-            host: "localhost",
-            user: "gregaire",
-            password: "password",
-        });
-        createDBcon.connect(function(err) {
-            if (err) throw err;
-            createDBcon.query("CREATE DATABASE IF NOT EXISTS gregaire", 
-            function (err, result) {
-                insertTablesAndDataIntoDB() 
-            });
-        }); 
+      var createDBcon = mysql.createConnection({
+          host: "localhost",
+          user: "gregaire",
+          password: "password",
+      });
+      createDBcon.connect(function(err) {
+          if (err) throw err;
+          createDBcon.query("CREATE DATABASE IF NOT EXISTS gregaire", 
+          function (err, result) {
+              insertTablesAndDataIntoDB() 
+          });
+      }); 
     }
-  }
+  },
+
+  con : mysql.createConnection({
+      host: "localhost",
+      user: "gregaire",
+      password: "password",
+      database: "gregaire"
+    })
 }
+
 function DBexists(name) {
     return new Promise ((resolve) => {
         var createDBcon = mysql.createConnection({

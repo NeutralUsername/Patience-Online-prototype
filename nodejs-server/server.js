@@ -3,9 +3,7 @@ var express = require ('express'),
     port = 3000,
     controller = require ('./controller');
 const server = require ('http').Server(app);
-
 const io = require ('socket.io') (server);
-
 const { RateLimiterMemory } = require ('rate-limiter-flexible');
 const rateLimiter = new RateLimiterMemory ({
     points: 1,
@@ -149,8 +147,8 @@ function optionsAreDifferent (options1, options2) {
 
 function initGame (red, black, options) {
     return new Promise ((resolve) => {
-        dbCon.connect (function(err) { if (err) throw err;
-            dbCon.query ("SELECT id FROM options WHERE ( "
+        db.con.connect (function(err) { if (err) throw err;
+            db.con.query ("SELECT id FROM options WHERE ( "
                 +"malussize = " + options.malusSize + " AND "
                 +"sequencesize = " + options.sequenceSize +" AND "
                 +"throwonwaste = " + options.throwOnWaste +" AND "
@@ -164,7 +162,7 @@ function initGame (red, black, options) {
                 +"roompassword " + (options.roomPassword != "" ? "= '"+options.roomPassword+"'" : "is null" ) +");", 
             function (err, option) { if (err) throw err;  
                 if (option.length === 1) {
-                    dbCon.query ("INSERT INTO games VALUES ( "
+                    db.con.query ("INSERT INTO games VALUES ( "
                         +"0 ,"
                         + option[0].id + ", "
                         + "'"+red+"'" + ", "
@@ -175,7 +173,7 @@ function initGame (red, black, options) {
                     });
                 }
                 else {
-                    dbCon.query("INSERT INTO options VALUES ( "
+                    db.con.query("INSERT INTO options VALUES ( "
                         +"0 ,"
                         + options.malusSize + ", "
                         + options.sequenceSize +", "
@@ -189,7 +187,7 @@ function initGame (red, black, options) {
                         + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
                         + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
                     function (err, option) { if (err) throw err;
-                        dbCon.query ("INSERT INTO games VALUES ( "
+                        db.con.query ("INSERT INTO games VALUES ( "
                             +"0 ,"
                             + option.insertId + ", "
                             + "'"+red+"'" + ", "
