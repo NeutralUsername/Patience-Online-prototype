@@ -4,8 +4,6 @@ it consists of two 52 card decks and is played in alternating turns against each
 _______
 install mysql, nodejs
 
-"nodejs-server / DBcreateAndInsert.txt" for db
-
 
 
 <b>start frontend</b> default port :4000
