@@ -100,7 +100,7 @@ function addPendingRoom (roomkey, options) {
 }
 
 async function startPendingRoom (red, black) {
-    var gameid =  await initGame (red, black, returnPendingRoomIfExists (red).options);
+    var gameid =  await db.insertGame(red,black,returnPendingRoomIfExists(red).options);
     removePendingRoomIfExists (red);
     removePendingRoomIfExists (black);
 
@@ -143,10 +143,6 @@ function optionsAreDifferent (options1, options2) {
                       if (options1.roomPassword == options2.roomPassword)
                         return false;
   return true;
-}
-
-async function initGame (red, black, options) {
-    return await db.insertGame(red,black,options);
 }
 
 class Card {
