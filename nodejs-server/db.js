@@ -20,7 +20,7 @@ module.exports = {
     }
   },
 
-  insertGame : async function (red, black, redDeck, blackDeck, options) {
+  initGame : async function (red, black, decks, options) {
     if(await DBexists("gregaire") === 1) 
       var dbCon = mysql.createConnection({
         host: "localhost",
@@ -33,17 +33,17 @@ module.exports = {
 
         function(err) { if (err) throw err;
           dbCon.query ("SELECT id FROM options WHERE ( "
-              +"malussize = " + options.malusSize + " AND "
-              +"sequencesize = " + options.sequenceSize +" AND "
-              +"throwonwaste = " + options.throwOnWaste +" AND "
-              +"throwonmalus = " + options.throwOnMalus +" AND "
-              +"variant = " + "'"+options.variant+"'" +" AND "
-              +"turnstimed = " + options.turnsTimed +" AND "
-              +"turntime = " + options.timePerTurn +" AND "
-              +"roundstimed = " + options.roundsTimed +" AND "
-              +"roundtime = " + options.timePerRound +" AND "
-              +"roomname " + (options.roomName     != "" ?"= '"+options.roomName+"'"     : "is null" )+" AND "
-              +"roompassword " + (options.roomPassword != "" ? "= '"+options.roomPassword+"'" : "is null" ) +");", 
+              +"malussize =     " + options.malusSize +   " AND "
+              +"sequencesize =  " + options.sequenceSize +" AND "
+              +"throwonwaste =  " + options.throwOnWaste +" AND "
+              +"throwonmalus =  " + options.throwOnMalus +" AND "
+              +"variant = " +   "'"+options.variant+"'" + " AND "
+              +"turnstimed =    " + options.turnsTimed +  " AND "
+              +"turntime =      " + options.timePerTurn + " AND "
+              +"roundstimed =   " + options.roundsTimed + " AND "
+              +"roundtime =     " + options.timePerRound +" AND "
+              +"roomname        " + (options.roomName     != "" ?"= '"+options.roomName+"'"     : "is null" )+" AND "
+              +"roompassword    " + (options.roomPassword != "" ? "= '"+options.roomPassword+"'" : "is null" ) +");", 
 
             function (err, option) { if (err) throw err;  
               if (option.length === 1) {
@@ -54,17 +54,20 @@ module.exports = {
                     + "'"+black+"'" +");", 
 
                   function (err, game) { if (err) throw err;
-                    dbCon.query ("INSERT INTO decks VALUES ( "
-                        +"0 ,"
-                        + option.insertId + ", "
-                        + "'"+red+"'" + ", "
-                        + "'"+black+"'" +");", 
-
-                      function (err, decks) { if (err) throw err;
-                        console.log (game.insertId, option[0].id);
-                        resolve ({ id : game.insertId });
-                      }
-                    )
+                    for(card of decks)
+                    {
+                      console.log(card);
+                      dbCon.query ("SELECT id FROM cards WHERE ("
+                          +"color = " + "'"+card.color+"'" +" AND "
+                          +"suit = " + "'"+card.suit+"'" +" AND "
+                          +"value = " + "'"+card.value+"'" +" AND ",
+                        function (err, card) { if (err) throw err;
+                          
+                          console.log (game.insertId, option[0].id);
+                          resolve ({ id : game.insertId });
+                        }
+                      ) 
+                    }
                   }
                 );
               }
@@ -91,17 +94,22 @@ module.exports = {
                         + "'"+black+"'" +");", 
 
                       function (err, game) { if (err) throw err;
-                        dbCon.query ("INSERT INTO decks VALUES ( "
-                            +"0 ,"
-                            + option.insertId + ", "
-                            + "'"+red+"'" + ", "
-                            + "'"+black+"'" +");", 
-                            
-                          function (err, decks) { if (err) throw err;
-                            console.log (game.insertId, option.insertId);
-                            resolve ({ id : game.insertId })
-                          }
-                        )
+                        for(card of decks)
+                        {
+                          console.log(card);
+                   
+                          dbCon.query ("SELECT id FROM cards WHERE ("
+                              +"color = " + "'"+card.color+"'" +" AND "
+                              +"suit = " + "'"+card.suit+"'" +" AND "
+                              +"value = " + "'"+card.value+"'" +" AND ",
+    
+                            function (err, card) { if (err) throw err;
+                              
+                              console.log (game.insertId, option[0].id);
+                              resolve ({ id : game.insertId });
+                            }
+                          ) 
+                        }
                       }
                     )
                   }

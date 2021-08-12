@@ -100,7 +100,7 @@ function addPendingRoom (roomkey, options) {
 }
 
 async function startPendingRoom (red, black) {
-    var game = await db.insertGame (red, black, shuffle(freshDeck("red")), shuffle(freshDeck("black")), returnPendingRoomIfExists(red).options ); 
+    var game = await db.initGame (red, black, shuffle(freshDeck("red")).concat(shuffle(freshDeck("black"))) , returnPendingRoomIfExists(red).options ); 
     removePendingRoomIfExists (red);
     removePendingRoomIfExists (black);
 
@@ -146,19 +146,19 @@ function optionsAreDifferent (options1, options2) {
 }
 
 class Card {
-    constructor (set, suit, value) { 
-        this.set = set;
+    constructor (color, suit, value) { 
+        this.color = color;
         this.suit = suit;
         this.value = value;
     }
 }
 
-function freshDeck (set) {
+function freshDeck (color) {
     const Suits = ["♥", "♠", "♦", "♣"];
     const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
     return Suits.flatMap(suit => {
         return Values.map(value => {
-            return new Card (set, suit, value)
+            return new Card (color, suit, value)
         });
     });
 }  
@@ -182,6 +182,12 @@ function shuffle (deck) {
 
 // ===== keeping just in case i need the templates
 
+app.route('/ping').get(controller.root);
+server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/testSocketConnection.html');
+});
+
 function optionsValid(options) {
   if(options.malusSize >= 5 && options.malusSize <= 20)
     if(options.sequenceSize >= 1 && options.sequenceSize <= 6)
@@ -196,8 +202,3 @@ function optionsValid(options) {
   return false;
 }
 
-app.route('/ping').get(controller.root);
-server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/testSocketConnection.html');
-});
