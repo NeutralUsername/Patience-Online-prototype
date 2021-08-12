@@ -171,7 +171,7 @@ function shuffle (deck) {
         [deck[currentIndex], deck[randomIndex]] = [
             deck[randomIndex], deck[currentIndex]];
     } 
-    return decks;
+    return deck;
 }
 
 
