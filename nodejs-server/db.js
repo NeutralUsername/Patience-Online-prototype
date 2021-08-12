@@ -19,13 +19,15 @@ module.exports = {
       }); 
     }
   },
+
   insertGame : async function (red, black, options) {
-    var dbCon = mysql.createConnection({
-      host: "localhost",
-      user: "gregaire",
-      password: "password",
-      database: "gregaire"
-    });
+    if(await DBexists("gregaire") === 1) 
+      var dbCon = mysql.createConnection({
+        host: "localhost",
+        user: "gregaire",
+        password: "password",
+        database: "gregaire"
+      });
     return new Promise ((resolve) => {
       dbCon.connect (function(err) { if (err) throw err;
         dbCon.query ("SELECT id FROM options WHERE ( "
