@@ -12,14 +12,8 @@ const rateLimiter = new RateLimiterMemory ({
     duration: 1,
 });
 
-var mysql = require ('mysql2');
-var dbCon = mysql.createConnection ({
-    host: "localhost",
-    user: "gregaire",
-    password: "password",
-    database: "gregaire"
-});
-
+var db = require('./db.js');
+db.createDBifNotExists();
 
 const pendingOnlineRooms = [];
 const activeGames = [];
