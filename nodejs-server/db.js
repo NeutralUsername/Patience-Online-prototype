@@ -19,13 +19,72 @@ module.exports = {
       }); 
     }
   },
-
-  con : mysql.createConnection({
+  insertGame : async function (red, black, options) {
+    var dbCon = mysql.createConnection({
       host: "localhost",
       user: "gregaire",
       password: "password",
       database: "gregaire"
-    })
+    });
+    return new Promise ((resolve) => {
+      dbCon.connect (function(err) { if (err) throw err;
+        dbCon.query ("SELECT id FROM options WHERE ( "
+              +"malussize = " + options.malusSize + " AND "
+              +"sequencesize = " + options.sequenceSize +" AND "
+              +"throwonwaste = " + options.throwOnWaste +" AND "
+              +"throwonmalus = " + options.throwOnMalus +" AND "
+              +"variant = " + "'"+options.variant+"'" +" AND "
+              +"turnstimed = " + options.turnsTimed +" AND "
+              +"turntime = " + options.timePerTurn +" AND "
+              +"roundstimed = " + options.roundsTimed +" AND "
+              +"roundtime = " + options.timePerRound +" AND "
+              +"roomname " + (options.roomName     != "" ?"= '"+options.roomName+"'"     : "is null" )+" AND "
+              +"roompassword " + (options.roomPassword != "" ? "= '"+options.roomPassword+"'" : "is null" ) +");", 
+          function (err, option) { if (err) throw err;  
+              if (option.length === 1) {
+                dbCon.query ("INSERT INTO games VALUES ( "
+                      +"0 ,"
+                      + option[0].id + ", "
+                      + "'"+red+"'" + ", "
+                      + "'"+black+"'" +");", 
+                  function (err, game) { if (err) throw err;
+                      console.log (game.insertId, option[0].id);
+                      resolve (game.insertId);
+                  });
+              }
+              else {
+                dbCon.query("INSERT INTO options VALUES ( "
+                      +"0 ,"
+                      + options.malusSize + ", "
+                      + options.sequenceSize +", "
+                      + options.throwOnWaste +", "
+                      + options.throwOnMalus +", "
+                      + "'"+options.variant+"'" +", "
+                      + options.turnsTimed +", "
+                      + options.timePerTurn +", "
+                      + options.roundsTimed +", "
+                      + options.timePerRound +", "
+                      + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
+                      + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
+                  function (err, option) { if (err) throw err;
+                    dbCon.query ("INSERT INTO games VALUES ( "
+                        +"0 ,"
+                        + option.insertId + ", "
+                        + "'"+red+"'" + ", "
+                        + "'"+black+"'" +");", 
+                    function (err, game) { if (err) throw err;
+                        console.log (game.insertId, option.insertId);
+                        resolve (game.insertId);
+                    });
+                  }
+                )
+              }   
+            }
+          )
+        }
+      )
+    }
+  )}
 }
 
 function DBexists(name) {
@@ -44,6 +103,8 @@ function DBexists(name) {
         }); 
     })
 }
+
+
 function insertTablesAndDataIntoDB() {
     var dbCon = mysql.createConnection({
         host: "localhost",

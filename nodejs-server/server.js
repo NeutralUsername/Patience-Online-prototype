@@ -145,62 +145,8 @@ function optionsAreDifferent (options1, options2) {
   return true;
 }
 
-function initGame (red, black, options) {
-    return new Promise ((resolve) => {
-        db.con.connect (function(err) { if (err) throw err;
-            db.con.query ("SELECT id FROM options WHERE ( "
-                +"malussize = " + options.malusSize + " AND "
-                +"sequencesize = " + options.sequenceSize +" AND "
-                +"throwonwaste = " + options.throwOnWaste +" AND "
-                +"throwonmalus = " + options.throwOnMalus +" AND "
-                +"variant = " + "'"+options.variant+"'" +" AND "
-                +"turnstimed = " + options.turnsTimed +" AND "
-                +"turntime = " + options.timePerTurn +" AND "
-                +"roundstimed = " + options.roundsTimed +" AND "
-                +"roundtime = " + options.timePerRound +" AND "
-                +"roomname " + (options.roomName     != "" ?"= '"+options.roomName+"'"     : "is null" )+" AND "
-                +"roompassword " + (options.roomPassword != "" ? "= '"+options.roomPassword+"'" : "is null" ) +");", 
-            function (err, option) { if (err) throw err;  
-                if (option.length === 1) {
-                    db.con.query ("INSERT INTO games VALUES ( "
-                        +"0 ,"
-                        + option[0].id + ", "
-                        + "'"+red+"'" + ", "
-                        + "'"+black+"'" +");", 
-                    function (err, game) { if (err) throw err;
-                        console.log (game.insertId, option[0].id);
-                        resolve (game.insertId);
-                    });
-                }
-                else {
-                    db.con.query("INSERT INTO options VALUES ( "
-                        +"0 ,"
-                        + options.malusSize + ", "
-                        + options.sequenceSize +", "
-                        + options.throwOnWaste +", "
-                        + options.throwOnMalus +", "
-                        + "'"+options.variant+"'" +", "
-                        + options.turnsTimed +", "
-                        + options.timePerTurn +", "
-                        + options.roundsTimed +", "
-                        + options.timePerRound +", "
-                        + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
-                        + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
-                    function (err, option) { if (err) throw err;
-                        db.con.query ("INSERT INTO games VALUES ( "
-                            +"0 ,"
-                            + option.insertId + ", "
-                            + "'"+red+"'" + ", "
-                            + "'"+black+"'" +");", 
-                        function (err, game) { if (err) throw err;
-                            console.log (game.insertId, option.insertId);
-                            resolve (game.insertId);
-                        });
-                    })
-                }   
-            })
-        })
-    })
+async function initGame (red, black, options) {
+    return await db.insertGame(red,black,options);
 }
 
 class Card {
