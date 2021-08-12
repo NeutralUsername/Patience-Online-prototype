@@ -20,7 +20,7 @@ module.exports = {
     }
   },
 
-  insertGame : async function (red, black, options) {
+  insertGame : async function (red, black, redDeck, blackDeck, options) {
     if(await DBexists("gregaire") === 1) 
       var dbCon = mysql.createConnection({
         host: "localhost",
