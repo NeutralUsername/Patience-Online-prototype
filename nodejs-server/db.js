@@ -182,82 +182,90 @@ async function dealCards(blackdeck, reddeck, malussize, sequencesize, gameid) {
     }
     dbCon.connect (
       function(err) { if (err) throw err;
-        for(var tableaunr = 0 ; tableaunr < malussize ; tableaunr ++) {
-          dbCon.query ("INSERT INTO actions VALUES ( "
-              +"0 ,"
-              + gameid +            " , "
-              + "'"+"newgame"+"'" + " , "
-              + "'"+"redmalus"+"'" +" , "
-              + 0 +                 " , "
-              + 0 +                 " , "
-              + (tableaunr === malussize-1 ? 1 : 0 ) +");", 
-          ) 
-          if(tableaunr === malussize-1) {
-            const card = reddeck.pop();
-            card.faceup = true;
-            field.red.malussequence[tableaunr] = card;
-            console.log(field.red.malussequence[tableaunr] );
-          }
-          else {
-            field.red.malussequence[tableaunr] = reddeck.pop();
-            console.log(field.red.malussequence[tableaunr] );
-          }
-        }
-        for(var tableaunr = 0 ; tableaunr < malussize ; tableaunr ++) {
-          dbCon.query ("INSERT INTO actions VALUES ( "
-              +"0 ,"
-              + gameid +            " , "
-              + "'"+"newgame"+"'" + " , "
-              + "'"+"blackmalus"+"'" +" , "
-              + 0 +                 " , "
-              + 0 +                 " , "
-              + (tableaunr === malussize-1 ? 1 : 0 ) +");", 
+        for(var i = 0 ; i < malussize ; i ++) {
+          var actioncard = reddeck.pop();
+          dbCon.query ("SELECT * FROM cards WHERE ("
+            +"color = '"+actioncard.color+"' AND "
+            +"suit = '"+actioncard.suit+"' AND "
+            +"value = '"+actioncard.value+"')",
+
+            function (err, card) { if (err) throw err;  
+          
+              dbCon.query ("INSERT INTO actions VALUES ( "
+                + "0 ,"
+                + gameid                               +" , "
+                + "'"+"newgame"+"'"                    +" , "
+                + "'"+"redmalus"+"'"                   +" , "
+                + card[0].id                           +" , "
+                + (i === malussize-1 ? 1 : 0 )         +" , "
+                + 0                                    +" , "
+                + 0                                    +");", 
+
+                function (err, action) { if (err) throw err;  
+
+                }
+              )
+            }
           )
-          if(tableaunr === malussize-1) {
-            const card = blackdeck.pop();
-            card.faceup = true;
-            field.black.malussequence[tableaunr] = card;
-            console.log(field.black.malussequence[tableaunr] );
-          }
-          else {
-            field.black.malussequence[tableaunr] = blackdeck.pop();
-            console.log(field.black.malussequence[tableaunr] );
-          }
+        } 
+        for(var i = 0 ; i < malussize ; i ++) {
+          var actioncard = blackdeck.pop();
+          dbCon.query ("SELECT * FROM cards WHERE ("
+            +"color = '"+actioncard.color+"' AND "
+            +"suit = '"+actioncard.suit+"' AND "
+            +"value = '"+actioncard.value+"')",
+
+            function (err, card) { if (err) throw err;  
+
+
+              dbCon.query ("INSERT INTO actions VALUES ( "
+                +"0 ,"
+                + gameid                               +" , "
+                + "'"+"newgame"+"'"                    +" , "
+                + "'"+"blackmalus"+"'"                 +" , "
+                + card[0].id                     +" , "
+                + (i === malussize-1 ? 1 : 0 ) +" , "
+                + 0                                    +" , "
+                + 0                                    +");", 
+
+                function (err, action) { if (err) throw err;  
+
+                } 
+              )
+            }
+          ) 
         }
         for(var tableaunr = 0; tableaunr< 8 ; tableaunr++) {
-          for(var cardnr = 0 ; cardnr < sequencesize ; cardnr ++) {
-            dbCon.query ("INSERT INTO actions VALUES ( "
-                +"0 ,"
-                + gameid +            " , "
-                + "'"+"newgame"+"'" + " , "
-                + "'"+"tableau"+(tableaunr)+"'" +" , "
-                + 0 +                 " , "
-                + 0 +                 ", "
-                + (cardnr === sequencesize-1 ? 1 : 0 ) +");", 
-            ) 
-            if(tableaunr < 4) {
-              if(cardnr === sequencesize -1) {
-                field.center.tableaus[tableaunr] = reddeck.pop();
-                field.center.tableaus[tableaunr].faceup = true;
-                console.log(field.center.tableaus[tableaunr]);
+          for(var i = 0; i< sequencesize ; i++) {
+
+
+            var actioncard = tableaunr < 4 ? reddeck.pop() : blackdeck.pop();
+            dbCon.query ("SELECT * FROM cards WHERE ("
+              +"color = '"+actioncard.color+"' AND "
+              +"suit = '"+actioncard.suit+"' AND "
+              +"value = '"+actioncard.value+"')",
+  
+              function (err, card) { if (err) throw err;  
+
+              
+
+                dbCon.query ("INSERT INTO actions VALUES ( "
+                  +"0 ,"
+                  + gameid                                                 +" , "
+                  + "'"+"newgame"+"'"                                      +" , "
+                  + "'"+"tableau"+(i)+"'"                                  +" , "
+                  + card[0].id                                             +" , "
+                  + (i === sequencesize-1 ? 1 : 0 )                        +" , "
+                  + 0                                                      +" , "
+                  + 0                                                      +");", 
+
+                  function (err, action) { if (err) throw err;  
+
+                  }
+                )     
               }
-              else {
-                field.center.tableaus[tableaunr] = reddeck.pop();
-                console.log(field.center.tableaus[tableaunr]);
-              }
-            }
-            else {
-              if(cardnr === sequencesize -1) {
-                field.center.tableaus[tableaunr] = blackdeck.pop();
-                field.center.tableaus[tableaunr].faceup = true;
-                console.log(field.center.tableaus[tableaunr]);
-              }
-              else {
-                field.center.tableaus[tableaunr] = blackdeck.pop();
-                console.log(field.center.tableaus[tableaunr]);
-              }
-            }
-          }         
+            )
+          }
         }
       }
     )
