@@ -183,7 +183,7 @@ async function dealCards(blackdeck, reddeck, malussize, sequencesize, gameid) {
     dbCon.connect (
 
       function(err) { if (err) throw err;
-        for(var i = 0 ; i < malussize ; i ++) {
+        for(let i = 0 ; i < malussize ; i ++) {
           var actioncard = reddeck.pop();
           dbCon.query ("SELECT * FROM cards WHERE ("
             +"color = '"+actioncard.color+"' AND "
@@ -208,7 +208,7 @@ async function dealCards(blackdeck, reddeck, malussize, sequencesize, gameid) {
             }
           )
         } 
-        for(var i = 0 ; i < malussize ; i ++) {
+        for(let i = 0 ; i < malussize ; i ++) {
           var actioncard = blackdeck.pop();
           dbCon.query ("SELECT * FROM cards WHERE ("
             +"color = '"+actioncard.color+"' AND "
@@ -234,7 +234,7 @@ async function dealCards(blackdeck, reddeck, malussize, sequencesize, gameid) {
           ) 
         }
         for(let tableaunr = 0; tableaunr< 8 ; tableaunr++) {
-          for(var i = 0; i< sequencesize ; i++) {
+          for(let i = 0; i< sequencesize ; i++) {
             var actioncard = tableaunr < 4 ? reddeck.pop() : blackdeck.pop();
             dbCon.query ("SELECT * FROM cards WHERE ("
               +"color = '"+actioncard.color+"' AND "
