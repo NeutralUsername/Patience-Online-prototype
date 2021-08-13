@@ -233,7 +233,7 @@ async function dealCards(blackdeck, reddeck, malussize, sequencesize, gameid) {
             }
           ) 
         }
-        for(var tableaunr = 0; tableaunr< 8 ; tableaunr++) {
+        for(let tableaunr = 0; tableaunr< 8 ; tableaunr++) {
           for(var i = 0; i< sequencesize ; i++) {
             var actioncard = tableaunr < 4 ? reddeck.pop() : blackdeck.pop();
             dbCon.query ("SELECT * FROM cards WHERE ("
@@ -246,7 +246,7 @@ async function dealCards(blackdeck, reddeck, malussize, sequencesize, gameid) {
                   +"0 ,"
                   + gameid                                                 +" , "
                   + "'"+"newgame"+"'"                                      +" , "
-                  + "'"+"tableau"+(i)+"'"                                  +" , "
+                  + "'"+"tableau"+(tableaunr)+"'"                                  +" , "
                   + card[0].id                                             +" , "
                   + (i === sequencesize-1 ? 1 : 0 )                        +" , "
                   + 0                                                      +" , "
