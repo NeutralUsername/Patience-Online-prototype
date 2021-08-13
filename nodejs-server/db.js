@@ -65,7 +65,6 @@ module.exports = {
                     }
                     resolve ({ 
                       id : game.insertId,
-                      decks : decks, 
                       options : {
                         malusSize : options.malusSize,
                         sequenceSize : options.sequenceSize,
@@ -76,6 +75,17 @@ module.exports = {
                         timePerTurn : options.timePerTurn,
                         roundsTimed : options.roundsTimed,
                         timePerRound : options.timePerRound,
+                      },
+                      field : {
+                        center : {
+
+                        },
+                        red : {
+
+                        },
+                        black : {
+                          
+                        }
                       }
                     })
                   }
@@ -115,7 +125,6 @@ module.exports = {
                         }
                         resolve ({ 
                           id : game.insertId, 
-                          decks : decks, 
                           options : {
                             malusSize : options.malusSize,
                             sequenceSize : options.sequenceSize,
@@ -126,7 +135,8 @@ module.exports = {
                             timePerTurn : options.timePerTurn,
                             roundsTimed : options.roundsTimed,
                             timePerRound : options.timePerRound,
-                          }
+                          },
+                          field : await dealCards(decks)
                         })
                       }
                     )
@@ -139,6 +149,43 @@ module.exports = {
       )
     })
   }
+}
+
+async function dealCards(decks) {
+  return new Promise ((resolve) => {
+    
+
+    resolve ({ 
+      center : { 
+        foundation1 : 'stack',
+        foundation2 : 'stack',
+        foundation3 : 'stack',
+        foundation4 : 'stack',
+        foundation5 : 'stack',
+        foundation6 : 'stack',
+        foundation7 : 'stack',
+        foundation8 : 'stack',
+        tableau1 : 'sequence',
+        tableau2 : 'sequence',
+        tableau3 : 'sequence',
+        tableau4 : 'sequence',
+        tableau5 : 'sequence',
+        tableau6 : 'sequence',
+        tableau7 : 'sequence',
+        tableau8 : 'sequence',
+      },
+      red : {
+        drawpile : 'stack',
+        discardpile : 'stack',
+        malussequence : 'sequence',
+      },
+      black : {
+        drawpile : 'stack',
+        discardpile : 'stack',
+        malussequence : 'sequence',
+      },     
+    })
+  })
 }
 
 function DBexists(name) {
@@ -204,13 +251,14 @@ function insertTablesAndDataIntoDB() {
             if (err) throw err;
         });
         dbCon.query("CREATE TABLE IF NOT EXISTS actions ("
-          +"id           INT, "
           +"gameid       INT, "
+          +"actionnr       INT, "
           +"fromstack    VARCHAR(20), "
           +"tostack      VARCHAR(20), "
           +"turntime     DECIMAL(8,2), "
           +"roundtimer   DECIMAL(8,2), "
           +"faceup       BOOLEAN, "
+          +"PRIMARY KEY (gameid, actionnr), "
           +"CONSTRAINT  `game`        FOREIGN KEY (`gameid`)        REFERENCES `games`(`id`)) ",
           function (err, result) {
             if (err) throw err;
