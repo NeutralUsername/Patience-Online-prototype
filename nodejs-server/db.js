@@ -246,7 +246,7 @@ async function dealCards(blackdeck, reddeck, malussize, sequencesize, gameid) {
                   +"0 ,"
                   + gameid                                                 +" , "
                   + "'"+"newgame"+"'"                                      +" , "
-                  + "'"+"tableau"+(tableaunr)+"'"                                  +" , "
+                  + "'"+"tableau"+(tableaunr)+"'"                          +" , "
                   + card[0].id                                             +" , "
                   + (i === sequencesize-1 ? 1 : 0 )                        +" , "
                   + 0                                                      +" , "
