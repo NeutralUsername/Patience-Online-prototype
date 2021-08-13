@@ -30,7 +30,7 @@ module.exports = {
       });
     return new Promise ((resolve) => {
       dbCon.connect (
-
+        
         function(err) { if (err) throw err;
           dbCon.query ("SELECT id FROM options WHERE ( "
               +"malussize =     " + options.malusSize +   " AND "
@@ -58,18 +58,27 @@ module.exports = {
                     {
                       console.log(card);
                       dbCon.query ("SELECT id FROM cards WHERE ("
-                          +"color = " + "'"+card.color+"'" +" AND "
-                          +"suit = " + "'"+card.suit+"'" +" AND "
-                          +"value = " + "'"+card.value+"'" +" AND ",
+                          +"color = " +   "'"+card.color+"'" +  " AND "
+                          +"suit = " +    "'"+card.suit+"'" +   " AND "
+                          +"value = " +   "'"+card.value+"'" +  " AND ",
+
                         function (err, card) { if (err) throw err;
-                          
-                          console.log (game.insertId, option[0].id);
-                          resolve ({ id : game.insertId });
+                          dbCon.query ("INSERT INTO decks VALUES ( "
+                            +"color = " + "'"+card.color+"'" +" AND "
+                            +"suit = " + "'"+card.suit+"'" +" AND "
+                            +"value = " + "'"+card.value+"'" +" AND ",
+
+                            function (err, cardInDecks) { if (err) throw err;
+                              card[0].id;
+                              console.log (game.insertId, option[0].id);
+                              resolve ({ id : game.insertId });
+                            } 
+                          ) 
                         }
                       ) 
                     }
                   }
-                );
+                )
               }
               else {
                 dbCon.query("INSERT INTO options VALUES ( "
@@ -97,16 +106,24 @@ module.exports = {
                         for(card of decks)
                         {
                           console.log(card);
-                   
                           dbCon.query ("SELECT id FROM cards WHERE ("
                               +"color = " + "'"+card.color+"'" +" AND "
                               +"suit = " + "'"+card.suit+"'" +" AND "
                               +"value = " + "'"+card.value+"'" +" AND ",
     
                             function (err, card) { if (err) throw err;
+                              dbCon.query ("INSERT INTO decks VALUES ( "
+                                +"color = " + "'"+card.color+"'" +" AND "
+                                +"suit = " + "'"+card.suit+"'" +" AND "
+                                +"value = " + "'"+card.value+"'" +" AND ",
+      
+                                function (err, cardInDecks) { if (err) throw err;
                               
-                              console.log (game.insertId, option[0].id);
-                              resolve ({ id : game.insertId });
+                                  card[0].id;
+                                  console.log (game.insertId, option[0].id);
+                                  resolve ({ id : game.insertId });
+                                }
+                              ) 
                             }
                           ) 
                         }
