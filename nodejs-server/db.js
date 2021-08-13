@@ -76,17 +76,7 @@ module.exports = {
                         roundsTimed : options.roundsTimed,
                         timePerRound : options.timePerRound,
                       },
-                      field : {
-                        center : {
-
-                        },
-                        red : {
-
-                        },
-                        black : {
-                          
-                        }
-                      }
+                      field : await dealCards(decks.splice(51), decks.splice(0), options.malusSize, options.sequenceSize, game.insertId)
                     })
                   }
                 )
@@ -136,7 +126,7 @@ module.exports = {
                             roundsTimed : options.roundsTimed,
                             timePerRound : options.timePerRound,
                           },
-                          field : await dealCards(decks)
+                          field : await dealCards(decks.splice(51), decks.splice(0), options.malusSize, options.sequenceSize, game.insertId)
                         })
                       }
                     )
@@ -151,40 +141,116 @@ module.exports = {
   }
 }
 
-async function dealCards(decks) {
+async function dealCards(blackdeck, reddeck, malussize, sequencesize, gameid) {
+  var dbCon = mysql.createConnection({
+    host: "localhost",
+    user: "gregaire",
+    password: "password",
+    database: "gregaire"
+  });
+  
   return new Promise ((resolve) => {
-    
-
-    resolve ({ 
+    var field = { 
       center : { 
-        foundation1 : 'stack',
-        foundation2 : 'stack',
-        foundation3 : 'stack',
-        foundation4 : 'stack',
-        foundation5 : 'stack',
-        foundation6 : 'stack',
-        foundation7 : 'stack',
-        foundation8 : 'stack',
-        tableau1 : 'sequence',
-        tableau2 : 'sequence',
-        tableau3 : 'sequence',
-        tableau4 : 'sequence',
-        tableau5 : 'sequence',
-        tableau6 : 'sequence',
-        tableau7 : 'sequence',
-        tableau8 : 'sequence',
+        foundations : [],
+        tableaus : [],
       },
       red : {
         drawpile : 'stack',
-        discardpile : 'stack',
-        malussequence : 'sequence',
+        discardpile : "stack",
+        malussequence : [],
       },
       black : {
         drawpile : 'stack',
         discardpile : 'stack',
-        malussequence : 'sequence',
-      },     
-    })
+        malussequence : []
+      },
+    }
+    dbCon.connect (
+      function(err) { if (err) throw err;
+        for(var i = 0 ; i < malussize ; i ++) {
+          dbCon.query ("INSERT INTO actions VALUES ( "
+              +"0 ,"
+              + gameid +            " , "
+              + "'"+"newgame"+"'" + " , "
+              + "'"+"redmalus"+"'" +" , "
+              + 0 +                 " , "
+              + 0 +                 " , "
+              + (i === malussize-1 ? 1 : 0 ) +");", 
+          ) 
+          if(i === malussize-1) {
+            const card = reddeck.pop();
+            card.faceup = true;
+            field.red.malussequence[i] = card;
+            console.log(field.red.malussequence[i] );
+          }
+          else {
+            field.red.malussequence[i] = reddeck.pop();
+            console.log(field.red.malussequence[i] );
+          }
+        }
+        for(var i = 0 ; i < malussize ; i ++) {
+          dbCon.query ("INSERT INTO actions VALUES ( "
+              +"0 ,"
+              + gameid +            " , "
+              + "'"+"newgame"+"'" + " , "
+              + "'"+"blackmalus"+"'" +" , "
+              + 0 +                 " , "
+              + 0 +                 " , "
+              + (i === malussize-1 ? 1 : 0 ) +");", 
+          )
+          if(i === malussize-1) {
+            const card = blackdeck.pop();
+            card.faceup = true;
+            field.black.malussequence[i] = card;
+            console.log(field.black.malussequence[i] );
+          }
+          else {
+            field.black.malussequence[i] = blackdeck.pop();
+            console.log(field.black.malussequence[i] );
+          }
+        }
+        for(var i = 0; i< 8 ; i++) {
+          for(var j = 0 ; j < sequencesize ; j ++) {
+            dbCon.query ("INSERT INTO actions VALUES ( "
+                +"0 ,"
+                + gameid +            " , "
+                + "'"+"newgame"+"'" + " , "
+                + "'"+"tableau"+i+"'" +" , "
+                + 0 +                 " , "
+                + 0 +                 ", "
+                + (j === sequencesize-1 ? 1 : 0 ) +");", 
+            ) 
+            if(i < 4) {
+              if(j === sequencesize -1) {
+                field.center.tableaus[i] = reddeck.pop();
+                field.center.tableaus[i].faceup = true;
+                console.log(field.center.tableaus[i]);
+              }
+              else {
+                field.center.tableaus[i] = reddeck.pop();
+                console.log(field.center.tableaus[i]);
+              }
+            }
+            else {
+              if(j === sequencesize -1) {
+                var card = blackdeck.pop();
+                field.center.tableaus[i] = blackdeck.pop();
+                field.center.tableaus[i].faceup = true;
+                console.log(field.center.tableaus[i]);
+              }
+              else {
+                field.center.tableaus[i] = blackdeck.pop();
+                console.log(field.center.tableaus[i]);
+              }
+            }
+          }         
+        }
+      }
+    )
+    resolve (
+        field
+    )
   })
 }
 
@@ -251,14 +317,13 @@ function insertTablesAndDataIntoDB() {
             if (err) throw err;
         });
         dbCon.query("CREATE TABLE IF NOT EXISTS actions ("
+          +"id           INT AUTO_INCREMENT PRIMARY KEY, "
           +"gameid       INT, "
-          +"actionnr       INT, "
           +"fromstack    VARCHAR(20), "
           +"tostack      VARCHAR(20), "
           +"turntime     DECIMAL(8,2), "
           +"roundtimer   DECIMAL(8,2), "
           +"faceup       BOOLEAN, "
-          +"PRIMARY KEY (gameid, actionnr), "
           +"CONSTRAINT  `game`        FOREIGN KEY (`gameid`)        REFERENCES `games`(`id`)) ",
           function (err, result) {
             if (err) throw err;
