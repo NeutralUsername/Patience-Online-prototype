@@ -108,7 +108,6 @@ async function startPendingRoom (red, black) {
     io.to (black).emit ('startOnlineGameRES' , {  gameid : game.id });
     
     console.log (red," vs. ", black, " gameid: ", game.id);
-    console.log(game.field.center.tableaus.length);
     updatePendingRoomsCLIENT ();
 }
 
