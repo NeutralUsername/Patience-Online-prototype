@@ -168,7 +168,7 @@ async function dealCards(blackdeck, reddeck, malussize, sequencesize, gameid) {
     }
     dbCon.connect (
       function(err) { if (err) throw err;
-        for(var i = 0 ; i < malussize ; i ++) {
+        for(var tableaunr = 0 ; tableaunr < malussize ; tableaunr ++) {
           dbCon.query ("INSERT INTO actions VALUES ( "
               +"0 ,"
               + gameid +            " , "
@@ -176,20 +176,20 @@ async function dealCards(blackdeck, reddeck, malussize, sequencesize, gameid) {
               + "'"+"redmalus"+"'" +" , "
               + 0 +                 " , "
               + 0 +                 " , "
-              + (i === malussize-1 ? 1 : 0 ) +");", 
+              + (tableaunr === malussize-1 ? 1 : 0 ) +");", 
           ) 
-          if(i === malussize-1) {
+          if(tableaunr === malussize-1) {
             const card = reddeck.pop();
             card.faceup = true;
-            field.red.malussequence[i] = card;
-            console.log(field.red.malussequence[i] );
+            field.red.malussequence[tableaunr] = card;
+            console.log(field.red.malussequence[tableaunr] );
           }
           else {
-            field.red.malussequence[i] = reddeck.pop();
-            console.log(field.red.malussequence[i] );
+            field.red.malussequence[tableaunr] = reddeck.pop();
+            console.log(field.red.malussequence[tableaunr] );
           }
         }
-        for(var i = 0 ; i < malussize ; i ++) {
+        for(var tableaunr = 0 ; tableaunr < malussize ; tableaunr ++) {
           dbCon.query ("INSERT INTO actions VALUES ( "
               +"0 ,"
               + gameid +            " , "
@@ -197,51 +197,51 @@ async function dealCards(blackdeck, reddeck, malussize, sequencesize, gameid) {
               + "'"+"blackmalus"+"'" +" , "
               + 0 +                 " , "
               + 0 +                 " , "
-              + (i === malussize-1 ? 1 : 0 ) +");", 
+              + (tableaunr === malussize-1 ? 1 : 0 ) +");", 
           )
-          if(i === malussize-1) {
+          if(tableaunr === malussize-1) {
             const card = blackdeck.pop();
             card.faceup = true;
-            field.black.malussequence[i] = card;
-            console.log(field.black.malussequence[i] );
+            field.black.malussequence[tableaunr] = card;
+            console.log(field.black.malussequence[tableaunr] );
           }
           else {
-            field.black.malussequence[i] = blackdeck.pop();
-            console.log(field.black.malussequence[i] );
+            field.black.malussequence[tableaunr] = blackdeck.pop();
+            console.log(field.black.malussequence[tableaunr] );
           }
         }
-        for(var i = 0; i< 8 ; i++) {
-          for(var j = 0 ; j < sequencesize ; j ++) {
+        for(var tableaunr = 0; tableaunr< 8 ; tableaunr++) {
+          for(var cardnr = 0 ; cardnr < sequencesize ; cardnr ++) {
             dbCon.query ("INSERT INTO actions VALUES ( "
                 +"0 ,"
                 + gameid +            " , "
                 + "'"+"newgame"+"'" + " , "
-                + "'"+"tableau"+(i+1)+"'" +" , "
+                + "'"+"tableau"+(tableaunr)+"'" +" , "
                 + 0 +                 " , "
                 + 0 +                 ", "
-                + (j === sequencesize-1 ? 1 : 0 ) +");", 
+                + (cardnr === sequencesize-1 ? 1 : 0 ) +");", 
             ) 
-            if(i < 4) {
-              if(j === sequencesize -1) {
-                field.center.tableaus[i] = reddeck.pop();
-                field.center.tableaus[i].faceup = true;
-                console.log(field.center.tableaus[i]);
+            if(tableaunr < 4) {
+              if(cardnr === sequencesize -1) {
+                field.center.tableaus[tableaunr] = reddeck.pop();
+                field.center.tableaus[tableaunr].faceup = true;
+                console.log(field.center.tableaus[tableaunr]);
               }
               else {
-                field.center.tableaus[i] = reddeck.pop();
-                console.log(field.center.tableaus[i]);
+                field.center.tableaus[tableaunr] = reddeck.pop();
+                console.log(field.center.tableaus[tableaunr]);
               }
             }
             else {
-              if(j === sequencesize -1) {
+              if(cardnr === sequencesize -1) {
                 var card = blackdeck.pop();
-                field.center.tableaus[i] = blackdeck.pop();
-                field.center.tableaus[i].faceup = true;
-                console.log(field.center.tableaus[i]);
+                field.center.tableaus[tableaunr] = blackdeck.pop();
+                field.center.tableaus[tableaunr].faceup = true;
+                console.log(field.center.tableaus[tableaunr]);
               }
               else {
-                field.center.tableaus[i] = blackdeck.pop();
-                console.log(field.center.tableaus[i]);
+                field.center.tableaus[tableaunr] = blackdeck.pop();
+                console.log(field.center.tableaus[tableaunr]);
               }
             }
           }         
@@ -308,9 +308,7 @@ function insertTablesAndDataIntoDB() {
         dbCon.query("CREATE TABLE IF NOT EXISTS decks ("
           +"gameid       INT, "
           +"position     INT, "
-          +"color        VARCHAR(5), "
-          +"suit         VARCHAR(1), "
-          +"value        VARCHAR(2), "
+          +"cardid           INT, "
           +"PRIMARY KEY (gameid, position), "
           +"CONSTRAINT  `gameid` FOREIGN KEY (`gameid`) REFERENCES `games`(`id`))" , 
           function (err, result) {
@@ -323,10 +321,19 @@ function insertTablesAndDataIntoDB() {
           +"tostack      VARCHAR(20), "
           +"turntime     DECIMAL(8,2), "
           +"roundtimer   DECIMAL(8,2), "
+          +"cardid           INT, "
           +"faceup       BOOLEAN, "
           +"CONSTRAINT  `game`        FOREIGN KEY (`gameid`)        REFERENCES `games`(`id`)) ",
           function (err, result) {
             if (err) throw err;
         });
+        dbCon.query("CREATE TABLE IF NOT EXISTS cards ("
+        +"id           INT AUTO_INCREMENT PRIMARY KEY, "
+        +"color        VARCHAR(5), "
+        +"suit         VARCHAR(1), "
+        +"value        VARCHAR(2)) ",
+        function (err, result) {
+          if (err) throw err;
+      });
       }); 
 }
