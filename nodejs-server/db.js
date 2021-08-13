@@ -60,14 +60,24 @@ module.exports = {
                           + (i)               + ", "
                           + "'"+decks[i-1].color+"'"   + ", "
                           + "'"+decks[i-1].suit+"'"   + ", "
-                          + "'"+decks[i-1].value+"'"   + ");", 
-                
-                        function (err, cardInDecks) { if (err) throw err;
-
-                        } 
+                          + "'"+decks[i-1].value+"'"   + ");"
                       ) 
                     }
-                    resolve ({ id : game.insertId });
+                    resolve ({ 
+                      id : game.insertId,
+                      decks : decks, 
+                      options : {
+                        malusSize : options.malusSize,
+                        sequenceSize : options.sequenceSize,
+                        throwOnWaste : options.throwOnWaste,
+                        throwOnMalus : options.throwOnMalus,
+                        variant : options.variant,
+                        turnsTimed : options.turnsTimed,
+                        timePerTurn : options.timePerTurn,
+                        roundsTimed : options.roundsTimed,
+                        timePerRound : options.timePerRound,
+                      }
+                    })
                   }
                 )
               }
@@ -100,14 +110,24 @@ module.exports = {
                               + (i)               + ", "
                               + "'"+decks[i-1].color+"'"   + ", "
                               + "'"+decks[i-1].suit+"'"   + ", "
-                              + "'"+decks[i-1].value+"'"   + ");", 
-                    
-                            function (err, cardInDecks) { if (err) throw err;
-
-                            } 
+                              + "'"+decks[i-1].value+"'"   + ");"
                           ) 
                         }
-                        resolve ({ id : game.insertId });
+                        resolve ({ 
+                          id : game.insertId, 
+                          decks : decks, 
+                          options : {
+                            malusSize : options.malusSize,
+                            sequenceSize : options.sequenceSize,
+                            throwOnWaste : options.throwOnWaste,
+                            throwOnMalus : options.throwOnMalus,
+                            variant : options.variant,
+                            turnsTimed : options.turnsTimed,
+                            timePerTurn : options.timePerTurn,
+                            roundsTimed : options.roundsTimed,
+                            timePerRound : options.timePerRound,
+                          }
+                        })
                       }
                     )
                   }
@@ -119,10 +139,6 @@ module.exports = {
       )
     })
   }
-}
-
-function insertDecks(decks, game) {
- 
 }
 
 function DBexists(name) {
