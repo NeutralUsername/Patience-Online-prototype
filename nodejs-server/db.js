@@ -28,11 +28,11 @@ module.exports = {
         password: "password",
         database: "gregaire"
       });
-    return new Promise ((resolve) => {
-      dbCon.connect (
+      return new Promise ((resolve) => {
+        dbCon.connect (
         
-        function(err) { if (err) throw err;
-          dbCon.query ("SELECT id FROM options WHERE ( "
+          function(err) { if (err) throw err;
+            dbCon.query ("SELECT id FROM options WHERE ( "
               +"malussize =     " + options.malusSize +   " AND "
               +"sequencesize =  " + options.sequenceSize +" AND "
               +"throwonwaste =  " + options.throwOnWaste +" AND "
@@ -45,90 +45,32 @@ module.exports = {
               +"roomname        " + (options.roomName     != "" ?"= '"+options.roomName+"'"     : "is null" )+" AND "
               +"roompassword    " + (options.roomPassword != "" ? "= '"+options.roomPassword+"'" : "is null" ) +");", 
 
-            function (err, option) { if (err) throw err;  
-              if (option.length === 1) {
-                dbCon.query ("INSERT INTO games VALUES ( "
+              function (err, option) { if (err) throw err;  
+                if (option.length === 1) {
+                  dbCon.query ("INSERT INTO games VALUES ( "
                     +"0 ,"
                     + option[0].id + ", "
                     + "'"+red+"'" + ", "
                     + "'"+black+"'" +");", 
 
-                  async function (err, game) { if (err) throw err;
-                    for(var i = 0; i< 104 ; i++) {
-                      
-                      dbCon.query ("SELECT * FROM cards WHERE ("
-                      +"color = '"+decks[i].color+"' AND "
-                      +"suit = '"+decks[i].suit+"' AND "
-                      +"value = '"+decks[i].value+"')",
+                    async function (err, game) { if (err) throw err;
+                      for(var i = 0; i< 104 ; i++) {
+                        dbCon.query ("SELECT * FROM cards WHERE ("
+                          +"color = '"+decks[i].color+"' AND "
+                          +"suit = '"+decks[i].suit+"' AND "
+                          +"value = '"+decks[i].value+"')",
 
-                    function (err, card) { if (err) throw err;  
-                      dbCon.query ("INSERT INTO decks VALUES ( "
-                          +"0 ,"
-                          + game.insertId       + ", "       
-                          + "'"+card[0].id+"'"   + ");"
-                      )   
-                    }
-                  )
-                }
-                resolve ({ 
-                  id : game.insertId,
-                  options : {
-                    malusSize : options.malusSize,
-                    sequenceSize : options.sequenceSize,
-                    throwOnWaste : options.throwOnWaste,
-                    throwOnMalus : options.throwOnMalus,
-                    variant : options.variant,
-                    turnsTimed : options.turnsTimed,
-                    timePerTurn : options.timePerTurn,
-                    roundsTimed : options.roundsTimed,
-                    timePerRound : options.timePerRound,
-                  },
-                      //field : await dealCards(decks.splice(51), decks.splice(0), options.malusSize, options.sequenceSize, game.insertId)
-                })
-              }
-            )
-          }
-              else {
-                dbCon.query("INSERT INTO options VALUES ( "
-                    +"0 ,"
-                    + options.malusSize + ", "
-                    + options.sequenceSize +", "
-                    + options.throwOnWaste +", "
-                    + options.throwOnMalus +", "
-                    + "'"+options.variant+"'" +", "
-                    + options.turnsTimed +", "
-                    + options.timePerTurn +", "
-                    + options.roundsTimed +", "
-                    + options.timePerRound +", "
-                    + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
-                    + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
-
-                  function (err, option) { if (err) throw err;
-                    dbCon.query ("INSERT INTO games VALUES ( "
-                        +"0 ,"
-                        + option.insertId + ", "
-                        + "'"+red+"'" + ", "
-                        + "'"+black+"'" +");", 
-
-                        async function (err, game) { if (err) throw err;
-                          for(var i = 0; i< 104 ; i++) {
-                            
-                            dbCon.query ("SELECT * FROM cards WHERE ("
-                            +"color = '"+decks[i].color+"' AND "
-                            +"suit = '"+decks[i].suit+"' AND "
-                            +"value = '"+decks[i].value+"')",
-      
-                          function (err, card) { if (err) throw err;  
-                            dbCon.query ("INSERT INTO decks VALUES ( "
+                           function (err, card) { if (err) throw err;  
+                              dbCon.query ("INSERT INTO decks VALUES ( "
                                 +"0 ,"
                                 + game.insertId       + ", "       
                                 + "'"+card[0].id+"'"   + ");"
-                            )   
-                          }
-                        )
-                      }
+                              )   
+                            }
+                          )
+                        }
                         resolve ({ 
-                          id : game.insertId, 
+                          id : game.insertId,
                           options : {
                             malusSize : options.malusSize,
                             sequenceSize : options.sequenceSize,
@@ -140,22 +82,190 @@ module.exports = {
                             roundsTimed : options.roundsTimed,
                             timePerRound : options.timePerRound,
                           },
-                          //field : await dealCards(decks.splice(51), decks.splice(0), options.malusSize, options.sequenceSize, game.insertId)
+                          field : await dealCards(decks.splice(51), decks.splice(0), options.malusSize, options.sequenceSize, game.insertId)
                         })
                       }
                     )
                   }
-                )
-              }   
-            }
-          )
-        }
-      )
-    })
+                  else {
+                    dbCon.query("INSERT INTO options VALUES ( "
+                      +"0 ,"
+                      + options.malusSize + ", "
+                      + options.sequenceSize +", "
+                      + options.throwOnWaste +", "
+                      + options.throwOnMalus +", "
+                      + "'"+options.variant+"'" +", "
+                      + options.turnsTimed +", "
+                      + options.timePerTurn +", "
+                      + options.roundsTimed +", "
+                      + options.timePerRound +", "
+                      + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
+                      + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
+
+                      function (err, option) { if (err) throw err;
+                        dbCon.query ("INSERT INTO games VALUES ( "
+                          +"0 ,"
+                          + option.insertId + ", "
+                          + "'"+red+"'" + ", "
+                          + "'"+black+"'" +");", 
+
+                          async function (err, game) { if (err) throw err;
+                            for(var i = 0; i< 104 ; i++) {
+                        
+                              dbCon.query ("SELECT * FROM cards WHERE ("
+                              +"color = '"+decks[i].color+"' AND "
+                              +"suit = '"+decks[i].suit+"' AND "
+                              +"value = '"+decks[i].value+"')",
+  
+                              function (err, card) { if (err) throw err;  
+                                dbCon.query ("INSERT INTO decks VALUES ( "
+                                  +"0 ,"
+                                  + game.insertId       + ", "       
+                                  + "'"+card[0].id+"'"   + ");"
+                                )   
+                              }        
+                            )
+                          } 
+                          resolve ({ 
+                            id : game.insertId, 
+                            options : {
+                              malusSize : options.malusSize,
+                              sequenceSize : options.sequenceSize,
+                              throwOnWaste : options.throwOnWaste,
+                              throwOnMalus : options.throwOnMalus,
+                              variant : options.variant,
+                              turnsTimed : options.turnsTimed,
+                              timePerTurn : options.timePerTurn,
+                              roundsTimed : options.roundsTimed,
+                              timePerRound : options.timePerRound,
+                            },
+                            field : await dealCards(decks.splice(51), decks.splice(0), options.malusSize, options.sequenceSize, game.insertId)
+                          })
+                        }
+                      )
+                    }
+                  )
+                }   
+              }
+            )
+          }
+        )
+      }
+    )
   }
 }
 
+async function dealCards(blackdeck, reddeck, malussize, sequencesize, gameid) {
+  var dbCon = mysql.createConnection({
+    host: "localhost",
+    user: "gregaire",
+    password: "password",
+    database: "gregaire"
+  });
 
+  return new Promise ((resolve) => {
+    var field = { 
+      center : { 
+        foundations : [],
+        tableaus : [],
+      },
+      red : {
+        drawpile : 'stack',
+        discardpile : "stack",
+        malussequence : [],
+      },
+      black : {
+        drawpile : 'stack',
+        discardpile : 'stack',
+        malussequence : []
+      },
+    }
+    dbCon.connect (
+      function(err) { if (err) throw err;
+        for(var tableaunr = 0 ; tableaunr < malussize ; tableaunr ++) {
+          dbCon.query ("INSERT INTO actions VALUES ( "
+              +"0 ,"
+              + gameid +            " , "
+              + "'"+"newgame"+"'" + " , "
+              + "'"+"redmalus"+"'" +" , "
+              + 0 +                 " , "
+              + 0 +                 " , "
+              + (tableaunr === malussize-1 ? 1 : 0 ) +");", 
+          ) 
+          if(tableaunr === malussize-1) {
+            const card = reddeck.pop();
+            card.faceup = true;
+            field.red.malussequence[tableaunr] = card;
+            console.log(field.red.malussequence[tableaunr] );
+          }
+          else {
+            field.red.malussequence[tableaunr] = reddeck.pop();
+            console.log(field.red.malussequence[tableaunr] );
+          }
+        }
+        for(var tableaunr = 0 ; tableaunr < malussize ; tableaunr ++) {
+          dbCon.query ("INSERT INTO actions VALUES ( "
+              +"0 ,"
+              + gameid +            " , "
+              + "'"+"newgame"+"'" + " , "
+              + "'"+"blackmalus"+"'" +" , "
+              + 0 +                 " , "
+              + 0 +                 " , "
+              + (tableaunr === malussize-1 ? 1 : 0 ) +");", 
+          )
+          if(tableaunr === malussize-1) {
+            const card = blackdeck.pop();
+            card.faceup = true;
+            field.black.malussequence[tableaunr] = card;
+            console.log(field.black.malussequence[tableaunr] );
+          }
+          else {
+            field.black.malussequence[tableaunr] = blackdeck.pop();
+            console.log(field.black.malussequence[tableaunr] );
+          }
+        }
+        for(var tableaunr = 0; tableaunr< 8 ; tableaunr++) {
+          for(var cardnr = 0 ; cardnr < sequencesize ; cardnr ++) {
+            dbCon.query ("INSERT INTO actions VALUES ( "
+                +"0 ,"
+                + gameid +            " , "
+                + "'"+"newgame"+"'" + " , "
+                + "'"+"tableau"+(tableaunr)+"'" +" , "
+                + 0 +                 " , "
+                + 0 +                 ", "
+                + (cardnr === sequencesize-1 ? 1 : 0 ) +");", 
+            ) 
+            if(tableaunr < 4) {
+              if(cardnr === sequencesize -1) {
+                field.center.tableaus[tableaunr] = reddeck.pop();
+                field.center.tableaus[tableaunr].faceup = true;
+                console.log(field.center.tableaus[tableaunr]);
+              }
+              else {
+                field.center.tableaus[tableaunr] = reddeck.pop();
+                console.log(field.center.tableaus[tableaunr]);
+              }
+            }
+            else {
+              if(cardnr === sequencesize -1) {
+                field.center.tableaus[tableaunr] = blackdeck.pop();
+                field.center.tableaus[tableaunr].faceup = true;
+                console.log(field.center.tableaus[tableaunr]);
+              }
+              else {
+                field.center.tableaus[tableaunr] = blackdeck.pop();
+                console.log(field.center.tableaus[tableaunr]);
+              }
+            }
+          }         
+        }
+      }
+    )
+    resolve (
+        field
+    )
+  })
+}
 
 function DBexists(name) {
     return new Promise ((resolve) => {
