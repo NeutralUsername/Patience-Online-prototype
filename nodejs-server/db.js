@@ -284,19 +284,10 @@ function insertTablesAndDataIntoDB() {
           function (err, result) {
             if (err) throw err;
         });
-        dbCon.query("CREATE TABLE IF NOT EXISTS decks ("
-          +"id           INT AUTO_INCREMENT PRIMARY KEY, "
-          +"gameid       INT, "
-          +"cardid       INT, "
-          +"CONSTRAINT  `gameid` FOREIGN KEY (`gameid`) REFERENCES `games`(`id`))" , 
-          function (err, result) {
-            if (err) throw err;
-        });
         dbCon.query("CREATE TABLE IF NOT EXISTS actions ("
           +"id           INT AUTO_INCREMENT PRIMARY KEY, "
           +"gameid       INT, "
-          +"fromstack    VARCHAR(20), "
-          +"tostack      VARCHAR(20), "
+          +"stack    VARCHAR(20), "
           +"cardid           INT, "
           +"faceup       BOOLEAN, "
           +"turntime     DECIMAL(8,2), "
