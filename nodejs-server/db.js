@@ -120,6 +120,7 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                 + ((player === 0) ? ("'redmalus'") : ("'blackmalus'"))        +" , "
                 + (malussize === options.malusSize-1 ? 1 : 0 )                 +" , "
                 + ((player === 0) ? ("'red'") : ("'black'"))                  +" , "
+                + 0                                                          +" , "
                 + options.timePerTurn                                        +" , "
                 + options.timePerPlayer                                     +");" )
             }     
@@ -135,6 +136,7 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                     (tableaunr+"r") : (tableaunr+"b")) +"'"+" , "
                     + (tableausize === options.tableauSize-1 ? 1 : 0 )    +" , "
                   + ((player === 0) ? ("'red'") : ("'black'"))              +" , "
+                  + 0                                                          +" , "
                   + options.timePerTurn                                        +" , "
                   + options.timePerPlayer                                     +");" )
               } 
@@ -149,6 +151,7 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                 + "'"+((player === 0) ? ("redstock") : ("blackstock")) +"'"  +" , "
                 + 0                                                          +" , "
                 + ((player === 0) ? ("'red'") : ("'black'"))                +" , "
+                + 0                                                          +" , "
                 + options.timePerTurn                                        +" , "
                 + options.timePerPlayer                                     +");" )
             } 
@@ -219,12 +222,13 @@ function insertTablesAndDataIntoDB() {
           if (err) throw err;
         });
         dbCon.query("CREATE TABLE IF NOT EXISTS actions ("
-          +"id           INT AUTO_INCREMENT PRIMARY KEY, "
-          +"gameid       INT, "
-          +"cardid       INT, "
-          +"stack        VARCHAR(20), "
-          +"faceup       BOOLEAN, "
-          +"player        VARCHAR(20), "
+          +"id                    INT AUTO_INCREMENT PRIMARY KEY, "
+          +"gameid                INT, "
+          +"cardid                INT, "
+          +"stack                 VARCHAR(20), "
+          +"faceup                BOOLEAN, "
+          +"player                VARCHAR(20), "
+          +"turn                  INT, "
           +"remainingtimeturn     DECIMAL(8,2), "
           +"remainingtimeplayer   DECIMAL(8,2), "
           +"CONSTRAINT  `card`        FOREIGN KEY (`cardid`)        REFERENCES `cards`(`id`), "
