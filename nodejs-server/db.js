@@ -117,9 +117,9 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                 + gameid                                                   +" , "
                 + cards.find( x=> x.color === card.color && 
                   x.suit == card.suit && x.value == card.value).id         +" , "
-                + ((player === 0) ? ("'redmalus'") : ("'blackmalus'"))     +" , "
+                + ((player === 0) ? ("'rmalus'") : ("'bmalus'"))     +" , "
                 + (malussize === options.malusSize-1 ? 1 : 0 )             +" , "
-                + ((player === 0) ? ("'red'") : ("'black'"))               +" , "
+                + ((player === 0) ? ("'r'") : ("'b'"))               +" , "
                 + 0                                                        +" , "
                 + options.timePerTurn                                      +" , "
                 + options.timePerPlayer                                    +");" 
@@ -133,10 +133,10 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                   + gameid                                                +" , "
                   +  cards.find( x=> x.color === card.color && 
                     x.suit == card.suit && x.value == card.value).id      +" , "
-                  + "'"+"tableau"+((player === 0 ) ? 
+                  + "'"+"tab"+((player === 0 ) ? 
                     (tableaunr+"r") : (tableaunr+"b")) +"'"+" , "
                     + (tableausize === options.tableauSize-1 ? 1 : 0 )    +" , "
-                  + ((player === 0) ? ("'red'") : ("'black'"))            +" , "
+                  + ((player === 0) ? ("'r'") : ("'b'"))            +" , "
                   + 0                                                     +" , "
                   + options.timePerTurn                                   +" , "
                   + options.timePerPlayer                                 +");" 
@@ -150,9 +150,9 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                 + gameid                                                     +" , "
                 + cards.find( x=> x.color === card.color && 
                   x.suit == card.suit && x.value == card.value).id           +" , "
-                + "'"+((player === 0) ? ("redstock") : ("blackstock")) +"'"  +" , "
+                + "'"+((player === 0) ? ("rstock") : ("bstock")) +"'"  +" , "
                 + 0                                                          +" , "
-                + ((player === 0) ? ("'red'") : ("'black'"))                 +" , "
+                + ((player === 0) ? ("'r'") : ("'b'"))                 +" , "
                 + 0                                                          +" , "
                 + options.timePerTurn                                        +" , "
                 + options.timePerPlayer                                      +");" 
@@ -197,7 +197,7 @@ function insertTablesAndDataIntoDB() {
           +"tableausize   INT, "
           +"throwonwaste  BOOLEAN, "
           +"throwonmalus  BOOLEAN, "
-          +"variant       VARCHAR(20), "
+          +"variant       VARCHAR(8), "
           +"turnstimed    BOOLEAN, "
           +"turntime      INT, "
           +"playerstimed  BOOLEAN, "
@@ -228,12 +228,12 @@ function insertTablesAndDataIntoDB() {
           +"id                   INT AUTO_INCREMENT PRIMARY KEY, "
           +"gameid               INT, "
           +"cardid               INT, "
-          +"stack                VARCHAR(20), "
+          +"stack                VARCHAR(6), "
           +"faceup               BOOLEAN, "
-          +"player               VARCHAR(20), "
+          +"player               VARCHAR(1), "
           +"turn                 INT, "
-          +"remainingtimeturn    DECIMAL(8,2), "
-          +"remainingtimeplayer  DECIMAL(8,2), "
+          +"remainingtimeturn    DECIMAL(6,2), "
+          +"remainingtimeplayer  DECIMAL(6,2), "
           +"CONSTRAINT  `card`    FOREIGN KEY (`cardid`)    REFERENCES `cards`(`id`), "
           +"CONSTRAINT  `game`    FOREIGN KEY (`gameid`)    REFERENCES `games`(`id`)) ",
           function (err, result) {
