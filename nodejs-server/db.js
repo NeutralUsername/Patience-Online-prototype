@@ -2,12 +2,12 @@ var mysql = require ('mysql2');
 module.exports = {
 
   createDBifNotExists : async function () {
-    if(await DBexists("gregaire") === 1) 
+    if(await DBexists("gregaire")) 
       return;
     else {
       var createDBcon = mysql.createConnection({
-          host: "localhost",
-          user: "gregaire",
+          host:     "localhost",
+          user:     "gregaire",
           password: "password",
       });
       createDBcon.connect(function(err) {
@@ -132,7 +132,7 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                   + gameid                                                +" , "
                   +  cards.find( x=> x.color === card.color && 
                     x.suit == card.suit && x.value == card.value).id      +" , "
-                  + "'"+"tableau"+((player === 0 )? 
+                  + "'"+"tableau"+((player === 0 ) ? 
                     (tableaunr+"r") : (tableaunr+"b")) +"'"+" , "
                     + (tableausize === options.tableauSize-1 ? 1 : 0 )    +" , "
                   + ((player === 0) ? ("'red'") : ("'black'"))            +" , "
@@ -165,8 +165,8 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
 function DBexists(name) {
     return new Promise ((resolve) => {
         var createDBcon = mysql.createConnection({
-            host: "localhost",
-            user: "gregaire",
+            host:     "localhost",
+            user:     "gregaire",
             password: "password",
         });
         createDBcon.connect(function(err) {
@@ -181,35 +181,35 @@ function DBexists(name) {
 
 function insertTablesAndDataIntoDB() {
     var dbCon = mysql.createConnection({
-        host: "localhost",
-        user: "gregaire",
+        host:     "localhost",
+        user:     "gregaire",
         password: "password",
         database: "gregaire"
       });
       dbCon.connect(function(err) {
         if (err) throw err;
         dbCon.query("CREATE TABLE IF NOT EXISTS options ("
-          +"id           INT AUTO_INCREMENT PRIMARY KEY, "
-          +"malussize    INT, "
-          +"tableausize INT, "
-          +"throwonwaste   BOOLEAN, "
-          +"throwonmalus   BOOLEAN, "
-          +"variant      VARCHAR(20), "
-          +"turnstimed   BOOLEAN, "
-          +"turntime     INT, "
+          +"id            INT AUTO_INCREMENT PRIMARY KEY, "
+          +"malussize     INT, "
+          +"tableausize   INT, "
+          +"throwonwaste  BOOLEAN, "
+          +"throwonmalus  BOOLEAN, "
+          +"variant       VARCHAR(20), "
+          +"turnstimed    BOOLEAN, "
+          +"turntime      INT, "
           +"playerstimed  BOOLEAN, "
-          +"timeperplayer    INT, "
+          +"timeperplayer INT, "
           +"roomname      VARCHAR(20), "
           +"roompassword  VARCHAR(20))",
           function (err, result) {
             if (err) throw err;
         });
           dbCon.query("CREATE TABLE IF NOT EXISTS games ("
-          +"id            INT AUTO_INCREMENT PRIMARY KEY, "
-          +"optionid      INT, "
-          +"redid         VARCHAR(20), "
-          +"blackid       VARCHAR(20), "
-          +"CONSTRAINT `option` FOREIGN KEY (`optionid`) REFERENCES `options`(`id`))", 
+          +"id                   INT AUTO_INCREMENT PRIMARY KEY, "
+          +"optionid             INT, "
+          +"redid                VARCHAR(20), "
+          +"blackid              VARCHAR(20), "
+          +"CONSTRAINT `option`   FOREIGN KEY (`optionid`)    REFERENCES `options`(`id`))", 
           function (err, result) {
             if (err) throw err;
         });
@@ -222,17 +222,17 @@ function insertTablesAndDataIntoDB() {
           if (err) throw err;
         });
         dbCon.query("CREATE TABLE IF NOT EXISTS actions ("
-          +"id                    INT AUTO_INCREMENT PRIMARY KEY, "
-          +"gameid                INT, "
-          +"cardid                INT, "
-          +"stack                 VARCHAR(20), "
-          +"faceup                BOOLEAN, "
-          +"player                VARCHAR(20), "
-          +"turn                  INT, "
-          +"remainingtimeturn     DECIMAL(8,2), "
-          +"remainingtimeplayer   DECIMAL(8,2), "
-          +"CONSTRAINT  `card`        FOREIGN KEY (`cardid`)        REFERENCES `cards`(`id`), "
-          +"CONSTRAINT  `game`        FOREIGN KEY (`gameid`)        REFERENCES `games`(`id`)) ",
+          +"id                   INT AUTO_INCREMENT PRIMARY KEY, "
+          +"gameid               INT, "
+          +"cardid               INT, "
+          +"stack                VARCHAR(20), "
+          +"faceup               BOOLEAN, "
+          +"player               VARCHAR(20), "
+          +"turn                 INT, "
+          +"remainingtimeturn    DECIMAL(8,2), "
+          +"remainingtimeplayer  DECIMAL(8,2), "
+          +"CONSTRAINT  `card`    FOREIGN KEY (`cardid`)    REFERENCES `cards`(`id`), "
+          +"CONSTRAINT  `game`    FOREIGN KEY (`gameid`)    REFERENCES `games`(`id`)) ",
           function (err, result) {
             if (err) throw err;
         });

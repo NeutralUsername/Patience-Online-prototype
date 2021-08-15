@@ -175,31 +175,13 @@ function shuffle (deck) {
     return deck;
 }
 
-
-
-
-
-
-
-// ===== keeping just in case i need the templates
-
 app.route('/ping').get(controller.root);
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/testSocketConnection.html');
 });
 
-function optionsValid(options) {
-  if(options.malusSize >= 5 && options.malusSize <= 20)
-    if(options.tableauSize >= 1 && options.tableauSize <= 6)
-      if(options.throwOnWaste === true || options.throwOnWaste === false)
-        if(options.throwOnMalus === true || options.throwOnMalus === false)
-          if(options.variant === 'Patience' || options.variant === 'Klondike')
-            if(options.turnsTimed === true || options.turnsTimed === false)
-              if(options.playersTimed === true || options.playersTimed === false)
-                if(options.timePerTurn >= 15 && options.timePerTurn <= 300)
-                  if(options.timePerPlayer >= 600 && options.timePerPlayer <= 3600)
-                    return true;
-  return false;
-}
+
+
+
 
