@@ -111,6 +111,10 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
         function (err, cards) { if (err) throw err;  
           for(var player = 0; player < 2 ; player++) {
             for(var malussize = 0 ; malussize < options.malusSize; malussize++) {
+              if(malussize < 6)
+                while(player === 0 ? reddeck[reddeck.length-1].value < 4 : blackdeck[blackdeck.length-1].value < 4) {
+                  player === 0 ? reddeck.splice(0, 0, reddeck.pop()) : blackdeck.splice(0, 0, blackdeck.pop())
+                } 
               var card = player === 0 ? reddeck.pop() : blackdeck.pop();
               dbCon.query ("INSERT INTO actions VALUES ( "
                 + "0 ,"
@@ -127,6 +131,10 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
             }     
             for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
               for(var tableausize = 0 ; tableausize < options.tableauSize; tableausize++) {
+                if(tableausize < 4)
+                  while(player === 0 ? reddeck[reddeck.length-1].value < 4 : blackdeck[blackdeck.length-1].value <4) {
+                    player === 0 ? reddeck.splice(0, 0, reddeck.pop()) : blackdeck.splice(0, 0, blackdeck.pop())
+                  } 
                 var card = player === 0 ? reddeck.pop() : blackdeck.pop();
                 dbCon.query ("INSERT INTO actions VALUES ( "
                   + "0 ,"
@@ -245,7 +253,7 @@ function insertTablesAndDataIntoDB() {
       console.log("Connected!");
       var sql = "INSERT INTO cards (color, suit, value) VALUES ?";
       var values = [
-        ['red', '♥', 'A'],
+        ['red', '♥', '1'],
         ['red', '♥', '2'],
         ['red', '♥', '3'],
         ['red', '♥', '4'],
@@ -258,7 +266,7 @@ function insertTablesAndDataIntoDB() {
         ['red', '♥', 'J'],
         ['red', '♥', 'Q'],
         ['red', '♥', 'K'],
-        ['red', '♦', 'A'],
+        ['red', '♦', '1'],
         ['red', '♦', '2'],
         ['red', '♦', '3'],
         ['red', '♦', '4'],
@@ -271,7 +279,7 @@ function insertTablesAndDataIntoDB() {
         ['red', '♦', 'J'],
         ['red', '♦', 'Q'],
         ['red', '♦', 'K'],
-        ['red', '♠', 'A'],
+        ['red', '♠', '1'],
         ['red', '♠', '2'],
         ['red', '♠', '3'],
         ['red', '♠', '4'],
@@ -284,7 +292,7 @@ function insertTablesAndDataIntoDB() {
         ['red', '♠', 'J'],
         ['red', '♠', 'Q'],
         ['red', '♠', 'K'],
-        ['red', '♣', 'A'],
+        ['red', '♣', '1'],
         ['red', '♣', '2'],
         ['red', '♣', '3'],
         ['red', '♣', '4'],
@@ -297,7 +305,7 @@ function insertTablesAndDataIntoDB() {
         ['red', '♣', 'J'],
         ['red', '♣', 'Q'],
         ['red', '♣', 'K'],
-        ['black', '♥', 'A'],
+        ['black', '♥', '1'],
         ['black', '♥', '2'],
         ['black', '♥', '3'],
         ['black', '♥', '4'],
@@ -310,7 +318,7 @@ function insertTablesAndDataIntoDB() {
         ['black', '♥', 'J'],
         ['black', '♥', 'Q'],
         ['black', '♥', 'K'],
-        ['black', '♦', 'A'],
+        ['black', '♦', '1'],
         ['black', '♦', '2'],
         ['black', '♦', '3'],
         ['black', '♦', '4'],
@@ -323,7 +331,7 @@ function insertTablesAndDataIntoDB() {
         ['black', '♦', 'J'],
         ['black', '♦', 'Q'],
         ['black', '♦', 'K'],
-        ['black', '♠', 'A'],
+        ['black', '♠', '1'],
         ['black', '♠', '2'],
         ['black', '♠', '3'],
         ['black', '♠', '4'],
@@ -336,7 +344,7 @@ function insertTablesAndDataIntoDB() {
         ['black', '♠', 'J'],
         ['black', '♠', 'Q'],
         ['black', '♠', 'K'],
-        ['black', '♣', 'A'],
+        ['black', '♣', '1'],
         ['black', '♣', '2'],
         ['black', '♣', '3'],
         ['black', '♣', '4'],

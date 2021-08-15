@@ -13,6 +13,5 @@ socket.on('connect', () => {
     ></Options>,
     document.getElementById('root')
   );
-  
 })
 

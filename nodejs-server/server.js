@@ -156,7 +156,7 @@ class Card {
 
 function freshDeck (color) {
     const Suits = ["♥", "♠", "♦", "♣"];
-    const Values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+    const Values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
     return Suits.flatMap(suit => {
         return Values.map(value => {
             return new Card (color, suit, value)
