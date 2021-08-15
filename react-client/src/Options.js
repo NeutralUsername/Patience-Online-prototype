@@ -8,7 +8,7 @@ export default class Options extends React.Component {
         super (props);
         this.state = {
             malusSize : 14,
-            sequenceSize : 3,
+            tableauSize : 3,
             throwOnWaste : true,
             throwOnMalus : true,
             variant : "Patience",
@@ -22,7 +22,7 @@ export default class Options extends React.Component {
         };
         this.mounted = false;
         this.handleMalusSizeChange = this.handleMalusSizeChange.bind (this);
-        this.handleSequenceSizeChange = this.handleSequenceSizeChange.bind (this);
+        this.handleTableauSizeChange = this.handleTableauSizeChange.bind (this);
         this.handleThrowOnWasteChange = this.handleThrowOnWasteChange.bind (this);
         this.handleThrowOnMalusChange = this.handleThrowOnMalusChange.bind (this);
         this.handleVariantChange = this.handleVariantChange.bind (this);
@@ -106,7 +106,7 @@ export default class Options extends React.Component {
         var options = this.state.pendingRooms.find(e=> e.roomkey === roomkey).options
         this.setState({
             malusSize : options.malusSize ,
-            sequenceSize : options.sequenceSize,
+            tableauSize : options.tableauSize,
             throwOnWaste : options.throwOnWaste,
             throwOnMalus : options.throwOnMalus,
             variant : options.variant,
@@ -121,8 +121,8 @@ export default class Options extends React.Component {
     handleMalusSizeChange (malusSize) {
         this.setState ({malusSize : malusSize })
     }
-    handleSequenceSizeChange (sequenceSize) {
-        this.setState ({sequenceSize : sequenceSize })
+    handleTableauSizeChange (tableauSize) {
+        this.setState ({tableauSize : tableauSize })
     }
     handleThrowOnWasteChange (throwOnWaste) {
         this.setState ({throwOnWaste : throwOnWaste })
@@ -165,10 +165,10 @@ export default class Options extends React.Component {
                     malusSize = {this.state.malusSize}
                     onChange = {this.handleMalusSizeChange}
                 ></MalusSize>
-                <SequenceSize
-                    sequenceSize = {this.state.sequenceSize}
-                    onChange = {this.handleSequenceSizeChange}
-                ></SequenceSize>
+                <TableauSize
+                    tableauSize = {this.state.tableauSize}
+                    onChange = {this.handleTableauSizeChange}
+                ></TableauSize>
                 <ThrowOnWaste
                     throwOnWaste = {this.state.throwOnWaste}
                     onChange = {this.handleThrowOnWasteChange}
@@ -229,7 +229,7 @@ class MalusSize extends React.Component {
                 className = "malussize">
                 <label
                     htmlFor = {"maluscountselect"} >
-                    Malus Sequence Size
+                    Malus Size
                 </label>
                 <select
                     value = { this.props.malusSize}
@@ -256,7 +256,7 @@ class MalusSize extends React.Component {
         )
     }
 }
-class SequenceSize extends React.Component {
+class TableauSize extends React.Component {
     constructor (props) {
         super (props);
         this.handleChange = this.handleChange.bind (this);
@@ -267,15 +267,15 @@ class SequenceSize extends React.Component {
     render () {
         return (
             <div
-                className = "sequencesize" >
+                className = "tableausize" >
                 <label
-                    htmlFor = {"sequencesizeselect"} >
-                    Tableau Sequence Size
+                    htmlFor = {"tableausizeselect"} >
+                    Tableau Starting Size
                 </label>
                 <select
-                    value = { this.props.sequenceSize}
+                    value = { this.props.tableauSize}
                     onChange = {this.handleChange}
-                    id = {"sequencesizeselect"} >
+                    id = {"tableauizeselect"} >
                     <option value = {1} >1</option>
                     <option value = {2} >2</option>
                     <option value = {3} >3</option>
@@ -327,7 +327,7 @@ class ThrowOnMalus extends React.Component {
                 className = {"throwonmalus"} >
                 <label
                     htmlFor = "throwmaluscb" >
-                    Throw on Opponent Malus Sequence 
+                    Throw on Opponent Malus
                 </label>
                 <input
                     checked = { this.props.throwOnMalus}

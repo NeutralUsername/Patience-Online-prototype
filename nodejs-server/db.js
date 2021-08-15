@@ -34,7 +34,7 @@ module.exports = {
           function(err) { if (err) throw err;
             dbCon.query ("SELECT id FROM options WHERE ( "
               +"malussize    =  " + options.malusSize    + " AND "
-              +"sequencesize =  " + options.sequenceSize + " AND "
+              +"tableausize =  " + options.tableauSize + " AND "
               +"throwonwaste =  " + options.throwOnWaste + " AND "
               +"throwonmalus =  " + options.throwOnMalus + " AND "
               +"variant      ="+"'"+options.variant+"'"  + " AND "
@@ -65,7 +65,7 @@ module.exports = {
                   dbCon.query("INSERT INTO options VALUES ( "
                     +"0 ,"
                     + options.malusSize       + ", "
-                    + options.sequenceSize    +", "
+                    + options.tableauSize    +", "
                     + options.throwOnWaste    +", "
                     + options.throwOnMalus    +", "
                     + "'"+options.variant     +"'" +", "
@@ -123,7 +123,7 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                 + 0                                                            +");" )
             }     
             for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
-              for(var tableausize = 0 ; tableausize < options.sequenceSize; tableausize++) {
+              for(var tableausize = 0 ; tableausize < options.tableauSize; tableausize++) {
                 var card = player === 0 ? reddeck.pop() : blackdeck.pop();
                 dbCon.query ("INSERT INTO actions VALUES ( "
                   + "0 ,"
@@ -132,12 +132,12 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                     x.suit == card.suit && x.value == card.value).id          +" , "
                   + "'"+"tableau"+((player === 0 )? 
                     (tableaunr+"r") : (tableaunr+"b")) +"'"+" , "
-                  + (tableausize === ((options.sequenceSize-1) ? 1 : 0 ))     +" , "
+                  + (tableausize === ((options.tableauSize-1) ? 1 : 0 ))     +" , "
                   + 0                                                         +" , "
                   + 0                                                         +");" )
               } 
             }
-            for(var stock = 0 ; stock < (52 - (options.malusSize + (options.sequenceSize*4))); stock ++ ) {
+            for(var stock = 0 ; stock < (52 - (options.malusSize + (options.tableauSize*4))); stock ++ ) {
               var card = player === 0 ? reddeck.pop() : blackdeck.pop();
               dbCon.query ("INSERT INTO actions VALUES ( "
                 + "0 ,"
@@ -155,7 +155,6 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
     }
   )
 }
-
 
 function DBexists(name) {
     return new Promise ((resolve) => {
@@ -186,7 +185,7 @@ function insertTablesAndDataIntoDB() {
         dbCon.query("CREATE TABLE IF NOT EXISTS options ("
           +"id           INT AUTO_INCREMENT PRIMARY KEY, "
           +"malussize    INT, "
-          +"sequencesize INT, "
+          +"tableausize INT, "
           +"throwonwaste   BOOLEAN, "
           +"throwonmalus   BOOLEAN, "
           +"variant      VARCHAR(20), "
