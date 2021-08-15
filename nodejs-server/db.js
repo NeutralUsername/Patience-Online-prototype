@@ -221,8 +221,8 @@ function insertTablesAndDataIntoDB() {
           +"cardid       INT, "
           +"stack        VARCHAR(20), "
           +"faceup       BOOLEAN, "
-          +"turntime     DECIMAL(8,2), "
-          +"timeperplayer   DECIMAL(8,2), "
+          +"remainingtimeturn     DECIMAL(8,2), "
+          +"remainingtimeplayer   DECIMAL(8,2), "
           +"CONSTRAINT  `card`        FOREIGN KEY (`cardid`)        REFERENCES `cards`(`id`), "
           +"CONSTRAINT  `game`        FOREIGN KEY (`gameid`)        REFERENCES `games`(`id`)) ",
           function (err, result) {
