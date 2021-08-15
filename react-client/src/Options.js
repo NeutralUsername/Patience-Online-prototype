@@ -269,7 +269,7 @@ class TableauSize extends React.Component {
                 className = "tableausize" >
                 <label
                     htmlFor = {"tableausizeselect"} >
-                    Tableau Starting Size
+                    Tableau Size
                 </label>
                 <select
                     value = { this.props.tableauSize}

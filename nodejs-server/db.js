@@ -42,8 +42,8 @@ module.exports = {
               +"turntime      =  " +     options.timePerTurn        + " AND "
               +"playerstimed  =  " +     options.playersTimed       + " AND "
               +"timeperplayer =  " +     options.timePerPlayer      + " AND "
-              +"roomname         " +    (options.roomName     != "" ? " = '"+options.roomName     +"'"     : "is null" ) +" AND "
-              +"roompassword     " +    (options.roomPassword != "" ? " = '"+options.roomPassword +"'"     : "is null" ) +");", 
+              +"roomname         " +    (options.roomName     != "" ? " = '"+options.roomName     +"'"  : "is null" ) +" AND "
+              +"roompassword     " +    (options.roomPassword != "" ? " = '"+options.roomPassword +"'"  : "is null" ) +");", 
 
               function (err, option) { if (err) throw err;  
                 if (option.length === 1) {
@@ -122,7 +122,8 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                 + ((player === 0) ? ("'red'") : ("'black'"))               +" , "
                 + 0                                                        +" , "
                 + options.timePerTurn                                      +" , "
-                + options.timePerPlayer                                    +");" )
+                + options.timePerPlayer                                    +");" 
+              )
             }     
             for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
               for(var tableausize = 0 ; tableausize < options.tableauSize; tableausize++) {
@@ -138,7 +139,8 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                   + ((player === 0) ? ("'red'") : ("'black'"))            +" , "
                   + 0                                                     +" , "
                   + options.timePerTurn                                   +" , "
-                  + options.timePerPlayer                                 +");" )
+                  + options.timePerPlayer                                 +");" 
+                )
               } 
             }
             for(var stock = 0 ; stock < (52 - (options.malusSize + (options.tableauSize*4))); stock ++ ) {
@@ -153,7 +155,8 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                 + ((player === 0) ? ("'red'") : ("'black'"))                 +" , "
                 + 0                                                          +" , "
                 + options.timePerTurn                                        +" , "
-                + options.timePerPlayer                                      +");" )
+                + options.timePerPlayer                                      +");" 
+              )
             } 
           }
         }
