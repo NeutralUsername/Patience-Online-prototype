@@ -55,7 +55,6 @@ module.exports = {
 
                     function (err, game) { if (err) throw err;
                       dealcards (reddeck, blackdeck, options, game.insertId, dbCon);    
-                      console.log("test2");
                       resolve ({ 
                         id : game.insertId,
                       })   
@@ -86,7 +85,6 @@ module.exports = {
 
                         function (err, game) { if (err) throw err;
                           dealcards (reddeck, blackdeck, options, game.insertId, dbCon);    
-                          console.log("test2");
                           resolve ({ 
                             id : game.insertId,
                           })   
@@ -111,22 +109,19 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
 
       dbCon.query ("SELECT * FROM cards ",
         function (err, cards) { if (err) throw err;  
-
           for(var player = 0; player < 2 ; player++) {
-
             for(var malussize = 0 ; malussize < options.malusSize; malussize++) {
               var card = player === 0 ? reddeck.pop() : blackdeck.pop();
               dbCon.query ("INSERT INTO actions VALUES ( "
                 + "0 ,"
-                + gameid                                                  +" , "
+                + gameid                                                       +" , "
                 +  cards.find( x=> x.color === card.color && 
-                  x.suit == card.suit && x.value == card.value).id        +" , "
+                  x.suit == card.suit && x.value == card.value).id             +" , "
                 + "'"+ ((player === 0) ? ("redmalus") : ("blackmalus"))  +"'"  +" , "
-                + (malussize === options.malusSize-1 ? 1 : 0 )            +" , "
-                + 0                                                       +" , "
-                + 0                                                       +");" )
-            }
-                   
+                + (malussize === options.malusSize-1 ? 1 : 0 )                 +" , "
+                + 0                                                            +" , "
+                + 0                                                            +");" )
+            }     
             for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
               for(var tableausize = 0 ; tableausize < options.sequenceSize; tableausize++) {
                 var card = player === 0 ? reddeck.pop() : blackdeck.pop();
@@ -135,27 +130,25 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                   + gameid                                                    +" , "
                   +  cards.find( x=> x.color === card.color && 
                     x.suit == card.suit && x.value == card.value).id          +" , "
-                  + "'"+((player === 0 )? 
-                    ("tableaured"+tableaunr) : ("tableaublack"+tableaunr)) +"'"+" , "
-                  + (tableausize === ((options.sequenceSize-1) ? 1 : 0 ))         +" , "
+                  + "'"+"tableau"+((player === 0 )? 
+                    (tableaunr+"r") : (tableaunr+"b")) +"'"+" , "
+                  + (tableausize === ((options.sequenceSize-1) ? 1 : 0 ))     +" , "
                   + 0                                                         +" , "
                   + 0                                                         +");" )
               } 
             }
-
             for(var stock = 0 ; stock < (52 - (options.malusSize + (options.sequenceSize*4))); stock ++ ) {
               var card = player === 0 ? reddeck.pop() : blackdeck.pop();
               dbCon.query ("INSERT INTO actions VALUES ( "
                 + "0 ,"
-                + gameid                                                 +" , "
+                + gameid                                                     +" , "
                 +  cards.find( x=> x.color === card.color && 
-                  x.suit == card.suit && x.value == card.value).id       +" , "
+                  x.suit == card.suit && x.value == card.value).id           +" , "
                 + "'"+((player === 0) ? ("redstock") : ("blackstock")) +"'"  +" , "
-                + 0                                                      +" , "
-                + 0                                                      +" , "
-                + 0                                                      +");" )
+                + 0                                                          +" , "
+                + 0                                                          +" , "
+                + 0                                                          +");" )
             } 
-          
           }
         }
       )
