@@ -115,12 +115,13 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
               dbCon.query ("INSERT INTO actions VALUES ( "
                 + "0 ,"
                 + gameid                                                       +" , "
-                +  cards.find( x=> x.color === card.color && 
+                + cards.find( x=> x.color === card.color && 
                   x.suit == card.suit && x.value == card.value).id             +" , "
-                + "'"+ ((player === 0) ? ("redmalus") : ("blackmalus"))  +"'"  +" , "
+                + ((player === 0) ? ("'redmalus'") : ("'blackmalus'"))        +" , "
                 + (malussize === options.malusSize-1 ? 1 : 0 )                 +" , "
-                + 0                                                            +" , "
-                + 0                                                            +");" )
+                + ((player === 0) ? ("'red'") : ("'black'"))                  +" , "
+                + options.timePerTurn                                        +" , "
+                + options.timePerPlayer                                     +");" )
             }     
             for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
               for(var tableausize = 0 ; tableausize < options.tableauSize; tableausize++) {
@@ -132,9 +133,10 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                     x.suit == card.suit && x.value == card.value).id          +" , "
                   + "'"+"tableau"+((player === 0 )? 
                     (tableaunr+"r") : (tableaunr+"b")) +"'"+" , "
-                  + (tableausize === ((options.tableauSize-1) ? 1 : 0 ))     +" , "
-                  + 0                                                         +" , "
-                  + 0                                                         +");" )
+                    + (tableausize === options.tableauSize-1 ? 1 : 0 )    +" , "
+                  + ((player === 0) ? ("'red'") : ("'black'"))              +" , "
+                  + options.timePerTurn                                        +" , "
+                  + options.timePerPlayer                                     +");" )
               } 
             }
             for(var stock = 0 ; stock < (52 - (options.malusSize + (options.tableauSize*4))); stock ++ ) {
@@ -142,12 +144,13 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
               dbCon.query ("INSERT INTO actions VALUES ( "
                 + "0 ,"
                 + gameid                                                     +" , "
-                +  cards.find( x=> x.color === card.color && 
+                + cards.find( x=> x.color === card.color && 
                   x.suit == card.suit && x.value == card.value).id           +" , "
                 + "'"+((player === 0) ? ("redstock") : ("blackstock")) +"'"  +" , "
                 + 0                                                          +" , "
-                + 0                                                          +" , "
-                + 0                                                          +");" )
+                + ((player === 0) ? ("'red'") : ("'black'"))                +" , "
+                + options.timePerTurn                                        +" , "
+                + options.timePerPlayer                                     +");" )
             } 
           }
         }
@@ -221,6 +224,7 @@ function insertTablesAndDataIntoDB() {
           +"cardid       INT, "
           +"stack        VARCHAR(20), "
           +"faceup       BOOLEAN, "
+          +"player        VARCHAR(20), "
           +"remainingtimeturn     DECIMAL(8,2), "
           +"remainingtimeplayer   DECIMAL(8,2), "
           +"CONSTRAINT  `card`        FOREIGN KEY (`cardid`)        REFERENCES `cards`(`id`), "
