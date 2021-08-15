@@ -33,15 +33,15 @@ module.exports = {
         
           function(err) { if (err) throw err;
             dbCon.query ("SELECT id FROM options WHERE ( "
-              +"malussize    =  " + options.malusSize    + " AND "
-              +"tableausize =  " + options.tableauSize + " AND "
-              +"throwonwaste =  " + options.throwOnWaste + " AND "
-              +"throwonmalus =  " + options.throwOnMalus + " AND "
-              +"variant      ="+"'"+options.variant+"'"  + " AND "
-              +"turnstimed   =  " + options.turnsTimed   + " AND "
-              +"turntime     =  " + options.timePerTurn  + " AND "
-              +"roundstimed  =  " + options.roundsTimed  + " AND "
-              +"roundtime    =  " + options.timePerRound +" AND "
+              +"malussize    =  " +  options.malusSize    + " AND "
+              +"tableausize =  " +   options.tableauSize + " AND "
+              +"throwonwaste =  " +  options.throwOnWaste + " AND "
+              +"throwonmalus =  " +  options.throwOnMalus + " AND "
+              +"variant      ="+"'"+ options.variant+"'"  + " AND "
+              +"turnstimed   =  " +  options.turnsTimed   + " AND "
+              +"turntime     =  " +  options.timePerTurn  + " AND "
+              +"playerstimed  =  " + options.playersTimed  + " AND "
+              +"timeperplayer =  " + options.timePerPlayer +" AND "
               +"roomname        " + (options.roomName     != "" ?"= '"+options.roomName+"'"     : "is null" )+" AND "
               +"roompassword    " + (options.roomPassword != "" ? "= '"+options.roomPassword+"'" : "is null" ) +");", 
 
@@ -71,8 +71,8 @@ module.exports = {
                     + "'"+options.variant     +"'" +", "
                     + options.turnsTimed      +", "
                     + options.timePerTurn     +", "
-                    + options.roundsTimed     +", "
-                    + options.timePerRound    +", "
+                    + options.playersTimed     +", "
+                    + options.timePerPlayer    +", "
                     + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
                     + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
 
@@ -191,8 +191,8 @@ function insertTablesAndDataIntoDB() {
           +"variant      VARCHAR(20), "
           +"turnstimed   BOOLEAN, "
           +"turntime     INT, "
-          +"roundstimed  BOOLEAN, "
-          +"roundtime    INT, "
+          +"playerstimed  BOOLEAN, "
+          +"timeperplayer    INT, "
           +"roomname      VARCHAR(20), "
           +"roompassword  VARCHAR(20))",
           function (err, result) {
@@ -218,11 +218,11 @@ function insertTablesAndDataIntoDB() {
         dbCon.query("CREATE TABLE IF NOT EXISTS actions ("
           +"id           INT AUTO_INCREMENT PRIMARY KEY, "
           +"gameid       INT, "
-          +"cardid           INT, "
-          +"stack    VARCHAR(20), "
+          +"cardid       INT, "
+          +"stack        VARCHAR(20), "
           +"faceup       BOOLEAN, "
           +"turntime     DECIMAL(8,2), "
-          +"roundtimer   DECIMAL(8,2), "
+          +"timeperplayer   DECIMAL(8,2), "
           +"CONSTRAINT  `card`        FOREIGN KEY (`cardid`)        REFERENCES `cards`(`id`), "
           +"CONSTRAINT  `game`        FOREIGN KEY (`gameid`)        REFERENCES `games`(`id`)) ",
           function (err, result) {

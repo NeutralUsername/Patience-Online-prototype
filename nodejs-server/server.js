@@ -90,8 +90,8 @@ function addPendingRoom (roomkey, options) {
             variant : options.variant,
             turnsTimed : options.turnsTimed,
             timePerTurn : options.timePerTurn,
-            roundsTimed : options.roundsTimed,
-            timePerRound : options.timePerRound,
+            playersTimed : options.playersTimed,
+            timePerPlayer : options.timePerPlayer,
             roomName : options.roomName,
             roomPassword : options.roomPassword,
         }
@@ -136,9 +136,9 @@ function optionsAreDifferent (options1, options2) {
         if (options1.throwOnMalus == options2.throwOnMalus)
           if (options1.variant == options2.variant)
             if (options1.turnsTimed == options2.turnsTimed)
-              if (options1.roundsTimed == options2.roundsTimed)  
+              if (options1.playersTimed == options2.playersTimed)  
                 if (options1.timePerTurn == options2.timePerTurn)
-                  if (options1.timePerRound == options2.timePerRound)
+                  if (options1.timePerPlayer == options2.timePerPlayer)
                     if (options1.roomName == options2.roomName)
                       if (options1.roomPassword == options2.roomPassword)
                         return false;
@@ -196,9 +196,9 @@ function optionsValid(options) {
         if(options.throwOnMalus === true || options.throwOnMalus === false)
           if(options.variant === 'Patience' || options.variant === 'Klondike')
             if(options.turnsTimed === true || options.turnsTimed === false)
-              if(options.roundsTimed === true || options.roundsTimed === false)
+              if(options.playersTimed === true || options.playersTimed === false)
                 if(options.timePerTurn >= 15 && options.timePerTurn <= 300)
-                  if(options.timePerRound >= 600 && options.timePerRound <= 3600)
+                  if(options.timePerPlayer >= 600 && options.timePerPlayer <= 3600)
                     return true;
   return false;
 }
