@@ -23,8 +23,8 @@ module.exports = {
   initGame : async function (red, black, reddeck, blackdeck, options) {
     if(await DBexists("gregaire")) 
       var dbCon = mysql.createConnection({
-        host: "localhost",
-        user: "gregaire",
+        host:     "localhost",
+        user:     "gregaire",
         password: "password",
         database: "gregaire"
       });
@@ -33,25 +33,25 @@ module.exports = {
         
           function(err) { if (err) throw err;
             dbCon.query ("SELECT id FROM options WHERE ( "
-              +"malussize    =  " +  options.malusSize    + " AND "
-              +"tableausize =  " +   options.tableauSize + " AND "
-              +"throwonwaste =  " +  options.throwOnWaste + " AND "
-              +"throwonmalus =  " +  options.throwOnMalus + " AND "
-              +"variant      ="+"'"+ options.variant+"'"  + " AND "
-              +"turnstimed   =  " +  options.turnsTimed   + " AND "
-              +"turntime     =  " +  options.timePerTurn  + " AND "
-              +"playerstimed  =  " + options.playersTimed  + " AND "
-              +"timeperplayer =  " + options.timePerPlayer +" AND "
-              +"roomname        " + (options.roomName     != "" ?"= '"+options.roomName+"'"     : "is null" )+" AND "
-              +"roompassword    " + (options.roomPassword != "" ? "= '"+options.roomPassword+"'" : "is null" ) +");", 
+              +"malussize     =  " +     options.malusSize          + " AND "
+              +"tableausize   =  " +     options.tableauSize        + " AND "
+              +"throwonwaste  =  " +     options.throwOnWaste       + " AND "
+              +"throwonmalus  =  " +     options.throwOnMalus       + " AND "
+              +"variant       =  " +"'"+ options.variant +"'"       + " AND "
+              +"turnstimed    =  " +     options.turnsTimed         + " AND "
+              +"turntime      =  " +     options.timePerTurn        + " AND "
+              +"playerstimed  =  " +     options.playersTimed       + " AND "
+              +"timeperplayer =  " +     options.timePerPlayer      + " AND "
+              +"roomname         " +    (options.roomName     != "" ? " = '"+options.roomName     +"'"     : "is null" ) +" AND "
+              +"roompassword     " +    (options.roomPassword != "" ? " = '"+options.roomPassword +"'"     : "is null" ) +");", 
 
               function (err, option) { if (err) throw err;  
                 if (option.length === 1) {
                   dbCon.query ("INSERT INTO games VALUES ( "
-                    +"0 ,"
-                    + option[0].id + ", "
-                    + "'"+red+"'" + ", "
-                    + "'"+black+"'" +");", 
+                    +      "0"          + " ,"
+                    +      option[0].id + ", "
+                    + "'"+ red + "'"    + ", "
+                    + "'"+ black + "'"  + ");", 
 
                     function (err, game) { if (err) throw err;
                       dealcards (reddeck, blackdeck, options, game.insertId, dbCon);    
@@ -63,25 +63,25 @@ module.exports = {
                 }
                 else {
                   dbCon.query("INSERT INTO options VALUES ( "
-                    +"0 ,"
-                    + options.malusSize       + ", "
-                    + options.tableauSize    +", "
-                    + options.throwOnWaste    +", "
-                    + options.throwOnMalus    +", "
-                    + "'"+options.variant     +"'" +", "
-                    + options.turnsTimed      +", "
-                    + options.timePerTurn     +", "
-                    + options.playersTimed     +", "
-                    + options.timePerPlayer    +", "
-                    + (options.roomName     != "" ? "'"+options.roomName+"'"     : "null" )+", "
-                    + (options.roomPassword != "" ? "'"+options.roomPassword+"'" : "null" )+");", 
+                    +     "0"                        +" ,"
+                    +     options.malusSize          +", "
+                    +     options.tableauSize        +", "
+                    +     options.throwOnWaste       +", "
+                    +     options.throwOnMalus       +", "
+                    + "'"+options.variant  +"'"      +", "
+                    +     options.turnsTimed         +", "
+                    +     options.timePerTurn        +", "
+                    +     options.playersTimed       +", "
+                    +     options.timePerPlayer      +", "
+                    +    (options.roomName     != "" ? "'"+ options.roomName+"'"     : "null" ) +", "
+                    +    (options.roomPassword != "" ? "'"+ options.roomPassword+"'" : "null" ) +");", 
 
                     function (err, option) { if (err) throw err;
                       dbCon.query ("INSERT INTO games VALUES ( "
-                        +"0 ,"
-                        + option.insertId + ", "
-                        + "'"+red+"'" + ", "
-                        + "'"+black+"'" +");", 
+                        +      "0"             +" ,"
+                        +      option.insertId + ", "
+                        + "'"+ red+"'"         + ", "
+                        + "'"+ black+"'"       + ");", 
 
                         function (err, game) { if (err) throw err;
                           dealcards (reddeck, blackdeck, options, game.insertId, dbCon);    
@@ -114,31 +114,31 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
               var card = player === 0 ? reddeck.pop() : blackdeck.pop();
               dbCon.query ("INSERT INTO actions VALUES ( "
                 + "0 ,"
-                + gameid                                                       +" , "
+                + gameid                                                   +" , "
                 + cards.find( x=> x.color === card.color && 
-                  x.suit == card.suit && x.value == card.value).id             +" , "
-                + ((player === 0) ? ("'redmalus'") : ("'blackmalus'"))        +" , "
-                + (malussize === options.malusSize-1 ? 1 : 0 )                 +" , "
-                + ((player === 0) ? ("'red'") : ("'black'"))                  +" , "
-                + 0                                                          +" , "
-                + options.timePerTurn                                        +" , "
-                + options.timePerPlayer                                     +");" )
+                  x.suit == card.suit && x.value == card.value).id         +" , "
+                + ((player === 0) ? ("'redmalus'") : ("'blackmalus'"))     +" , "
+                + (malussize === options.malusSize-1 ? 1 : 0 )             +" , "
+                + ((player === 0) ? ("'red'") : ("'black'"))               +" , "
+                + 0                                                        +" , "
+                + options.timePerTurn                                      +" , "
+                + options.timePerPlayer                                    +");" )
             }     
             for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
               for(var tableausize = 0 ; tableausize < options.tableauSize; tableausize++) {
                 var card = player === 0 ? reddeck.pop() : blackdeck.pop();
                 dbCon.query ("INSERT INTO actions VALUES ( "
                   + "0 ,"
-                  + gameid                                                    +" , "
+                  + gameid                                                +" , "
                   +  cards.find( x=> x.color === card.color && 
-                    x.suit == card.suit && x.value == card.value).id          +" , "
+                    x.suit == card.suit && x.value == card.value).id      +" , "
                   + "'"+"tableau"+((player === 0 )? 
                     (tableaunr+"r") : (tableaunr+"b")) +"'"+" , "
                     + (tableausize === options.tableauSize-1 ? 1 : 0 )    +" , "
-                  + ((player === 0) ? ("'red'") : ("'black'"))              +" , "
-                  + 0                                                          +" , "
-                  + options.timePerTurn                                        +" , "
-                  + options.timePerPlayer                                     +");" )
+                  + ((player === 0) ? ("'red'") : ("'black'"))            +" , "
+                  + 0                                                     +" , "
+                  + options.timePerTurn                                   +" , "
+                  + options.timePerPlayer                                 +");" )
               } 
             }
             for(var stock = 0 ; stock < (52 - (options.malusSize + (options.tableauSize*4))); stock ++ ) {
@@ -150,10 +150,10 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
                   x.suit == card.suit && x.value == card.value).id           +" , "
                 + "'"+((player === 0) ? ("redstock") : ("blackstock")) +"'"  +" , "
                 + 0                                                          +" , "
-                + ((player === 0) ? ("'red'") : ("'black'"))                +" , "
+                + ((player === 0) ? ("'red'") : ("'black'"))                 +" , "
                 + 0                                                          +" , "
                 + options.timePerTurn                                        +" , "
-                + options.timePerPlayer                                     +");" )
+                + options.timePerPlayer                                      +");" )
             } 
           }
         }
