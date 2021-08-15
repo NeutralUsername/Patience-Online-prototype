@@ -100,7 +100,7 @@ function addPendingRoom (roomkey, options) {
 }
 
 async function startPendingRoom (red, black) {
-    activeGames.push( game = await db.initGame (red, black, shuffle(freshDeck("red")).concat(shuffle(freshDeck("black"))) , returnPendingRoomIfExists(red).options ) );
+    activeGames.push( game = await db.initGame (red, black, shuffle(freshDeck("red")), shuffle(freshDeck("black")) , returnPendingRoomIfExists(red).options ) );
     removePendingRoomIfExists (red);
     removePendingRoomIfExists (black);
 
