@@ -112,7 +112,7 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
           for(var player = 0; player < 2 ; player++) {
             for(var malussize = 0 ; malussize < options.malusSize; malussize++) {
               if(malussize < 6)
-                while(player === 0 ? reddeck[reddeck.length-1].value < 4 : blackdeck[blackdeck.length-1].value < 4) {
+                while(player === 0 ? reddeck[reddeck.length-1].value < 6 : blackdeck[blackdeck.length-1].value < 6) {
                   player === 0 ? reddeck.splice(0, 0, reddeck.pop()) : blackdeck.splice(0, 0, blackdeck.pop())
                 } 
               var card = player === 0 ? reddeck.pop() : blackdeck.pop();
@@ -131,7 +131,7 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
             }     
             for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
               for(var tableausize = 0 ; tableausize < options.tableauSize; tableausize++) {
-                if(tableausize < 4)
+                if(tableausize < 3)
                   while(player === 0 ? reddeck[reddeck.length-1].value < 4 : blackdeck[blackdeck.length-1].value <4) {
                     player === 0 ? reddeck.splice(0, 0, reddeck.pop()) : blackdeck.splice(0, 0, blackdeck.pop())
                   } 
