@@ -113,7 +113,7 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
             for(var malussize = 0 ; malussize < options.malusSize; malussize++) {
               if(malussize < 6)
                 while(player === 0 ? reddeck[reddeck.length-1].value < 6 : blackdeck[blackdeck.length-1].value < 6) {
-                  player === 0 ? reddeck.splice(1, 0, reddeck.pop()) : blackdeck.splice(0, 0, blackdeck.pop())
+                  player === 0 ? reddeck = shuffle(reddeck) : blackdeck = shuffle(blackdeck)
                 } 
               var card = player === 0 ? reddeck.pop() : blackdeck.pop();
               dbCon.query ("INSERT INTO actions VALUES ( "
@@ -133,7 +133,7 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
               for(var tableausize = 0 ; tableausize < options.tableauSize; tableausize++) {
                 if(tableausize < options.tableauSize - 1)
                   while(player === 0 ? reddeck[reddeck.length-1].value < 4 : blackdeck[blackdeck.length-1].value <4) {
-                    player === 0 ? reddeck.splice(1, 0, reddeck.pop()) : blackdeck.splice(0, 0, blackdeck.pop())
+                    player === 0 ? reddeck = shuffle(reddeck) : blackdeck = shuffle(blackdeck)
                   } 
                 var card = player === 0 ? reddeck.pop() : blackdeck.pop();
                 dbCon.query ("INSERT INTO actions VALUES ( "
@@ -171,6 +171,17 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
       )
     }
   )
+}
+
+function shuffle (deck) {
+  var currentIndex = deck.length,  randomIndex;
+  while (0 !== currentIndex) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+      [deck[currentIndex], deck[randomIndex]] = [
+          deck[randomIndex], deck[currentIndex]];
+  } 
+  return deck;
 }
 
 function DBexists(name) {
