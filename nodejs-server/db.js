@@ -84,7 +84,7 @@ module.exports = {
                         + "'"+ black+"'"       + ");", 
 
                         function (err, game) { if (err) throw err;
-                          dealcards (reddeck, blackdeck, options, game.insertId, dbCon);    
+                          dealcards ( options, game.insertId, dbCon);    
                           resolve ({ 
                             id : game.insertId,
                           })   

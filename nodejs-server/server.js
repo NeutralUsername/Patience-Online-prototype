@@ -145,16 +145,6 @@ function optionsAreDifferent (options1, options2) {
   return true;
 }
 
-class Card {
-    constructor (color, suit, value) { 
-        this.color = color;
-        this.suit = suit;
-        this.value = value;
-        this.faceup = false;
-    }
-}
-
-
 app.route('/ping').get(controller.root);
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
 app.get('/', function (req, res) {
