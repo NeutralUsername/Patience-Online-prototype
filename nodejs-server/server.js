@@ -100,7 +100,7 @@ function addPendingRoom (roomkey, options) {
 }
 
 async function startPendingRoom (red, black) {
-    activeGames.push( game = await db.initGame (red, black, shuffle(freshDeck("red")), shuffle(freshDeck("black")) , returnPendingRoomIfExists(red).options ) );
+    activeGames.push( game = await db.initGame (red, black,  returnPendingRoomIfExists(red).options ) );
     removePendingRoomIfExists (red);
     removePendingRoomIfExists (black);
 
@@ -154,26 +154,6 @@ class Card {
     }
 }
 
-function freshDeck (color) {
-    const Suits = ["♥", "♠", "♦", "♣"];
-    const Values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-    return Suits.flatMap(suit => {
-        return Values.map(value => {
-            return new Card (color, suit, value)
-        });
-    });
-}  
-
-function shuffle (deck) {
-    var currentIndex = deck.length,  randomIndex;
-    while (0 !== currentIndex) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-        [deck[currentIndex], deck[randomIndex]] = [
-            deck[randomIndex], deck[currentIndex]];
-    } 
-    return deck;
-}
 
 app.route('/ping').get(controller.root);
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));

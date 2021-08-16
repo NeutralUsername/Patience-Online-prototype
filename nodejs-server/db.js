@@ -20,7 +20,7 @@ module.exports = {
     }
   },
 
-  initGame : async function (red, black, reddeck, blackdeck, options) {
+  initGame : async function (red, black, options) {
     if(await DBexists("gregaire")) 
       var dbCon = mysql.createConnection({
         host:     "localhost",
@@ -54,7 +54,7 @@ module.exports = {
                     + "'"+ black + "'"  + ");", 
 
                     function (err, game) { if (err) throw err;
-                      dealcards (reddeck, blackdeck, options, game.insertId, dbCon);    
+                      dealcards (options, game.insertId, dbCon);    
                       resolve ({ 
                         id : game.insertId,
                       })   
@@ -102,13 +102,15 @@ module.exports = {
   }
 }
 
-async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
-
+async function dealcards(options, gameid, dbCon) {
+  var reddeck = shuffle(freshdeck("red"));
+  var blackdeck = shuffle(freshdeck("black"));
   dbCon.connect (
     function(err) { if (err) throw err;
 
       dbCon.query ("SELECT * FROM cards ",
         function (err, cards) { if (err) throw err;  
+          
           for(var player = 0; player < 2 ; player++) {
             for(var malussize = 0 ; malussize < options.malusSize; malussize++) {
               if(malussize < 6)
@@ -172,6 +174,25 @@ async function dealcards(reddeck, blackdeck, options, gameid, dbCon) {
     }
   )
 }
+
+class Card {
+  constructor (color, suit, value) { 
+      this.color = color;
+      this.suit = suit;
+      this.value = value;
+      this.faceup = false;
+  }
+}
+
+function freshdeck (color) {
+  const Suits = ["♥", "♠", "♦", "♣"];
+  const Values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+  return Suits.flatMap(suit => {
+      return Values.map(value => {
+          return new Card (color, suit, value)
+      });
+  });
+}  
 
 function shuffle (deck) {
   var currentIndex = deck.length,  randomIndex;
