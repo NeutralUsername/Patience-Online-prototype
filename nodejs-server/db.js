@@ -43,7 +43,7 @@ module.exports = {
               +"playerstimed  =  " +     options.playersTimed       + " AND "
               +"timeperplayer =  " +     options.timePerPlayer      + " AND "
               +"roomname         " +    (options.roomName     != "" ? " = '"+options.roomName     +"'"  : "is null" ) +" AND "
-              +"roompassword     " +    (options.roomPassword != "" ? " = '"+options.roomPassword +"'"  : "is null" ) +");", 
+              +"roompassword     " +    (options.roomPassword != "" ? " = '"+options.roomPassword +"'"  : "is null" ) +" );", 
 
               function (err, option) { if (err) throw err;  
                 if (option.length === 1) {
@@ -99,6 +99,34 @@ module.exports = {
         )
       }
     )
+  },
+  getField : async function (gameid) {
+    if(await DBexists("gregaire")) 
+    var dbCon = mysql.createConnection({
+      host:     "localhost",
+      user:     "gregaire",
+      password: "password",
+      database: "gregaire"
+    });
+    return new Promise ((resolve) => {
+      dbCon.connect (
+
+        function(err) { if (err) throw err;
+          dbCon.query ("SELECT * FROM actions WHERE "
+            +"gameid = "+ gameid,
+
+            function (err, actions) { if (err) throw err;
+              if(actions.find(x=> x.turn > 0)) {
+                //continue games will ve implemented later
+              }
+              else {
+                
+              }
+            }
+          ) 
+        }
+      )
+    })
   }
 }
 
@@ -128,7 +156,7 @@ async function dealcards(options, gameid, dbCon) {
                 + ((player === 0) ? ("'red'") : ("'black'"))               +" , "
                 + 0                                                        +" , "
                 + options.timePerTurn                                      +" , "
-                + options.timePerPlayer                                    +");" 
+                + options.timePerPlayer                                    +" );" 
               )
             }     
             for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
@@ -149,7 +177,7 @@ async function dealcards(options, gameid, dbCon) {
                   + ((player === 0) ? ("'red'") : ("'black'"))            +" , "
                   + 0                                                     +" , "
                   + options.timePerTurn                                   +" , "
-                  + options.timePerPlayer                                 +");" 
+                  + options.timePerPlayer                                 +" );" 
                 )
               } 
             }
@@ -165,7 +193,7 @@ async function dealcards(options, gameid, dbCon) {
                 + ((player === 0) ? ("'red'") : ("'black'"))                 +" , "
                 + 0                                                          +" , "
                 + options.timePerTurn                                        +" , "
-                + options.timePerPlayer                                      +");" 
+                + options.timePerPlayer                                      +" );" 
               )
             } 
           }

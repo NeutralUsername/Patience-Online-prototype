@@ -101,8 +101,13 @@ function addPendingRoom (roomkey, options) {
 
 async function startPendingRoom (red, black) {
     activeGames.push( game = await db.initGame (red, black,  returnPendingRoomIfExists(red).options ) );
+    game.field = db.getField(game.id);
+    
     removePendingRoomIfExists (red);
     removePendingRoomIfExists (black);
+
+
+    //query field state
 
     io.to (red).emit ('startOnlineGameRES', { gameid : game.id });
     io.to (black).emit ('startOnlineGameRES' , {  gameid : game.id });
