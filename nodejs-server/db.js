@@ -112,7 +112,6 @@ async function getfield (gameid, options, dbCon) {
 
         }
         else {
-          console.log(actions);
           resolve ({
             center : {
               tableau : [],
