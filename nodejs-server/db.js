@@ -104,60 +104,6 @@ module.exports = {
   }
 }
 
-async function getfield (gameid, dbCon) {
- 
-  return new Promise ((resolve) => {
-    dbCon.connect (
-      async function(err) { if (err) throw err;
-        dbCon.query (" SELECT cardid, stack, faceup, turn FROM actions WHERE gameid =" + gameid,
-          function (err, actions) { if (err) throw err;
-            if(actions.find(x=> x.turn > 0)) {
-
-            }
-            else {
-              console.log(actions);
-              resolve ({
-                center : {
-                  tableau : {
-                    tableau0r : [],
-                    tableau1r : [],
-                    tableau2r : [],
-                    tableau3r : [],
-                    tableau0b : [],
-                    tableau1b : [],
-                    tableau2b : [],
-                    tableau3b : [],
-                  },
-                  foundation : {
-                    foundation0r : [],
-                    foundation1r : [],
-                    foundation2r : [],
-                    foundation3r : [],
-                    foundation0b : [],
-                    foundation1b : [],
-                    foundation2b : [],
-                    foundation3b : [],
-                  }
-                },
-                red : {
-                  stock : [],
-                  waste : [],
-                  malus : [],
-                },
-                black : {
-                  stock : [],
-                  waste : [],
-                  malus : [],
-                },
-              })
-            }
-          }
-        )
-      }
-    )
-  })
-}
-
 async function dealcards( gameid, options, dbCon) {
   return new Promise ((resolve) => {
     var reddeck = shuffle(freshdeck("red"));
@@ -232,6 +178,56 @@ async function dealcards( gameid, options, dbCon) {
                 resolve();
               }
             )      
+          }
+        )
+      }
+    )
+  })
+}
+
+async function getfield (gameid, dbCon) {
+ 
+  return new Promise ((resolve) => {
+    dbCon.connect (
+      async function(err) { if (err) throw err;
+        dbCon.query (" SELECT stack, faceup, cardid, MAX(id) FROM actions WHERE gameid =" + gameid+" GROUP BY cardid",
+          function (err, actions) { if (err) throw err;
+          
+            console.log(actions.length);
+            resolve ({
+              center : {
+                tableau : {
+                  tableau0r : [],
+                  tableau1r : [],
+                  tableau2r : [],
+                  tableau3r : [],
+                  tableau0b : [],
+                  tableau1b : [],
+                  tableau2b : [],
+                  tableau3b : [],
+                },
+                foundation : {
+                  foundation0r : [],
+                  foundation1r : [],
+                  foundation2r : [],
+                  foundation3r : [],
+                  foundation0b : [],
+                  foundation1b : [],
+                  foundation2b : [],
+                  foundation3b : [],
+                }
+              },
+              red : {
+                stock : [],
+                waste : [],
+                malus : [],
+              },
+              black : {
+                stock : [],
+                waste : [],
+                malus : [],
+              },
+            })
           }
         )
       }
