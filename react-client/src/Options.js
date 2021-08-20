@@ -45,7 +45,7 @@ export default class Options extends React.Component {
             return (
                 ReactDOM.render (
                     <Game
-                        gameid = {data.gameid}
+                        game = {data.game}
                         socket = {this.props.socket}
                     ></Game>,
                     document.getElementById ('root')
@@ -63,7 +63,7 @@ export default class Options extends React.Component {
             return (
                 ReactDOM.render (
                     <Game
-                        gameid = {data.gameid}
+                        game = {data.game}
                         socket = {this.props.socket}              
                     ></Game>,
                     document.getElementById ('root')
