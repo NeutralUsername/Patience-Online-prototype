@@ -190,7 +190,7 @@ async function getfield (gameid, dbCon) {
   return new Promise ((resolve) => {
     dbCon.connect (
       async function(err) { if (err) throw err;
-        dbCon.query (" SELECT c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.id) as id FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE gameid =" + gameid+" GROUP BY cardid",
+        dbCon.query (" SELECT c.color, c.suit, c.value, a.faceup, a.stack FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE gameid =" + gameid,
 
           function (err, actions) { if (err) throw err;
             resolve ({
