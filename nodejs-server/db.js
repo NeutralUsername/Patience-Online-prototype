@@ -112,17 +112,18 @@ async function getfield (gameid, options, dbCon) {
 
         }
         else {
+          console.log(actions);
           resolve ({
             center : {
               tableau : {
-                tableau0r : actions.filter( x => x.find(y => y === 'tableau0r')),
-                tableau1r : actions.filter( x => x.find(y => y === 'tableau1r')),
-                tableau2r : actions.filter( x => x.find(y => y === 'tableau2r')),
-                tableau3r : actions.filter( x => x.find(y => y === 'tableau3r')),
-                tableau0b : actions.filter( x => x.find(y => y === 'tableau0b')),
-                tableau1b : actions.filter( x => x.find(y => y === 'tableau1b')),
-                tableau2b : actions.filter( x => x.find(y => y === 'tableau2b')),
-                tableau3b : actions.filter( x => x.find(y => y === 'tableau3b')),
+                tableau0r : [],
+                tableau1r : [],
+                tableau2r : [],
+                tableau3r : [],
+                tableau0b : [],
+                tableau1b : [],
+                tableau2b : [],
+                tableau3b : [],
               },
               foundation : {
                 foundation0r : [],
@@ -136,14 +137,14 @@ async function getfield (gameid, options, dbCon) {
               }
             },
             red : {
-              stock : actions.filter( x => x.find(y => y === 'redstock')),
+              stock : [],
               waste : [],
-              malus : actions.filter( x => x.find(y => y === 'redmalus')),
+              malus : [],
             },
             black : {
-              stock : actions.filter( x => x.find(y => y === 'blackstock')),
+              stock : [],
               waste : [],
-              malus : actions.filter( x => x.find(y => y === 'blackmalus')),
+              malus : [],
             },
           })
         }
@@ -158,9 +159,9 @@ async function dealcards( gameid, options, dbCon) {
     var blackdeck = shuffle(freshdeck("black"));
     var values = [];
     dbCon.connect (
-      async function(err) { if (err) throw err;
+       function(err) { if (err) throw err;
         dbCon.query ("SELECT * FROM cards ",
-          async function (err, cards) { if (err) throw err;  
+           function (err, cards) { if (err) throw err;  
 
             for(var player = 0; player < 2 ; player++) {
               for(var malussize = 0 ; malussize < options.malusSize; malussize++) {
@@ -223,7 +224,11 @@ async function dealcards( gameid, options, dbCon) {
 
             dbCon.query ("INSERT INTO actions (id, gameid,cardid, stack, faceup, player, turn, remainingtimeturn, remainingtimeplayer) VALUES ?", [values],
               function (err, result) { if (err) throw err;
-                resolve(values);
+                dbCon.query (" SELECT cardid, stack, faceup FROM actions WHERE gameid =" + gameid,
+                  function (err, actions) { if (err) throw err;
+                    resolve(actions);
+                  }
+                )
               }
             )      
           }
