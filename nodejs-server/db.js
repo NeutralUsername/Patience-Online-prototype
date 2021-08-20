@@ -110,6 +110,53 @@ module.exports = {
   }
 }
 
+async function getfield (gameid, dbCon) {
+  //right now can only take gameid's of freshly initialized games. otherwise buggy
+   return new Promise ((resolve) => {
+     dbCon.connect (
+        function(err) { if (err) throw err;
+         dbCon.query (" SELECT c.color, c.suit, c.value, a.faceup, a.stack FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE gameid =" + gameid,
+           //for continuation need to modify query to only return the most recent occurence of each card per game
+           //for continuation theres still some other logic in regards to game timers missing
+           function (err, actions) { if (err) throw err;
+             resolve ({
+               center : {
+                 tableau0r : actions.filter(x=>x.stack === 'tableau0r'),
+                 tableau1r : actions.filter(x=>x.stack === 'tableau1r'),
+                 tableau2r : actions.filter(x=>x.stack === 'tableau2r'),
+                 tableau3r : actions.filter(x=>x.stack === 'tableau3r'),
+                 tableau0b : actions.filter(x=>x.stack === 'tableau0b'),
+                 tableau1b : actions.filter(x=>x.stack === 'tableau1b'),
+                 tableau2b : actions.filter(x=>x.stack === 'tableau2b'),
+                 tableau3b : actions.filter(x=>x.stack === 'tableau3b'),
+ 
+                 foundation0r : actions.filter(x=>x.stack === 'foundation0r'),
+                 foundation1r : actions.filter(x=>x.stack === 'foundation1r'),
+                 foundation2r : actions.filter(x=>x.stack === 'foundation2r'),
+                 foundation3r : actions.filter(x=>x.stack === 'foundation3r'),
+                 foundation0b : actions.filter(x=>x.stack === 'foundation0b'),
+                 foundation1b : actions.filter(x=>x.stack === 'foundation1b'),
+                 foundation2b : actions.filter(x=>x.stack === 'foundation2b'),
+                 foundation3b : actions.filter(x=>x.stack === 'foundation3b'),
+               },
+               red : {
+                 stock : actions.filter(x=>x.stack === 'redstock'),
+                 waste : actions.filter(x=>x.stack === 'redwaste'),
+                 malus : actions.filter(x=>x.stack === 'redmalus'),
+               },
+               black : {
+                 stock : actions.filter(x=>x.stack === 'blackstock'),
+                 waste : actions.filter(x=>x.stack === 'blackwaste'),
+                 malus : actions.filter(x=>x.stack === 'blackmalus'),
+               },
+             })
+           }
+         )
+       }
+     )
+   })
+ }
+
 async function dealcards( gameid, options, dbCon) {
   return new Promise ((resolve) => {
     var reddeck = shuffle(freshdeck("red"));
@@ -170,7 +217,7 @@ async function dealcards( gameid, options, dbCon) {
                   cards.find( x=> x.color === card.color && 
                     x.suit == card.suit && x.value == card.value).id,
                   ((player === 0) ? ('redstock') : ('blackstock')),
-                  (malussize === options.malusSize-1 ? 1 : 0 ) ,
+                  0,
                   ((player === 0) ? ('red') : ('black')),
                   0,
                   options.timePerTurn,
@@ -184,53 +231,6 @@ async function dealcards( gameid, options, dbCon) {
                 resolve();
               }
             )      
-          }
-        )
-      }
-    )
-  })
-}
-
-async function getfield (gameid, dbCon) {
- //right now can only take gameid's of freshly initialized games. otherwise buggy
-  return new Promise ((resolve) => {
-    dbCon.connect (
-       function(err) { if (err) throw err;
-        dbCon.query (" SELECT c.color, c.suit, c.value, a.faceup, a.stack FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE gameid =" + gameid,
-          //for continuation need to modify query to only return the most recent occurence of each card per game
-          //for continuation theres still some other logic in regards to game timers missing
-          function (err, actions) { if (err) throw err;
-            resolve ({
-              center : {
-                tableau0r : actions.filter(x=>x.stack === 'tableau0r'),
-                tableau1r : actions.filter(x=>x.stack === 'tableau1r'),
-                tableau2r : actions.filter(x=>x.stack === 'tableau2r'),
-                tableau3r : actions.filter(x=>x.stack === 'tableau3r'),
-                tableau0b : actions.filter(x=>x.stack === 'tableau0b'),
-                tableau1b : actions.filter(x=>x.stack === 'tableau1b'),
-                tableau2b : actions.filter(x=>x.stack === 'tableau2b'),
-                tableau3b : actions.filter(x=>x.stack === 'tableau3b'),
-
-                foundation0r : actions.filter(x=>x.stack === 'foundation0r'),
-                foundation1r : actions.filter(x=>x.stack === 'foundation1r'),
-                foundation2r : actions.filter(x=>x.stack === 'foundation2r'),
-                foundation3r : actions.filter(x=>x.stack === 'foundation3r'),
-                foundation0b : actions.filter(x=>x.stack === 'foundation0b'),
-                foundation1b : actions.filter(x=>x.stack === 'foundation1b'),
-                foundation2b : actions.filter(x=>x.stack === 'foundation2b'),
-                foundation3b : actions.filter(x=>x.stack === 'foundation3b'),
-              },
-              red : {
-                stock : actions.filter(x=>x.stack === 'redstock'),
-                waste : actions.filter(x=>x.stack === 'redwaste'),
-                malus : actions.filter(x=>x.stack === 'redmalus'),
-              },
-              black : {
-                stock : actions.filter(x=>x.stack === 'blackstock'),
-                waste : actions.filter(x=>x.stack === 'blackwaste'),
-                malus : actions.filter(x=>x.stack === 'blackmalus'),
-              },
-            })
           }
         )
       }
