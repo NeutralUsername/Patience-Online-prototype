@@ -112,7 +112,7 @@ async function dealcards( gameid, options, dbCon) {
     dbCon.connect (
        function(err) { if (err) throw err;
         dbCon.query ("SELECT * FROM cards ",
-           function (err, cards) { if (err) throw err;  
+           async function (err, cards) { if (err) throw err;  
 
             for(var player = 0; player < 2 ; player++) {
               for(var malussize = 0 ; malussize < options.malusSize; malussize++) {
@@ -190,42 +190,129 @@ async function getfield (gameid, dbCon) {
   return new Promise ((resolve) => {
     dbCon.connect (
       async function(err) { if (err) throw err;
-        dbCon.query (" SELECT stack, faceup, cardid, MAX(id) FROM actions WHERE gameid =" + gameid+" GROUP BY cardid",
+        dbCon.query (" SELECT c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.id) as id FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE gameid =" + gameid+" GROUP BY cardid",
+
           function (err, actions) { if (err) throw err;
-          
-            console.log(actions.length);
             resolve ({
               center : {
                 tableau : {
-                  tableau0r : [],
-                  tableau1r : [],
-                  tableau2r : [],
-                  tableau3r : [],
-                  tableau0b : [],
-                  tableau1b : [],
-                  tableau2b : [],
-                  tableau3b : [],
+                  tableau0r : actions.filter(x=>x.stack === 'tableau0r').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
+                  tableau1r : actions.filter(x=>x.stack === 'tableau1r').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
+                  tableau2r : actions.filter(x=>x.stack === 'tableau2r').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
+                  tableau3r : actions.filter(x=>x.stack === 'tableau3r').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
+                  tableau0b : actions.filter(x=>x.stack === 'tableau0b').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
+                  tableau1b : actions.filter(x=>x.stack === 'tableau1b').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
+                  tableau2b : actions.filter(x=>x.stack === 'tableau2b').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
+                  tableau3b : actions.filter(x=>x.stack === 'tableau3b').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
                 },
                 foundation : {
-                  foundation0r : [],
-                  foundation1r : [],
-                  foundation2r : [],
-                  foundation3r : [],
-                  foundation0b : [],
-                  foundation1b : [],
-                  foundation2b : [],
-                  foundation3b : [],
+                  foundation0r : actions.filter(x=>x.stack === 'foundation0r').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
+                  foundation1r : actions.filter(x=>x.stack === 'foundation1r').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
+                  foundation2r : actions.filter(x=>x.stack === 'foundation2r').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
+                  foundation3r : actions.filter(x=>x.stack === 'foundation3r').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
+                  foundation0b : actions.filter(x=>x.stack === 'foundation0b').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
+                  foundation1b : actions.filter(x=>x.stack === 'foundation1b').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
+                  foundation2b : actions.filter(x=>x.stack === 'foundation2b').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
+                  foundation3b : actions.filter(x=>x.stack === 'foundation3b').map (function(item){
+                    delete item.stack;
+                    delete item.id;
+                    return item;
+                  }),
                 }
               },
               red : {
-                stock : [],
-                waste : [],
-                malus : [],
+                stock : actions.filter(x=>x.stack === 'redstock').map (function(item){
+                  delete item.stack;
+                  delete item.id;
+                  return item;
+                }),
+                waste : actions.filter(x=>x.stack === 'redwaste').map (function(item){
+                  delete item.stack;
+                  delete item.id;
+                  return item;
+                }),
+                malus : actions.filter(x=>x.stack === 'redmalus').map (function(item){
+                  delete item.stack;
+                  delete item.id;
+                  return item;
+                }),
               },
               black : {
-                stock : [],
-                waste : [],
-                malus : [],
+                stock : actions.filter(x=>x.stack === 'blackstock').map (function(item){
+                  delete item.stack;
+                  delete item.id;
+                  return item;
+                }),
+                waste : actions.filter(x=>x.stack === 'blackwaste').map (function(item){
+                  delete item.stack;
+                  delete item.id;
+                  return item;
+                }),
+                malus : actions.filter(x=>x.stack === 'blackmalus').map (function(item){
+                  delete item.stack;
+                  delete item.id;
+                  return item;
+                }),
               },
             })
           }

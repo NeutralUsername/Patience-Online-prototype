@@ -108,7 +108,7 @@ async function startPendingRoom (red, black) {
     io.to (red).emit ('startOnlineGameRES', { game : game });
     io.to (black).emit ('startOnlineGameRES' , {  game : game });
     
-    updatePendingRoomsCLIENT (); console.log (red," vs. ", black, " gameid: ", game.id);
+    updatePendingRoomsCLIENT (); console.log (game.field.center.tableau);
 }
 
 function removePendingRoomIfExists (roomkey) {
