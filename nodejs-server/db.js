@@ -54,9 +54,10 @@ module.exports = {
                     + "'"+ black + "'"  + ");", 
 
                     async function (err, game) { if (err) throw err;
+                      await dealcards ( game.insertId , options, dbCon); 
                       resolve ({ 
                         id : game.insertId,
-                        field : await getfield(game.insertId, options, dbCon)
+                        field : await getfield(game.insertId, dbCon)
                       })   
                     }
                   )
@@ -84,9 +85,10 @@ module.exports = {
                         + "'"+ black+"'"       + ");", 
 
                         async function (err, game) { if (err) throw err;
+                          await dealcards ( game.insertId , options, dbCon); 
                           resolve ({ 
                             id : game.insertId,
-                            field : await getfield(game.insertId, options, dbCon)
+                            field : await getfield(game.insertId, dbCon)
                           })   
                         }
                       )
@@ -102,52 +104,55 @@ module.exports = {
   }
 }
 
-async function getfield (gameid, options, dbCon) {
+async function getfield (gameid, dbCon) {
  
   return new Promise ((resolve) => {
     dbCon.connect (
       async function(err) { if (err) throw err;
-        var actions = await dealcards ( gameid , options, dbCon); 
-        if(actions.find(x=> x.turn > 0)) {
+        dbCon.query (" SELECT cardid, stack, faceup, turn FROM actions WHERE gameid =" + gameid,
+          function (err, actions) { if (err) throw err;
+            if(actions.find(x=> x.turn > 0)) {
 
-        }
-        else {
-          console.log(actions);
-          resolve ({
-            center : {
-              tableau : {
-                tableau0r : [],
-                tableau1r : [],
-                tableau2r : [],
-                tableau3r : [],
-                tableau0b : [],
-                tableau1b : [],
-                tableau2b : [],
-                tableau3b : [],
-              },
-              foundation : {
-                foundation0r : [],
-                foundation1r : [],
-                foundation2r : [],
-                foundation3r : [],
-                foundation0b : [],
-                foundation1b : [],
-                foundation2b : [],
-                foundation3b : [],
-              }
-            },
-            red : {
-              stock : [],
-              waste : [],
-              malus : [],
-            },
-            black : {
-              stock : [],
-              waste : [],
-              malus : [],
-            },
-          })
-        }
+            }
+            else {
+              console.log(actions);
+              resolve ({
+                center : {
+                  tableau : {
+                    tableau0r : [],
+                    tableau1r : [],
+                    tableau2r : [],
+                    tableau3r : [],
+                    tableau0b : [],
+                    tableau1b : [],
+                    tableau2b : [],
+                    tableau3b : [],
+                  },
+                  foundation : {
+                    foundation0r : [],
+                    foundation1r : [],
+                    foundation2r : [],
+                    foundation3r : [],
+                    foundation0b : [],
+                    foundation1b : [],
+                    foundation2b : [],
+                    foundation3b : [],
+                  }
+                },
+                red : {
+                  stock : [],
+                  waste : [],
+                  malus : [],
+                },
+                black : {
+                  stock : [],
+                  waste : [],
+                  malus : [],
+                },
+              })
+            }
+          }
+        )
       }
     )
   })
@@ -224,11 +229,7 @@ async function dealcards( gameid, options, dbCon) {
 
             dbCon.query ("INSERT INTO actions (id, gameid,cardid, stack, faceup, player, turn, remainingtimeturn, remainingtimeplayer) VALUES ?", [values],
               function (err, result) { if (err) throw err;
-                dbCon.query (" SELECT cardid, stack, faceup FROM actions WHERE gameid =" + gameid,
-                  function (err, actions) { if (err) throw err;
-                    resolve(actions);
-                  }
-                )
+                resolve();
               }
             )      
           }
