@@ -56,7 +56,7 @@ module.exports = {
                     async function (err, game) { if (err) throw err; 
                       resolve ({ 
                         id : game.insertId,
-                        field : await newfield(game.insertId, options, dbCon),
+                        field : await getfield(game.insertId, options, dbCon),
                         timerr : options.timePerPlayer,
                         timerb : options.timePerPlayer,
                         turntimer : options.timePerTurn,
@@ -92,7 +92,7 @@ module.exports = {
                         async function (err, game) { if (err) throw err;
                           resolve ({ 
                             id : game.insertId,
-                            field : await newfield(game.insertId, options, dbCon),
+                            field : await getfield(game.insertId, options, dbCon),
                             timerr : options.timePerPlayer,
                             timerb : options.timePerPlayer,
                             turntimer : options.timePerTurn,
@@ -114,7 +114,11 @@ module.exports = {
   }
 }
 
-async function newfield (gameid, options, dbCon) {
+async function insertmove() {
+  
+}
+
+async function getfield (gameid, options, dbCon) {
   await dealcards ( gameid , options, dbCon); 
   return new Promise ((resolve) => {
     dbCon.connect (
