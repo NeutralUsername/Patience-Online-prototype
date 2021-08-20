@@ -114,18 +114,36 @@ async function getfield (gameid, options, dbCon) {
         else {
           resolve ({
             center : {
-              tableau : [],
-              foundation : []
+              tableau : {
+                tableau0r : actions.filter( x => x.find(y => y === 'tableau0r')),
+                tableau1r : actions.filter( x => x.find(y => y === 'tableau1r')),
+                tableau2r : actions.filter( x => x.find(y => y === 'tableau2r')),
+                tableau3r : actions.filter( x => x.find(y => y === 'tableau3r')),
+                tableau0b : actions.filter( x => x.find(y => y === 'tableau0b')),
+                tableau1b : actions.filter( x => x.find(y => y === 'tableau1b')),
+                tableau2b : actions.filter( x => x.find(y => y === 'tableau2b')),
+                tableau3b : actions.filter( x => x.find(y => y === 'tableau3b')),
+              },
+              foundation : {
+                foundation0r : [],
+                foundation1r : [],
+                foundation2r : [],
+                foundation3r : [],
+                foundation0b : [],
+                foundation1b : [],
+                foundation2b : [],
+                foundation3b : [],
+              }
             },
             red : {
-              stock : actions.filter( x => x.stack === 'redstock'),
+              stock : actions.filter( x => x.find(y => y === 'redstock')),
               waste : [],
-              malus : actions.filter( x => x.stack === 'redmalus'),
+              malus : actions.filter( x => x.find(y => y === 'redmalus')),
             },
             black : {
-              stock : actions.filter( x => x.stack === 'blackstock'),
+              stock : actions.filter( x => x.find(y => y === 'blackstock')),
               waste : [],
-              malus : actions.filter( x => x.stack === 'blackmalus'),
+              malus : actions.filter( x => x.find(y => y === 'blackmalus')),
             },
           })
         }
