@@ -88,7 +88,13 @@ module.exports = {
                           await dealcards ( game.insertId , options, dbCon); 
                           resolve ({ 
                             id : game.insertId,
-                            field : await getfield(game.insertId, dbCon)
+                            field : await getfield(game.insertId, dbCon),
+                            timerr : options.timePerPlayer,
+                            timerb : options.timePerPlayer,
+                            turntimer : options.timePerTurn,
+                            throwOnWaste : options.throwOnWaste,
+                            throwOnMalus : options.throwOnMalus,
+                            variant : options.variant,
                           })   
                         }
                       )
@@ -148,7 +154,7 @@ async function dealcards( gameid, options, dbCon) {
                       x.suit == card.suit && x.value == card.value).id,
                     'tableau'+((player === 0 ) ? 
                       (tableaunr+'r') : (tableaunr+'b')),
-                    (malussize === options.malusSize-1 ? 1 : 0 ) ,
+                    (tableausize === options.tableauSize-1 ? 1 : 0 ) ,
                     ((player === 0) ? ('red') : ('black')),
                     0,
                     options.timePerTurn,
@@ -189,9 +195,9 @@ async function getfield (gameid, dbCon) {
  //right now can only take gameid's of freshly initialized games. otherwise buggy
   return new Promise ((resolve) => {
     dbCon.connect (
-      async function(err) { if (err) throw err;
+       function(err) { if (err) throw err;
         dbCon.query (" SELECT c.color, c.suit, c.value, a.faceup, a.stack FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE gameid =" + gameid,
-          //need to modify query to only return the most recent occurence of each card per game to also use it for game continuation
+          //for continuation need to modify query to only return the most recent occurence of each card per game
           //for continuation theres still some other logic in regards to game timers missing
           function (err, actions) { if (err) throw err;
             resolve ({
