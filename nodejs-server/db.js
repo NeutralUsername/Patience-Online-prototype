@@ -38,9 +38,7 @@ module.exports = {
               +"throwonwaste  =  " +     options.throwOnWaste       + " AND "
               +"throwonmalus  =  " +     options.throwOnMalus       + " AND "
               +"variant       =  " +"'"+ options.variant +"'"       + " AND "
-              +"turnstimed    =  " +     options.turnsTimed         + " AND "
               +"turntime      =  " +     options.timePerTurn        + " AND "
-              +"playerstimed  =  " +     options.playersTimed       + " AND "
               +"timeperplayer =  " +     options.timePerPlayer      + " AND "
               +"roomname         " +    (options.roomName     != "" ? " = '"+options.roomName     +"'"  : "is null" ) +" AND "
               +"roompassword     " +    (options.roomPassword != "" ? " = '"+options.roomPassword +"'"  : "is null" ) +" );", 
@@ -57,15 +55,17 @@ module.exports = {
                     async function (err, game) { if (err) throw err; 
                       await dealcards ( game.insertId , options, created, dbCon); 
                       resolve ({ 
-                        id : game.insertId,
-                        field : await getfield(game.insertId, dbCon),
-                        turntimer : options.timePerTurn,
-                        redtimer : options.timePerPlayer,
-                        blacktimer : options.timePerPlayer,
-                        player : 'red',
-                        throwOnWaste : options.throwOnWaste,
-                        throwOnMalus : options.throwOnMalus,
-                        variant : options.variant,
+                        id :            game.insertId,
+                        field :         await getfield(game.insertId, dbCon),
+                        turntimer :     options.timePerTurn,
+                        redtimer :      options.timePerPlayer,
+                        blacktimer :    options.timePerPlayer,
+                        player :        'red',
+                        throwOnWaste :  options.throwOnWaste,
+                        throwOnMalus :  options.throwOnMalus,
+                        variant :       options.variant,
+                        timePerPlayer : options.timePerPlayer,
+                        timePerTurn :   options.timePerTurn,
                       })   
                     }
                   )
@@ -78,9 +78,7 @@ module.exports = {
                     +     options.throwOnWaste       +", "
                     +     options.throwOnMalus       +", "
                     + "'"+options.variant  +"'"      +", "
-                    +     options.turnsTimed         +", "
                     +     options.timePerTurn        +", "
-                    +     options.playersTimed       +", "
                     +     options.timePerPlayer      +", "
                     +    (options.roomName     != "" ? "'"+ options.roomName+"'"     : "null" ) +", "
                     +    (options.roomPassword != "" ? "'"+ options.roomPassword+"'" : "null" ) +");", 
@@ -96,15 +94,17 @@ module.exports = {
                         async function (err, game) { if (err) throw err;
                           await dealcards ( game.insertId , options, created, dbCon); 
                           resolve ({ 
-                            id : game.insertId,
-                            field : await getfield(game.insertId, dbCon),
-                            turntimer : options.timePerTurn,
-                            redtimer : options.timePerPlayer,
-                            blacktimer : options.timePerPlayer,
-                            player : 'red',
-                            throwOnWaste : options.throwOnWaste,
-                            throwOnMalus : options.throwOnMalus,
-                            variant : options.variant,
+                            id :            game.insertId,
+                            field :         await getfield(game.insertId, dbCon),
+                            turntimer :     options.timePerTurn,
+                            redtimer :      options.timePerPlayer,
+                            blacktimer :    options.timePerPlayer,
+                            player :        'red',
+                            throwOnWaste :  options.throwOnWaste,
+                            throwOnMalus :  options.throwOnMalus,
+                            variant :       options.variant,
+                            timePerPlayer : options.timePerPlayer,
+                            timePerTurn :   options.timePerTurn,
                           })   
                         }
                       )
@@ -231,7 +231,6 @@ async function dealcards( gameid, options, created, dbCon) {
               }
             }
             dbCon.query ("INSERT INTO actions (id, gameid, cardid, stack, faceup, player, turn, moved) VALUES ?", [values],
-
               function (err, result) { if (err) throw err;
                 resolve();
               }
@@ -307,9 +306,7 @@ function insertTablesAndDataIntoDB() {
           +"throwonwaste  BOOLEAN, "
           +"throwonmalus  BOOLEAN, "
           +"variant       VARCHAR(20), "
-          +"turnstimed    BOOLEAN, "
           +"turntime      INT, "
-          +"playerstimed  BOOLEAN, "
           +"timeperplayer INT, "
           +"roomname      VARCHAR(20), "
           +"roompassword  VARCHAR(20))",

@@ -88,10 +88,8 @@ function addPendingRoom (roomkey, options) {
             throwOnWaste : options.throwOnWaste,
             throwOnMalus : options.throwOnMalus,
             variant : options.variant,
-            turnsTimed : options.turnsTimed,
-            timePerTurn : options.timePerTurn,
-            playersTimed : options.playersTimed,
-            timePerPlayer : options.timePerPlayer,
+            timePerTurn : options.turnsTimed ? options.timePerTurn : -1337,
+            timePerPlayer :  options.timePerPlayer,
             roomName : options.roomName,
             roomPassword : options.roomPassword,
         }
@@ -100,6 +98,7 @@ function addPendingRoom (roomkey, options) {
 }
 
 async function startPendingRoom (red, black) {
+
     var date = new Date();
     date = date.getUTCFullYear() + '-' +
         ('00' + (date.getUTCMonth()+1)).slice(-2) + '-' +
@@ -107,6 +106,7 @@ async function startPendingRoom (red, black) {
         ('00' + date.getUTCHours()).slice(-2) + ':' + 
         ('00' + date.getUTCMinutes()).slice(-2) + ':' + 
         ('00' + date.getUTCSeconds()).slice(-2);
+
     activeGames.push( game = await db.initGame (red, black,  returnPendingRoomIfExists(red).options, date ) );
     
     removePendingRoomIfExists (red);
@@ -115,7 +115,7 @@ async function startPendingRoom (red, black) {
     io.to (red).emit ('startOnlineGameRES', { game : game });
     io.to (black).emit ('startOnlineGameRES' , {  game : game });
     
-    updatePendingRoomsCLIENT (); console.log (game.field.red.malus);
+    updatePendingRoomsCLIENT (); console.log (activeGames.length);
 }
 
 function removePendingRoomIfExists (roomkey) {
@@ -142,13 +142,12 @@ function optionsAreDifferent (options1, options2) {
       if (options1.throwOnWaste == options2.throwOnWaste)
         if (options1.throwOnMalus == options2.throwOnMalus)
           if (options1.variant == options2.variant)
-            if (options1.turnsTimed == options2.turnsTimed)
-              if (options1.playersTimed == options2.playersTimed)  
-                if (options1.timePerTurn == options2.timePerTurn)
-                  if (options1.timePerPlayer == options2.timePerPlayer)
-                    if (options1.roomName == options2.roomName)
-                      if (options1.roomPassword == options2.roomPassword)
-                        return false;
+            if (options1.turnsTimed == options2.turnsTimed) 
+              if (options1.timePerTurn == options2.timePerTurn)
+                if (options1.timePerPlayer == options2.timePerPlayer)
+                  if (options1.roomName == options2.roomName)
+                    if (options1.roomPassword == options2.roomPassword)
+                      return false;
   return true;
 }
 

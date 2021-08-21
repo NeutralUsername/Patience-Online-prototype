@@ -14,8 +14,7 @@ export default class Options extends React.Component {
             variant : "Patience",
             turnsTimed : false,
             timePerTurn : 90,
-            playersTimed : false,
-            timePerPlayer : 2700,
+            timePerPlayer : 1800,
             roomName : '',
             roomPassword : '',
             pendingRooms : [],
@@ -28,7 +27,6 @@ export default class Options extends React.Component {
         this.handleVariantChange = this.handleVariantChange.bind (this);
         this.handleTurnsTimedChange = this.handleTurnsTimedChange.bind (this);
         this.handleTimePerTurnChange = this.handleTimePerTurnChange.bind (this);
-        this.handlePlayersTimedChange = this.handlePlayersTimedChange.bind (this);
         this.handleTimePerPlayerChange = this.handleTimePerPlayerChange.bind (this);
         this.handleRoomNameChange = this.handleRoomNameChange.bind (this);
         this.handleRoomPasswordChange = this.handleRoomPasswordChange.bind (this);
@@ -111,7 +109,6 @@ export default class Options extends React.Component {
             variant : options.variant,
             turnsTimed : options.turnsTimed,
             timePerTurn : options.timePerTurn,
-            playersTimed : options.playersTimed,
             timePerPlayer : options.timePerPlayer,
             roomName : (!options.roomName.replace(/\s/g, '').length) ? roomkey : options.roomName  
         })
@@ -137,9 +134,6 @@ export default class Options extends React.Component {
     }
     handleTimePerTurnChange (timePerTurn) {
         this.setState ({timePerTurn : timePerTurn })
-    }
-    handlePlayersTimedChange (playersTimed) {
-        this.setState ({playersTimed : playersTimed })
     }
     handleTimePerPlayerChange (timePerPlayer) {
         this.setState ({timePerPlayer : timePerPlayer })
@@ -187,8 +181,6 @@ export default class Options extends React.Component {
                     onValueChange = {this.handleTimePerTurnChange}
                 ></TimedTurns>
                 <TimedPlayers
-                    playersTimed = {this.state.playersTimed}
-                    onBoolChange = {this.handlePlayersTimedChange}
                     timePerPlayer = {this.state.timePerPlayer}
                     onValueChange = {this.handleTimePerPlayerChange}
                 ></TimedPlayers>
@@ -437,20 +429,10 @@ class TimedPlayers extends React.Component {
     render () {
         return (
             <div
-                className = {"playersimed"} >
+                className = {"timedplayers"} >
                 <label
-                    htmlFor = "playerstimed" >
+                    htmlFor = "timedplayers" >
                     Limit time for each player
-                </label>
-                <input
-                    checked = { this.props.playersTimed}
-                    onChange = {this.handleBoolChange}
-                    id = {"playerstimed"}
-                    type = "checkbox"
-                ></input>
-                <label
-                    htmlFor="timeperplayer">
-                    Duration
                 </label>
                 <select
                     value = { this.props.timePerPlayer}
