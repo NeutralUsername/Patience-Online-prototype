@@ -20,13 +20,13 @@ module.exports = {
     }
   },
 
-  initGame : async function (red, black, options) {
+  initGame : async function (red, black, options, created) {
     if(await DBexists("gregaire")) 
       var dbCon = mysql.createConnection({
         host:     "localhost",
         user:     "gregaire",
         password: "password",
-        database: "gregaire"
+        database: "gregaire",
       });
       return new Promise ((resolve) => {
         dbCon.connect (
@@ -50,16 +50,14 @@ module.exports = {
                   dbCon.query ("INSERT INTO games VALUES ( "
                     +      "0"          + " ,"
                     +      option[0].id + ", "
+                    + "'"+created+ "'" + ", "
                     + "'"+ red + "'"    + ", "
                     + "'"+ black + "'"  + ");", 
 
                     async function (err, game) { if (err) throw err; 
                       resolve ({ 
                         id : game.insertId,
-                        field : await getfield(game.insertId, options, dbCon),
-                        timerr : options.timePerPlayer,
-                        timerb : options.timePerPlayer,
-                        turntimer : options.timePerTurn,
+                        field : await getfield(game.insertId, options, created, dbCon),
                         throwOnWaste : options.throwOnWaste,
                         throwOnMalus : options.throwOnMalus,
                         variant : options.variant,
@@ -86,16 +84,14 @@ module.exports = {
                       dbCon.query ("INSERT INTO games VALUES ( "
                         +      "0"             +" ,"
                         +      option.insertId + ", "
+                        + "'"+created+ "'" + ", "
                         + "'"+ red+"'"         + ", "
                         + "'"+ black+"'"       + ");", 
 
                         async function (err, game) { if (err) throw err;
                           resolve ({ 
                             id : game.insertId,
-                            field : await getfield(game.insertId, options, dbCon),
-                            timerr : options.timePerPlayer,
-                            timerb : options.timePerPlayer,
-                            turntimer : options.timePerTurn,
+                            field : await getfield(game.insertId, options, created, dbCon),
                             throwOnWaste : options.throwOnWaste,
                             throwOnMalus : options.throwOnMalus,
                             variant : options.variant,
@@ -114,12 +110,10 @@ module.exports = {
   }
 }
 
-async function insertmove() {
-  
-}
 
-async function getfield (gameid, options, dbCon) {
-  await dealcards ( gameid , options, dbCon); 
+
+async function getfield (gameid, options, created, dbCon) {
+  await dealcards ( gameid , options, created, dbCon); 
   return new Promise ((resolve) => {
     dbCon.connect (
       function(err) { if (err) throw err;
@@ -163,7 +157,7 @@ async function getfield (gameid, options, dbCon) {
   })
 }
 
-async function dealcards( gameid, options, dbCon) {
+async function dealcards( gameid, options, created, dbCon) {
   return new Promise ((resolve) => {
     var reddeck = shuffle(freshdeck("red"));
     var blackdeck = shuffle(freshdeck("black"));
@@ -189,8 +183,7 @@ async function dealcards( gameid, options, dbCon) {
                   (malussize === options.malusSize-1 ? 1 : 0 ) ,
                   ((player === 0) ? ('red') : ('black')),
                   0,
-                  options.timePerTurn,
-                  options.timePerPlayer
+                  created
                 ]);
               } 
               for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
@@ -210,8 +203,7 @@ async function dealcards( gameid, options, dbCon) {
                     (tableausize === options.tableauSize-1 ? 1 : 0 ) ,
                     ((player === 0) ? ('red') : ('black')),
                     0,
-                    options.timePerTurn,
-                    options.timePerPlayer
+                    created
                   ]);
                 } 
               }
@@ -226,13 +218,12 @@ async function dealcards( gameid, options, dbCon) {
                   0,
                   ((player === 0) ? ('red') : ('black')),
                   0,
-                  options.timePerTurn,
-                  options.timePerPlayer
+                  created
                 ]);
               }
             }
 
-            dbCon.query ("INSERT INTO actions (id, gameid,cardid, stack, faceup, player, turn, remainingtimeturn, remainingtimeplayer) VALUES ?", [values],
+            dbCon.query ("INSERT INTO actions (id, gameid, cardid, stack, faceup, player, turn, moved) VALUES ?", [values],
               function (err, result) { if (err) throw err;
                 resolve();
               }
@@ -319,6 +310,7 @@ function insertTablesAndDataIntoDB() {
           dbCon.query("CREATE TABLE IF NOT EXISTS games ("
           +"id                   INT AUTO_INCREMENT PRIMARY KEY, "
           +"optionid             INT, "
+          +"started              DATETIME, "
           +"redid                VARCHAR(20), "
           +"blackid              VARCHAR(20), "
           +"CONSTRAINT `option`   FOREIGN KEY (`optionid`)    REFERENCES `options`(`id`))", 
@@ -341,8 +333,7 @@ function insertTablesAndDataIntoDB() {
           +"faceup               BOOLEAN, "
           +"player               VARCHAR(20), "
           +"turn                 INT, "
-          +"remainingtimeturn    DECIMAL(8,2), "
-          +"remainingtimeplayer  DECIMAL(8,2), "
+          +"moved                DATETIME, "
           +"CONSTRAINT  `card`    FOREIGN KEY (`cardid`)    REFERENCES `cards`(`id`), "
           +"CONSTRAINT  `game`    FOREIGN KEY (`gameid`)    REFERENCES `games`(`id`)) ",
           function (err, result) {
