@@ -55,9 +55,10 @@ module.exports = {
                     + "'"+ black + "'"  + ");", 
 
                     async function (err, game) { if (err) throw err; 
+                      await dealcards ( game.insertId , options, created, dbCon); 
                       resolve ({ 
                         id : game.insertId,
-                        field : await getfield(game.insertId, options, created, dbCon),
+                        field : await getfield(game.insertId, dbCon),
                         throwOnWaste : options.throwOnWaste,
                         throwOnMalus : options.throwOnMalus,
                         variant : options.variant,
@@ -89,9 +90,10 @@ module.exports = {
                         + "'"+ black+"'"       + ");", 
 
                         async function (err, game) { if (err) throw err;
+                          await dealcards ( game.insertId , options, created, dbCon); 
                           resolve ({ 
                             id : game.insertId,
-                            field : await getfield(game.insertId, options, created, dbCon),
+                            field : await getfield(game.insertId, dbCon),
                             throwOnWaste : options.throwOnWaste,
                             throwOnMalus : options.throwOnMalus,
                             variant : options.variant,
@@ -112,12 +114,14 @@ module.exports = {
 
 
 
-async function getfield (gameid, options, created, dbCon) {
-  await dealcards ( gameid , options, created, dbCon); 
+async function getfield (gameid, dbCon) {
+ 
   return new Promise ((resolve) => {
     dbCon.connect (
+
       function(err) { if (err) throw err;
-        dbCon.query (" SELECT c.color, c.suit, c.value, a.faceup, a.stack FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE (a.gameid =" + gameid+" AND a.turn = 0 )",
+        dbCon.query (" SELECT c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
+
           function (err, actions) { if (err) throw err;
             resolve ({
               center : {
@@ -163,10 +167,11 @@ async function dealcards( gameid, options, created, dbCon) {
     var blackdeck = shuffle(freshdeck("black"));
     var values = [];
     dbCon.connect (
+
        function(err) { if (err) throw err;
         dbCon.query ("SELECT * FROM cards ",
-           async function (err, cards) { if (err) throw err;  
 
+           async function (err, cards) { if (err) throw err;  
             for(var player = 0; player < 2 ; player++) {
               for(var malussize = 0 ; malussize < options.malusSize; malussize++) {
                 if(malussize < 6)
@@ -222,8 +227,8 @@ async function dealcards( gameid, options, created, dbCon) {
                 ]);
               }
             }
-
             dbCon.query ("INSERT INTO actions (id, gameid, cardid, stack, faceup, player, turn, moved) VALUES ?", [values],
+
               function (err, result) { if (err) throw err;
                 resolve();
               }
@@ -266,20 +271,21 @@ function shuffle (deck) {
 }
 
 function DBexists(name) {
-    return new Promise ((resolve) => {
-        var createDBcon = mysql.createConnection({
-            host:     "localhost",
-            user:     "gregaire",
-            password: "password",
-        });
-        createDBcon.connect(function(err) {
-            if (err) throw err;
-            createDBcon.query("SHOW DATABASES LIKE '"+name+"';", 
-            function (err, result) {
-                resolve( result.length);
-            });
-        }); 
-    })
+  return new Promise ((resolve) => {
+    var createDBcon = mysql.createConnection({
+        host:     "localhost",
+        user:     "gregaire",
+        password: "password",
+    });
+    createDBcon.connect(function(err) {
+      if (err) throw err;
+        createDBcon.query("SHOW DATABASES LIKE '"+name+"';", 
+          function (err, result) {
+            resolve( result.length);
+          }
+        );
+    }); 
+  })
 }
 
 function insertTablesAndDataIntoDB() {
