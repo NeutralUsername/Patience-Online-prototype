@@ -59,6 +59,10 @@ module.exports = {
                       resolve ({ 
                         id : game.insertId,
                         field : await getfield(game.insertId, dbCon),
+                        turntimer : options.timePerTurn,
+                        redtimer : options.timePerPlayer,
+                        blacktimer : options.timePerPlayer,
+                        player : 'red',
                         throwOnWaste : options.throwOnWaste,
                         throwOnMalus : options.throwOnMalus,
                         variant : options.variant,
@@ -94,6 +98,10 @@ module.exports = {
                           resolve ({ 
                             id : game.insertId,
                             field : await getfield(game.insertId, dbCon),
+                            turntimer : options.timePerTurn,
+                            redtimer : options.timePerPlayer,
+                            blacktimer : options.timePerPlayer,
+                            player : 'red',
                             throwOnWaste : options.throwOnWaste,
                             throwOnMalus : options.throwOnMalus,
                             variant : options.variant,
@@ -112,13 +120,9 @@ module.exports = {
   }
 }
 
-
-
 async function getfield (gameid, dbCon) {
- 
   return new Promise ((resolve) => {
     dbCon.connect (
-
       function(err) { if (err) throw err;
         dbCon.query (" SELECT c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
 
@@ -167,7 +171,6 @@ async function dealcards( gameid, options, created, dbCon) {
     var blackdeck = shuffle(freshdeck("black"));
     var values = [];
     dbCon.connect (
-
        function(err) { if (err) throw err;
         dbCon.query ("SELECT * FROM cards ",
 
