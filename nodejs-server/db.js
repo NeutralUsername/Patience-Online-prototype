@@ -127,7 +127,7 @@ async function getfield (gameid, dbCon) {
   return new Promise ((resolve) => {
     dbCon.connect (
       function(err) { if (err) throw err;
-        dbCon.query (" SELECT c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
+        dbCon.query (" SELECT c.id, c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
 
           function (err, actions) { if (err) throw err;
             resolve ({

@@ -77,12 +77,13 @@ io.on ('connection', function (socket) {
     })
 
     socket.on ('GameMountedREQ', async function ( data) {
+        var game = activeGames.find(x=>x.id === data.id);
         socket.emit ('GameMountedRES', {
-            field : activeGames.find(x=>x.id === data.id).field,
-            redtimer : activeGames.find(x=>x.id === data.id).redtimer, 
-            blacktimer : activeGames.find(x=>x.id === data.id).blacktimer,
-            turntimer : activeGames.find(x=>x.id === data.id).turntimer,
-            turncolor : activeGames.find(x=>x.id === data.id).turncolor
+            field : hideFaceDownCardsFromClient(game.field),
+            redtimer : game.redtimer, 
+            blacktimer : game.blacktimer,
+            turntimer : game.turntimer,
+            turncolor : game.turncolor
         });
     });
 
@@ -115,7 +116,6 @@ function addTimersToGame (game) {
     socket.emit ('UpdateFieldRES', {roomkey : data.roomkey});
     socket.emit ('UpdateTimerRES', {roomkey : data.roomkey});
     socket.emit ('UpdateTurnColorRES', {roomkey : data.roomkey});
-
 }
 
 function addPendingRoom (roomkey, options) {
@@ -176,7 +176,194 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/testSocketConnection.html');
 });
 
+function hideFaceDownCardsFromClient (field) {
+    return {
+        field : {
+            red : {
+                malus : field.red.malus.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                stock : field.red.stock.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                waste : field.red.waste.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+            },
+            center : {
+                tableau0r : field.center.tableau0r.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                tableau1r :  field.center.tableau1r.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                tableau2r : field.center.tableau2r.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                tableau3r :  field.center.tableau3r.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                tableau0b :  field.center.tableau0b.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                tableau1b :  field.center.tableau1b.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                tableau2b :  field.center.tableau2b.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                tableau3b :  field.center.tableau3b.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
 
+                foundation0r : field.center.foundation0r.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                foundation1r : field.center.foundation1r.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                foundation2r : field.center.foundation2r.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                foundation3r : field.center.foundation3r.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                foundation0b : field.center.foundation0b.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                foundation1b : field.center.foundation1b.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                foundation2b : field.center.foundation2b.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                foundation3b : field.center.foundation3b.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+            },
+            black : {
+                malus : field.black.malus.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                stock : field.black.stock.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+                waste : field.black.waste.map( x=> {
+                    if(x.faceup===0) {
+                        delete x.id;
+                        delete x.suit;
+                        delete x.value;
+                    }
+                    return x;
+                }),
+            }
+    }}
+}
 
 
 
