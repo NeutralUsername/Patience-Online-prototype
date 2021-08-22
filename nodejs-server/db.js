@@ -56,16 +56,17 @@ module.exports = {
                       await dealcards ( game.insertId , options, created, dbCon); 
                       resolve ({ 
                         id :            game.insertId,
-                        field :         await getfield(game.insertId, dbCon),
-                        turntimer :     options.timePerTurn,
-                        redtimer :      options.timePerPlayer,
-                        blacktimer :    options.timePerPlayer,
-                        player :        'red',
                         throwOnWaste :  options.throwOnWaste,
                         throwOnMalus :  options.throwOnMalus,
                         variant :       options.variant,
                         timePerPlayer : options.timePerPlayer,
                         timePerTurn :   options.timePerTurn,
+
+                        playerAtTurn :  'red',
+                        field :         await getfield(game.insertId, dbCon),
+                        turntimer :     options.timePerTurn,
+                        redtimer :      options.timePerPlayer,
+                        blacktimer :    options.timePerPlayer,
                       })   
                     }
                   )
@@ -95,16 +96,15 @@ module.exports = {
                           await dealcards ( game.insertId , options, created, dbCon); 
                           resolve ({ 
                             id :            game.insertId,
-                            field :         await getfield(game.insertId, dbCon),
-                            turntimer :     options.timePerTurn,
-                            redtimer :      options.timePerPlayer,
-                            blacktimer :    options.timePerPlayer,
-                            player :        'red',
                             throwOnWaste :  options.throwOnWaste,
                             throwOnMalus :  options.throwOnMalus,
                             variant :       options.variant,
-                            timePerPlayer : options.timePerPlayer,
                             timePerTurn :   options.timePerTurn,
+    
+                            playerAtTurn :  'red',
+                            field :         await getfield(game.insertId, dbCon),
+                            redtimer :      options.timePerPlayer,
+                            blacktimer :    options.timePerPlayer,
                           })   
                         }
                       )

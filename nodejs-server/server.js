@@ -24,6 +24,8 @@ io.on ('connection', function (socket) {
         },96);
     });
 
+    
+
     socket.on ('startAIgameREQ', async function (data) {
         try {
             await rateLimiter.consume (socket.handshake.address);
@@ -79,6 +81,13 @@ io.on ('connection', function (socket) {
     });
 });
 
+
+
+setTimeout(PlayerTimeout, 100000);
+function PlayerTimeout() {
+    console.log("endinggame# ");
+}
+
 function addPendingRoom (roomkey, options) {
      pendingOnlineRooms.push ({
         roomkey : roomkey,
@@ -108,12 +117,21 @@ async function startPendingRoom (red, black) {
         ('00' + date.getUTCSeconds()).slice(-2);
 
     activeGames.push( game = await db.initGame (red, black,  returnPendingRoomIfExists(red).options, date ) );
-    
+
+    if(game.player === 'red')
+        setTimeout(playertimeout, game.redtimer*1000);
+    if(game.player === 'black')
+        setTimeout(playertimeout, game.blacktimer*1000);
+    function playertimeout() {
+        game.player === 'red' ? "black won" : "red won"
+    }
+
     removePendingRoomIfExists (red);
     removePendingRoomIfExists (black);
 
-    io.to (red).emit ('startOnlineGameRES', { game : game });
-    io.to (black).emit ('startOnlineGameRES' , {  game : game });
+
+    io.to (red).emit ('startOnlineGameRES', { id : game.id, throwOnWaste : game.throwOnWaste, throwOnMalus : game.throwOnMalus, variant : game.variant });
+    io.to (black).emit ('startOnlineGameRES' , { id : game.id, throwOnWaste : game.throwOnWaste, throwOnMalus : game.throwOnMalus, variant : game.variant });
     
     updatePendingRoomsCLIENT (); console.log (activeGames.length);
 }
