@@ -66,6 +66,7 @@ export default class Options extends React.Component {
                         throwOnMalus = {data.throwOnMalus}
                         variant = {data.variant}
                         color = {data.color}
+                        initialState = {data.initialState}
                         socket = {this.props.socket}              
                     ></Game>,
                     document.getElementById ('root')
