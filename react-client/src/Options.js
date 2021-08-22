@@ -61,7 +61,11 @@ export default class Options extends React.Component {
             return (
                 ReactDOM.render (
                     <Game
-                        game = {data.game}
+                        id = {data.id}
+                        throwOnWaste = {data.throwOnWaste}
+                        throwOnMalus = {data.throwOnMalus}
+                        variant = {data.variant}
+                        color = {data.color}
                         socket = {this.props.socket}              
                     ></Game>,
                     document.getElementById ('root')

@@ -16,7 +16,7 @@ db.createDBifNotExists();
 const pendingOnlineRooms = [];
 const activeGames = [];
 io.on ('connection', function (socket) {
-    updatePendingRoomsCLIENT ();
+    updatePendingRoomsCLIENTS ();
 
     socket.on('serverTimeREQ',  () => {
         setInterval(function () {
@@ -84,16 +84,17 @@ io.on ('connection', function (socket) {
 async function startPendingRoom (red, black) {
     activeGames.push( game = await db.initGame (red, black,  returnPendingRoomIfExists(red).options, new Date() ) );
 
-    addTimersToRoom(game);
+    addTimersToGame(game);
 
     removePendingRoomIfExists (red); removePendingRoomIfExists (black);
 
-    io.to (red).to (black).emit ('startOnlineGameRES', { id : game.id, throwOnWaste : game.throwOnWaste, throwOnMalus : game.throwOnMalus, variant : game.variant });
+    io.to (red).emit ('startOnlineGameRES', { id : game.id, color : 'red', throwOnWaste : game.throwOnWaste, throwOnMalus : game.throwOnMalus, variant : game.variant });
+    io.to (black).emit ('startOnlineGameRES', { id : game.id, color : 'black', throwOnWaste : game.throwOnWaste, throwOnMalus : game.throwOnMalus, variant : game.variant });
     
-    updatePendingRoomsCLIENT (); console.log (activeGames.length);
+    updatePendingRoomsCLIENTS (); console.log (activeGames.length);
 }
 
-function addTimersToRoom (game) {
+function addTimersToGame (game) {
     if(game.player === 'red')
         setTimeout(playertimeout, game.redtimer*1000);
     if(game.player === 'black')
@@ -118,13 +119,13 @@ function addPendingRoom (roomkey, options) {
             roomPassword : options.roomPassword,
         }
      });
-    updatePendingRoomsCLIENT ();
+    updatePendingRoomsCLIENTS ();
 }
 
-function removePendingRoomIfExists (roomkey) {
-    if (returnPendingRoomIfExists (roomkey)) {
-        pendingOnlineRooms.splice (pendingOnlineRooms.findIndex (e => e.roomkey == roomkey), 1);
-        updatePendingRoomsCLIENT ();
+function removePendingRoomIfExists(roomkey)  {
+    if  (returnPendingRoomIfExists (roomkey)) {
+         pendingOnlineRooms.splice (pendingOnlineRooms.findIndex (e => e.roomkey == roomkey), 1);
+         updatePendingRoomsCLIENTS ();
     }
 }
 
@@ -135,7 +136,7 @@ function returnPendingRoomIfExists (roomkey) {
         return false;
 }
 
-function updatePendingRoomsCLIENT () {
+function updatePendingRoomsCLIENTS () {
     io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms});
 }
 

@@ -100,10 +100,12 @@ module.exports = {
                             throwOnWaste :  options.throwOnWaste,
                             throwOnMalus :  options.throwOnMalus,
                             variant :       options.variant,
-                            timePerTurn :   options.timePerTurn,
-    
-                            playerAtTurn :  'red',
+                            red :           red,
+                            black :         black,
+
                             field :         await getfield(game.insertId, dbCon),
+                            playerAtTurn :  'red',
+                            timePerTurn :   options.timePerTurn,
                             redtimer :      options.timePerPlayer,
                             blacktimer :    options.timePerPlayer,
                           })   
@@ -178,7 +180,7 @@ async function dealcards( gameid, options, created, dbCon) {
            async function (err, cards) { if (err) throw err;  
             for(var player = 0; player < 2 ; player++) {
               for(var malussize = 0 ; malussize < options.malusSize; malussize++) {
-                if(malussize < 6)
+                if (malussize < 6)
                   while(player === 0 ? reddeck[reddeck.length-1].value < 6 : blackdeck[blackdeck.length-1].value < 6) {
                     player === 0 ? reddeck = shuffle(reddeck) : blackdeck = shuffle(blackdeck)
                   } 
@@ -330,7 +332,7 @@ function insertTablesAndDataIntoDB() {
           +"started              DATETIME, "
           +"redid                VARCHAR(20), "
           +"blackid              VARCHAR(20), "
-          +"CONSTRAINT `option`   FOREIGN KEY (`optionid`)    REFERENCES `options`(`id`))", 
+          +"CONSTRAINT `option`  FOREIGN KEY (`optionid`)    REFERENCES `options`(`id`))", 
           function (err, result) {
             if (err) throw err;
         });
@@ -351,8 +353,8 @@ function insertTablesAndDataIntoDB() {
           +"player               VARCHAR(20), "
           +"turn                 INT, "
           +"moved                DATETIME, "
-          +"CONSTRAINT  `card`    FOREIGN KEY (`cardid`)    REFERENCES `cards`(`id`), "
-          +"CONSTRAINT  `game`    FOREIGN KEY (`gameid`)    REFERENCES `games`(`id`)) ",
+          +"CONSTRAINT  `card`   FOREIGN KEY (`cardid`)    REFERENCES `cards`(`id`), "
+          +"CONSTRAINT  `game`   FOREIGN KEY (`gameid`)    REFERENCES `games`(`id`)) ",
           function (err, result) {
             if (err) throw err;
         });
