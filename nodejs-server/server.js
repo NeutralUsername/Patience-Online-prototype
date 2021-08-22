@@ -76,15 +76,14 @@ io.on ('connection', function (socket) {
                 startPendingRoom (data.roomkey, socket.id);
     })
 
-    socket.on ('updateGameREQ', async function ( data) {
-        socket.emit ('UpdateFieldRES', {field : activeGames.find(x=>x.id === data.id).field});
-
-        socket.emit ('UpdateTimerRES', { 
+    socket.on ('GameMountedREQ', async function ( data) {
+        socket.emit ('GameMountedRES', {
+            field : activeGames.find(x=>x.id === data.id).field,
             redtimer : activeGames.find(x=>x.id === data.id).redtimer, 
             blacktimer : activeGames.find(x=>x.id === data.id).blacktimer,
             turntimer : activeGames.find(x=>x.id === data.id).turntimer,
+            turncolor : activeGames.find(x=>x.id === data.id).turncolor
         });
-        socket.emit ('UpdateTurnColorRES', {turncolor : activeGames.find(x=>x.id === data.id).turncolor});
     });
 
     socket.on ('disconnect', function () {
