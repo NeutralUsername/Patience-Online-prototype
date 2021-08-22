@@ -86,7 +86,7 @@ async function addActiveRoom (red, black) {
     removePendingRoomIfExists (red); 
     removePendingRoomIfExists (black);
     //startTurn(game.id);
-    io.to (red).to (black).emit ('startOnlineGameRES', { 
+    io.to (red).emit ('startOnlineGameRES', { 
         id : game.id, 
         color : 'red', 
         throwOnWaste : game.throwOnWaste, 
