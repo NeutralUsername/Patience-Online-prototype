@@ -59,7 +59,7 @@ io.on ('connection', function (socket) {
             await rateLimiter.consume (socket.handshake.address);
             if (data.roomkey != socket.id)
                 if (returnPendingRoomIfExists (data.roomkey)) {
-                    if (returnPendingRoomIfExists (data.roomkey).options.roomPassword.length  == 0) 
+                    if (returnPendingRoomIfExists (data.roomkey).options.roomPassword.length  === 0) 
                         startPendingRoom (data.roomkey, socket.id);
                     else 
                         socket.emit ('roomPasswordREQ', {roomkey : data.roomkey});
@@ -76,17 +76,6 @@ io.on ('connection', function (socket) {
                 startPendingRoom (data.roomkey, socket.id);
     })
 
-    socket.on ('GameMountedREQ', async function ( data) {
-        var game = activeGames.find(x=>x.id === data.id);
-        socket.emit ('GameMountedRES', {
-            field : hideFaceDownCardsFromClient(game.field),
-            redtimer : game.redtimer, 
-            blacktimer : game.blacktimer,
-            turntimer : game.turntimer,
-            turncolor : game.turncolor
-        });
-    });
-
     socket.on ('disconnect', function () {
         removePendingRoomIfExists (socket.id);
     });
@@ -94,16 +83,57 @@ io.on ('connection', function (socket) {
 
 async function startPendingRoom (red, black) {
     activeGames.push( game = await db.initGame (red, black,  returnPendingRoomIfExists(red).options, new Date() ) );
-    //addTimersToGame(game);
+    
     removePendingRoomIfExists (red); removePendingRoomIfExists (black);
 
-    io.to (red).emit ('startOnlineGameRES', { id : game.id, color : 'red', throwOnWaste : game.throwOnWaste, throwOnMalus : game.throwOnMalus, variant : game.variant });
-    io.to (black).emit ('startOnlineGameRES', { id : game.id, color : 'black', throwOnWaste : game.throwOnWaste, throwOnMalus : game.throwOnMalus, variant : game.variant });
-    
+    //startTurn(game.id);
+
+    io.to (red).emit ('startOnlineGameRES', { 
+        id : game.id, 
+        color : 'red', 
+        throwOnWaste : game.throwOnWaste, 
+        throwOnMalus : game.throwOnMalus, 
+        variant : game.variant,
+        initialState : {
+            field :         hideFaceDownCardsFromClient(game.field),
+            redtimer :      game.redtimer,
+            blacktimer :    game.blacktimer,
+            turntimer :     game.turntimer,
+            turncolor :     game.turncolor,  
+         } 
+    });
+       
+    io.to (black).emit ('startOnlineGameRES', { 
+        id : game.id, 
+        color : 'black', 
+        throwOnWaste : game.throwOnWaste, 
+        throwOnMalus : game.throwOnMalus, 
+        variant : game.variant,
+        initialState : {
+            field :         hideFaceDownCardsFromClient(game.field),
+            redtimer :      game.redtimer,
+            blacktimer :    game.blacktimer,
+            turntimer :     game.turntimer,
+            turncolor :     game.turncolor,  
+         } 
+    });
     updatePendingRoomsCLIENTS (); console.log (activeGames.length);
 }
 
-function addTimersToGame (game) {
+function hideFaceDownCardsFromClient (field) {
+    for(var stack in field) {
+        for(var card of field[stack]) {
+            if(card.faceup === 0) {
+                delete card.id;
+                delete card.value;
+                delete card.suit;
+            }
+        }
+    }
+    return field;
+ }
+
+function startTurn (game) {
     if(game.turncolor === 'red')
         setTimeout(playertimeout, game.redtimer*1000);
     else 
@@ -167,27 +197,13 @@ function optionsAreDifferent (options1, options2) {
   return true;
 }
 
-
 app.route('/ping').get(controller.root);
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/testSocketConnection.html');
 });
 
-function hideFaceDownCardsFromClient (field) {
-   for(var stack in field) {
-        if(field[stack].length > 0)
-            for(var card of field[stack]) {
-                if(card.faceup === 0) {
-                    delete card.id;
-                    delete card.value;
-                    delete card.suit;
-                }
-                console.log(card);
-            }
-   }
-   return field;
-}
+
 
 
 
