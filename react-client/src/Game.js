@@ -15,7 +15,6 @@ export default class Game extends React.Component{
         };
     }
 
-
     componentDidMount () {
         this.mounted = true;
         this.props.socket.emit('GameMountedREQ', {

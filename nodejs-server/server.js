@@ -94,9 +94,7 @@ io.on ('connection', function (socket) {
 
 async function startPendingRoom (red, black) {
     activeGames.push( game = await db.initGame (red, black,  returnPendingRoomIfExists(red).options, new Date() ) );
-
     //addTimersToGame(game);
-   
     removePendingRoomIfExists (red); removePendingRoomIfExists (black);
 
     io.to (red).emit ('startOnlineGameRES', { id : game.id, color : 'red', throwOnWaste : game.throwOnWaste, throwOnMalus : game.throwOnMalus, variant : game.variant });

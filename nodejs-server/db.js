@@ -96,18 +96,19 @@ module.exports = {
                         async function (err, game) { if (err) throw err;
                           await dealcards ( game.insertId , options, sqlstarted, dbCon); 
                           resolve ({ 
+                            //props (constant)
                             id :            game.insertId,
                             throwOnWaste :  options.throwOnWaste,
                             throwOnMalus :  options.throwOnMalus,
                             variant :       options.variant,
                             red :           red,
                             black :         black,
-
+                            //state (changing)
                             field :         await getfield(game.insertId, dbCon),
-                            turncolor :     'red',
-                            turntimer :     options.timePerTurn,
                             redtimer :      options.timePerPlayer,
                             blacktimer :    options.timePerPlayer,
+                            turntimer :     options.timePerTurn,
+                            turncolor :     'red',  
                           })   
                         }
                       )
