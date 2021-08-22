@@ -132,7 +132,6 @@ async function getfield (gameid, dbCon) {
 
           function (err, actions) { if (err) throw err;
             resolve ({
-              center : {
                 tableau0r : actions.filter(x=>x.stack === 'tableau0r'),
                 tableau1r : actions.filter(x=>x.stack === 'tableau1r'),
                 tableau2r : actions.filter(x=>x.stack === 'tableau2r'),
@@ -141,7 +140,6 @@ async function getfield (gameid, dbCon) {
                 tableau1b : actions.filter(x=>x.stack === 'tableau1b'),
                 tableau2b : actions.filter(x=>x.stack === 'tableau2b'),
                 tableau3b : actions.filter(x=>x.stack === 'tableau3b'),
-
                 foundation0r : actions.filter(x=>x.stack === 'foundation0r'),
                 foundation1r : actions.filter(x=>x.stack === 'foundation1r'),
                 foundation2r : actions.filter(x=>x.stack === 'foundation2r'),
@@ -150,17 +148,14 @@ async function getfield (gameid, dbCon) {
                 foundation1b : actions.filter(x=>x.stack === 'foundation1b'),
                 foundation2b : actions.filter(x=>x.stack === 'foundation2b'),
                 foundation3b : actions.filter(x=>x.stack === 'foundation3b'),
-              },
-              red : {
-                stock : actions.filter(x=>x.stack === 'redstock'),
-                waste : actions.filter(x=>x.stack === 'redwaste'),
-                malus : actions.filter(x=>x.stack === 'redmalus'),
-              },
-              black : {
-                stock : actions.filter(x=>x.stack === 'blackstock'),
-                waste : actions.filter(x=>x.stack === 'blackwaste'),
-                malus : actions.filter(x=>x.stack === 'blackmalus'),
-              },
+              
+                redstock : actions.filter(x=>x.stack === 'redstock'),
+                redwaste : actions.filter(x=>x.stack === 'redwaste'),
+                redmalus : actions.filter(x=>x.stack === 'redmalus'),
+               
+                blackstock : actions.filter(x=>x.stack === 'blackstock'),
+                blackwaste : actions.filter(x=>x.stack === 'blackwaste'),
+                blackmalus : actions.filter(x=>x.stack === 'blackmalus'),
             })
           }
         )
