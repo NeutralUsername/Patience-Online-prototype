@@ -59,12 +59,12 @@ module.exports = {
                       var startcolor = await determinestartingplayer(field.redmalus, field.blackmalus)
                       resolve ({ 
                         //props (constant)
+                        red :           red,
+                        black :         black,
                         id :            game.insertId,
                         throwOnWaste :  options.throwOnWaste,
                         throwOnMalus :  options.throwOnMalus,
                         variant :       options.variant,
-                        red :           red,
-                        black :         black,
                         //state (changing)
                         field :         field,
                         redtimer :      options.timePerPlayer,
@@ -136,8 +136,6 @@ async function determinestartingplayer(redmalus, blackmalus) {
     red += parseInt(redmalus[i].value);
     black += parseInt(blackmalus[i].value);
   }
-  console.log(red);
-  console.log(black);
   return red >= black ? 'red' : 'black';
 }
 

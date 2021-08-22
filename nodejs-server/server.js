@@ -60,7 +60,7 @@ io.on ('connection', function (socket) {
             if (data.roomkey != socket.id)
                 if (returnPendingRoomIfExists (data.roomkey)) {
                     if (returnPendingRoomIfExists (data.roomkey).options.roomPassword.length  === 0) 
-                        startPendingRoom (data.roomkey, socket.id);
+                        addActiveRoom (data.roomkey, socket.id);
                     else 
                         socket.emit ('roomPasswordREQ', {roomkey : data.roomkey});
                 }
@@ -73,7 +73,7 @@ io.on ('connection', function (socket) {
     socket.on ('roomPasswordRES' , async function ( data) {
         if(data.password != undefined)
             if (returnPendingRoomIfExists (data.roomkey).options.roomPassword == data.password) 
-                startPendingRoom (data.roomkey, socket.id);
+                addActiveRoom (data.roomkey, socket.id);
     })
 
     socket.on ('disconnect', function () {
@@ -81,30 +81,13 @@ io.on ('connection', function (socket) {
     });
 });
 
-async function startPendingRoom (red, black) {
+async function addActiveRoom (red, black) {
     activeGames.push( game = await db.initGame (red, black,  returnPendingRoomIfExists(red).options, new Date() ) );
-    
     removePendingRoomIfExists (red); 
     removePendingRoomIfExists (black);
     //startTurn(game.id);
-    io.to (red).emit ('startOnlineGameRES', { 
+    io.to (red).to (black).emit ('startOnlineGameRES', { 
         id : game.id, 
-        color : 'red', 
-        throwOnWaste : game.throwOnWaste, 
-        throwOnMalus : game.throwOnMalus, 
-        variant : game.variant,
-        initialState : {
-            field :         hideFaceDownCardsFromClient(game.field),
-            redtimer :      game.redtimer,
-            blacktimer :    game.blacktimer,
-            turntimer :     game.turntimer,
-            turncolor :     game.turncolor,  
-         } 
-    });
-       
-    io.to (black).emit ('startOnlineGameRES', { 
-        id : game.id, 
-        color : 'black', 
         throwOnWaste : game.throwOnWaste, 
         throwOnMalus : game.throwOnMalus, 
         variant : game.variant,
