@@ -81,11 +81,26 @@ io.on ('connection', function (socket) {
     });
 });
 
+async function startPendingRoom (red, black) {
+    activeGames.push( game = await db.initGame (red, black,  returnPendingRoomIfExists(red).options, new Date() ) );
 
+    addTimersToRoom(game);
 
-setTimeout(PlayerTimeout, 100000);
-function PlayerTimeout() {
-    console.log("endinggame# ");
+    removePendingRoomIfExists (red); removePendingRoomIfExists (black);
+
+    io.to (red).to (black).emit ('startOnlineGameRES', { id : game.id, throwOnWaste : game.throwOnWaste, throwOnMalus : game.throwOnMalus, variant : game.variant });
+    
+    updatePendingRoomsCLIENT (); console.log (activeGames.length);
+}
+
+function addTimersToRoom (game) {
+    if(game.player === 'red')
+        setTimeout(playertimeout, game.redtimer*1000);
+    if(game.player === 'black')
+        setTimeout(playertimeout, game.blacktimer*1000);
+    function playertimeout() {
+        game.player === 'red' ? "black won" : "red won"
+    }
 }
 
 function addPendingRoom (roomkey, options) {
@@ -104,36 +119,6 @@ function addPendingRoom (roomkey, options) {
         }
      });
     updatePendingRoomsCLIENT ();
-}
-
-async function startPendingRoom (red, black) {
-
-    var date = new Date();
-    date = date.getUTCFullYear() + '-' +
-        ('00' + (date.getUTCMonth()+1)).slice(-2) + '-' +
-        ('00' + date.getUTCDate()).slice(-2) + ' ' + 
-        ('00' + date.getUTCHours()).slice(-2) + ':' + 
-        ('00' + date.getUTCMinutes()).slice(-2) + ':' + 
-        ('00' + date.getUTCSeconds()).slice(-2);
-
-    activeGames.push( game = await db.initGame (red, black,  returnPendingRoomIfExists(red).options, date ) );
-
-    if(game.player === 'red')
-        setTimeout(playertimeout, game.redtimer*1000);
-    if(game.player === 'black')
-        setTimeout(playertimeout, game.blacktimer*1000);
-    function playertimeout() {
-        game.player === 'red' ? "black won" : "red won"
-    }
-
-    removePendingRoomIfExists (red);
-    removePendingRoomIfExists (black);
-
-
-    io.to (red).emit ('startOnlineGameRES', { id : game.id, throwOnWaste : game.throwOnWaste, throwOnMalus : game.throwOnMalus, variant : game.variant });
-    io.to (black).emit ('startOnlineGameRES' , { id : game.id, throwOnWaste : game.throwOnWaste, throwOnMalus : game.throwOnMalus, variant : game.variant });
-    
-    updatePendingRoomsCLIENT (); console.log (activeGames.length);
 }
 
 function removePendingRoomIfExists (roomkey) {
@@ -168,6 +153,7 @@ function optionsAreDifferent (options1, options2) {
                       return false;
   return true;
 }
+
 
 app.route('/ping').get(controller.root);
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));

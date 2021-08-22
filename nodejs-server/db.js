@@ -20,7 +20,7 @@ module.exports = {
     }
   },
 
-  initGame : async function (red, black, options, created) {
+  initGame : async function (red, black, options, started) {
     if(await DBexists("gregaire")) 
       var dbCon = mysql.createConnection({
         host:     "localhost",
@@ -28,6 +28,7 @@ module.exports = {
         password: "password",
         database: "gregaire",
       });
+      var sqlstarted = sqlCompatibleDate(started);
       return new Promise ((resolve) => {
         dbCon.connect (
         
@@ -48,12 +49,12 @@ module.exports = {
                   dbCon.query ("INSERT INTO games VALUES ( "
                     +      "0"          + " ,"
                     +      option[0].id + ", "
-                    + "'"+created+ "'" + ", "
+                    + "'"+sqlstarted+ "'" + ", "
                     + "'"+ red + "'"    + ", "
                     + "'"+ black + "'"  + ");", 
 
                     async function (err, game) { if (err) throw err; 
-                      await dealcards ( game.insertId , options, created, dbCon); 
+                      await dealcards ( game.insertId , options, sqlstarted, dbCon); 
                       resolve ({ 
                         id :            game.insertId,
                         throwOnWaste :  options.throwOnWaste,
@@ -88,12 +89,12 @@ module.exports = {
                       dbCon.query ("INSERT INTO games VALUES ( "
                         +      "0"             +" ,"
                         +      option.insertId + ", "
-                        + "'"+created+ "'" + ", "
+                        + "'"+sqlstarted+ "'" + ", "
                         + "'"+ red+"'"         + ", "
                         + "'"+ black+"'"       + ");", 
 
                         async function (err, game) { if (err) throw err;
-                          await dealcards ( game.insertId , options, created, dbCon); 
+                          await dealcards ( game.insertId , options, sqlstarted, dbCon); 
                           resolve ({ 
                             id :            game.insertId,
                             throwOnWaste :  options.throwOnWaste,
@@ -240,6 +241,16 @@ async function dealcards( gameid, options, created, dbCon) {
       }
     )
   })
+}
+
+function sqlCompatibleDate(date) {
+  var sqlcompatibledate = date;
+  return sqlcompatibledate = sqlcompatibledate.getUTCFullYear() + '-' +
+  ('00' + (sqlcompatibledate.getUTCMonth()+1)).slice(-2) + '-' +
+  ('00' + sqlcompatibledate.getUTCDate()).slice(-2) + ' ' + 
+  ('00' + sqlcompatibledate.getUTCHours()).slice(-2) + ':' + 
+  ('00' + sqlcompatibledate.getUTCMinutes()).slice(-2) + ':' + 
+  ('00' + sqlcompatibledate.getUTCSeconds()).slice(-2);
 }
 
 class Card {
