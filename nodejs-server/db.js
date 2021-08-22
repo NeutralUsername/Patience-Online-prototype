@@ -56,8 +56,7 @@ module.exports = {
                     async function (err, game) { if (err) throw err; 
                       await dealcards ( game.insertId , options, sqlstarted, dbCon); 
                       var field =  await getfield(game.insertId, dbCon);
-                      console.log(field.redmalus[options.malusSize-1].value);
-                      console.log(field.blackmalus[options.malusSize-1].value);
+                      var startcolor = await determinestartingplayer(field.redmalus, field.blackmalus)
                       resolve ({ 
                         //props (constant)
                         id :            game.insertId,
@@ -71,12 +70,7 @@ module.exports = {
                         redtimer :      options.timePerPlayer,
                         blacktimer :    options.timePerPlayer,
                         turntimer :     options.timePerTurn,
-                        turncolor :     parseInt(field.redmalus[options.malusSize-1].value) !=  parseInt(field.blackmalus[options.malusSize-1].value)  ?
-                                          parseInt(field.redmalus[options.malusSize-1].value) >  parseInt(field.blackmalus[options.malusSize-1].value) ? 'red' : 'black' :
-                                            parseInt(field.redmalus[options.malusSize-2].value) !=  parseInt(field.blackmalus[options.malusSize-2].value) ? 
-                                              parseInt(field.redmalus[options.malusSize-2].value) >  parseInt(field.blackmalus[options.malusSize-2].value) ? 'red' : 'black' :
-                                                parseInt(field.redmalus[options.malusSize-3].value) >=  parseInt(field.blackmalus[options.malusSize-3].value) ? 'red' : 'black' 
-
+                        turncolor :     startcolor
                       })   
                     }
                   )
@@ -105,6 +99,7 @@ module.exports = {
                         async function (err, game) { if (err) throw err;
                           await dealcards ( game.insertId , options, sqlstarted, dbCon); 
                           var field =  await getfield(game.insertId, dbCon);
+                          var startcolor = await determinestartingplayer(field.redmalus, field.blackmalus)
                           resolve ({ 
                             //props (constant)
                             id :            game.insertId,
@@ -118,10 +113,8 @@ module.exports = {
                             redtimer :      options.timePerPlayer,
                             blacktimer :    options.timePerPlayer,
                             turntimer :     options.timePerTurn,
-                            turncolor :     (field.redmalus[options.malusSize-1].value != field.blackmalus[options.malusSize-1].value ) ? 
-                            (field.redmalus[options.malusSize-1].value > field.blackmalus[options.malusSize-1].value ) ? 'red' : 'black' : 
-                              (field.redmalus[options.malusSize-1].value >= field.blackmalus[options.malusSize-1].value ) ? 'red' : 'black'
-                           })   
+                            turncolor :     startcolor
+                          })   
                         }
                       )
                     } 
@@ -134,6 +127,18 @@ module.exports = {
       }
     )
   }
+}
+
+async function determinestartingplayer(redmalus, blackmalus) {
+  var red = 0;
+  var black = 0;
+  for(var i  = 0 ; i< redmalus.length; i++) {
+    red += parseInt(redmalus[i].value);
+    black += parseInt(blackmalus[i].value);
+  }
+  console.log(red);
+  console.log(black);
+  return red >= black ? 'red' : 'black';
 }
 
 async function getfield (gameid, dbCon) {
