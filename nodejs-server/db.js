@@ -55,19 +55,28 @@ module.exports = {
 
                     async function (err, game) { if (err) throw err; 
                       await dealcards ( game.insertId , options, sqlstarted, dbCon); 
+                      var field =  await getfield(game.insertId, dbCon);
+                      console.log(field.redmalus[options.malusSize-1].value);
+                      console.log(field.blackmalus[options.malusSize-1].value);
                       resolve ({ 
+                        //props (constant)
                         id :            game.insertId,
                         throwOnWaste :  options.throwOnWaste,
                         throwOnMalus :  options.throwOnMalus,
                         variant :       options.variant,
                         red :           red,
                         black :         black,
-
-                        field :         await getfield(game.insertId, dbCon),
-                        turncolor :     'red',
-                        turntimer :     options.timePerTurn,
+                        //state (changing)
+                        field :         field,
                         redtimer :      options.timePerPlayer,
                         blacktimer :    options.timePerPlayer,
+                        turntimer :     options.timePerTurn,
+                        turncolor :     parseInt(field.redmalus[options.malusSize-1].value) !=  parseInt(field.blackmalus[options.malusSize-1].value)  ?
+                                          parseInt(field.redmalus[options.malusSize-1].value) >  parseInt(field.blackmalus[options.malusSize-1].value) ? 'red' : 'black' :
+                                            parseInt(field.redmalus[options.malusSize-2].value) !=  parseInt(field.blackmalus[options.malusSize-2].value) ? 
+                                              parseInt(field.redmalus[options.malusSize-2].value) >  parseInt(field.blackmalus[options.malusSize-2].value) ? 'red' : 'black' :
+                                                parseInt(field.redmalus[options.malusSize-3].value) >=  parseInt(field.blackmalus[options.malusSize-3].value) ? 'red' : 'black' 
+
                       })   
                     }
                   )
@@ -95,6 +104,7 @@ module.exports = {
 
                         async function (err, game) { if (err) throw err;
                           await dealcards ( game.insertId , options, sqlstarted, dbCon); 
+                          var field =  await getfield(game.insertId, dbCon);
                           resolve ({ 
                             //props (constant)
                             id :            game.insertId,
@@ -104,12 +114,14 @@ module.exports = {
                             red :           red,
                             black :         black,
                             //state (changing)
-                            field :         await getfield(game.insertId, dbCon),
+                            field :         field,
                             redtimer :      options.timePerPlayer,
                             blacktimer :    options.timePerPlayer,
                             turntimer :     options.timePerTurn,
-                            turncolor :     'red',  
-                          })   
+                            turncolor :     (field.redmalus[options.malusSize-1].value != field.blackmalus[options.malusSize-1].value ) ? 
+                            (field.redmalus[options.malusSize-1].value > field.blackmalus[options.malusSize-1].value ) ? 'red' : 'black' : 
+                              (field.redmalus[options.malusSize-1].value >= field.blackmalus[options.malusSize-1].value ) ? 'red' : 'black'
+                           })   
                         }
                       )
                     } 
@@ -262,7 +274,7 @@ class Card {
 
 function freshdeck (color) {
   const Suits = ["♥", "♠", "♦", "♣"];
-  const Values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+  const Values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"];
   return Suits.flatMap(suit => {
       return Values.map(value => {
           return new Card (color, suit, value)
@@ -370,9 +382,9 @@ function insertTablesAndDataIntoDB() {
         ['red', '♥', '8'],
         ['red', '♥', '9'],
         ['red', '♥', '10'],
-        ['red', '♥', 'J'],
-        ['red', '♥', 'Q'],
-        ['red', '♥', 'K'],
+        ['red', '♥', '11'],
+        ['red', '♥', '12'],
+        ['red', '♥', '13'],
         ['red', '♦', '1'],
         ['red', '♦', '2'],
         ['red', '♦', '3'],
@@ -383,9 +395,9 @@ function insertTablesAndDataIntoDB() {
         ['red', '♦', '8'],
         ['red', '♦', '9'],
         ['red', '♦', '10'],
-        ['red', '♦', 'J'],
-        ['red', '♦', 'Q'],
-        ['red', '♦', 'K'],
+        ['red', '♦', '11'],
+        ['red', '♦', '12'],
+        ['red', '♦', '13'],
         ['red', '♠', '1'],
         ['red', '♠', '2'],
         ['red', '♠', '3'],
@@ -396,9 +408,9 @@ function insertTablesAndDataIntoDB() {
         ['red', '♠', '8'],
         ['red', '♠', '9'],
         ['red', '♠', '10'],
-        ['red', '♠', 'J'],
-        ['red', '♠', 'Q'],
-        ['red', '♠', 'K'],
+        ['red', '♠', '11'],
+        ['red', '♠', '12'],
+        ['red', '♠', '13'],
         ['red', '♣', '1'],
         ['red', '♣', '2'],
         ['red', '♣', '3'],
@@ -409,9 +421,9 @@ function insertTablesAndDataIntoDB() {
         ['red', '♣', '8'],
         ['red', '♣', '9'],
         ['red', '♣', '10'],
-        ['red', '♣', 'J'],
-        ['red', '♣', 'Q'],
-        ['red', '♣', 'K'],
+        ['red', '♣', '11'],
+        ['red', '♣', '12'],
+        ['red', '♣', '13'],
         ['black', '♥', '1'],
         ['black', '♥', '2'],
         ['black', '♥', '3'],
@@ -422,9 +434,9 @@ function insertTablesAndDataIntoDB() {
         ['black', '♥', '8'],
         ['black', '♥', '9'],
         ['black', '♥', '10'],
-        ['black', '♥', 'J'],
-        ['black', '♥', 'Q'],
-        ['black', '♥', 'K'],
+        ['black', '♥', '11'],
+        ['black', '♥', '12'],
+        ['black', '♥', '13'],
         ['black', '♦', '1'],
         ['black', '♦', '2'],
         ['black', '♦', '3'],
@@ -435,9 +447,9 @@ function insertTablesAndDataIntoDB() {
         ['black', '♦', '8'],
         ['black', '♦', '9'],
         ['black', '♦', '10'],
-        ['black', '♦', 'J'],
-        ['black', '♦', 'Q'],
-        ['black', '♦', 'K'],
+        ['black', '♦', '11'],
+        ['black', '♦', '12'],
+        ['black', '♦', '13'],
         ['black', '♠', '1'],
         ['black', '♠', '2'],
         ['black', '♠', '3'],
@@ -448,9 +460,9 @@ function insertTablesAndDataIntoDB() {
         ['black', '♠', '8'],
         ['black', '♠', '9'],
         ['black', '♠', '10'],
-        ['black', '♠', 'J'],
-        ['black', '♠', 'Q'],
-        ['black', '♠', 'K'],
+        ['black', '♠', '11'],
+        ['black', '♠', '12'],
+        ['black', '♠', '13'],
         ['black', '♣', '1'],
         ['black', '♣', '2'],
         ['black', '♣', '3'],
@@ -461,9 +473,9 @@ function insertTablesAndDataIntoDB() {
         ['black', '♣', '8'],
         ['black', '♣', '9'],
         ['black', '♣', '10'],
-        ['black', '♣', 'J'],
-        ['black', '♣', 'Q'],
-        ['black', '♣', 'K'],
+        ['black', '♣', '11'],
+        ['black', '♣', '12'],
+        ['black', '♣', '13'],
       ];
       dbCon.query(sql, [values], function (err, result) {
         if (err) throw err;

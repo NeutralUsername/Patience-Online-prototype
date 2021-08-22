@@ -84,10 +84,9 @@ io.on ('connection', function (socket) {
 async function startPendingRoom (red, black) {
     activeGames.push( game = await db.initGame (red, black,  returnPendingRoomIfExists(red).options, new Date() ) );
     
-    removePendingRoomIfExists (red); removePendingRoomIfExists (black);
-
+    removePendingRoomIfExists (red); 
+    removePendingRoomIfExists (black);
     //startTurn(game.id);
-
     io.to (red).emit ('startOnlineGameRES', { 
         id : game.id, 
         color : 'red', 
@@ -117,7 +116,8 @@ async function startPendingRoom (red, black) {
             turncolor :     game.turncolor,  
          } 
     });
-    updatePendingRoomsCLIENTS (); console.log (activeGames.length);
+    updatePendingRoomsCLIENTS (); 
+    console.log (activeGames.length);
 }
 
 function hideFaceDownCardsFromClient (field) {
