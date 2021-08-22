@@ -88,6 +88,21 @@ async function addActiveRoom (red, black) {
     //startTurn(game.id);
     io.to (red).to (black).emit ('startOnlineGameRES', { 
         id : game.id, 
+        color : 'red', 
+        throwOnWaste : game.throwOnWaste, 
+        throwOnMalus : game.throwOnMalus, 
+        variant : game.variant,
+        initialState : {
+            field :         hideFaceDownCardsFromClient(game.field),
+            redtimer :      game.redtimer,
+            blacktimer :    game.blacktimer,
+            turntimer :     game.turntimer,
+            turncolor :     game.turncolor,  
+         } 
+    });
+    io.to (black).emit ('startOnlineGameRES', { 
+        id : game.id, 
+        color : 'black', 
         throwOnWaste : game.throwOnWaste, 
         throwOnMalus : game.throwOnMalus, 
         variant : game.variant,
