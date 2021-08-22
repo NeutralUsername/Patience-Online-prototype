@@ -76,6 +76,17 @@ io.on ('connection', function (socket) {
                 startPendingRoom (data.roomkey, socket.id);
     })
 
+    socket.on ('updateGameREQ', async function ( data) {
+        socket.emit ('UpdateFieldRES', {field : activeGames.find(x=>x.id === data.id).field});
+
+        socket.emit ('UpdateTimerRES', { 
+            redtimer : activeGames.find(x=>x.id === data.id).redtimer, 
+            blacktimer : activeGames.find(x=>x.id === data.id).blacktimer,
+            turntimer : activeGames.find(x=>x.id === data.id).turntimer,
+        });
+        socket.emit ('UpdateTurnColorRES', {turncolor : activeGames.find(x=>x.id === data.id).turncolor});
+    });
+
     socket.on ('disconnect', function () {
         removePendingRoomIfExists (socket.id);
     });
@@ -84,8 +95,8 @@ io.on ('connection', function (socket) {
 async function startPendingRoom (red, black) {
     activeGames.push( game = await db.initGame (red, black,  returnPendingRoomIfExists(red).options, new Date() ) );
 
-    addTimersToGame(game);
-
+    //addTimersToGame(game);
+   
     removePendingRoomIfExists (red); removePendingRoomIfExists (black);
 
     io.to (red).emit ('startOnlineGameRES', { id : game.id, color : 'red', throwOnWaste : game.throwOnWaste, throwOnMalus : game.throwOnMalus, variant : game.variant });
@@ -95,13 +106,17 @@ async function startPendingRoom (red, black) {
 }
 
 function addTimersToGame (game) {
-    if(game.player === 'red')
+    if(game.turncolor === 'red')
         setTimeout(playertimeout, game.redtimer*1000);
-    if(game.player === 'black')
+    else 
         setTimeout(playertimeout, game.blacktimer*1000);
-    function playertimeout() {
-        game.player === 'red' ? "black won" : "red won"
+    function playertimeout () {
+        game.turncolor === 'red' ? "black won" : "red won"
     }
+    socket.emit ('UpdateFieldRES', {roomkey : data.roomkey});
+    socket.emit ('UpdateTimerRES', {roomkey : data.roomkey});
+    socket.emit ('UpdateTurnColorRES', {roomkey : data.roomkey});
+
 }
 
 function addPendingRoom (roomkey, options) {

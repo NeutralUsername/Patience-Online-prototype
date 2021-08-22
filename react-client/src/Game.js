@@ -8,28 +8,36 @@ export default class Game extends React.Component{
         this.mounted = false;
         this.state = {
             field :{},
-            turn : -1337,
-            red : -1337,
-            black : -1339,
+            redtimer : 0,
+            blacktimer : 0,
+            turntimer : 0,
+            turncolor : ' '
         };
     }
 
 
     componentDidMount () {
         this.mounted = true;
-        this.props.socket.emit('updateREQ', {
+        this.props.socket.emit('updateGameREQ', {
             id : this.props.id,
         });
 
         this.props.socket.on("UpdateFieldRES", data => {
             if (this.mounted) {
-                this.setState ({field : data });
+                this.setState ({field : data.field });
             }
         });
 
         this.props.socket.on("UpdateTimerRES", data => {
             if (this.mounted) {
-                this.setState ({field : data });
+                this.setState ({redtimer : data.redtimer, blacktimer : data.blacktimer, turntimer : data.turntimer });
+            }
+        });
+
+        this.props.socket.on("UpdateTurnColorRES", data => {
+            if (this.mounted) {
+                console.log(data);
+                this.setState ({turncolor : data.turncolor });
             }
         });
     }

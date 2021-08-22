@@ -60,11 +60,11 @@ module.exports = {
                         throwOnWaste :  options.throwOnWaste,
                         throwOnMalus :  options.throwOnMalus,
                         variant :       options.variant,
-                        timePerPlayer : options.timePerPlayer,
-                        timePerTurn :   options.timePerTurn,
+                        red :           red,
+                        black :         black,
 
-                        playerAtTurn :  'red',
                         field :         await getfield(game.insertId, dbCon),
+                        turncolor :     'red',
                         turntimer :     options.timePerTurn,
                         redtimer :      options.timePerPlayer,
                         blacktimer :    options.timePerPlayer,
@@ -104,8 +104,8 @@ module.exports = {
                             black :         black,
 
                             field :         await getfield(game.insertId, dbCon),
-                            playerAtTurn :  'red',
-                            timePerTurn :   options.timePerTurn,
+                            turncolor :     'red',
+                            turntimer :     options.timePerTurn,
                             redtimer :      options.timePerPlayer,
                             blacktimer :    options.timePerPlayer,
                           })   
