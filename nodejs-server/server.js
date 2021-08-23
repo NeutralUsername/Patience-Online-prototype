@@ -9,12 +9,11 @@ const rateLimiter = new RateLimiterMemory ({
     points: 1,
     duration: 2,
 });
-
 var db = require('./db.js');
 db.createDBifNotExists();
-
 const pendingOnlineRooms = [];
 const activeGames = [];
+
 io.on ('connection', function (socket) {
     updatePendingRoomsCLIENTS ();
     socket.on('serverTimeREQ',  () => {
@@ -70,14 +69,11 @@ io.on ('connection', function (socket) {
 });
 
 async function addActiveRoom (red, black, options) {
+
     activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
-
     removePendingRoomIfExists (red); 
-    if(black != 'AI')
-        removePendingRoomIfExists (black);
-
+    removePendingRoomIfExists (black);
     //startTurn(game.id);
-
     io.to (red).emit ('startOnlineGameRES', { 
         id : game.id, 
         color : 'red', 
@@ -92,7 +88,7 @@ async function addActiveRoom (red, black, options) {
             turncolor :     game.turncolor,  
          } 
     });
-    if  (black != 'AI')
+    if (black != 'AI')
         io.to (black).emit ('startOnlineGameRES', { 
             id : game.id, 
             color : 'black', 
@@ -155,10 +151,11 @@ function addPendingRoom (roomkey, options) {
 }
 
 function removePendingRoomIfExists(roomkey)  {
-    if  (returnPendingRoomIfExists (roomkey)) {
-         pendingOnlineRooms.splice (pendingOnlineRooms.findIndex (e => e.roomkey == roomkey), 1);
-         updatePendingRoomsCLIENTS ();
-    }
+    if(roomkey != 'AI')
+        if (returnPendingRoomIfExists (roomkey)) {
+            pendingOnlineRooms.splice (pendingOnlineRooms.findIndex (e => e.roomkey == roomkey), 1);
+            updatePendingRoomsCLIENTS ();
+        }
 }
 
 function returnPendingRoomIfExists (roomkey) {

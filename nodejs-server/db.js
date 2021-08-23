@@ -41,9 +41,8 @@ module.exports = {
               +"variant       =  " +"'"+ options.variant +"'"       + " AND "
               +"turntime      =  " +     options.timePerTurn        + " AND "
               +"timeperplayer =  " +     options.timePerPlayer      + " AND "
-              +"roomname         " +    (options.roomName     != "" ? " = '"+options.roomName     +"'"  : "is null" ) +" AND "
-              +"roompassword     " +    (options.roomPassword != "" ? " = '"+options.roomPassword +"'"  : "is null" ) +" );", 
-
+              +"roomname         " +    (options.roomName     != "" ? " = '"+ options.roomName.replace(/\s+/g,' ').trim() +"'"  : "is null" ) +" AND "
+              +"roompassword     " +    (options.roomPassword != "" ? " = '"+options.roomPassword +"'"  : "is null" ) +" );",  
               function (err, option) { if (err) throw err;  
                 if (option.length === 1) {
                   dbCon.query ("INSERT INTO games VALUES ( "
@@ -85,7 +84,7 @@ module.exports = {
                     + "'"+options.variant  +"'"      +", "
                     +     options.timePerTurn        +", "
                     +     options.timePerPlayer      +", "
-                    +    (options.roomName     != "" ? "'"+ options.roomName+"'"     : "null" ) +", "
+                    +    (options.roomName     != "" ? "'"+ options.roomName.replace(/\s+/g,' ').trim()+"'"     : "null" ) +", "
                     +    (options.roomPassword != "" ? "'"+ options.roomPassword+"'" : "null" ) +");", 
 
                     function (err, option) { if (err) throw err;

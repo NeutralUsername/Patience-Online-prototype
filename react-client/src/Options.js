@@ -120,7 +120,7 @@ export default class Options extends React.Component {
             turnsTimed : options.turnsTimed,
             timePerTurn : options.timePerTurn,
             timePerPlayer : options.timePerPlayer,
-            roomName : (!options.roomName.replace(/\s/g, '').length) ? roomkey : options.roomName  
+            roomName : (!options.roomName.replace(/\s/g, '').length) ? roomkey : options.roomName.replace(/\s+/g,' ').trim() 
         })
      }
 
@@ -562,7 +562,7 @@ class PendingRooms extends React.Component {
                             className="pendingrooms-roomname" 
                             value = {room.roomkey}
                             onClick = {this.handleOptionClick} >
-                            {(!room.options.roomName.replace(/\s/g, '').length) ? room.roomkey : room.options.roomName  }   
+                            {(!room.options.roomName.replace(/\s/g, '').length) ? room.roomkey : room.options.roomName.replace(/\s+/g,' ').trim()}   
                         </button>
                         <label className="pendingrooms-lock" hidden = {! room.options.roomPassword > 0}>🔒</label>
                     </li>)}
