@@ -75,16 +75,19 @@ io.on ('connection', function (socket) {
 
 async function addActiveRoom (red, black, options) {
     options.timePerTurn = options.turnsTimed ? options.timePerTurn : -1337,
+
     activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
-    removePendingRoomIfExists (red); 
-    removePendingRoomIfExists (black);
+
+    removePendingRoomIfExists (red); removePendingRoomIfExists (black);
+
     //startTurn(game.id);
+
     var initialstate = game.initialstate;
     initialstate.field = hideFaceDownCardsFromClient(initialstate.field)
+
     io.to (red).to(black).emit ('startOnlineGameRES', { props : game.props, initialstate : initialstate});
     
     updatePendingRoomsCLIENTS (); 
-    console.log (activeGames.length);
 }
 
 function hideFaceDownCardsFromClient (field) {

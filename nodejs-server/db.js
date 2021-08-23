@@ -19,7 +19,6 @@ module.exports = {
       }); 
     }
   },
-
   initGame : async function (red, black, options, started) {
     if(await DBexists("gregaire")) 
       var dbCon = mysql.createConnection({
@@ -99,7 +98,6 @@ module.exports = {
     )
   }
 }
-
 function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, field, redtimer, blacktimer, turntimer, turncolor) {
   return {
     props : { 
@@ -119,7 +117,6 @@ function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, field, red
     }
   }
 }
-
 async function determinestartingplayer(redmalus, blackmalus) {
   var red = 0;
   var black = 0;
@@ -150,7 +147,6 @@ async function getfield (gameid, dbCon) {
     )
   })
 }
-
 async function dealcards( gameid, options, created, dbCon) {
   return new Promise ((resolve) => {
     var reddeck = shuffle(freshdeck("red"));
@@ -226,7 +222,6 @@ async function dealcards( gameid, options, created, dbCon) {
     )
   })
 }
-
 function sqlCompatibleDate(date) {
   var sqlcompatibledate = date;
   return sqlcompatibledate = sqlcompatibledate.getUTCFullYear() + '-' +
