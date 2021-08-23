@@ -27,25 +27,7 @@ io.on ('connection', function (socket) {
     socket.on ('startAIgameREQ', async function (data) {
         try {
             await rateLimiter.consume (socket.handshake.address);
-            activeGames.push( game = await db.initGame (socket.id, "AI",  data.options, new Date() ) );
-            removePendingRoomIfExists (socket.id); 
-            //startTurn(game.id);
-            io.to (socket.id).emit ('startAIgameRES', { 
-                id : game.id, 
-                color : 'red', 
-                throwOnWaste : game.throwOnWaste, 
-                throwOnMalus : game.throwOnMalus, 
-                variant : game.variant,
-                initialState : {
-                    field :         hideFaceDownCardsFromClient(game.field),
-                    redtimer :      game.redtimer,
-                    blacktimer :    game.blacktimer,
-                    turntimer :     game.turntimer,
-                    turncolor :     game.turncolor,  
-                 } 
-            });
-            updatePendingRoomsCLIENTS (); 
-            console.log (activeGames.length);
+            addActiveRoom(socket.id, 'AI', data.options);
         }
         catch (rejRes) {
             console.log ("flood protection => startAIgameREQ");
@@ -75,7 +57,7 @@ io.on ('connection', function (socket) {
             if (data.roomkey != socket.id)
                 if (returnPendingRoomIfExists (data.roomkey)) 
                     if (returnPendingRoomIfExists (data.roomkey).options.roomPassword.length  === 0) 
-                        addActiveRoom (data.roomkey, socket.id);
+                        addActiveRoom (data.roomkey, socket.id, returnPendingRoomIfExists (data.roomkey).options );
                     else 
                         socket.emit ('roomPasswordREQ', {roomkey : data.roomkey});
         }    
@@ -87,7 +69,7 @@ io.on ('connection', function (socket) {
     socket.on ('roomPasswordRES' , async function ( data) {
         if(data.password != undefined)
             if (returnPendingRoomIfExists (data.roomkey).options.roomPassword == data.password) 
-                addActiveRoom (data.roomkey, socket.id);
+                addActiveRoom (data.roomkey, socket.id, returnPendingRoomIfExists (data.roomkey).options );
     })
 
     socket.on ('disconnect', function () {
@@ -95,11 +77,15 @@ io.on ('connection', function (socket) {
     });
 });
 
-async function addActiveRoom (red, black) {
-    activeGames.push( game = await db.initGame (red, black,  returnPendingRoomIfExists(red).options, new Date() ) );
+async function addActiveRoom (red, black, options) {
+    activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
+
     removePendingRoomIfExists (red); 
-    removePendingRoomIfExists (black);
+    if(black != 'AI')
+        removePendingRoomIfExists (black);
+
     //startTurn(game.id);
+
     io.to (red).emit ('startOnlineGameRES', { 
         id : game.id, 
         color : 'red', 
@@ -114,20 +100,21 @@ async function addActiveRoom (red, black) {
             turncolor :     game.turncolor,  
          } 
     });
-    io.to (black).emit ('startOnlineGameRES', { 
-        id : game.id, 
-        color : 'black', 
-        throwOnWaste : game.throwOnWaste, 
-        throwOnMalus : game.throwOnMalus, 
-        variant : game.variant,
-        initialState : {
-            field :         hideFaceDownCardsFromClient(game.field),
-            redtimer :      game.redtimer,
-            blacktimer :    game.blacktimer,
-            turntimer :     game.turntimer,
-            turncolor :     game.turncolor,  
-         } 
-    });
+    if (black != 'AI')
+        io.to (black).emit ('startOnlineGameRES', { 
+            id : game.id, 
+            color : 'black', 
+            throwOnWaste : game.throwOnWaste, 
+            throwOnMalus : game.throwOnMalus, 
+            variant : game.variant,
+            initialState : {
+                field :         hideFaceDownCardsFromClient(game.field),
+                redtimer :      game.redtimer,
+                blacktimer :    game.blacktimer,
+                turntimer :     game.turntimer,
+                turncolor :     game.turncolor,  
+            } 
+        });
     updatePendingRoomsCLIENTS (); 
     console.log (activeGames.length);
 }
