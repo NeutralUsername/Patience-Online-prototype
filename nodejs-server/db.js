@@ -138,7 +138,7 @@ async function getStacks (gameid, dbCon) {
             var stack = [];
             for(var i = 0; i< 22 ; i++) {
               if(actions[0] != undefined) {
-                stack[i] = {stack : actions[0].stack, cards : actions.filter(x=> x.stack === actions[0].stack)}
+                stack[i] = {name : actions[0].stack, cards : actions.filter(x=> x.stack === actions[0].stack)}
                 actions = actions.filter(x=> x.stack != actions[0].stack)
               }
             }
@@ -154,6 +154,18 @@ async function dealcards( gameid, options, created, dbCon) {
     var reddeck = shuffle(freshdeck("red"));
     var blackdeck = shuffle(freshdeck("black"));
     var actions = [];
+    function addtoactions(gameid, cardid, stack, faceup, player, turn, moved){
+      actions.push([
+        0,
+        gameid,
+        cardid,
+        stack,
+        faceup,
+        player,
+        turn,
+        moved
+      ])
+    }
     dbCon.connect (
        function(err) { if (err) throw err;
         dbCon.query ("SELECT * FROM cards ",
@@ -165,17 +177,7 @@ async function dealcards( gameid, options, created, dbCon) {
                     player === 0 ? reddeck = shuffle(reddeck) : blackdeck = shuffle(blackdeck)
                   } 
                 var card = player === 0 ? reddeck.pop() : blackdeck.pop();
-                actions.push([
-                  0,
-                  gameid,
-                  cards.find( x=> x.color === card.color && 
-                    x.suit == card.suit && x.value == card.value).id,
-                  ((player === 0) ? ('redmalus') : ('blackmalus')),
-                  (malussize === options.malusSize-1 ? 1 : 0 ) ,
-                  ((player === 0) ? ('red') : ('black')),
-                  0,
-                  created
-                ]);
+                addtoactions ( gameid, cards.find( x=> x.color === card.color &&  x.suit == card.suit && x.value == card.value).id,((player === 0) ? ('redmalus') : ('blackmalus')),(malussize === options.malusSize-1 ? 1 : 0 ) , ((player === 0) ? ('red') : ('black')), 0, created )
               } 
               for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
                 for(var tableausize = 0 ; tableausize < options.tableauSize; tableausize++) {
@@ -184,33 +186,12 @@ async function dealcards( gameid, options, created, dbCon) {
                       player === 0 ? reddeck = shuffle(reddeck) : blackdeck = shuffle(blackdeck)
                     } 
                   var card = player === 0 ? reddeck.pop() : blackdeck.pop();
-                  actions.push([
-                    0,
-                    gameid,
-                    cards.find( x=> x.color === card.color && 
-                      x.suit == card.suit && x.value == card.value).id,
-                    'tableau'+((player === 0 ) ? 
-                      (tableaunr+'r') : (tableaunr+'b')),
-                    (tableausize === options.tableauSize-1 ? 1 : 0 ) ,
-                    ((player === 0) ? ('red') : ('black')),
-                    0,
-                    created
-                  ]);
+                  addtoactions ( gameid, cards.find( x=> x.color === card.color && x.suit == card.suit && x.value == card.value).id,'tableau'+((player === 0 ) ? (tableaunr+'r') : (tableaunr+'b')), (tableausize === options.tableauSize-1 ? 1 : 0 ) , ((player === 0) ? ('red') : ('black')),0, created);
                 } 
               }
               for(var stock = 0 ; stock <  52 -options.malusSize - 4*options.tableauSize ; stock ++ ) {
                 var card = player === 0 ? reddeck.pop() : blackdeck.pop();
-                actions.push([
-                  0,
-                  gameid,
-                  cards.find( x=> x.color === card.color && 
-                    x.suit == card.suit && x.value == card.value).id,
-                  ((player === 0) ? ('redstock') : ('blackstock')),
-                  0,
-                  ((player === 0) ? ('red') : ('black')),
-                  0,
-                  created
-                ]);
+                addtoactions ( gameid,cards.find( x=> x.color === card.color &&  x.suit == card.suit && x.value == card.value).id, ((player === 0) ? ('redstock') : ('blackstock')), 0, ((player === 0) ? ('red') : ('black')),  0,  created);
               }
             }
             dbCon.query ("INSERT INTO actions (id, gameid, cardid, stack, faceup, player, turn, moved) VALUES ?", [actions],

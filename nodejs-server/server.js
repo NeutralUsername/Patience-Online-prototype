@@ -77,14 +77,12 @@ async function startGame (red, black, options) {
     options.timePerTurn = options.turnsTimed ? options.timePerTurn : -1337,
 
     activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
-
     removePendingRoomIfExists (red); removePendingRoomIfExists (black);
 
     //startTurn(game.id);
 
     var initialstate = game.initialstate;
     initialstate.stacks = hideFaceDownCardsFromClient(initialstate.stacks)
-
     io.to (red).to(black).emit ('startOnlineGameRES', { props : game.props, initialstate : initialstate});
     
     updatePendingRoomsCLIENTS (); 
