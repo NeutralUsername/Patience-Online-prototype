@@ -53,9 +53,9 @@ module.exports = {
                     + "'"+ black + "'"  + ");", 
 
                     async function (err, game) { if (err) throw err; 
-                      await dealcards ( game.insertId , options, sqlstarted, dbCon); 
-                      var field =  await getfield(game.insertId, dbCon);
-                      var startcolor = await determinestartingplayer(field[0], field[6])
+                        await dealcards ( game.insertId , options, sqlstarted, dbCon); 
+                        var field =  await getfield(game.insertId, dbCon);
+                        var startcolor = await determinestartingplayer(field[0], field[6])
                       resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, field, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
                     }
                   )
@@ -82,9 +82,9 @@ module.exports = {
                         + "'"+ black+"'"       + ");", 
 
                         async function (err, game) { if (err) throw err;
-                          await dealcards ( game.insertId , options, sqlstarted, dbCon); 
-                          var field =  await getfield(game.insertId, dbCon);
-                          var startcolor = await determinestartingplayer(field[0], field[6])
+                            await dealcards ( game.insertId , options, sqlstarted, dbCon); 
+                            var field =  await getfield(game.insertId, dbCon);
+                            var startcolor = await determinestartingplayer(field[0], field[6])
                           resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, field, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
                         }
                       )
