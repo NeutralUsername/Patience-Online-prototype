@@ -7,7 +7,7 @@ const io = require ('socket.io') (server);
 const { RateLimiterMemory } = require ('rate-limiter-flexible');
 const rateLimiter = new RateLimiterMemory ({
     points: 1,
-    duration: 1,
+    duration: 2,
 });
 
 var db = require('./db.js');
@@ -17,7 +17,6 @@ const pendingOnlineRooms = [];
 const activeGames = [];
 io.on ('connection', function (socket) {
     updatePendingRoomsCLIENTS ();
-
     socket.on('serverTimeREQ',  () => {
         setInterval(function () {
             socket.emit ('serverTimeRES', { data: new Date () });
@@ -93,7 +92,7 @@ async function addActiveRoom (red, black, options) {
             turncolor :     game.turncolor,  
          } 
     });
-    if (black != 'AI')
+    if  (black != 'AI')
         io.to (black).emit ('startOnlineGameRES', { 
             id : game.id, 
             color : 'black', 
@@ -137,7 +136,7 @@ function startTurn (game) {
 }
 
 function addPendingRoom (roomkey, options) {
-    removePendingRoomIfExists (roomkey);
+    removePendingRoomIfExists(roomkey);
     pendingOnlineRooms.push ({
         roomkey : roomkey,
         options : {
@@ -173,20 +172,6 @@ function updatePendingRoomsCLIENTS () {
     io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms});
 }
 
-function optionsAreDifferent (options1, options2) {
-  if (options1.malusSize == options2.malusSize)
-    if (options1.tableauSize == options2.tableauSize)
-      if (options1.throwOnWaste == options2.throwOnWaste)
-        if (options1.throwOnMalus == options2.throwOnMalus)
-          if (options1.variant == options2.variant)
-            if (options1.turnsTimed == options2.turnsTimed) 
-              if (options1.timePerTurn == options2.timePerTurn)
-                if (options1.timePerPlayer == options2.timePerPlayer)
-                  if (options1.roomName == options2.roomName)
-                    if (options1.roomPassword == options2.roomPassword)
-                      return false;
-  return true;
-}
 
 app.route('/ping').get(controller.root);
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
