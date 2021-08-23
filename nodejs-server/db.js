@@ -229,7 +229,7 @@ async function dealcards( gameid, options, created, dbCon) {
                   ]);
                 } 
               }
-              for(var stock = 0 ; stock < (52 - (options.malusSize + (options.tableauSize*4))); stock ++ ) {
+              for(var stock = 0 ; stock <  52 -options.malusSize - 4*options.tableauSize ; stock ++ ) {
                 var card = player === 0 ? reddeck.pop() : blackdeck.pop();
                 values.push([
                   0,
