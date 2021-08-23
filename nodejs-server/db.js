@@ -136,6 +136,7 @@ async function determinestartingplayer(redmalus, blackmalus) {
     red += parseInt(redmalus[i].value);
     black += parseInt(blackmalus[i].value);
   }
+  console.log(red,black);
   return red >= black ? 'red' : 'black';
 }
 
@@ -147,6 +148,10 @@ async function getfield (gameid, dbCon) {
 
           function (err, actions) { if (err) throw err;
             resolve ({
+                redstock : actions.filter(x=>x.stack === 'redstock'),
+                redwaste : actions.filter(x=>x.stack === 'redwaste'),
+                redmalus : actions.filter(x=>x.stack === 'redmalus'),
+
                 tableau0r : actions.filter(x=>x.stack === 'tableau0r'),
                 tableau1r : actions.filter(x=>x.stack === 'tableau1r'),
                 tableau2r : actions.filter(x=>x.stack === 'tableau2r'),
@@ -163,11 +168,7 @@ async function getfield (gameid, dbCon) {
                 foundation1b : actions.filter(x=>x.stack === 'foundation1b'),
                 foundation2b : actions.filter(x=>x.stack === 'foundation2b'),
                 foundation3b : actions.filter(x=>x.stack === 'foundation3b'),
-              
-                redstock : actions.filter(x=>x.stack === 'redstock'),
-                redwaste : actions.filter(x=>x.stack === 'redwaste'),
-                redmalus : actions.filter(x=>x.stack === 'redmalus'),
-               
+
                 blackstock : actions.filter(x=>x.stack === 'blackstock'),
                 blackwaste : actions.filter(x=>x.stack === 'blackwaste'),
                 blackmalus : actions.filter(x=>x.stack === 'blackmalus'),

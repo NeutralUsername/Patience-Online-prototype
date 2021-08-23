@@ -24,18 +24,33 @@ io.on ('connection', function (socket) {
         },96);
     });
 
-    
-
     socket.on ('startAIgameREQ', async function (data) {
         try {
             await rateLimiter.consume (socket.handshake.address);
-            removePendingRoomIfExists (socket.id);
-            socket.emit('startAIgameRES' , { gameid : "gameid"});
-        }    
-        catch (rejRes) {
-            console.log("flood protection => AI Game");
+            activeGames.push( game = await db.initGame (socket.id, "AI",  data.options, new Date() ) );
+            removePendingRoomIfExists (socket.id); 
+            //startTurn(game.id);
+            io.to (socket.id).emit ('startAIgameRES', { 
+                id : game.id, 
+                color : 'red', 
+                throwOnWaste : game.throwOnWaste, 
+                throwOnMalus : game.throwOnMalus, 
+                variant : game.variant,
+                initialState : {
+                    field :         hideFaceDownCardsFromClient(game.field),
+                    redtimer :      game.redtimer,
+                    blacktimer :    game.blacktimer,
+                    turntimer :     game.turntimer,
+                    turncolor :     game.turncolor,  
+                 } 
+            });
+            updatePendingRoomsCLIENTS (); 
+            console.log (activeGames.length);
         }
-        });
+        catch (rejRes) {
+            console.log ("flood protection => startAIgameREQ");
+        }
+    });
 
     socket.on ('createOnlineRoomREQ', async function (data){
         try {
@@ -58,12 +73,11 @@ io.on ('connection', function (socket) {
         try {
             await rateLimiter.consume (socket.handshake.address);
             if (data.roomkey != socket.id)
-                if (returnPendingRoomIfExists (data.roomkey)) {
+                if (returnPendingRoomIfExists (data.roomkey)) 
                     if (returnPendingRoomIfExists (data.roomkey).options.roomPassword.length  === 0) 
                         addActiveRoom (data.roomkey, socket.id);
                     else 
                         socket.emit ('roomPasswordREQ', {roomkey : data.roomkey});
-                }
         }    
         catch (rejRes) {
             console.log ("flood protection => join pending Room");
@@ -119,15 +133,13 @@ async function addActiveRoom (red, black) {
 }
 
 function hideFaceDownCardsFromClient (field) {
-    for(var stack in field) {
-        for(var card of field[stack]) {
+    for(var stack in field) 
+        for(var card of field[stack]) 
             if(card.faceup === 0) {
                 delete card.id;
                 delete card.value;
                 delete card.suit;
             }
-        }
-    }
     return field;
  }
 
