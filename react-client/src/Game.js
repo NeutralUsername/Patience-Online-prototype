@@ -12,6 +12,7 @@ export default class Game extends React.Component{
             stacks : this.props.initialstate.stacks,
             redtimer : this.props.initialstate.redtimer,
             blacktimer : this.props.initialstate.blacktimer,
+            turn : this.props.initialstate.turn,
             turntimer : this.props.initialstate.turntimer,
             turncolor : this.props.initialstate.turncolor,
         };
@@ -85,7 +86,12 @@ class Stock extends React.Component {
         return (
             <ul>
                 { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
-                    <Card key = {card.nr}> </Card>
+                    <Card 
+                        key = {card.nr} 
+                        color = {card.details.color} 
+                        suit = {card.details.faceup?card.details.suit:'facedown'} 
+                        value = {card.details.faceup?card.details.value:'facedown'}
+                    > </Card>
                 ):''}
             </ul>
         )
@@ -101,7 +107,12 @@ class Waste extends React.Component {
         return (
             <ul>
                 { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
-                    <Card key = {card.nr}> </Card>
+                    <Card 
+                        key = {card.nr} 
+                        color = {card.details.color} 
+                        suit = {card.details.faceup?card.details.suit:'facedown'} 
+                        value = {card.details.faceup?card.details.value:'facedown'}
+                    > </Card>
                 ):''}
             </ul>
         )
@@ -117,7 +128,12 @@ class Malus extends React.Component {
         return (
             <ul>
                 { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
-                    <Card key = {card.nr}> </Card>
+                    <Card 
+                        key = {card.nr} 
+                        color = {card.details.color} 
+                        suit = {card.details.faceup?card.details.suit:'facedown'} 
+                        value = {card.details.faceup?card.details.value:'facedown'}
+                    > </Card>
                 ):''}
             </ul>
         )
@@ -133,7 +149,12 @@ class Tableau extends React.Component {
         return (
             <ul>
                 { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
-                    <Card key = {card.nr}> </Card>
+                    <Card 
+                        key = {card.nr} 
+                        color = {card.details.color} 
+                        suit = {card.details.faceup?card.details.suit:'facedown'} 
+                        value = {card.details.faceup?card.details.value:'facedown'}
+                    > </Card>
                 ):''}
             </ul>
         )
@@ -150,7 +171,12 @@ class Foundation extends React.Component {
         return (
             <ul>
                 { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
-                    <Card key = {card.nr}> </Card>
+                    <Card 
+                        key = {card.nr} 
+                        color = {card.details.color} 
+                        suit = {card.details.faceup?card.details.suit:'facedown'} 
+                        value = {card.details.faceup?card.details.value:'facedown'}
+                    > </Card>
                 ):''}
             </ul>
         )
@@ -160,7 +186,9 @@ class Foundation extends React.Component {
 function Card (props) {
     return (
         <div>
-
+            <label>{props.color}</label>
+            <label>{props.suit}</label>
+            <label>{props.value}</label>
         </div>
     )
 }

@@ -112,6 +112,7 @@ function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, re
       stacks : stacks,
       redtimer : redtimer,
       blacktimer : blacktimer,
+      turn :  0,
       turntimer : turntimer,
       turncolor : turncolor
     }

@@ -74,7 +74,7 @@ io.on ('connection', function (socket) {
 });
 
 async function startGame (red, black, options) {
-    options.timePerTurn = options.turnsTimed ? options.timePerTurn : -1337,
+    options.timePerTurn = options.turnsTimed ? options.timePerTurn : 0,
 
     activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
     removePendingRoomIfExists (red); removePendingRoomIfExists (black);
@@ -82,13 +82,13 @@ async function startGame (red, black, options) {
     //startTurn(game.id);
 
     var initialstate = game.initialstate;
-    initialstate.stacks = hideFaceDownCardsFromClient(initialstate.stacks)
+    initialstate.stacks = hideDetailsFaceDownCards(initialstate.stacks)
     io.to (red).to(black).emit ('startOnlineGameRES', { props : game.props, initialstate : initialstate});
     
     updatePendingRoomsCLIENTS (); 
 }
 
-function hideFaceDownCardsFromClient (stacks) {
+function hideDetailsFaceDownCards (stacks) {
     for(var stack in stacks) 
         for(var card of stacks[stack].cards) 
             if(card.details.faceup === 0) {
