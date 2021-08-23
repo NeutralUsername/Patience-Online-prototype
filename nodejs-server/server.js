@@ -79,35 +79,10 @@ async function addActiveRoom (red, black, options) {
     removePendingRoomIfExists (red); 
     removePendingRoomIfExists (black);
     //startTurn(game.id);
-    io.to (red).emit ('startOnlineGameRES', { 
-        color : 'red', 
-        id : game.id, 
-        throwOnWaste : game.throwOnWaste, 
-        throwOnMalus : game.throwOnMalus, 
-        variant : game.variant,
-        initialState : {
-            field :         hideFaceDownCardsFromClient(game.field),
-            redtimer :      game.redtimer,
-            blacktimer :    game.blacktimer,
-            turntimer :     game.turntimer,
-            turncolor :     game.turncolor,  
-         } 
-    });
-    if (black != 'AI')
-        io.to (black).emit ('startOnlineGameRES', { 
-            color : 'black', 
-            id : game.id,   
-            throwOnWaste : game.throwOnWaste, 
-            throwOnMalus : game.throwOnMalus, 
-            variant : game.variant,
-            initialState : {
-                field :         hideFaceDownCardsFromClient(game.field),
-                redtimer :      game.redtimer,
-                blacktimer :    game.blacktimer,
-                turntimer :     game.turntimer,
-                turncolor :     game.turncolor,  
-            } 
-        });
+    var initialstate = game.initialstate;
+    initialstate.field = hideFaceDownCardsFromClient(initialstate.field)
+    io.to (red).to(black).emit ('startOnlineGameRES', { props : game.props, initialstate : initialstate});
+    
     updatePendingRoomsCLIENTS (); 
     console.log (activeGames.length);
 }

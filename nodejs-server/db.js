@@ -102,19 +102,21 @@ module.exports = {
 
 function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, field, redtimer, blacktimer, turntimer, turncolor) {
   return {
-    //props ( constant for whole game)
-    id : id,
-    throwOnWaste : throwOnWaste,
-    throwOnMalus : throwOnMalus,
-    variant : variant,
-    red : red,
-    black : black,
-    //state (chainging every action/turn)
-    field : field,
-    redtimer : redtimer,
-    blacktimer : blacktimer,
-    turntimer : turntimer,
-    turncolor : turncolor
+    props : { 
+      id : id,
+      throwOnWaste : throwOnWaste,
+      throwOnMalus : throwOnMalus,
+      variant : variant,
+      red : red,
+      black : black,
+    },
+    initialstate : {
+      field : field,
+      redtimer : redtimer,
+      blacktimer : blacktimer,
+      turntimer : turntimer,
+      turncolor : turncolor
+    }
   }
 }
 

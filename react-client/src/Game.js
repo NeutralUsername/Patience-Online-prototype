@@ -7,11 +7,11 @@ export default class Game extends React.Component{
         super(props); 
         this.mounted = false;
         this.state = {
-            field : this.props.initialState.field,
-            redtimer : this.props.initialState.redtimer,
-            blacktimer : this.props.initialState.blacktimer,
-            turntimer : this.props.initialState.turntimer,
-            turncolor : this.props.initialState.turncolor,
+            field : this.props.initialstate.field,
+            redtimer : this.props.initialstate.redtimer,
+            blacktimer : this.props.initialstate.blacktimer,
+            turntimer : this.props.initialstate.turntimer,
+            turncolor : this.props.initialstate.turncolor,
         };
     }
 

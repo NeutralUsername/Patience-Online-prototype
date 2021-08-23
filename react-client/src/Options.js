@@ -43,13 +43,13 @@ export default class Options extends React.Component {
             return (
                 ReactDOM.render (
                     <Game
-                        id = {data.id}
-                        throwOnWaste = {data.throwOnWaste}
-                        throwOnMalus = {data.throwOnMalus}
-                        variant = {data.variant}
-                        color = {data.color}
-                        initialState = {data.initialState}
-                        socket = {this.props.socket}         
+                        id = {data.props.id}
+                        throwOnWaste = {data.props.throwOnWaste}
+                        throwOnMalus = {data.props.throwOnMalus}
+                        variant = {data.props.variant}
+                        color = {this.props.socket.id === data.props.red ? 'red' : 'black'}
+                        initialstate = {data.initialstate}
+                        socket = {this.props.socket}          
                     ></Game>,
                     document.getElementById ('root')
                 )
@@ -66,12 +66,12 @@ export default class Options extends React.Component {
             return (
                 ReactDOM.render (
                     <Game
-                        id = {data.id}
-                        throwOnWaste = {data.throwOnWaste}
-                        throwOnMalus = {data.throwOnMalus}
-                        variant = {data.variant}
-                        color = {data.color}
-                        initialState = {data.initialState}
+                        id = {data.props.id}
+                        throwOnWaste = {data.props.throwOnWaste}
+                        throwOnMalus = {data.props.throwOnMalus}
+                        variant = {data.props.variant}
+                        color = {this.props.socket.id === data.props.red ? 'red' : 'black'}
+                        initialstate = {data.initialstate}
                         socket = {this.props.socket}              
                     ></Game>,
                     document.getElementById ('root')
