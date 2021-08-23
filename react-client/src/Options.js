@@ -550,22 +550,24 @@ class PendingRooms extends React.Component {
                 <label> 
                      <div><b>Pending Rooms : </b><article className="pendingrooms-info">(click <i>Room Name</i> to inspect options)</article></div> 
                 </label>
-                <ul className="pendingrooms-list" > {this.props.pendingRooms.map( (room) =>
-                    <li className="pendingrooms-listitem" key = {room.roomkey} > 
-                        <button 
-                            className="pendingrooms-join" 
-                            value = {room.roomkey}
-                            onClick = {this.handleJoinClick} >
-                            Join
-                        </button>
-                        <button 
-                            className="pendingrooms-roomname" 
-                            value = {room.roomkey}
-                            onClick = {this.handleOptionClick} >
-                            {(!room.options.roomName.replace(/\s/g, '').length) ? room.roomkey : room.options.roomName.replace(/\s+/g,' ').trim()}   
-                        </button>
-                        <label className="pendingrooms-lock" hidden = {! room.options.roomPassword > 0}>🔒</label>
-                    </li>)}
+                <ul className="pendingrooms-list" > 
+                    {this.props.pendingRooms.map( (room) =>
+                        <li className="pendingrooms-listitem" key = {room.roomkey} > 
+                            <button 
+                                className="pendingrooms-join" 
+                                value = {room.roomkey}
+                                onClick = {this.handleJoinClick} >
+                                Join
+                            </button>
+                            <button 
+                                className="pendingrooms-roomname" 
+                                value = {room.roomkey}
+                                onClick = {this.handleOptionClick} >
+                                {(!room.options.roomName.replace(/\s/g, '').length) ? room.roomkey : room.options.roomName.replace(/\s+/g,' ').trim()}   
+                            </button>
+                            <label className="pendingrooms-lock" hidden = {! room.options.roomPassword > 0}>🔒</label>
+                        </li>
+                    )}
                 </ul>
             </div>
         )

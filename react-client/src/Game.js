@@ -44,10 +44,68 @@ export default class Game extends React.Component{
     render(){
         return (
             <div className="game">
-                
+                <Stock></Stock>
+                <Waste></Waste>
+                <Malus></Malus>
+
+                <Foundation></Foundation>
+                <Foundation></Foundation>
+                <Foundation></Foundation>
+                <Foundation></Foundation>
+                <Foundation></Foundation>
+                <Foundation></Foundation>
+                <Foundation></Foundation>
+                <Foundation></Foundation>
+
+                <Tableau></Tableau>
+                <Tableau></Tableau>
+                <Tableau></Tableau>
+                <Tableau></Tableau>
+                <Tableau></Tableau>
+                <Tableau></Tableau>
+                <Tableau></Tableau>
+                <Tableau></Tableau>
+
+                <Stock></Stock>
+                <Waste></Waste>
+                <Malus></Malus>
             </div>
         )
     }
 } 
 
+class Stock extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+}
+
+class Waste extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+}
+
+class Malus extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+}
+
+class Tableau extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+}
+
+
+class Foundation extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+}
+
+function Card () {
+
+}
 
