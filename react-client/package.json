@@ -4,9 +4,11 @@
   "private": true,
   "dependencies": {
     "react": "^16.9.0",
+    "react-dnd": "^14.0.3",
+    "react-dnd-html5-backend": "^14.0.1",
     "react-dom": "^16.9.0",
-    "socket.io-client": "^2.2.0",
-    "react-scripts": "^4.0.3"
+    "react-scripts": "^4.0.3",
+    "socket.io-client": "^2.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",

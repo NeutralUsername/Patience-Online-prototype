@@ -1,6 +1,8 @@
 import React from 'react';
 import socketIOClient from 'socket.io-client';
 import ReactDOM from 'react-dom';
+import { useDrag, useDrop } from "react-dnd";
+
 
 export default class Game extends React.Component{
     constructor(props) {
