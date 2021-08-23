@@ -7,7 +7,7 @@ export default class Game extends React.Component{
         super(props); 
         this.mounted = false;
         this.state = {
-            field : this.props.initialstate.field,
+            stacks : this.props.initialstate.stacks,
             redtimer : this.props.initialstate.redtimer,
             blacktimer : this.props.initialstate.blacktimer,
             turntimer : this.props.initialstate.turntimer,
@@ -20,7 +20,7 @@ export default class Game extends React.Component{
 
         this.props.socket.on("UpdateFieldRES", data => {
             if (this.mounted) {
-                this.setState ({field : data.field });
+                this.setState ({stacks : data.stacks });
             }
         });
 

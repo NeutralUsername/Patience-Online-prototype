@@ -53,9 +53,9 @@ module.exports = {
 
                     async function (err, game) { if (err) throw err; 
                         await dealcards ( game.insertId , options, sqlstarted, dbCon); 
-                        var field =  await getfield(game.insertId, dbCon);
-                        var startcolor = await determinestartingplayer(field[0], field[6])
-                      resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, field, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
+                        var stacks =  await getStacks(game.insertId, dbCon);
+                        var startcolor = await determinestartingplayer(stacks[0], stacks[6]);
+                      resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, stacks, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
                     }
                   )
                 }
@@ -82,9 +82,9 @@ module.exports = {
 
                         async function (err, game) { if (err) throw err;
                             await dealcards ( game.insertId , options, sqlstarted, dbCon); 
-                            var field =  await getfield(game.insertId, dbCon);
-                            var startcolor = await determinestartingplayer(field[0], field[6])
-                          resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, field, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
+                            var stacks =  await getStacks(game.insertId, dbCon);
+                            var startcolor = await determinestartingplayer(stacks[0], stacks[6]);
+                          resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, stacks, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
                         }
                       )
                     } 
@@ -98,7 +98,7 @@ module.exports = {
     )
   }
 }
-function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, field, redtimer, blacktimer, turntimer, turncolor) {
+function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, redtimer, blacktimer, turntimer, turncolor) {
   return {
     props : { 
       id : id,
@@ -109,7 +109,7 @@ function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, field, red
       black : black,
     },
     initialstate : {
-      field : field,
+      stacks : stacks,
       redtimer : redtimer,
       blacktimer : blacktimer,
       turntimer : turntimer,
@@ -120,15 +120,15 @@ function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, field, red
 async function determinestartingplayer(redmalus, blackmalus) {
   var red = 0;
   var black = 0;
-  for(var i  = 0 ; i< redmalus.length; i++) {
-    red += parseInt(redmalus[i].value);
-    black += parseInt(blackmalus[i].value);
+  for(var i  = 0 ; i< redmalus.cards.length; i++) {
+    red += parseInt(redmalus.cards[i].value);
+    black += parseInt(blackmalus.cards[i].value);
   }
   console.log(red,black);
   return red >= black ? 'red' : 'black';
 }
 
-async function getfield (gameid, dbCon) {
+async function getStacks (gameid, dbCon) {
   return new Promise ((resolve) => {
     dbCon.connect (
       function(err) { if (err) throw err;
@@ -137,8 +137,10 @@ async function getfield (gameid, dbCon) {
           function (err, actions) { if (err) throw err;
             var stack = [];
             for(var i = 0; i< 22 ; i++) {
-              stack[i] = actions.filter(x=> x.stack === actions[0].stack)
-              actions = actions.filter(x=> x.stack != actions[0].stack)
+              if(actions[0] != undefined) {
+                stack[i] = {stack : actions[0].stack, cards : actions.filter(x=> x.stack === actions[0].stack)}
+                actions = actions.filter(x=> x.stack != actions[0].stack)
+              }
             }
             resolve (stack)
           }

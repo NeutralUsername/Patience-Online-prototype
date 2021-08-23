@@ -83,22 +83,22 @@ async function startGame (red, black, options) {
     //startTurn(game.id);
 
     var initialstate = game.initialstate;
-    initialstate.field = hideFaceDownCardsFromClient(initialstate.field)
+    initialstate.stacks = hideFaceDownCardsFromClient(initialstate.stacks)
 
     io.to (red).to(black).emit ('startOnlineGameRES', { props : game.props, initialstate : initialstate});
     
     updatePendingRoomsCLIENTS (); 
 }
 
-function hideFaceDownCardsFromClient (field) {
-    for(var stack in field) 
-        for(var card of field[stack]) 
+function hideFaceDownCardsFromClient (stacks) {
+    for(var stack in stacks) 
+        for(var card of stacks[stack].cards) 
             if(card.faceup === 0) {
                 delete card.id;
                 delete card.value;
                 delete card.suit;
             }
-    return field;
+    return stacks;
  }
 
 function startTurn (game) {
