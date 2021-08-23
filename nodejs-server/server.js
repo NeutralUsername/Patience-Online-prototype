@@ -37,14 +37,7 @@ io.on ('connection', function (socket) {
     socket.on ('createOnlineRoomREQ', async function (data){
         try {
             await rateLimiter.consume (socket.handshake.address);
-            if( returnPendingRoomIfExists (socket.id) ) {
-                if(optionsAreDifferent( returnPendingRoomIfExists (socket.id).options , data.options)) {
-                    removePendingRoomIfExists (socket.id);
-                    addPendingRoom (socket.id, data.options) ;
-                }
-            }
-            else 
-                addPendingRoom (socket.id, data.options) ;
+            addPendingRoom (socket.id, data.options) ;
         }        
         catch (rejRes) {
             console.log ("flood protection => new pending Room");
@@ -56,10 +49,10 @@ io.on ('connection', function (socket) {
             await rateLimiter.consume (socket.handshake.address);
             if (data.roomkey != socket.id)
                 if (returnPendingRoomIfExists (data.roomkey)) 
-                    if (returnPendingRoomIfExists (data.roomkey).options.roomPassword.length  === 0) 
-                        addActiveRoom (data.roomkey, socket.id, returnPendingRoomIfExists (data.roomkey).options );
-                    else 
+                    if (returnPendingRoomIfExists (data.roomkey).options.roomPassword.length) 
                         socket.emit ('roomPasswordREQ', {roomkey : data.roomkey});
+                    else 
+                        addActiveRoom (data.roomkey, socket.id, returnPendingRoomIfExists (data.roomkey).options );
         }    
         catch (rejRes) {
             console.log ("flood protection => join pending Room");
@@ -144,7 +137,8 @@ function startTurn (game) {
 }
 
 function addPendingRoom (roomkey, options) {
-     pendingOnlineRooms.push ({
+    removePendingRoomIfExists (roomkey);
+    pendingOnlineRooms.push ({
         roomkey : roomkey,
         options : {
             malusSize : options.malusSize,
@@ -157,7 +151,7 @@ function addPendingRoom (roomkey, options) {
             roomName : options.roomName,
             roomPassword : options.roomPassword,
         }
-     });
+    });
     updatePendingRoomsCLIENTS ();
 }
 
