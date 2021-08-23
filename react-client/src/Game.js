@@ -48,97 +48,97 @@ export default class Game extends React.Component{
         return (
             <div className="game">
                 <Stock 
-                    name = {this.props.color === 'red' ? 'redstock' : 'blackstock' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='redstock') : this.state.stacks.find(x=>x.name ==='blackstock') }
+                    name =  {this.props.color+'stock'  } 
+                    stack = {this.state.stacks.find(x=>x.name === this.props.color+'stock') }
                 ></Stock>
                 <Waste 
-                    name = {this.props.color === 'red' ? 'redwaste' : 'blackwaste' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='redwaste') : this.state.stacks.find(x=>x.name ==='blackwaste') }
+                    name =  {this.props.color+'waste'  } 
+                    stack = {this.state.stacks.find(x=>x.name === this.props.color+'waste') }
                 ></Waste>
                 <Malus 
-                    name = {this.props.color === 'red' ? 'redmalus' : 'blackmalus' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='redmalus') : this.state.stacks.find(x=>x.name ==='blackmalus')}
+                    name =  {this.props.color+'malus'  } 
+                    stack = {this.state.stacks.find(x=>x.name === this.props.color+'malus') }
                 ></Malus>
                
                 <Tableau 
-                    name = {this.props.color === 'red' ? 'tableau0r' : 'tableau0b' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='tableau0r') : this.state.stacks.find(x=>x.name ==='tableau0b') }
+                    name = { 'tableau0'+ (this.props.color ==='red' ? 'r' : 'b')} 
+                    stack = {this.state.stacks.find(x=>x.name ==='tableau0'+ ( this.props.color ==='red' ? 'r' : 'b')) }
                 ></Tableau>
                 <Foundation 
-                    name = {this.props.color === 'red' ? 'foundation0r' : 'foundation0b' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='foundation0r') : this.state.stacks.find(x=>x.name ==='foundation0b') }
+                    name = {'foundation0'+ (this.props.color ==='red' ? 'r' : 'b')} 
+                    stack = {this.state.stacks.find(x=>x.name ==='foundation0' + (this.props.color ==='red' ? 'r' : 'b')) }
                 ></Foundation>
                 <Foundation 
-                    name = {this.props.color === 'red' ? 'foundation0b' : 'foundation0r' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='foundation0b') : this.state.stacks.find(x=>x.name ==='foundation0r') }
+                    name = {'foundation0'+ (this.props.color ==='red' ? 'b' : 'r')} 
+                    stack = {this.state.stacks.find(x=>x.name ==='foundation0' + (this.props.color ==='red' ? 'b' : 'r')) }
                 ></Foundation>
                 <Tableau 
-                    name = {this.props.color === 'red' ? 'tableau0b' : 'tableau0r' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='tableau0b') : this.state.stacks.find(x=>x.name ==='tableau0r') }
-                ></Tableau>
-
-                <Tableau 
-                    name = {this.props.color === 'red' ? 'tableau1r' : 'tableau1b' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='tableau1r') : this.state.stacks.find(x=>x.name ==='tableau1b') }
-                ></Tableau>
-                <Foundation 
-                    name = {this.props.color === 'red' ? 'foundation1r' : 'foundation1b' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='foundation1r') : this.state.stacks.find(x=>x.name ==='foundation1b') }
-                ></Foundation>
-                <Foundation 
-                    name = {this.props.color === 'red' ? 'foundation1b' : 'foundation1r' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='foundation1b') : this.state.stacks.find(x=>x.name ==='foundation1r') }
-                ></Foundation>
-                <Tableau 
-                    name = {this.props.color === 'red' ? 'tableau1b' : 'tableau1r' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='tableau1b') : this.state.stacks.find(x=>x.name ==='tableau1r') }
-                ></Tableau> 
-
-                <Tableau 
-                    name = {this.props.color === 'red' ? 'tableau2r' : 'tableau2b' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='tableau2r') : this.state.stacks.find(x=>x.name ==='tableau2b') }
-                ></Tableau>
-                <Foundation 
-                    name = {this.props.color === 'red' ? 'foundation2r' : 'foundation2b' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='foundation2r') : this.state.stacks.find(x=>x.name ==='foundation2b') }
-                ></Foundation>
-                <Foundation 
-                    name = {this.props.color === 'red' ? 'foundation2b' : 'foundation2r' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='foundation2b') : this.state.stacks.find(x=>x.name ==='foundation2r') }
-                ></Foundation>
-                <Tableau 
-                    name = {this.props.color === 'red' ? 'tableau2b' : 'tableau2r' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='tableau2b') : this.state.stacks.find(x=>x.name ==='tableau2r') }
+                   name = { 'tableau0'+ (this.props.color ==='red' ? 'b' : 'r')} 
+                   stack = {this.state.stacks.find(x=>x.name ==='tableau0'+ ( this.props.color ==='red' ? 'b' : 'r')) }
                 ></Tableau>
 
                 <Tableau 
-                    name = {this.props.color === 'red' ? 'tableau3r' : 'tableau3b' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='tableau3r') : this.state.stacks.find(x=>x.name ==='tableau3b') }
+                    name = { 'tableau1'+ (this.props.color ==='red' ? 'r' : 'b')} 
+                    stack = {this.state.stacks.find(x=>x.name ==='tableau1'+ ( this.props.color ==='red' ? 'r' : 'b')) }
                 ></Tableau>
                 <Foundation 
-                    name = {this.props.color === 'red' ? 'foundation3r' : 'foundation3b' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='foundation3r') : this.state.stacks.find(x=>x.name ==='foundation3b') }
+                    name = {'foundation1'+ (this.props.color ==='red' ? 'r' : 'b')} 
+                    stack = {this.state.stacks.find(x=>x.name ==='foundation1' + (this.props.color ==='red' ? 'r' : 'b')) }
                 ></Foundation>
                 <Foundation 
-                    name = {this.props.color === 'red' ? 'foundation3b' : 'foundation3r' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='foundation3b') : this.state.stacks.find(x=>x.name ==='foundation3r') }
+                    name = {'foundation1'+ (this.props.color ==='red' ? 'b' : 'r')} 
+                    stack = {this.state.stacks.find(x=>x.name ==='foundation1' + (this.props.color ==='red' ? 'b' : 'r')) }
                 ></Foundation>
                 <Tableau 
-                    name = {this.props.color === 'red' ? 'tableau3b' : 'tableau3r' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='tableau3b') : this.state.stacks.find(x=>x.name ==='tableau3r') }
+                   name = { 'tableau1'+ (this.props.color ==='red' ? 'b' : 'r')} 
+                   stack = {this.state.stacks.find(x=>x.name ==='tableau1'+ ( this.props.color ==='red' ? 'b' : 'r')) }
+                ></Tableau>
+
+                <Tableau 
+                    name = { 'tableau2'+ (this.props.color ==='red' ? 'r' : 'b')} 
+                    stack = {this.state.stacks.find(x=>x.name ==='tableau2'+ ( this.props.color ==='red' ? 'r' : 'b')) }
+                ></Tableau>
+                <Foundation 
+                    name = {'foundation2'+ (this.props.color ==='red' ? 'r' : 'b')} 
+                    stack = {this.state.stacks.find(x=>x.name ==='foundation2' + (this.props.color ==='red' ? 'r' : 'b')) }
+                ></Foundation>
+                <Foundation 
+                    name = {'foundation2'+ (this.props.color ==='red' ? 'b' : 'r')} 
+                    stack = {this.state.stacks.find(x=>x.name ==='foundation2' + (this.props.color ==='red' ? 'b' : 'r')) }
+                ></Foundation>
+                <Tableau 
+                   name = { 'tableau2'+ (this.props.color ==='red' ? 'b' : 'r')} 
+                   stack = {this.state.stacks.find(x=>x.name ==='tableau2'+ ( this.props.color ==='red' ? 'b' : 'r')) }
+                ></Tableau>
+
+                <Tableau 
+                    name = { 'tableau3'+ (this.props.color ==='red' ? 'r' : 'b')} 
+                    stack = {this.state.stacks.find(x=>x.name ==='tableau3'+ ( this.props.color ==='red' ? 'r' : 'b')) }
+                ></Tableau>
+                <Foundation 
+                    name = {'foundation3'+ (this.props.color ==='red' ? 'r' : 'b')} 
+                    stack = {this.state.stacks.find(x=>x.name ==='foundation3' + (this.props.color ==='red' ? 'r' : 'b')) }
+                ></Foundation>
+                <Foundation 
+                    name = {'foundation3'+ (this.props.color ==='red' ? 'b' : 'r')} 
+                    stack = {this.state.stacks.find(x=>x.name ==='foundation3' + (this.props.color ==='red' ? 'b' : 'r')) }
+                ></Foundation>
+                <Tableau 
+                   name = { 'tableau3'+ (this.props.color ==='red' ? 'b' : 'r')} 
+                   stack = {this.state.stacks.find(x=>x.name ==='tableau3'+ ( this.props.color ==='red' ? 'b' : 'r')) }
                 ></Tableau>
 
                 <Stock 
-                    name = {this.props.color === 'red' ? 'blackstock' : 'redstock' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='blackstock') : this.state.stacks.find(x=>x.name ==='redstock') }
+                    name = {(this.props.color === 'red' ? 'black' : 'red' )+'stock'} 
+                    stack = {this.state.stacks.find(x=>x.name === (this.props.color === 'red' ? 'black' : 'red' )+ 'stock') }
                 ></Stock>
                 <Waste 
-                    name = {this.props.color === 'red' ? 'blackwaste' : 'redwaste' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='blackwaste') : this.state.stacks.find(x=>x.name ==='redwaste') }
+                    name = {(this.props.color === 'red' ? 'black' : 'red' )+'waste'} 
+                    stack = {this.state.stacks.find(x=>x.name === (this.props.color === 'red' ? 'black' : 'red' )+ 'waste') }
                 ></Waste>
                 <Malus 
-                    name = {this.props.color === 'red' ? 'blackmalus' : 'redmalus' } 
-                    stack = {this.props.color === 'red' ? this.state.stacks.find(x=>x.name ==='blackmalus') : this.state.stacks.find(x=>x.name ==='redmalus') }
+                      name = {(this.props.color === 'red' ? 'black' : 'red' )+'malus'} 
+                      stack = {this.state.stacks.find(x=>x.name === (this.props.color === 'red' ? 'black' : 'red' )+ 'malus') }
                 ></Malus>
             </div>
         )
