@@ -55,22 +55,8 @@ module.exports = {
                     async function (err, game) { if (err) throw err; 
                       await dealcards ( game.insertId , options, sqlstarted, dbCon); 
                       var field =  await getfield(game.insertId, dbCon);
-                      var startcolor = await determinestartingplayer(field.redmalus, field.blackmalus)
-                      resolve ({ 
-                        //props (constant)
-                        red :           red,
-                        black :         black,
-                        id :            game.insertId,
-                        throwOnWaste :  options.throwOnWaste,
-                        throwOnMalus :  options.throwOnMalus,
-                        variant :       options.variant,
-                        //state (changing)
-                        field :         field,
-                        redtimer :      options.timePerPlayer,
-                        blacktimer :    options.timePerPlayer,
-                        turntimer :     options.timePerTurn,
-                        turncolor :     startcolor
-                      })   
+                      var startcolor = await determinestartingplayer(field[0], field[6])
+                      resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, field, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
                     }
                   )
                 }
@@ -98,22 +84,8 @@ module.exports = {
                         async function (err, game) { if (err) throw err;
                           await dealcards ( game.insertId , options, sqlstarted, dbCon); 
                           var field =  await getfield(game.insertId, dbCon);
-                          var startcolor = await determinestartingplayer(field.redmalus, field.blackmalus)
-                          resolve ({ 
-                            //props (constant)
-                            id :            game.insertId,
-                            throwOnWaste :  options.throwOnWaste,
-                            throwOnMalus :  options.throwOnMalus,
-                            variant :       options.variant,
-                            red :           red,
-                            black :         black,
-                            //state (changing)
-                            field :         field,
-                            redtimer :      options.timePerPlayer,
-                            blacktimer :    options.timePerPlayer,
-                            turntimer :     options.timePerTurn,
-                            turncolor :     startcolor
-                          })   
+                          var startcolor = await determinestartingplayer(field[0], field[6])
+                          resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, field, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
                         }
                       )
                     } 
@@ -125,6 +97,24 @@ module.exports = {
         )
       }
     )
+  }
+}
+
+function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, field, redtimer, blacktimer, turntimer, turncolor) {
+  return {
+    //props ( constant for whole game)
+    id : id,
+    throwOnWaste : throwOnWaste,
+    throwOnMalus : throwOnMalus,
+    variant : variant,
+    red : red,
+    black : black,
+    //state (chainging every action/turn)
+    field : field,
+    redtimer : redtimer,
+    blacktimer : blacktimer,
+    turntimer : turntimer,
+    turncolor : turncolor
   }
 }
 
@@ -146,32 +136,12 @@ async function getfield (gameid, dbCon) {
         dbCon.query (" SELECT c.id, c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
 
           function (err, actions) { if (err) throw err;
-            resolve ({
-                redstock : actions.filter(x=>x.stack === 'redstock'),
-                redwaste : actions.filter(x=>x.stack === 'redwaste'),
-                redmalus : actions.filter(x=>x.stack === 'redmalus'),
-
-                tableau0r : actions.filter(x=>x.stack === 'tableau0r'),
-                tableau1r : actions.filter(x=>x.stack === 'tableau1r'),
-                tableau2r : actions.filter(x=>x.stack === 'tableau2r'),
-                tableau3r : actions.filter(x=>x.stack === 'tableau3r'),
-                tableau0b : actions.filter(x=>x.stack === 'tableau0b'),
-                tableau1b : actions.filter(x=>x.stack === 'tableau1b'),
-                tableau2b : actions.filter(x=>x.stack === 'tableau2b'),
-                tableau3b : actions.filter(x=>x.stack === 'tableau3b'),
-                foundation0r : actions.filter(x=>x.stack === 'foundation0r'),
-                foundation1r : actions.filter(x=>x.stack === 'foundation1r'),
-                foundation2r : actions.filter(x=>x.stack === 'foundation2r'),
-                foundation3r : actions.filter(x=>x.stack === 'foundation3r'),
-                foundation0b : actions.filter(x=>x.stack === 'foundation0b'),
-                foundation1b : actions.filter(x=>x.stack === 'foundation1b'),
-                foundation2b : actions.filter(x=>x.stack === 'foundation2b'),
-                foundation3b : actions.filter(x=>x.stack === 'foundation3b'),
-
-                blackstock : actions.filter(x=>x.stack === 'blackstock'),
-                blackwaste : actions.filter(x=>x.stack === 'blackwaste'),
-                blackmalus : actions.filter(x=>x.stack === 'blackmalus'),
-            })
+            var stack = [];
+            for(var i = 0; i< 22 ; i++) {
+              stack[i] = actions.filter(x=> x.stack === actions[0].stack)
+              actions = actions.filter(x=> x.stack != actions[0].stack)
+            }
+            resolve (stack)
           }
         )
       }
@@ -187,8 +157,7 @@ async function dealcards( gameid, options, created, dbCon) {
     dbCon.connect (
        function(err) { if (err) throw err;
         dbCon.query ("SELECT * FROM cards ",
-
-           async function (err, cards) { if (err) throw err;  
+          async function (err, cards) { if (err) throw err;  
             for(var player = 0; player < 2 ; player++) {
               for(var malussize = 0 ; malussize < options.malusSize; malussize++) {
                 if (malussize < 6)
@@ -259,7 +228,7 @@ async function dealcards( gameid, options, created, dbCon) {
 function sqlCompatibleDate(date) {
   var sqlcompatibledate = date;
   return sqlcompatibledate = sqlcompatibledate.getUTCFullYear() + '-' +
-  ('00' + (sqlcompatibledate.getUTCMonth()+1)).slice(-2) + '-' +
+  ('00' +(sqlcompatibledate.getUTCMonth()+1)).slice(-2) + '-' +
   ('00' + sqlcompatibledate.getUTCDate()).slice(-2) + ' ' + 
   ('00' + sqlcompatibledate.getUTCHours()).slice(-2) + ':' + 
   ('00' + sqlcompatibledate.getUTCMinutes()).slice(-2) + ':' + 
