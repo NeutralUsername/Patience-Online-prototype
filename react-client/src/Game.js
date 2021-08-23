@@ -46,31 +46,31 @@ export default class Game extends React.Component{
     render(){
         return (
             <div className="game">
-                <Stock></Stock>
-                <Waste></Waste>
-                <Malus></Malus>
+                <Stock stack = {this.state.stacks.find(x=>x.name ==='redstock') }></Stock>
+                <Waste stack = {this.state.stacks.find(x=>x.name ==='redwaste') }></Waste>
+                <Malus stack = {this.state.stacks.find(x=>x.name ==='redmalus') }></Malus>
 
-                <Foundation></Foundation>
-                <Foundation></Foundation>
-                <Foundation></Foundation>
-                <Foundation></Foundation>
-                <Foundation></Foundation>
-                <Foundation></Foundation>
-                <Foundation></Foundation>
-                <Foundation></Foundation>
+                <Tableau stack = {this.state.stacks.find(x=>x.name ==='tableau0r') }></Tableau>
+                <Tableau stack = {this.state.stacks.find(x=>x.name ==='tableau1r') }></Tableau>
+                <Tableau stack = {this.state.stacks.find(x=>x.name ==='tableau2r') }></Tableau>
+                <Tableau stack = {this.state.stacks.find(x=>x.name ==='tableau3r') }></Tableau>
+                <Tableau stack = {this.state.stacks.find(x=>x.name ==='tableau0r') }></Tableau>
+                <Tableau stack = {this.state.stacks.find(x=>x.name ==='tableau1b') }></Tableau>
+                <Tableau stack = {this.state.stacks.find(x=>x.name ==='tableau2b') }></Tableau>
+                <Tableau stack = {this.state.stacks.find(x=>x.name ==='tableau3b') }></Tableau>
 
-                <Tableau></Tableau>
-                <Tableau></Tableau>
-                <Tableau></Tableau>
-                <Tableau></Tableau>
-                <Tableau></Tableau>
-                <Tableau></Tableau>
-                <Tableau></Tableau>
-                <Tableau></Tableau>
+                <Foundation stack = {this.state.stacks.find(x=>x.name ==='foundation0r') }></Foundation>
+                <Foundation stack = {this.state.stacks.find(x=>x.name ==='foundation1r') }></Foundation>
+                <Foundation stack = {this.state.stacks.find(x=>x.name ==='foundation2r') }></Foundation>
+                <Foundation stack = {this.state.stacks.find(x=>x.name ==='foundation3r') }></Foundation>
+                <Foundation stack = {this.state.stacks.find(x=>x.name ==='foundation0b') }></Foundation>
+                <Foundation stack = {this.state.stacks.find(x=>x.name ==='foundation1b') }></Foundation>
+                <Foundation stack = {this.state.stacks.find(x=>x.name ==='foundation2b') }></Foundation>
+                <Foundation stack = {this.state.stacks.find(x=>x.name ==='foundation3b') }></Foundation>
 
-                <Stock></Stock>
-                <Waste></Waste>
-                <Malus></Malus>
+                <Stock stack = {this.state.stacks.find(x=>x.name ==='blackstock') }></Stock>
+                <Waste stack = {this.state.stacks.find(x=>x.name ==='blackwaste') }></Waste>
+                <Malus stack = {this.state.stacks.find(x=>x.name ==='blackmalus') }></Malus>
             </div>
         )
     }
@@ -80,11 +80,31 @@ class Stock extends React.Component {
     constructor(props) {
         super(props);
     }
+    
+    render () {
+        return (
+            <ul>
+                { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
+                    <Card key = {card.nr}> </Card>
+                ):''}
+            </ul>
+        )
+    }
 }
 
 class Waste extends React.Component {
     constructor(props) {
         super(props);
+    }
+
+    render () {
+        return (
+            <ul>
+                { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
+                    <Card key = {card.nr}> </Card>
+                ):''}
+            </ul>
+        )
     }
 }
 
@@ -92,11 +112,31 @@ class Malus extends React.Component {
     constructor(props) {
         super(props);
     }
+
+    render () {
+        return (
+            <ul>
+                { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
+                    <Card key = {card.nr}> </Card>
+                ):''}
+            </ul>
+        )
+    }
 }
 
 class Tableau extends React.Component {
     constructor(props) {
         super(props);
+    }
+
+    render () {
+        return (
+            <ul>
+                { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
+                    <Card key = {card.nr}> </Card>
+                ):''}
+            </ul>
+        )
     }
 }
 
@@ -105,9 +145,23 @@ class Foundation extends React.Component {
     constructor(props) {
         super(props);
     }
+
+    render () {
+        return (
+            <ul>
+                { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
+                    <Card key = {card.nr}> </Card>
+                ):''}
+            </ul>
+        )
+    }
 }
 
-function Card () {
+function Card (props) {
+    return (
+        <div>
 
+        </div>
+    )
 }
 

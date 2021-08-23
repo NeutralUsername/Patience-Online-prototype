@@ -121,8 +121,8 @@ async function determinestartingplayer(redmalus, blackmalus) {
   var red = 0;
   var black = 0;
   for(var i  = 0 ; i< redmalus.cards.length; i++) {
-    red += parseInt(redmalus.cards[i].value);
-    black += parseInt(blackmalus.cards[i].value);
+    red += parseInt(redmalus.cards[i].details.value);
+    black += parseInt(blackmalus.cards[i].details.value);
   }
   console.log(red,black);
   return red >= black ? 'red' : 'black';
@@ -138,7 +138,10 @@ async function getStacks (gameid, dbCon) {
             var stack = [];
             for(var i = 0; i< 22 ; i++) {
               if(actions[0] != undefined) {
-                stack[i] = {name : actions[0].stack, cards : actions.filter(x=> x.stack === actions[0].stack)}
+                var cardcounter = 0;
+                stack[i] = {name : actions[0].stack, cards : actions.filter(x=> x.stack === actions[0].stack).map(function(card) {
+                  return { nr : cardcounter++, details : card};
+                })}
                 actions = actions.filter(x=> x.stack != actions[0].stack)
               }
             }

@@ -91,10 +91,11 @@ async function startGame (red, black, options) {
 function hideFaceDownCardsFromClient (stacks) {
     for(var stack in stacks) 
         for(var card of stacks[stack].cards) 
-            if(card.faceup === 0) {
-                delete card.id;
-                delete card.value;
-                delete card.suit;
+            if(card.details.faceup === 0) {
+                delete card.details.id;
+                delete card.details.value;
+                delete card.details.suit;
+                delete card.details.moved;
             }
     return stacks;
  }
