@@ -25,7 +25,7 @@ io.on ('connection', function (socket) {
     socket.on ('startAIgameREQ', async function (data) {
         try {
             await rateLimiter.consume (socket.handshake.address);
-            addActiveRoom(socket.id, 'AI', data.options);
+            startGame(socket.id, 'AI', data.options);
         }
         catch (rejRes) {
             console.log ("flood protection => startAIgameREQ");
@@ -55,7 +55,7 @@ io.on ('connection', function (socket) {
                     if (returnPendingRoomIfExists (data.roomkey).options.roomPassword.length) 
                         socket.emit ('roomPasswordREQ', {roomkey : data.roomkey});
                     else 
-                        addActiveRoom (data.roomkey, socket.id, returnPendingRoomIfExists (data.roomkey).options );
+                        startGame (data.roomkey, socket.id, returnPendingRoomIfExists (data.roomkey).options );
         }    
         catch (rejRes) {
             console.log ("flood protection => join pending Room");
@@ -65,7 +65,7 @@ io.on ('connection', function (socket) {
     socket.on ('roomPasswordRES' , async function ( data) {
         if(data.password != undefined)
             if (returnPendingRoomIfExists (data.roomkey).options.roomPassword == data.password) 
-                addActiveRoom (data.roomkey, socket.id, returnPendingRoomIfExists (data.roomkey).options );
+                startGame (data.roomkey, socket.id, returnPendingRoomIfExists (data.roomkey).options );
     })
 
     socket.on ('disconnect', function () {
@@ -73,7 +73,7 @@ io.on ('connection', function (socket) {
     });
 });
 
-async function addActiveRoom (red, black, options) {
+async function startGame (red, black, options) {
     options.timePerTurn = options.turnsTimed ? options.timePerTurn : -1337,
 
     activeGames.push( game = await db.initGame (red, black, options, new Date()  ));

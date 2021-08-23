@@ -151,7 +151,7 @@ async function dealcards( gameid, options, created, dbCon) {
   return new Promise ((resolve) => {
     var reddeck = shuffle(freshdeck("red"));
     var blackdeck = shuffle(freshdeck("black"));
-    var values = [];
+    var actions = [];
     dbCon.connect (
        function(err) { if (err) throw err;
         dbCon.query ("SELECT * FROM cards ",
@@ -163,7 +163,7 @@ async function dealcards( gameid, options, created, dbCon) {
                     player === 0 ? reddeck = shuffle(reddeck) : blackdeck = shuffle(blackdeck)
                   } 
                 var card = player === 0 ? reddeck.pop() : blackdeck.pop();
-                values.push([
+                actions.push([
                   0,
                   gameid,
                   cards.find( x=> x.color === card.color && 
@@ -182,7 +182,7 @@ async function dealcards( gameid, options, created, dbCon) {
                       player === 0 ? reddeck = shuffle(reddeck) : blackdeck = shuffle(blackdeck)
                     } 
                   var card = player === 0 ? reddeck.pop() : blackdeck.pop();
-                  values.push([
+                  actions.push([
                     0,
                     gameid,
                     cards.find( x=> x.color === card.color && 
@@ -198,7 +198,7 @@ async function dealcards( gameid, options, created, dbCon) {
               }
               for(var stock = 0 ; stock <  52 -options.malusSize - 4*options.tableauSize ; stock ++ ) {
                 var card = player === 0 ? reddeck.pop() : blackdeck.pop();
-                values.push([
+                actions.push([
                   0,
                   gameid,
                   cards.find( x=> x.color === card.color && 
@@ -211,7 +211,7 @@ async function dealcards( gameid, options, created, dbCon) {
                 ]);
               }
             }
-            dbCon.query ("INSERT INTO actions (id, gameid, cardid, stack, faceup, player, turn, moved) VALUES ?", [values],
+            dbCon.query ("INSERT INTO actions (id, gameid, cardid, stack, faceup, player, turn, moved) VALUES ?", [actions],
               function (err, result) { if (err) throw err;
                 resolve();
               }
