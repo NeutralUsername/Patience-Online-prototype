@@ -108,7 +108,7 @@ function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, re
       red : red,
       black : black,
     },
-    initialstate : {
+    state : {
       stacks : stacks,
       redtimer : redtimer,
       blacktimer : blacktimer,
@@ -122,8 +122,8 @@ async function determinestartingplayer(redmalus, blackmalus) {
   var red = 0;
   var black = 0;
   for(var i  = 0 ; i< redmalus.cards.length; i++) {
-    red += parseInt(redmalus.cards[i].details.value);
-    black += parseInt(blackmalus.cards[i].details.value);
+    red += parseInt(redmalus.cards[i].value);
+    black += parseInt(blackmalus.cards[i].value);
   }
   console.log(red,black);
   return red >= black ? 'red' : 'black';
@@ -141,7 +141,8 @@ async function getStacks (gameid, dbCon) {
               if(actions[0] != undefined) {
                 var cardcounter = 0;
                 stack[i] = {name : actions[0].stack, cards : actions.filter(x=> x.stack === actions[0].stack).map(function(card) {
-                  return { nr : cardcounter++, details : card};
+                  var item = { nr : cardcounter++, faceup : card.faceup, color : card.color, suit : card.suit, value : card.value};
+                  return item;
                 })}
                 actions = actions.filter(x=> x.stack != actions[0].stack)
               }

@@ -88,9 +88,9 @@ class Stock extends React.Component {
                 { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
                     <Card 
                         key = {card.nr} 
-                        color = {card.details.color} 
-                        suit = {card.details.faceup?card.details.suit:'facedown'} 
-                        value = {card.details.faceup?card.details.value:'facedown'}
+                        color = {card.color} 
+                        suit = {card.suit} 
+                        value = {card.value}
                     > </Card>
                 ):''}
             </ul>
@@ -109,9 +109,9 @@ class Waste extends React.Component {
                 { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
                     <Card 
                         key = {card.nr} 
-                        color = {card.details.color} 
-                        suit = {card.details.faceup?card.details.suit:'facedown'} 
-                        value = {card.details.faceup?card.details.value:'facedown'}
+                        color = {card.color} 
+                        suit = {card.suit} 
+                        value = {card.value}
                     > </Card>
                 ):''}
             </ul>
@@ -130,9 +130,9 @@ class Malus extends React.Component {
                 { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
                     <Card 
                         key = {card.nr} 
-                        color = {card.details.color} 
-                        suit = {card.details.faceup?card.details.suit:'facedown'} 
-                        value = {card.details.faceup?card.details.value:'facedown'}
+                        color = {card.color} 
+                        suit = {card.suit} 
+                        value = {card.value}
                     > </Card>
                 ):''}
             </ul>
@@ -151,9 +151,9 @@ class Tableau extends React.Component {
                 { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
                     <Card 
                         key = {card.nr} 
-                        color = {card.details.color} 
-                        suit = {card.details.faceup?card.details.suit:'facedown'} 
-                        value = {card.details.faceup?card.details.value:'facedown'}
+                        color = {card.color} 
+                        suit = {card.suit} 
+                        value = {card.value}
                     > </Card>
                 ):''}
             </ul>
@@ -173,9 +173,9 @@ class Foundation extends React.Component {
                 { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
                     <Card 
                         key = {card.nr} 
-                        color = {card.details.color} 
-                        suit = {card.details.faceup?card.details.suit:'facedown'} 
-                        value = {card.details.faceup?card.details.value:'facedown'}
+                        color = {card.color} 
+                        suit = {card.suit} 
+                        value = {card.value}
                     > </Card>
                 ):''}
             </ul>
@@ -186,9 +186,7 @@ class Foundation extends React.Component {
 function Card (props) {
     return (
         <div>
-            <label>{props.color}</label>
-            <label>{props.suit}</label>
-            <label>{props.value}</label>
+            <label>{props.color} {props.suit} {props.value}</label>
         </div>
     )
 }
