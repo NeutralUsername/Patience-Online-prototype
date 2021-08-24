@@ -47,121 +47,91 @@ export default class Game extends React.Component{
     render(){
         return (
             <div className="game">
-                <div className = "player">
-                    <Pile 
-                        name =  {this.props.color+'stock'  } 
-                        stack = {this.state.stacks.find(x=>x.name === this.props.color+'stock') }
-                    ></Pile>
-                    <Pile 
-                        name =  {this.props.color+'waste'  } 
-                        stack = {this.state.stacks.find(x=>x.name === this.props.color+'waste') }
-                    ></Pile>
-                    <Sequence 
-                        name =  {this.props.color+'malus'  } 
-                        stack = {this.state.stacks.find(x=>x.name === this.props.color+'malus') }
-                        orientation = {'right'}
-                    ></Sequence>
-                </div>
-                <div className = "field 1">
-                    <Sequence 
-                        name = { 'tableau0'+ (this.props.color ==='red' ? 'r' : 'b')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='tableau0'+ ( this.props.color ==='red' ? 'r' : 'b')) }
-                        orientation = {'left'}
-                    ></Sequence>
-                    <Pile 
-                        name = {'foundation0'+ (this.props.color ==='red' ? 'r' : 'b')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='foundation0' + (this.props.color ==='red' ? 'r' : 'b')) }
-                    ></Pile>
-                    <Pile 
-                        name = {'foundation0'+ (this.props.color ==='red' ? 'b' : 'r')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='foundation0' + (this.props.color ==='red' ? 'b' : 'r')) }
-                    ></Pile>
-                    <Sequence 
-                        name = { 'tableau0'+ (this.props.color ==='red' ? 'b' : 'r')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='tableau0'+ ( this.props.color ==='red' ? 'b' : 'r')) }
-                        orientation = {'right'}
-                    ></Sequence>
-                </div>
-                <div className = "field 2">
-                    <Sequence 
-                        name = { 'tableau1'+ (this.props.color ==='red' ? 'r' : 'b')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='tableau1'+ ( this.props.color ==='red' ? 'r' : 'b')) }
-                        orientation = {'left'}
-                    ></Sequence>
-                    <Pile 
-                        name = {'foundation1'+ (this.props.color ==='red' ? 'r' : 'b')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='foundation1' + (this.props.color ==='red' ? 'r' : 'b')) }
-                    ></Pile>
-                    <Pile 
-                        name = {'foundation1'+ (this.props.color ==='red' ? 'b' : 'r')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='foundation1' + (this.props.color ==='red' ? 'b' : 'r')) }
-                    ></Pile>
-                    <Sequence 
-                        name = { 'tableau1'+ (this.props.color ==='red' ? 'b' : 'r')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='tableau1'+ ( this.props.color ==='red' ? 'b' : 'r')) }
-                        orientation = {'right'}
-                    ></Sequence>
-                </div>
-                <div className ="field 3">
-                    <Sequence 
-                        name = { 'tableau2'+ (this.props.color ==='red' ? 'r' : 'b')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='tableau2'+ ( this.props.color ==='red' ? 'r' : 'b')) }
-                        orientation = {'left'}
-                    ></Sequence>
-                    <Pile 
-                        name = {'foundation2'+ (this.props.color ==='red' ? 'r' : 'b')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='foundation2' + (this.props.color ==='red' ? 'r' : 'b')) }
-                    ></Pile>
-                    <Pile 
-                        name = {'foundation2'+ (this.props.color ==='red' ? 'b' : 'r')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='foundation2' + (this.props.color ==='red' ? 'b' : 'r')) }
-                    ></Pile>
-                    <Sequence 
-                        name = { 'tableau2'+ (this.props.color ==='red' ? 'b' : 'r')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='tableau2'+ ( this.props.color ==='red' ? 'b' : 'r')) }
-                        orientation = {'right'}
-                    ></Sequence>
-                </div>
-                <div className ="field 4">
-                    <Sequence 
-                        name = { 'tableau3'+ (this.props.color ==='red' ? 'r' : 'b')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='tableau3'+ ( this.props.color ==='red' ? 'r' : 'b')) }
-                        orientation = {'left'}
-                    ></Sequence>
-                    <Pile 
-                        name = {'foundation3'+ (this.props.color ==='red' ? 'r' : 'b')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='foundation3' + (this.props.color ==='red' ? 'r' : 'b')) }
-                    ></Pile>
-                    <Pile 
-                        name = {'foundation3'+ (this.props.color ==='red' ? 'b' : 'r')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='foundation3' + (this.props.color ==='red' ? 'b' : 'r')) }
-                    ></Pile>
-                    <Sequence 
-                        name = { 'tableau3'+ (this.props.color ==='red' ? 'b' : 'r')} 
-                        stack = {this.state.stacks.find(x=>x.name ==='tableau3'+ ( this.props.color ==='red' ? 'b' : 'r')) }
-                        oorientation = {'right'}
-                    ></Sequence>
-                </div>
-                <div className ="opponent">
-                    <Sequence 
-                        name = {(this.props.color === 'red' ? 'black' : 'red' )+'malus'} 
-                        stack = {this.state.stacks.find(x=>x.name === (this.props.color === 'red' ? 'black' : 'red' )+ 'malus') }
-                        orientation = {'left'}
-                    ></Sequence>
-                    <Pile 
-                        name = {(this.props.color === 'red' ? 'black' : 'red' )+'waste'} 
-                        stack = {this.state.stacks.find(x=>x.name === (this.props.color === 'red' ? 'black' : 'red' )+ 'waste') }
-                    ></Pile>
-                    <Pile 
-                        name = {(this.props.color === 'red' ? 'black' : 'red' )+'stock'} 
-                        stack = {this.state.stacks.find(x=>x.name === (this.props.color === 'red' ? 'black' : 'red' )+ 'stock') }
-                    ></Pile>
-                </div>
+                <Player 
+                    malus = {this.state.stacks.find(x=>x.name === this.props.color+'malus')}
+                    stock = {this.state.stacks.find(x=>x.name === this.props.color+'stock')}
+                    waste = {this.state.stacks.find(x=>x.name === this.props.color+'waste')}
+                ></Player>
+                <Field 
+                    tableauP = {this.state.stacks.find(x=>x.name ==='tableau0'+ ( this.props.color ==='red' ? 'r' : 'b'))}
+                    foundationP = {this.state.stacks.find(x=>x.name ==='foundation0' + (this.props.color ==='red' ? 'r' : 'b'))}
+                    tableauO = {this.state.stacks.find(x=>x.name ==='foundation0' + (this.props.color ==='red' ? 'b' : 'r'))}
+                    foundationO = {this.state.stacks.find(x=>x.name ==='tableau0'+ ( this.props.color ==='red' ? 'b' : 'r'))}
+                ></Field>
+                <Field 
+                    tableauP = {this.state.stacks.find(x=>x.name ==='tableau1'+ ( this.props.color ==='red' ? 'r' : 'b'))}
+                    foundationP = {this.state.stacks.find(x=>x.name ==='foundation1' + (this.props.color ==='red' ? 'r' : 'b'))}
+                    tableauO = {this.state.stacks.find(x=>x.name ==='foundation1' + (this.props.color ==='red' ? 'b' : 'r'))}
+                    foundationO = {this.state.stacks.find(x=>x.name ==='tableau1'+ ( this.props.color ==='red' ? 'b' : 'r'))}
+                ></Field>
+                <Field 
+                    tableauP = {this.state.stacks.find(x=>x.name ==='tableau2'+ ( this.props.color ==='red' ? 'r' : 'b'))}
+                    foundationP = {this.state.stacks.find(x=>x.name ==='foundation2' + (this.props.color ==='red' ? 'r' : 'b'))}
+                    tableauO = {this.state.stacks.find(x=>x.name ==='foundation2' + (this.props.color ==='red' ? 'b' : 'r'))}
+                    foundationO = {this.state.stacks.find(x=>x.name ==='tableau2'+ ( this.props.color ==='red' ? 'b' : 'r'))}
+                ></Field>
+                <Field 
+                    tableauP = {this.state.stacks.find(x=>x.name ==='tableau3'+ ( this.props.color ==='red' ? 'r' : 'b'))}
+                    foundationP = {this.state.stacks.find(x=>x.name ==='foundation3' + (this.props.color ==='red' ? 'r' : 'b'))}
+                    tableauO = {this.state.stacks.find(x=>x.name ==='foundation3' + (this.props.color ==='red' ? 'b' : 'r'))}
+                    foundationO = {this.state.stacks.find(x=>x.name ==='tableau3'+ ( this.props.color ==='red' ? 'b' : 'r'))}
+                ></Field>
+                <Opponent 
+                    malus = {this.state.stacks.find(x=>x.name === (this.props.color === 'red' ? 'black' : 'red' )+ 'malus')}
+                    stock = {this.state.stacks.find(x=>x.name === (this.props.color === 'red' ? 'black' : 'red' )+ 'stock')}
+                    waste = {this.state.stacks.find(x=>x.name === (this.props.color === 'red' ? 'black' : 'red' )+ 'waste')}
+                ></Opponent>
             </div>
         )
     }
 } 
 
+class Player extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    
+    render () {
+        return (
+            <div>
+                <Sequence stack = {this.props.malus}></Sequence>
+                <Pile stack = {this.props.stock}></Pile>
+                <Pile stack = {this.props.waste}></Pile>
+            </div>
+        )
+    }
+}
+class Opponent extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    
+    render () {
+        return (
+            <div>
+                <Sequence stack = {this.props.malus}></Sequence>
+                <Pile stack = {this.props.stock}></Pile>
+                <Pile stack = {this.props.waste}></Pile>
+            </div>
+        )
+    }
+}
+class Field extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    
+    render () {
+        return (
+           <div>
+               <Sequence stack = {this.props.tableauP}></Sequence>
+               <Pile stack = {this.props.foundationP}></Pile>
+               <Pile stack = {this.props.tableauO}></Pile>
+               <Sequence stack = {this.props.foundationO}></Sequence>
+           </div>
+        )
+    }
+}
 
 class Pile extends React.Component {
     constructor(props) {
