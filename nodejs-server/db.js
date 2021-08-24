@@ -207,7 +207,6 @@ async function determineStartingPlayer(redmalus, blackmalus) {
   for(card in blackmalus) {
     black += parseInt(blackmalus[card].value);
   }
-  console.log(red, black)
   return red >= black ? 'red' : 'black';
 }
 

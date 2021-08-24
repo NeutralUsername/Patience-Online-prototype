@@ -72,7 +72,6 @@ io.on ('connection', function (socket) {
         var game = activeGames.find(game => game.props.id === data.id );
         var color = socket.id === game.props.red ? 'red' : socket.id === game.props.black ? 'black' : '';
         socket.emit ('UpdateGameState', prepareStateForClient(game.state, color));
-        console.log(game.state.stacks.redmalus);
     })
 
     socket.on ('disconnect', function () {

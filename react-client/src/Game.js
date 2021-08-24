@@ -20,7 +20,6 @@ export default class Game extends React.Component{
             if (this.mounted) {
                 this.setState (data);
             }
-            console.log(this.state.stacks);
         });
     }
     
