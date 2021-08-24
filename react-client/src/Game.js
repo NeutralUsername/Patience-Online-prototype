@@ -16,7 +16,7 @@ export default class Game extends React.Component{
             turntimer : this.props.initialstate.turntimer,
             turncolor : this.props.initialstate.turncolor,
         };
-        
+        console.log(this.state.stacks);
     }
 
     componentDidMount () {
@@ -85,14 +85,14 @@ class Pile extends React.Component {
     render () {
         return (
             <ul> {this.props.name}
-                { Object.keys(this.props.cards).map( (card) =>
+                { this.props.cards ? Object.keys(this.props.cards).map( (card) =>
                     <Card key = {card}
                         faceup = {this.props.cards[card].faceup}
                         color = {this.props.cards[card].color} 
                         suit = {this.props.cards[card].suit} 
                         value = {this.props.cards[card].value}
                     > </Card>
-                )}
+                ):''}
             </ul>
         )
     }
@@ -105,14 +105,14 @@ class Sequence extends React.Component {
     render () {
         return (
             <ul> {this.props.name}
-                { Object.keys(this.props.cards).map( (card) =>
+                { this.props.cards ? Object.keys(this.props.cards).map( (card) =>
                     <Card key = {card}
                         faceup = {this.props.cards[card].faceup}
                         color = {this.props.cards[card].color} 
                         suit = {this.props.cards[card].suit} 
                         value = {this.props.cards[card].value}
                     > </Card>
-                )}
+                ):''}
             </ul>
         )
     }
