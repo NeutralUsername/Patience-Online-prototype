@@ -122,7 +122,7 @@ async function dealcards( gameid, options, created, dbCon) {
     dbCon.connect (
        function(err) { if (err) throw err;
         dbCon.query ("SELECT * FROM cards ",
-          async function (err, cards) { if (err) throw err;  
+           function (err, cards) { if (err) throw err;  
             for(var player = 0; player < 2 ; player++) {
               for(var malussize = 0 ; malussize < options.malusSize; malussize++) {
                 if (malussize < 6)
@@ -164,7 +164,7 @@ async function getStacks (gameid, dbCon) {
     dbCon.connect (
       function(err) { if (err) throw err;
         dbCon.query (" SELECT c.id, c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
-          async function (err, actions) { if (err) throw err;
+           function (err, actions) { if (err) throw err;
             var stacks = {};
             for (action of actions) {
               stacks[action.stack] =  actionsarrayToCards(actions.filter(x=> x.stack === action.stack));
@@ -176,8 +176,6 @@ async function getStacks (gameid, dbCon) {
     )
   })
 }
-
-
 
 function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, redtimer, blacktimer, turntimer, turncolor) {
   return {

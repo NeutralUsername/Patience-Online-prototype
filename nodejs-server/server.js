@@ -62,10 +62,14 @@ io.on ('connection', function (socket) {
         }   
     });
 
-    socket.on ('roomPasswordRES' , async function ( data) {
+    socket.on ('roomPasswordRES' , function ( data) {
         if(data.password != undefined)
             if (getPendingRoom (data.roomkey).options.roomPassword === data.password) 
                 startGame (data.roomkey, socket.id, getPendingRoom (data.roomkey).options );
+    })
+
+    socket.on ('GameMounted' , function ( data) {
+        socket.emit ('UpdateGameState', prepareStateForClient(activeGames.find(game => game.props.id===data.id).state));
     })
 
     socket.on ('disconnect', function () {
@@ -81,7 +85,7 @@ async function startGame (red, black, options) {
     removePendingRoomIfExists (black);
     updatePendingRoomsCLIENTS (); 
 
-    io.to (red).to(black).emit ('startOnlineGameRES', { props : game.props, state : prepareStateForClient(game.state)});
+    io.to (red).to(black).emit ('startOnlineGameRES', { props : game.props});
 }
 
 function prepareStateForClient (state) {

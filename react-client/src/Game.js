@@ -4,45 +4,28 @@ import ReactDOM from 'react-dom';
 import { useDrag, useDrop } from "react-dnd";
 
 
+
 export default class Game extends React.Component{
     constructor(props) {
         super(props); 
         this.mounted = false;
         this.state = {
-            stacks : this.props.initialstate.stacks,
-            redtimer : this.props.initialstate.redtimer,
-            blacktimer : this.props.initialstate.blacktimer,
-            turn : this.props.initialstate.turn,
-            turntimer : this.props.initialstate.turntimer,
-            turncolor : this.props.initialstate.turncolor,
+            stacks : '',
+            redtimer : '',
+            blacktimer : '',
+            turntimer : '',
+            turncolor : '',
         };
-        console.log(this.state.stacks);
+        this.props.socket.on("UpdateGameState", data => {
+            if (this.mounted) {
+                this.setState (data);
+            }
+        });
     }
-
+    
     componentDidMount () {
         this.mounted = true;
-
-        this.props.socket.on("UpdateFieldRES", data => {
-            if (this.mounted) {
-                this.setState ({stacks : data.stacks });
-            }
-        });
-
-        this.props.socket.on("UpdateTimerRES", data => {
-            if (this.mounted) {
-                this.setState ({
-                    redtimer : data.redtimer, 
-                    blacktimer : data.blacktimer, 
-                    turntimer : data.turntimer 
-                });
-            }
-        });
-
-        this.props.socket.on("UpdateTurnColorRES", data => {
-            if (this.mounted) {
-                this.setState ({turncolor : data.turncolor });
-            }
-        });
+        this.props.socket.emit("GameMounted", {id : this.props.id});
     }
 
     render(){
@@ -84,14 +67,14 @@ class Pile extends React.Component {
     
     render () {
         return (
-            <ul> {this.props.name}
-                { this.props.cards ? Object.keys(this.props.cards).map( (card) =>
+            <ul>{this.props.name}
+                {this.props.cards ? Object.keys(this.props.cards).map( (card) =>
                     <Card key = {card}
                         faceup = {this.props.cards[card].faceup}
                         color = {this.props.cards[card].color} 
                         suit = {this.props.cards[card].suit} 
                         value = {this.props.cards[card].value}
-                    > </Card>
+                    ></Card>
                 ):''}
             </ul>
         )
@@ -104,14 +87,14 @@ class Sequence extends React.Component {
 
     render () {
         return (
-            <ul> {this.props.name}
-                { this.props.cards ? Object.keys(this.props.cards).map( (card) =>
+            <ul>{this.props.name}
+                {this.props.cards ? Object.keys(this.props.cards).map( (card) =>
                     <Card key = {card}
                         faceup = {this.props.cards[card].faceup}
                         color = {this.props.cards[card].color} 
                         suit = {this.props.cards[card].suit} 
                         value = {this.props.cards[card].value}
-                    > </Card>
+                    ></Card>
                 ):''}
             </ul>
         )
