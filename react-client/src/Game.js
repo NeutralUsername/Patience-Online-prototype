@@ -20,6 +20,7 @@ export default class Game extends React.Component{
             if (this.mounted) {
                 this.setState (data);
             }
+            console.log(this.state.stacks);
         });
     }
     
@@ -31,30 +32,33 @@ export default class Game extends React.Component{
     render(){
         return (
             <div className="game">
-                <Pile cards = {this.state.stacks.redstock} name = "redstock" ></Pile>
-                <Pile cards = {this.state.stacks.blackstock} name = "blackstock" ></Pile>
-                <Pile cards = {this.state.stacks.redwaste} name = "redwaste" ></Pile>
-                <Pile cards = {this.state.stacks.blackwaste}  name = "blackwaste"></Pile>
-                <Sequence cards = {this.state.stacks.redmalus}  name = "redmalus"></Sequence>
-                <Sequence cards = {this.state.stacks.blackmalus}  name = "blackmalus"></Sequence>
+                <Sequence cards = {this.state.stacks.playermalus} ></Sequence>
+                <Pile cards = {this.state.stacks.playerstock} ></Pile>
+                <Pile cards = {this.state.stacks.playerwaste} ></Pile>
+                
+                <Sequence cards = {this.state.stacks.playertableau0} ></Sequence>
+                <Pile cards = {this.state.stacks.playerfoundation0} ></Pile>
+                <Pile cards = {this.state.stacks.opponentfoundation0} ></Pile>
+                <Sequence cards = {this.state.stacks.opponenttableau0} ></Sequence>
+                
+                <Sequence cards = {this.state.stacks.playertableau1} ></Sequence>
+                <Pile cards = {this.state.stacks.playerfoundation1} ></Pile>
+                <Pile cards = {this.state.stacks.opponentfoundation1} ></Pile>
+                <Sequence cards = {this.state.stacks.opponenttableau1} ></Sequence>
 
-                <Sequence cards = {this.state.stacks.tableau0r} name = "tableau0r"></Sequence>
-                <Sequence cards = {this.state.stacks.tableau1r} name = "tableau1r"></Sequence>
-                <Sequence cards = {this.state.stacks.tableau2r} name = "tableau2r"></Sequence>
-                <Sequence cards = {this.state.stacks.tableau3r} name = "tableau3r"></Sequence>
-                <Sequence cards = {this.state.stacks.tableau0b} name = "tableau0b"></Sequence>
-                <Sequence cards = {this.state.stacks.tableau1b} name = "tableau1b"></Sequence>
-                <Sequence cards = {this.state.stacks.tableau2b} name = "tableau2b"></Sequence>
-                <Sequence cards = {this.state.stacks.tableau3b} name = "tableau3b"></Sequence>
+                <Sequence cards = {this.state.stacks.playertableau2} ></Sequence>
+                <Pile cards = {this.state.stacks.playerfoundation2} ></Pile>
+                <Pile cards = {this.state.stacks.opponentfoundation2} ></Pile>
+                <Sequence cards = {this.state.stacks.opponenttableau2} ></Sequence> 
 
-                <Pile cards = {this.state.stacks.foundation0r} name = "foundation0r"></Pile>
-                <Pile cards = {this.state.stacks.foundation1r} name = "foundation1r"></Pile>
-                <Pile cards = {this.state.stacks.foundation2r} name = "foundation2r"></Pile>
-                <Pile cards = {this.state.stacks.foundation3r} name = "foundation3r"></Pile>
-                <Pile cards = {this.state.stacks.foundation0b} name = "foundation0b"></Pile>
-                <Pile cards = {this.state.stacks.foundation1b} name = "foundation1b"></Pile>
-                <Pile cards = {this.state.stacks.foundation2b} name = "foundation2b"></Pile>
-                <Pile cards = {this.state.stacks.foundation3b} name = "foundation3b"></Pile>      
+                <Sequence cards = {this.state.stacks.playertableau3} ></Sequence>
+                <Pile cards = {this.state.stacks.playerfoundation3} ></Pile>
+                <Pile cards = {this.state.stacks.opponentfoundation3} ></Pile>
+                <Sequence cards = {this.state.stacks.opponenttableau3} ></Sequence>
+
+                <Sequence cards = {this.state.stacks.opponentmalus} ></Sequence>
+                <Pile cards = {this.state.stacks.opponentstock} ></Pile>
+                <Pile cards = {this.state.stacks.opponentwaste} ></Pile>
             </div>
         )
     }

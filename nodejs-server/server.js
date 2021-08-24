@@ -72,12 +72,54 @@ io.on ('connection', function (socket) {
         var game = activeGames.find(game => game.props.id === data.id );
         var color = socket.id === game.props.red ? 'red' : socket.id === game.props.black ? 'black' : '';
         socket.emit ('UpdateGameState', prepareStateForClient(game.state, color));
+        console.log(game.state.stacks.redmalus);
     })
 
     socket.on ('disconnect', function () {
         removePendingRoomIfExists (socket.id);
     });
 });
+
+function prepareStateForClient (state, color) {
+    var stacks = JSON.parse(JSON.stringify(state.stacks));
+    for(stack in stacks) 
+        for(card in stacks[stack]) 
+            if(stacks[stack][card].faceup === 0) {
+                delete stacks[stack][card].suit;
+                delete stacks[stack][card].value;
+            }    
+    return {
+        turn : state.turn,
+        turncolor : state.turncolor,
+        turntimer : state.turntimer,
+        playertimer : color === 'red' ? state.redtimer : state.blacktimer, 
+        opponenttimer : color === 'red' ? state.blacktimer : state.redtimer,
+        stacks : {
+            playermalus : color === 'red' ? stacks.redmalus : stacks.blackmalus,
+            playerstock : color === 'red' ? stacks.redstock : stacks.blackstock,
+            playerwaste : color === 'red' ? stacks.redwaste : stacks.blackwaste,
+            opponentmalus : color === 'black' ? stacks.redmalus : stacks.blackmalus,
+            opponentstock : color === 'black' ? stacks.redstock : stacks.blackstock,
+            opponentwaste : color === 'black' ? stacks.redwaste : stacks.blackwaste,
+            playertableau0 : color === 'red' ? stacks.tableau0r : stacks.tableau0b,
+            playertableau1 : color === 'red' ? stacks.tableau1r : stacks.tableau1b,
+            playertableau2 : color === 'red' ? stacks.tableau2r : stacks.tableau2b,
+            playertableau3 : color === 'red' ? stacks.tableau3r : stacks.tableau3b,
+            opponenttableau0 : color === 'black' ? stacks.tableau0r : stacks.tableau0b,
+            opponenttableau1 : color === 'black' ? stacks.tableau1r : stacks.tableau1b,
+            opponenttableau2 : color === 'black' ? stacks.tableau2r : stacks.tableau2b,
+            opponenttableau3 : color === 'black' ? stacks.tableau3r : stacks.tableau3b,
+            playerfoundation0 : color === 'red' ? stacks.foundation0r : stacks.foundation0b,
+            playerfoundation1 : color === 'red' ? stacks.foundation1r : stacks.foundation1b,
+            playerfoundation2 : color === 'red' ? stacks.foundation2r : stacks.foundation2b,
+            playerfoundation3 : color === 'red' ? stacks.foundation3r : stacks.foundation3b,
+            opponentfoundation0 : color === 'black' ? stacks.foundation0r : stacks.foundation0b,
+            opponentfoundation1 : color === 'black' ? stacks.foundation1r : stacks.foundation1b,
+            opponentfoundation2 : color === 'black' ? stacks.foundation2r : stacks.foundation2b,
+            opponentfoundation3 : color === 'black' ? stacks.foundation3r : stacks.foundation3b,
+        }
+    };
+ }
 
 async function startGame (red, black, options) {
     activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
@@ -88,55 +130,6 @@ async function startGame (red, black, options) {
 
     io.to (red).to(black).emit ('startOnlineGameRES', { props : game.props});
 }
-
-function prepareStateForClient (state, color) {
-    for(stack in state.stacks) 
-        for(card in state.stacks[stack]) 
-            if(state.stacks[stack][card].faceup === 0) {
-                delete state.stacks[stack][card].suit;
-                delete state.stacks[stack][card].value;
-            }
-
-        state.playertimer = color === 'red' ? state.redtimer : state.blacktimer;
-        state.opponenttimer = color === 'red' ? state.blacktimer : state.redtimer;
-
-        state.stacks.playermalus = color === 'red' ? state.stacks.redmalus : state.stacks.blackmalus;
-        state.stacks.playerstock = color === 'red' ? state.stacks.redstock : state.stacks.blackstock;
-        state.stacks.playerwaste = color === 'red' ? state.stacks.redwaste : state.stacks.blackwaste;
-
-        state.stacks.opponentmalus = color === 'black' ? state.stacks.redmalus : state.stacks.blackmalus;
-        state.stacks.opponentstock = color === 'black' ? state.stacks.redstock : state.stacks.blackstock;
-        state.stacks.opponentwaste = color === 'black' ? state.stacks.redwaste : state.stacks.blackwaste;
-
-        state.stacks.playertableau0 = color === 'red' ? state.stacks.tableau0r : state.stacks.tableau0b;
-        state.stacks.playertableau1 = color === 'red' ? state.stacks.tableau1r : state.stacks.tableau1b;
-        state.stacks.playertableau2 = color === 'red' ? state.stacks.tableau2r : state.stacks.tableau2b;
-        state.stacks.playertableau3 = color === 'red' ? state.stacks.tableau3r : state.stacks.tableau3b;
-
-        state.stacks.opponenttableau0 = color === 'black' ? state.stacks.tableau0r : state.stacks.tableau0b;
-        state.stacks.opponenttableau1 = color === 'black' ? state.stacks.tableau1r : state.stacks.tableau1b;
-        state.stacks.opponenttableau2 = color === 'black' ? state.stacks.tableau2r : state.stacks.tableau2b;
-        state.stacks.opponenttableau3 = color === 'black' ? state.stacks.tableau3r : state.stacks.tableau3b;
-
-        delete state.redtimer;
-        delete state.blacktimer;
-        delete state.stacks.redmalus;
-        delete state.stacks.blackmalus;
-        delete state.stacks.redstock;
-        delete state.stacks.blackstock;
-        delete state.stacks.redwaste;
-        delete state.stacks.blackwaste;
-        delete state.stacks.tableau0r;
-        delete state.stacks.tableau1r;
-        delete state.stacks.tableau2r;
-        delete state.stacks.tableau3r;
-        delete state.stacks.tableau0b;
-        delete state.stacks.tableau1b;
-        delete state.stacks.tableau2b;
-        delete state.stacks.tableau3b;
-
-    return state;
- }
 
 function startTurn (game) {
     if(game.turncolor === 'red')
