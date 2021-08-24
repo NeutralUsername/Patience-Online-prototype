@@ -66,7 +66,6 @@ export default class Options extends React.Component {
                 ReactDOM.render (
                     <Game
                         id = {data.props.id}
-                        color = {this.props.socket.id === data.props.red ? 'red' : 'black'}
                         socket = {this.props.socket}    
                         throwOnWaste = {data.props.throwOnWaste}
                         throwOnMalus = {data.props.throwOnMalus}

@@ -11,8 +11,8 @@ export default class Game extends React.Component{
         this.mounted = false;
         this.state = {
             stacks : '',
-            redtimer : '',
-            blacktimer : '',
+            playertimer : '',
+            opponenttimer : '',
             turntimer : '',
             turncolor : '',
         };

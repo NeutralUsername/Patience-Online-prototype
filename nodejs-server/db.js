@@ -55,9 +55,9 @@ module.exports = {
                     + "'"+ black + "'"  + ");", 
 
                     async function (err, game) { if (err) throw err; 
-                        await dealcards ( game.insertId , options, sqlstarted, dbCon); 
+                        await dealCards ( game.insertId , options, sqlstarted, dbCon); 
                         var stacks =  await getStacks(game.insertId, dbCon);
-                        var startcolor = await determinestartingplayer(stacks.redmalus, stacks.blackmalus);
+                        var startcolor = await determineStartingPlayer(stacks.redmalus, stacks.blackmalus);
                       resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, stacks, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
                     }
                   )
@@ -84,9 +84,9 @@ module.exports = {
                         + "'"+ black+"'"       + ");", 
 
                         async function (err, game) { if (err) throw err;
-                            await dealcards ( game.insertId , options, sqlstarted, dbCon); 
+                            await dealCards ( game.insertId , options, sqlstarted, dbCon); 
                             var stacks =  await getStacks(game.insertId, dbCon);
-                            var startcolor = await determinestartingplayer(stacks.redmalus, stacks.blackmalus);
+                            var startcolor = await determineStartingPlayer(stacks.redmalus, stacks.blackmalus);
                           resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, stacks, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
                         }
                       )
@@ -102,10 +102,10 @@ module.exports = {
   }
 }
 
-async function dealcards( gameid, options, created, dbCon) {
+async function dealCards( gameid, options, created, dbCon) {
   return new Promise ((resolve) => {
-    var reddeck = shuffle(freshdeck("red"));
-    var blackdeck = shuffle(freshdeck("black"));
+    var reddeck = shuffle(feshDeck("red"));
+    var blackdeck = shuffle(feshDeck("black"));
     var actions = [];
     function addtoactions(gameid, cardid, stack, faceup, player, turn, moved){
       actions.push([
@@ -164,10 +164,10 @@ async function getStacks (gameid, dbCon) {
     dbCon.connect (
       function(err) { if (err) throw err;
         dbCon.query (" SELECT c.id, c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
-           function (err, actions) { if (err) throw err;
+          function (err, actions) { if (err) throw err;
             var stacks = {};
             for (action of actions) {
-              stacks[action.stack] =  actionsarrayToCards(actions.filter(x=> x.stack === action.stack));
+              stacks[action.stack] =  ActionsArrayToCards(actions.filter(x=> x.stack === action.stack));
             }
             resolve (stacks);
           }
@@ -198,7 +198,7 @@ function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, re
   }
 }
 
-async function determinestartingplayer(redmalus, blackmalus) {
+async function determineStartingPlayer(redmalus, blackmalus) {
   var red = 0;
   var black = 0;
   for(card in redmalus) {
@@ -211,7 +211,7 @@ async function determinestartingplayer(redmalus, blackmalus) {
   return red >= black ? 'red' : 'black';
 }
 
-function actionsarrayToCards (actions) {
+function ActionsArrayToCards (actions) {
   var counter = 0;
   var cards = {};
   for(action of actions) {
@@ -239,7 +239,7 @@ class Card {
   }
 }
 
-function freshdeck (color) {
+function feshDeck (color) {
   const Suits = ["♥", "♠", "♦", "♣"];
   const Values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"];
   return Suits.flatMap(suit => {
