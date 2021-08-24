@@ -74,12 +74,10 @@ io.on ('connection', function (socket) {
 });
 
 async function startGame (red, black, options) {
+    
     options.timePerTurn = options.turnsTimed ? options.timePerTurn : 0,
-
     activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
     removePendingRoomIfExists (red); removePendingRoomIfExists (black);
-
-    //startTurn(game.id);
 
     var clientinitialstate = game.state;
     clientinitialstate.stacks = prepareStacksForClient(clientinitialstate.stacks)
