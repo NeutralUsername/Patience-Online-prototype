@@ -15,7 +15,7 @@ const pendingOnlineRooms = [];
 const activeGames = [];
 
 io.on ('connection', function (socket) {
-    updatePendingRoomsCLIENTS ();
+    updateClientPendingRooms ();
     socket.on('serverTimeREQ',  () => {
         setInterval(function () {
             socket.emit ('serverTimeRES', { data: new Date () });
@@ -35,12 +35,12 @@ io.on ('connection', function (socket) {
     socket.on ('createOnlineRoomREQ', async function (data){
         try {
             await rateLimiter.consume (socket.handshake.address);
-            removePendingRoomIfExists(socket.id);
+            removePendingRoom(socket.id);
             pendingOnlineRooms.push ({
                 roomkey : socket.id,
                 options : data.options
             });
-            updatePendingRoomsCLIENTS ();
+            updateClientPendingRooms ();
         }        
         catch (rejRes) {
             console.log ("flood protection => new pending Room");
@@ -75,7 +75,7 @@ io.on ('connection', function (socket) {
     })
 
     socket.on ('disconnect', function () {
-        removePendingRoomIfExists (socket.id);
+        removePendingRoom (socket.id);
     });
 });
 
@@ -123,9 +123,9 @@ function prepareStateForClient (state, color) {
 async function startGame (red, black, options) {
     activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
 
-    removePendingRoomIfExists (red);
-    removePendingRoomIfExists (black);
-    updatePendingRoomsCLIENTS (); 
+    removePendingRoom (red);
+    removePendingRoom (black);
+    updateClientPendingRooms (); 
 
     io.to (red).to(black).emit ('startOnlineGameRES', { props : game.props});
 }
@@ -144,11 +144,11 @@ function startTurn (game) {
     socket.emit ('UpdateTurnColorRES', {roomkey : data.roomkey});
 }
 
-function removePendingRoomIfExists(roomkey)  {
+function removePendingRoom(roomkey)  {
     if(roomkey != 'AI')
         if (getPendingRoom (roomkey)) {
             pendingOnlineRooms.splice (pendingOnlineRooms.findIndex (e => e.roomkey == roomkey), 1);
-            updatePendingRoomsCLIENTS ();
+            updateClientPendingRooms ();
         }
 }
 
@@ -159,7 +159,7 @@ function getPendingRoom (roomkey) {
         return false;
 }
 
-function updatePendingRoomsCLIENTS () {
+function updateClientPendingRooms () {
     io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms});
 }
 

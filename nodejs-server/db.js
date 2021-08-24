@@ -167,7 +167,7 @@ async function getStacks (gameid, dbCon) {
           function (err, actions) { if (err) throw err;
             var stacks = {};
             for (action of actions) {
-              stacks[action.stack] =  ActionsArrayToCards(actions.filter(x=> x.stack === action.stack));
+              stacks[action.stack] =  actionsToStack(actions.filter(x=> x.stack === action.stack));
             }
             resolve (stacks);
           }
@@ -210,7 +210,7 @@ async function determineStartingPlayer(redmalus, blackmalus) {
   return red >= black ? 'red' : 'black';
 }
 
-function ActionsArrayToCards (actions) {
+function actionsToStack (actions) {
   var counter = 0;
   var cards = {};
   for(action of actions) {
