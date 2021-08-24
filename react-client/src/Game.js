@@ -85,12 +85,12 @@ class Pile extends React.Component {
     render () {
         return (
             <ul> {this.props.name}
-                { Object(this.props.cards).map( (card) =>
-                    <Card key = {card.nr}
-                        faceup = {card.faceup}
-                        color = {card.color} 
-                        suit = {card.suit} 
-                        value = {card.value}
+                { Object.keys(this.props.cards).map( (card) =>
+                    <Card key = {card}
+                        faceup = {this.props.cards[card].faceup}
+                        color = {this.props.cards[card].color} 
+                        suit = {this.props.cards[card].suit} 
+                        value = {this.props.cards[card].value}
                     > </Card>
                 )}
             </ul>
@@ -105,12 +105,12 @@ class Sequence extends React.Component {
     render () {
         return (
             <ul> {this.props.name}
-                { Object(this.props.cards).map( (card) =>
-                    <Card key = {card.nr}
-                        faceup = {card.faceup}
-                        color = {card.color} 
-                        suit = {card.suit} 
-                        value = {card.value}
+                { Object.keys(this.props.cards).map( (card) =>
+                    <Card key = {card}
+                        faceup = {this.props.cards[card].faceup}
+                        color = {this.props.cards[card].color} 
+                        suit = {this.props.cards[card].suit} 
+                        value = {this.props.cards[card].value}
                     > </Card>
                 )}
             </ul>

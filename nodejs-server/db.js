@@ -57,7 +57,7 @@ module.exports = {
                     async function (err, game) { if (err) throw err; 
                         await dealcards ( game.insertId , options, sqlstarted, dbCon); 
                         var stacks =  await getStacks(game.insertId, dbCon);
-                        var startcolor = await determinestartingplayer(stacks['redmalus'], stacks['blackmalus']);
+                        var startcolor = await determinestartingplayer(stacks.redmalus, stacks.blackmalus);
                       resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, stacks, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
                     }
                   )
@@ -86,7 +86,7 @@ module.exports = {
                         async function (err, game) { if (err) throw err;
                             await dealcards ( game.insertId , options, sqlstarted, dbCon); 
                             var stacks =  await getStacks(game.insertId, dbCon);
-                            var startcolor = await determinestartingplayer(stacks['redmalus'], stacks['blackmalus']);
+                            var startcolor = await determinestartingplayer(stacks.redmalus, stacks.blackmalus);
                           resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, stacks, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
                         }
                       )
@@ -190,7 +190,7 @@ async function getStacks (gameid, dbCon) {
               blackstock : actionsarrayToCards(actions.filter(x=> x.stack === 'blackstock')),
               blackwaste : actionsarrayToCards(actions.filter(x=> x.stack === 'blackwaste')),
             };
-            resolve (stacks)
+            resolve (stacks);
           }
         )
       }
@@ -222,11 +222,11 @@ function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, re
 async function determinestartingplayer(redmalus, blackmalus) {
   var red = 0;
   var black = 0;
-  for(card of redmalus) {
-    red += parseInt(card.value);
+  for(card in redmalus) {
+    red += parseInt(redmalus[card].value);
   }
-  for(card of blackmalus) {
-    black += parseInt(card.value);
+  for(card in blackmalus) {
+    black += parseInt(blackmalus[card].value);
   }
   console.log(red, black)
   return red >= black ? 'red' : 'black';
@@ -234,9 +234,10 @@ async function determinestartingplayer(redmalus, blackmalus) {
 
 function actionsarrayToCards (actions) {
   var counter = 0;
-  var cards = actions.map(card=> {
-    return {nr : counter ++, faceup : card.faceup, color : card.color, suit : card.suit, value : card.value}
-  })
+  var cards = {};
+  for(action of actions) {
+    cards[counter++] = {faceup : action.faceup, color : action.color, suit : action.suit, value : action.value};
+  }
   return cards;
 }
 

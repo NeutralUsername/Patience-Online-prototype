@@ -86,10 +86,10 @@ async function startGame (red, black, options) {
 
 function prepareStateForClient (state) {
     for(stack in state.stacks) 
-        for(card of state.stacks[stack]) 
-            if(card.faceup === 0) {
-                delete card.suit;
-                delete card.value;
+        for(card in state.stacks[stack]) 
+            if(state.stacks[stack][card].faceup === 0) {
+                delete state.stacks[stack][card].suit;
+                delete state.stacks[stack][card].value;
             }
     return state;
  }
