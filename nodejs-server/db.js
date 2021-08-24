@@ -101,77 +101,7 @@ module.exports = {
     )
   }
 }
-function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, redtimer, blacktimer, turntimer, turncolor) {
-  return {
-    props : { 
-      id : id,
-      throwOnWaste : throwOnWaste,
-      throwOnMalus : throwOnMalus,
-      variant : variant,
-      red : red,
-      black : black,
-    },
-    state : {
-      stacks : stacks,
-      redtimer : redtimer,
-      blacktimer : blacktimer,
-      turn :  0,
-      turntimer : turntimer,
-      turncolor : turncolor
-    }
-  }
-}
-async function determinestartingplayer(redmalus, blackmalus) {
-  var red = 0;
-  var black = 0;
-  for(card of redmalus) {
-    red += parseInt(card.value);
-  }
-  for(card of blackmalus) {
-    black += parseInt(card.value);
-  }
-  console.log(red, black)
-  return red >= black ? 'red' : 'black';
-}
 
-async function getStacks (gameid, dbCon) {
-  return new Promise ((resolve) => {
-    dbCon.connect (
-      function(err) { if (err) throw err;
-        dbCon.query (" SELECT c.id, c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
-
-          async function (err, actions) { if (err) throw err;
-            var stacks = {
-              redmalus : actionsarrayToCards(actions.filter(x=> x.stack === 'redmalus')),
-              redstock : actionsarrayToCards(actions.filter(x=> x.stack === 'redstock')),
-              redwaste : actionsarrayToCards(actions.filter(x=> x.stack === 'redwaste')),
-              tableau0r : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau0r')),
-              tableau1r : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau1r')),
-              tableau2r : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau2r')),
-              tableau3r : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau3r')),
-              tableau0b : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau0b')),
-              tableau1b : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau1b')),
-              tableau2b : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau2b')),
-              tableau3b : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau3b')),
-              foundation0r : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation0r')),
-              foundation1r : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation1r')),
-              foundation2r : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation2r')),
-              foundation3r : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation3r')),
-              foundation0b : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation0b')),
-              foundation1b : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation1b')),
-              foundation2b : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation2b')),
-              foundation3b : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation3b')),
-              blackmalus : actionsarrayToCards(actions.filter(x=> x.stack === 'blackmalus')),
-              blackstock : actionsarrayToCards(actions.filter(x=> x.stack === 'blackstock')),
-              blackwaste : actionsarrayToCards(actions.filter(x=> x.stack === 'blackwaste')),
-            };
-            resolve (stacks)
-          }
-        )
-      }
-    )
-  })
-}
 async function dealcards( gameid, options, created, dbCon) {
   return new Promise ((resolve) => {
     var reddeck = shuffle(freshdeck("red"));
@@ -227,6 +157,79 @@ async function dealcards( gameid, options, created, dbCon) {
       }
     )
   })
+}
+
+async function getStacks (gameid, dbCon) {
+  return new Promise ((resolve) => {
+    dbCon.connect (
+      function(err) { if (err) throw err;
+        dbCon.query (" SELECT c.id, c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
+
+          async function (err, actions) { if (err) throw err;
+            var stacks = {
+              redmalus : actionsarrayToCards(actions.filter(x=> x.stack === 'redmalus')),
+              redstock : actionsarrayToCards(actions.filter(x=> x.stack === 'redstock')),
+              redwaste : actionsarrayToCards(actions.filter(x=> x.stack === 'redwaste')),
+              tableau0r : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau0r')),
+              tableau1r : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau1r')),
+              tableau2r : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau2r')),
+              tableau3r : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau3r')),
+              tableau0b : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau0b')),
+              tableau1b : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau1b')),
+              tableau2b : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau2b')),
+              tableau3b : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau3b')),
+              foundation0r : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation0r')),
+              foundation1r : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation1r')),
+              foundation2r : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation2r')),
+              foundation3r : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation3r')),
+              foundation0b : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation0b')),
+              foundation1b : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation1b')),
+              foundation2b : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation2b')),
+              foundation3b : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation3b')),
+              blackmalus : actionsarrayToCards(actions.filter(x=> x.stack === 'blackmalus')),
+              blackstock : actionsarrayToCards(actions.filter(x=> x.stack === 'blackstock')),
+              blackwaste : actionsarrayToCards(actions.filter(x=> x.stack === 'blackwaste')),
+            };
+            resolve (stacks)
+          }
+        )
+      }
+    )
+  })
+}
+
+function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, redtimer, blacktimer, turntimer, turncolor) {
+  return {
+    props : { 
+      id : id,
+      throwOnWaste : throwOnWaste,
+      throwOnMalus : throwOnMalus,
+      variant : variant,
+      red : red,
+      black : black,
+    },
+    state : {
+      stacks : stacks,
+      redtimer : redtimer,
+      blacktimer : blacktimer,
+      turn :  0,
+      turntimer : turntimer,
+      turncolor : turncolor
+    }
+  }
+}
+
+async function determinestartingplayer(redmalus, blackmalus) {
+  var red = 0;
+  var black = 0;
+  for(card of redmalus) {
+    red += parseInt(card.value);
+  }
+  for(card of blackmalus) {
+    black += parseInt(card.value);
+  }
+  console.log(red, black)
+  return red >= black ? 'red' : 'black';
 }
 
 function actionsarrayToCards (actions) {
