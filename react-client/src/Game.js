@@ -48,39 +48,39 @@ export default class Game extends React.Component{
         return (
             <div className="game">
                 <Player 
-                    malus = {this.state.stacks.find(x=>x.name === this.props.color+'malus')}
-                    stock = {this.state.stacks.find(x=>x.name === this.props.color+'stock')}
-                    waste = {this.state.stacks.find(x=>x.name === this.props.color+'waste')}
+                    malus = {this.state.stacks.redmalus}
+                    stock = {this.state.stacks.redstock}
+                    waste = {this.state.stacks.redwaste}
                 ></Player>
                 <Field 
-                    tableauP = {this.state.stacks.find(x=>x.name ==='tableau0'+ ( this.props.color ==='red' ? 'r' : 'b'))}
-                    foundationP = {this.state.stacks.find(x=>x.name ==='foundation0' + (this.props.color ==='red' ? 'r' : 'b'))}
-                    tableauO = {this.state.stacks.find(x=>x.name ==='foundation0' + (this.props.color ==='red' ? 'b' : 'r'))}
-                    foundationO = {this.state.stacks.find(x=>x.name ==='tableau0'+ ( this.props.color ==='red' ? 'b' : 'r'))}
+                    tableauP = {this.state.stacks.tableau0r}
+                    foundationP = {this.state.stacks.foundation0r}
+                    tableauO = {this.state.stacks.tableau0b}
+                    foundationO = {this.state.stacks.foundation0b}
                 ></Field>
                 <Field 
-                    tableauP = {this.state.stacks.find(x=>x.name ==='tableau1'+ ( this.props.color ==='red' ? 'r' : 'b'))}
-                    foundationP = {this.state.stacks.find(x=>x.name ==='foundation1' + (this.props.color ==='red' ? 'r' : 'b'))}
-                    tableauO = {this.state.stacks.find(x=>x.name ==='foundation1' + (this.props.color ==='red' ? 'b' : 'r'))}
-                    foundationO = {this.state.stacks.find(x=>x.name ==='tableau1'+ ( this.props.color ==='red' ? 'b' : 'r'))}
+                    tableauP = {this.state.stacks.tableau1r}
+                    foundationP = {this.state.stacks.foundation1r}
+                    tableauO = {this.state.stacks.tableau1b}
+                    foundationO = {this.state.stacks.foundation1b}
                 ></Field>
-                <Field 
-                    tableauP = {this.state.stacks.find(x=>x.name ==='tableau2'+ ( this.props.color ==='red' ? 'r' : 'b'))}
-                    foundationP = {this.state.stacks.find(x=>x.name ==='foundation2' + (this.props.color ==='red' ? 'r' : 'b'))}
-                    tableauO = {this.state.stacks.find(x=>x.name ==='foundation2' + (this.props.color ==='red' ? 'b' : 'r'))}
-                    foundationO = {this.state.stacks.find(x=>x.name ==='tableau2'+ ( this.props.color ==='red' ? 'b' : 'r'))}
+                 <Field 
+                    tableauP = {this.state.stacks.tableau2r}
+                    foundationP = {this.state.stacks.foundation2r}
+                    tableauO = {this.state.stacks.tableau2b}
+                    foundationO = {this.state.stacks.foundation2b}
                 ></Field>
-                <Field 
-                    tableauP = {this.state.stacks.find(x=>x.name ==='tableau3'+ ( this.props.color ==='red' ? 'r' : 'b'))}
-                    foundationP = {this.state.stacks.find(x=>x.name ==='foundation3' + (this.props.color ==='red' ? 'r' : 'b'))}
-                    tableauO = {this.state.stacks.find(x=>x.name ==='foundation3' + (this.props.color ==='red' ? 'b' : 'r'))}
-                    foundationO = {this.state.stacks.find(x=>x.name ==='tableau3'+ ( this.props.color ==='red' ? 'b' : 'r'))}
+                 <Field 
+                    tableauP = {this.state.stacks.tableau3r}
+                    foundationP = {this.state.stacks.foundation3r}
+                    tableauO = {this.state.stacks.tableau3b}
+                    foundationO = {this.state.stacks.foundation3b}
                 ></Field>
-                <Opponent 
-                    malus = {this.state.stacks.find(x=>x.name === (this.props.color === 'red' ? 'black' : 'red' )+ 'malus')}
-                    stock = {this.state.stacks.find(x=>x.name === (this.props.color === 'red' ? 'black' : 'red' )+ 'stock')}
-                    waste = {this.state.stacks.find(x=>x.name === (this.props.color === 'red' ? 'black' : 'red' )+ 'waste')}
-                ></Opponent>
+                <Player 
+                    malus = {this.state.stacks.blackmalus}
+                    stock = {this.state.stacks.blackstock}
+                    waste = {this.state.stacks.blackwaste}
+                ></Player>
             </div>
         )
     }
@@ -89,29 +89,21 @@ export default class Game extends React.Component{
 class Player extends React.Component {
     constructor(props) {
         super(props);
+        
     }
     
     render () {
         return (
             <div>
-                <Sequence stack = {this.props.malus}></Sequence>
-                <Pile stack = {this.props.stock}></Pile>
-                <Pile stack = {this.props.waste}></Pile>
-            </div>
-        )
-    }
-}
-class Opponent extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-    
-    render () {
-        return (
-            <div>
-                <Sequence stack = {this.props.malus}></Sequence>
-                <Pile stack = {this.props.stock}></Pile>
-                <Pile stack = {this.props.waste}></Pile>
+                <Sequence 
+                    stack = {this.props.malus}
+                ></Sequence>
+                <Pile 
+                    stack = {this.props.stock}
+                ></Pile>
+                <Pile 
+                    stack = {this.props.waste}
+                ></Pile>
             </div>
         )
     }
@@ -124,10 +116,18 @@ class Field extends React.Component {
     render () {
         return (
            <div>
-               <Sequence stack = {this.props.tableauP}></Sequence>
-               <Pile stack = {this.props.foundationP}></Pile>
-               <Pile stack = {this.props.tableauO}></Pile>
-               <Sequence stack = {this.props.foundationO}></Sequence>
+                <Sequence 
+                    stack = {this.props.tableauP}
+                ></Sequence>
+                <Pile 
+                    stack = {this.props.foundationP}
+                ></Pile>
+                <Pile 
+                    stack = {this.props.tableauO}
+                ></Pile>
+                <Sequence 
+                    stack = {this.props.foundationO}
+                ></Sequence>
            </div>
         )
     }
@@ -140,8 +140,8 @@ class Pile extends React.Component {
     
     render () {
         return (
-            <ul> {this.props.name}
-                { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
+            <ul> 
+                { this.props.stack != undefined ? Object(this.props.stack).map( (card) =>
                     <li key = {card.nr}>
                         <Card  
                             color = {card.color} 
@@ -154,7 +154,6 @@ class Pile extends React.Component {
         )
     }
 }
-
 class Sequence extends React.Component {
     constructor(props) {
         super(props);
@@ -162,8 +161,8 @@ class Sequence extends React.Component {
 
     render () {
         return (
-            <ul> {this.props.name}
-                { this.props.stack != undefined ? this.props.stack.cards.map( (card) =>
+            <ul> 
+                { this.props.stack != undefined ? Object(this.props.stack).map( (card) =>
                     <li key = {card.nr}>
                         <Card  
                             color = {card.color} 
@@ -176,7 +175,6 @@ class Sequence extends React.Component {
         )
     }
 }
-
 
 function Card (props) {
     return (

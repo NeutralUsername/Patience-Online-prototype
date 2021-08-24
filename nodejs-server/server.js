@@ -51,11 +51,11 @@ io.on ('connection', function (socket) {
         try {
             await rateLimiter.consume (socket.handshake.address);
             if (data.roomkey != socket.id)
-                if (returnPendingRoomIfExists (data.roomkey)) 
-                    if (returnPendingRoomIfExists (data.roomkey).options.roomPassword.length) 
+                if (getPendingRoom (data.roomkey)) 
+                    if (getPendingRoom (data.roomkey).options.roomPassword.length) 
                         socket.emit ('roomPasswordREQ', {roomkey : data.roomkey});
                     else 
-                        startGame (data.roomkey, socket.id, returnPendingRoomIfExists (data.roomkey).options );
+                        startGame (data.roomkey, socket.id, getPendingRoom (data.roomkey).options );
         }    
         catch (rejRes) {
             console.log ("flood protection => join pending Room");
@@ -64,8 +64,8 @@ io.on ('connection', function (socket) {
 
     socket.on ('roomPasswordRES' , async function ( data) {
         if(data.password != undefined)
-            if (returnPendingRoomIfExists (data.roomkey).options.roomPassword == data.password) 
-                startGame (data.roomkey, socket.id, returnPendingRoomIfExists (data.roomkey).options );
+            if (getPendingRoom (data.roomkey).options.roomPassword === data.password) 
+                startGame (data.roomkey, socket.id, getPendingRoom (data.roomkey).options );
     })
 
     socket.on ('disconnect', function () {
@@ -74,28 +74,24 @@ io.on ('connection', function (socket) {
 });
 
 async function startGame (red, black, options) {
-    
-    options.timePerTurn = options.turnsTimed ? options.timePerTurn : 0,
-    activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
-    removePendingRoomIfExists (red); removePendingRoomIfExists (black);
 
-    var clientinitialstate = game.state;
-    clientinitialstate.stacks = prepareStacksForClient(clientinitialstate.stacks)
-    io.to (red).to(black).emit ('startOnlineGameRES', { props : game.props, initialstate : clientinitialstate});
-    
+    activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
+
+    removePendingRoomIfExists (red);
+    removePendingRoomIfExists (black);
     updatePendingRoomsCLIENTS (); 
+
+    io.to (red).to(black).emit ('startOnlineGameRES', { props : game.props, state : prepareStateForClient(game.state)});
 }
 
-function prepareStacksForClient (stacks) {
-    for(var stack in stacks) 
-        for(var card of stacks[stack].cards) {
+function prepareStateForClient (state) {
+    for(stack in state.stacks) 
+        for(card of state.stacks[stack]) 
             if(card.faceup === 0) {
-                delete card.value;
                 delete card.suit;
+                delete card.value;
             }
-            delete card.faceup
-        }
-    return stacks;
+    return state;
  }
 
 function startTurn (game) {
@@ -106,6 +102,7 @@ function startTurn (game) {
     function playertimeout () {
         game.turncolor === 'red' ? "black won" : "red won"
     }
+    //emit initialstate 
     socket.emit ('UpdateFieldRES', {roomkey : data.roomkey});
     socket.emit ('UpdateTimerRES', {roomkey : data.roomkey});
     socket.emit ('UpdateTurnColorRES', {roomkey : data.roomkey});
@@ -113,13 +110,13 @@ function startTurn (game) {
 
 function removePendingRoomIfExists(roomkey)  {
     if(roomkey != 'AI')
-        if (returnPendingRoomIfExists (roomkey)) {
+        if (getPendingRoom (roomkey)) {
             pendingOnlineRooms.splice (pendingOnlineRooms.findIndex (e => e.roomkey == roomkey), 1);
             updatePendingRoomsCLIENTS ();
         }
 }
 
-function returnPendingRoomIfExists (roomkey) {
+function getPendingRoom (roomkey) {
     if (pendingOnlineRooms.find (e => e.roomkey === roomkey) )
         return pendingOnlineRooms.find (e => e.roomkey === roomkey);
     else

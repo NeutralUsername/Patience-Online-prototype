@@ -27,7 +27,10 @@ module.exports = {
         password: "password",
         database: "gregaire",
       });
+
       var sqlstarted = sqlCompatibleDate(started);
+      options.timePerTurn = options.turnsTimed ? options.timePerTurn : 0;
+      
       return new Promise ((resolve) => {
         dbCon.connect (
         
@@ -54,7 +57,7 @@ module.exports = {
                     async function (err, game) { if (err) throw err; 
                         await dealcards ( game.insertId , options, sqlstarted, dbCon); 
                         var stacks =  await getStacks(game.insertId, dbCon);
-                        var startcolor = await determinestartingplayer(stacks[0], stacks[6]);
+                        var startcolor = await determinestartingplayer(stacks['redmalus'], stacks['blackmalus']);
                       resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, stacks, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
                     }
                   )
@@ -83,7 +86,7 @@ module.exports = {
                         async function (err, game) { if (err) throw err;
                             await dealcards ( game.insertId , options, sqlstarted, dbCon); 
                             var stacks =  await getStacks(game.insertId, dbCon);
-                            var startcolor = await determinestartingplayer(stacks[0], stacks[6]);
+                            var startcolor = await determinestartingplayer(stacks['redmalus'], stacks['blackmalus']);
                           resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, stacks, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
                         }
                       )
@@ -121,11 +124,13 @@ function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, re
 async function determinestartingplayer(redmalus, blackmalus) {
   var red = 0;
   var black = 0;
-  for(var i  = 0 ; i< redmalus.cards.length; i++) {
-    red += parseInt(redmalus.cards[i].value);
-    black += parseInt(blackmalus.cards[i].value);
+  for(card of redmalus) {
+    red += parseInt(card.value);
   }
-  console.log(red,black);
+  for(card of blackmalus) {
+    black += parseInt(card.value);
+  }
+  console.log(red, black)
   return red >= black ? 'red' : 'black';
 }
 
@@ -135,19 +140,32 @@ async function getStacks (gameid, dbCon) {
       function(err) { if (err) throw err;
         dbCon.query (" SELECT c.id, c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
 
-          function (err, actions) { if (err) throw err;
-            var stack = [];
-            for(var i = 0; i< 22 ; i++) {
-              if(actions[0] != undefined) {
-                var cardcounter = 0;
-                stack[i] = {name : actions[0].stack, cards : actions.filter(x=> x.stack === actions[0].stack).map(function(card) {
-                  var item = { nr : cardcounter++, faceup : card.faceup, color : card.color, suit : card.suit, value : card.value};
-                  return item;
-                })}
-                actions = actions.filter(x=> x.stack != actions[0].stack)
-              }
-            }
-            resolve (stack)
+          async function (err, actions) { if (err) throw err;
+            var stacks = {
+              redmalus : actionsarrayToCards(actions.filter(x=> x.stack === 'redmalus')),
+              redstock : actionsarrayToCards(actions.filter(x=> x.stack === 'redstock')),
+              redwaste : actionsarrayToCards(actions.filter(x=> x.stack === 'redwaste')),
+              tableau0r : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau0r')),
+              tableau1r : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau1r')),
+              tableau2r : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau2r')),
+              tableau3r : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau3r')),
+              tableau0b : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau0b')),
+              tableau1b : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau1b')),
+              tableau2b : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau2b')),
+              tableau3b : actionsarrayToCards(actions.filter(x=> x.stack === 'tableau3b')),
+              foundation0r : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation0r')),
+              foundation1r : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation1r')),
+              foundation2r : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation2r')),
+              foundation3r : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation3r')),
+              foundation0b : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation0b')),
+              foundation1b : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation1b')),
+              foundation2b : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation2b')),
+              foundation3b : actionsarrayToCards(actions.filter(x=> x.stack === 'foundation3b')),
+              blackmalus : actionsarrayToCards(actions.filter(x=> x.stack === 'blackmalus')),
+              blackstock : actionsarrayToCards(actions.filter(x=> x.stack === 'blackstock')),
+              blackwaste : actionsarrayToCards(actions.filter(x=> x.stack === 'blackwaste')),
+            };
+            resolve (stacks)
           }
         )
       }
@@ -210,6 +228,15 @@ async function dealcards( gameid, options, created, dbCon) {
     )
   })
 }
+
+function actionsarrayToCards (actions) {
+  var counter = 0;
+  var cards = actions.map(card=> {
+    return {nr : counter ++, faceup : card.faceup, color : card.color, suit : card.suit, value : card.value}
+  })
+  return cards;
+}
+
 function sqlCompatibleDate(date) {
   var sqlcompatibledate = date;
   return sqlcompatibledate = sqlcompatibledate.getUTCFullYear() + '-' +
