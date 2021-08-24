@@ -70,7 +70,7 @@ class Pile extends React.Component {
     
     render () {
         return (
-            <ul>{this.props.name}
+            <ul className ="Pile">{this.props.name}
                 {this.props.cards ? Object.keys(this.props.cards).map( (card) =>
                     <Card key = {card}
                         faceup = {this.props.cards[card].faceup}
@@ -90,7 +90,7 @@ class Sequence extends React.Component {
 
     render () {
         return (
-            <ul>{this.props.name}
+            <ul className ="Sequence">{this.props.name}
                 {this.props.cards ? Object.keys(this.props.cards).map( (card) =>
                     <Card key = {card}
                         faceup = {this.props.cards[card].faceup}
@@ -106,8 +106,7 @@ class Sequence extends React.Component {
 
 function Card (props) {
     return (
-        <div>
-            <div>{props.color} </div>
+        <div className ={'card '+ props.color +' '+ (props.faceup?'faceup':'facedown')+ (props.faceup?' '+props.suit:'') +(props.faceup?' '+ props.value:'')}>
             <div>{props.suit} </div>
             <div>{props.value} </div>
         </div>

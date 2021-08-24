@@ -41,3 +41,36 @@ body {
 #roompassword {
   width: 129px;
 }
+
+body {
+ 
+}
+
+.card{
+  position: relative;
+  height: 130px;
+  width: 100px;
+  border: 1px solid black;
+  border-radius: .5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card.red {
+  color: white;
+  background-color: red;
+}
+
+.card.black {
+  color: white;
+  background-color: black;
+}
+
+.Sequence {
+ 
+}
+
+.Pile {
+ 
+}
