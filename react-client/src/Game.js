@@ -21,6 +21,7 @@ export default class Game extends React.Component{
                 this.setState (data);
             }
         });
+ 
     }
     
     componentDidMount () {
@@ -31,33 +32,33 @@ export default class Game extends React.Component{
     render(){
         return (
             <div className="game">
-                <Sequence cards = {this.state.stacks.playermalus} ></Sequence>
-                <Pile cards = {this.state.stacks.playerstock} ></Pile>
-                <Pile cards = {this.state.stacks.playerwaste} ></Pile>
+                <Sequence cards = {this.state.stacks.playermalus} name ="playermalus" ></Sequence>
+                <Pile cards = {this.state.stacks.playerstock} name = "playerstock" ></Pile>
+                <Pile cards = {this.state.stacks.playerwaste} name = "playerwaste" ></Pile>
                 
-                <Sequence cards = {this.state.stacks.playertableau0} ></Sequence>
-                <Pile cards = {this.state.stacks.playerfoundation0} ></Pile>
-                <Pile cards = {this.state.stacks.opponentfoundation0} ></Pile>
-                <Sequence cards = {this.state.stacks.opponenttableau0} ></Sequence>
+                <Sequence cards = {this.state.stacks.playertableau0} name = "playertableau0"></Sequence>
+                <Pile cards = {this.state.stacks.playerfoundation0} name = "playerfoundation0"></Pile>
+                <Pile cards = {this.state.stacks.opponentfoundation0} name = "opponentfoundation0"></Pile>
+                <Sequence cards = {this.state.stacks.opponenttableau0} name = "opponenttableau0"></Sequence>
                 
-                <Sequence cards = {this.state.stacks.playertableau1} ></Sequence>
-                <Pile cards = {this.state.stacks.playerfoundation1} ></Pile>
-                <Pile cards = {this.state.stacks.opponentfoundation1} ></Pile>
-                <Sequence cards = {this.state.stacks.opponenttableau1} ></Sequence>
+                <Sequence cards = {this.state.stacks.playertableau1} name = "playertableau1"></Sequence>
+                <Pile cards = {this.state.stacks.playerfoundation1} name = "playerfoundation1"></Pile>
+                <Pile cards = {this.state.stacks.opponentfoundation1} name = "opponentfoundation1"></Pile>
+                <Sequence cards = {this.state.stacks.opponenttableau1} name = "opponenttableau1"></Sequence>
 
-                <Sequence cards = {this.state.stacks.playertableau2} ></Sequence>
-                <Pile cards = {this.state.stacks.playerfoundation2} ></Pile>
-                <Pile cards = {this.state.stacks.opponentfoundation2} ></Pile>
-                <Sequence cards = {this.state.stacks.opponenttableau2} ></Sequence> 
+                <Sequence cards = {this.state.stacks.playertableau2} name = "playertableau2"></Sequence>
+                <Pile cards = {this.state.stacks.playerfoundation2} name = "playerfoundation2"></Pile>
+                <Pile cards = {this.state.stacks.opponentfoundation2} name = "opponentfoundation2"></Pile>
+                <Sequence cards = {this.state.stacks.opponenttableau2} name = "opponenttableau2"></Sequence> 
 
-                <Sequence cards = {this.state.stacks.playertableau3} ></Sequence>
-                <Pile cards = {this.state.stacks.playerfoundation3} ></Pile>
-                <Pile cards = {this.state.stacks.opponentfoundation3} ></Pile>
-                <Sequence cards = {this.state.stacks.opponenttableau3} ></Sequence>
+                <Sequence cards = {this.state.stacks.playertableau3} name = "playertableau3"></Sequence>
+                <Pile cards = {this.state.stacks.playerfoundation3} name = "playerfoundation3"></Pile>
+                <Pile cards = {this.state.stacks.opponentfoundation3} name = "opponentfoundation3"></Pile>
+                <Sequence cards = {this.state.stacks.opponenttableau3} name = "opponenttableau3"></Sequence>
 
-                <Sequence cards = {this.state.stacks.opponentmalus} ></Sequence>
-                <Pile cards = {this.state.stacks.opponentstock} ></Pile>
-                <Pile cards = {this.state.stacks.opponentwaste} ></Pile>
+                <Sequence cards = {this.state.stacks.opponentmalus} name = "opponentmalus"></Sequence>
+                <Pile cards = {this.state.stacks.opponentstock} name = "opponentstock"></Pile>
+                <Pile cards = {this.state.stacks.opponentwaste} name = "opponentwaste"></Pile>
             </div>
         )
     }
@@ -70,7 +71,7 @@ class Pile extends React.Component {
     
     render () {
         return (
-            <ul className ="Pile">{this.props.name}
+            <ul className ={"Pile "+this.props.name}>{this.props.name}
                 {this.props.cards ? Object.keys(this.props.cards).map( (card) =>
                     <Card key = {card}
                         faceup = {this.props.cards[card].faceup}
@@ -90,7 +91,7 @@ class Sequence extends React.Component {
 
     render () {
         return (
-            <ul className ="Sequence">{this.props.name}
+            <ul className ={"Sequence "+this.props.name}>{this.props.name}
                 {this.props.cards ? Object.keys(this.props.cards).map( (card) =>
                     <Card key = {card}
                         faceup = {this.props.cards[card].faceup}
