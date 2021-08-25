@@ -1,7 +1,6 @@
 import React from 'react';
 import socketIOClient from 'socket.io-client';
 import ReactDOM from 'react-dom';
-import { useDrag, useDrop } from "react-dnd";
 
 
 
@@ -109,9 +108,9 @@ class Sequence extends React.Component {
 
 function Card (props) {
     return (
-        <div className ={'card '+ props.color +' '+ (props.faceup?'faceup':'facedown')+ (props.faceup?' '+props.suit:'') +(props.faceup?' '+ props.value:'')}>
+        <li className ={'card '+ props.color +' '+ (props.faceup?'faceup':'facedown')+ (props.faceup?' '+props.suit:'') +(props.faceup?' '+ props.value:'')}>
             <div>{props.suit} {props.value}</div>
-        </div>
+        </li>
     )
 }
 
