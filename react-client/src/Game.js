@@ -71,9 +71,9 @@ class Pile extends React.Component {
     render () {
         return (
             <DragDropContext>
-                <Droppable droppableId={"Pile-"+this.props.name}>
+                <Droppable droppableId={"Pile "+this.props.name}>
                     {(provided) => ( 
-                        <ul className ={"Pile-"+this.props.name} {...provided.droppableProps} ref={provided.innerRef}>{this.props.name}
+                        <ul className ={"Pile "+this.props.name} {...provided.droppableProps} ref={provided.innerRef}>{this.props.name}
                             {this.props.cards ? Object.keys(this.props.cards).map( (card, index) =>
                                 <Draggable key = {card} draggableId={card} index={index}> 
                                     {(provided) => (
@@ -85,7 +85,6 @@ class Pile extends React.Component {
                                                 value = {this.props.cards[card].value}
                                                 cardnr = {this.props.cards[card].cardnr}
                                             ></Card>
-                                            {provided.placeholder}
                                         </li>
                                     )}
                                 </Draggable>
@@ -108,9 +107,9 @@ class Sequence extends React.Component {
         return (
             
             <DragDropContext>
-                <Droppable droppableId={"Sequence-"+this.props.name}>
+                <Droppable droppableId={"Sequence "+this.props.name}>
                     {(provided) => ( 
-                        <ul className ={"Sequence-"+this.props.name} {...provided.droppableProps} ref={provided.innerRef}>{this.props.name}
+                        <ul className ={"Sequence "+this.props.name} {...provided.droppableProps} ref={provided.innerRef}>{this.props.name}
                             {this.props.cards ? Object.keys(this.props.cards).map( (card, index) =>
                                 <Draggable key = {card} draggableId={card}  index={index}> 
                                     {(provided) => (
@@ -122,7 +121,6 @@ class Sequence extends React.Component {
                                                 value = {this.props.cards[card].value}
                                                 cardnr = {this.props.cards[card].cardnr}
                                             ></Card>
-                                            {provided.placeholder}
                                         </li>
                                     )}
                                 </Draggable>
