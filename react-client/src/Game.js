@@ -78,6 +78,7 @@ class Pile extends React.Component {
                         color = {this.props.cards[card].color} 
                         suit = {this.props.cards[card].suit} 
                         value = {this.props.cards[card].value}
+                        cardnr = {this.props.cards[card].cardnr}
                     ></Card>
                 ):''}
             </ul>
@@ -98,6 +99,7 @@ class Sequence extends React.Component {
                         color = {this.props.cards[card].color} 
                         suit = {this.props.cards[card].suit} 
                         value = {this.props.cards[card].value}
+                        cardnr = {this.props.cards[card].cardnr}
                     ></Card>
                 ):''}
             </ul>
