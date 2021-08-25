@@ -1,7 +1,7 @@
 import React from 'react';
 import socketIOClient from 'socket.io-client';
 import ReactDOM from 'react-dom';
-
+import { DragDropContext, Droppable, Draggable   } from 'react-beautiful-dnd';
 
 
 export default class Game extends React.Component{
@@ -70,47 +70,77 @@ class Pile extends React.Component {
     
     render () {
         return (
-            <ul className ={"Pile "+this.props.name}>{this.props.name}
-                {this.props.cards ? Object.keys(this.props.cards).map( (card) =>
-                    <Card key = {card}
-                        faceup = {this.props.cards[card].faceup}
-                        color = {this.props.cards[card].color} 
-                        suit = {this.props.cards[card].suit} 
-                        value = {this.props.cards[card].value}
-                        cardnr = {this.props.cards[card].cardnr}
-                    ></Card>
-                ):''}
-            </ul>
+            <DragDropContext>
+                <Droppable droppableId={"Pile-"+this.props.name}>
+                    {(provided) => ( 
+                        <ul className ={"Pile-"+this.props.name} {...provided.droppableProps} ref={provided.innerRef}>{this.props.name}
+                            {this.props.cards ? Object.keys(this.props.cards).map( (card, index) =>
+                                <Draggable key = {card} draggableId={card} index={index}> 
+                                    {(provided) => (
+                                        <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}> 
+                                            <Card 
+                                                faceup = {this.props.cards[card].faceup}
+                                                color = {this.props.cards[card].color} 
+                                                suit = {this.props.cards[card].suit} 
+                                                value = {this.props.cards[card].value}
+                                                cardnr = {this.props.cards[card].cardnr}
+                                            ></Card>
+                                            {provided.placeholder}
+                                        </li>
+                                    )}
+                                </Draggable>
+                            ):''}
+                            {provided.placeholder}
+                        </ul>
+                    )}
+                </Droppable>
+            </DragDropContext>
         )
     }
 }
 class Sequence extends React.Component {
     constructor(props) {
         super(props);
+       
     }
 
     render () {
         return (
-            <ul className ={"Sequence "+this.props.name}>{this.props.name}
-                {this.props.cards ? Object.keys(this.props.cards).map( (card) =>
-                    <Card key = {card}
-                        faceup = {this.props.cards[card].faceup}
-                        color = {this.props.cards[card].color} 
-                        suit = {this.props.cards[card].suit} 
-                        value = {this.props.cards[card].value}
-                        cardnr = {this.props.cards[card].cardnr}
-                    ></Card>
-                ):''}
-            </ul>
+            
+            <DragDropContext>
+                <Droppable droppableId={"Sequence-"+this.props.name}>
+                    {(provided) => ( 
+                        <ul className ={"Sequence-"+this.props.name} {...provided.droppableProps} ref={provided.innerRef}>{this.props.name}
+                            {this.props.cards ? Object.keys(this.props.cards).map( (card, index) =>
+                                <Draggable key = {card} draggableId={card}  index={index}> 
+                                    {(provided) => (
+                                        <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}> 
+                                            <Card 
+                                                faceup = {this.props.cards[card].faceup}
+                                                color = {this.props.cards[card].color} 
+                                                suit = {this.props.cards[card].suit} 
+                                                value = {this.props.cards[card].value}
+                                                cardnr = {this.props.cards[card].cardnr}
+                                            ></Card>
+                                            {provided.placeholder}
+                                        </li>
+                                    )}
+                                </Draggable>
+                            ):''}
+                            {provided.placeholder}
+                        </ul>
+                    )}
+                </Droppable>
+            </DragDropContext>
         )
     }
 }
 
 function Card (props) {
     return (
-        <li className ={'card '+ props.color +' '+ (props.faceup?'faceup':'facedown')+ (props.faceup?' '+props.suit:'') +(props.faceup?' '+ props.value:'')}>
-            <div>{props.suit} {props.value}</div>
-        </li>
+        <div className ={'card '+ props.color +' '+ (props.faceup?'faceup':'facedown')+ (props.faceup?' '+props.suit:'') +(props.faceup?' '+ props.value:'')}>
+            {props.suit} {props.value}
+        </div>
     )
 }
 
