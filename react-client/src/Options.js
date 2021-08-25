@@ -258,6 +258,7 @@ class TableauSize extends React.Component {
         return (
             <div
                 className = "tableausize" >
+                <div>
                 <label
                     htmlFor = {"tableausizeselect"} >
                     Tableau Size
@@ -273,6 +274,7 @@ class TableauSize extends React.Component {
                     <option value = {5} >5</option>
                     <option value = {6} >6</option>
                 </select>
+                </div>
             </div>
         )
     }

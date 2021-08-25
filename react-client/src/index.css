@@ -42,46 +42,22 @@ body {
   width: 129px;
 }
 
-body {
- 
+.card.red {
+  color: red;
+  border: 3px solid red;
 }
 
+.card.black {
+  color: black;
+  border: 3px solid black;
+}
 .card{
   height: 50px;
   width: 37px;
 
-  
+  display: inline-block;
+  vertical-align: top;
 
-  border: 1px solid black;
+  
   border-radius: .5rem;
-}
-
-.card.red {
-  color: white;
-  background-color: red;
-}
-
-.card.black {
-  color: white;
-  background-color: black;
-}
-
-.game {
-  font-size: small;
-  
-}
-
-.Sequence {
-  height:auto;
-  width: auto;
-  float:left;
-  border: 3px solid black;
-}
-
-.Pile {
-  height:auto;
-  width: auto;
-  float:left;
-
-  border: 3px solid black;
 }
