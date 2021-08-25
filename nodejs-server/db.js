@@ -102,6 +102,49 @@ module.exports = {
   }
 }
 
+async function getStacks (gameid, dbCon) {
+  return new Promise ((resolve) => {
+    dbCon.connect (
+      function(err) { if (err) throw err;
+        dbCon.query (" SELECT c.id, c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
+          function (err, actions) { if (err) throw err;
+            var stacks = {};
+            var cardcounter = new Counter();
+            for (action of actions) {
+              if(actions.filter(x=> x.stack === action.stack).length) {
+                stacks[action.stack] =  actionsToStack(actions.filter(x=> x.stack === action.stack), cardcounter);
+                actions =  actions.filter(x=> x.stack != action.stack);
+              }
+            }
+            resolve (stacks);
+          }
+        )
+      }
+    )
+  })
+}
+
+async function determineStartingPlayer(redmalus, blackmalus) {
+  var red = 0;
+  var black = 0;
+  for(card in redmalus) {
+    red += parseInt(redmalus[card].value);
+  }
+  for(card in blackmalus) {
+    black += parseInt(blackmalus[card].value);
+  }
+  return red >= black ? 'red' : 'black';
+}
+
+function actionsToStack (actions, cardcounter) {
+  var stacknr = 0;
+  var stack = {};
+  for(action of actions) {
+    stack[stacknr++] = {faceup : action.faceup, color : action.color, suit : action.suit, value : action.value, cardnr : cardcounter.next()};
+  }
+  return stack;
+}
+
 async function dealCards( gameid, options, created, dbCon) {
   return new Promise ((resolve) => {
     var reddeck = shuffle(feshDeck("red"));
@@ -159,30 +202,6 @@ async function dealCards( gameid, options, created, dbCon) {
   })
 }
 
-async function getStacks (gameid, dbCon) {
-  return new Promise ((resolve) => {
-    dbCon.connect (
-      function(err) { if (err) throw err;
-        dbCon.query (" SELECT c.id, c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
-          function (err, actions) { if (err) throw err;
-            var stacks = {};
-            var cardcounter = new Counter();
-            for (action of actions) {
-              if(actions.filter(x=> x.stack === action.stack).length) {
-                stacks[action.stack] =  actionsToStack(actions.filter(x=> x.stack === action.stack), cardcounter);
-                actions =  actions.filter(x=> x.stack != action.stack);
-              }
-            }
-            cardcounter = 0;
-            console.log(stacks);
-            resolve (stacks);
-          }
-        )
-      }
-    )
-  })
-}
-
 function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, redtimer, blacktimer, turntimer, turncolor) {
   return {
     props : { 
@@ -202,27 +221,6 @@ function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, re
       turncolor : turncolor
     }
   }
-}
-
-async function determineStartingPlayer(redmalus, blackmalus) {
-  var red = 0;
-  var black = 0;
-  for(card in redmalus) {
-    red += parseInt(redmalus[card].value);
-  }
-  for(card in blackmalus) {
-    black += parseInt(blackmalus[card].value);
-  }
-  return red >= black ? 'red' : 'black';
-}
-
-function actionsToStack (actions, cardcounter) {
-  var stacknr = 0;
-  var stack = {};
-  for(action of actions) {
-    stack[stacknr++] = {faceup : action.faceup, color : action.color, suit : action.suit, value : action.value, cardnr : cardcounter.next()};
-  }
-  return stack;
 }
 
 function sqlCompatibleDate(date) {
