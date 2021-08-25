@@ -42,13 +42,8 @@ export default class Options extends React.Component {
             return (
                 ReactDOM.render (
                     <Game
-                        id = {data.props.id}
-                        throwOnWaste = {data.props.throwOnWaste}
-                        throwOnMalus = {data.props.throwOnMalus}
-                        variant = {data.props.variant}
-                        color = {this.props.socket.id === data.props.red ? 'red' : 'black'}
-                        initialstate = {data.state}
-                        socket = {this.props.socket}          
+                        id = {data.id}
+                        socket = {this.props.socket}         
                     ></Game>,
                     document.getElementById ('root')
                 )
@@ -65,11 +60,8 @@ export default class Options extends React.Component {
             return (
                 ReactDOM.render (
                     <Game
-                        id = {data.props.id}
-                        socket = {this.props.socket}    
-                        throwOnWaste = {data.props.throwOnWaste}
-                        throwOnMalus = {data.props.throwOnMalus}
-                        variant = {data.props.variant}          
+                        id = {data.id}
+                        socket = {this.props.socket}          
                     ></Game>,
                     document.getElementById ('root')
                 )

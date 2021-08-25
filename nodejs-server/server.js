@@ -86,7 +86,7 @@ async function startGame (red, black, options) {
     removePendingRoom (black);
     updateClientPendingRooms (); 
 
-    io.to (red).to(black).emit ('startOnlineGameRES', { props : game.props});
+    io.to (red).to(black).emit ('startOnlineGameRES', { id : game.props.id});
 }
 
 function startTurn (game) {
@@ -139,11 +139,11 @@ function prepareStateForClient (state, color) {
             } 
         }    
     return {
-        turn : state.turn,
-        turncolor : state.turncolor,
-        turntimer : state.turntimer,
-        playertimer : color === 'red' ? state.redtimer : state.blacktimer, 
         opponenttimer : color === 'red' ? state.blacktimer : state.redtimer,
+        playertimer : color === 'red' ? state.redtimer : state.blacktimer, 
+        turntimer : state.turntimer,
+        turncolor : state.turncolor,     
+        turn : state.turn,
         stacks : {
             playermalus : color === 'red' ? stacks.redmalus : stacks.blackmalus,
             playerstock : color === 'red' ? stacks.redstock : stacks.blackstock,
