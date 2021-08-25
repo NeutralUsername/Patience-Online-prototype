@@ -66,11 +66,16 @@ export default class Game extends React.Component{
 class Pile extends React.Component {
     constructor(props) {
         super(props);
+        this.handleOnDragEnd = this.handleOnDragEnd.bind (this);
+    }
+
+    handleOnDragEnd(result) {
+        console.log(result);
     }
     
     render () {
         return (
-            <DragDropContext>
+            <DragDropContext onDragEnd={this.handleOnDragEnd}>
                 <Droppable droppableId={"Pile "+this.props.name}>
                     {(provided) => ( 
                         <ul className ={"Pile "+this.props.name} {...provided.droppableProps} ref={provided.innerRef}>{this.props.name}
@@ -100,13 +105,17 @@ class Pile extends React.Component {
 class Sequence extends React.Component {
     constructor(props) {
         super(props);
-       
+        this.handleOnDragEnd = this.handleOnDragEnd.bind (this);
+    }
+
+    handleOnDragEnd(result) {
+        console.log(result);
     }
 
     render () {
         return (
             
-            <DragDropContext>
+            <DragDropContext onDragEnd={this.handleOnDragEnd}>
                 <Droppable droppableId={"Sequence "+this.props.name}>
                     {(provided) => ( 
                         <ul className ={"Sequence "+this.props.name} {...provided.droppableProps} ref={provided.innerRef}>{this.props.name}
