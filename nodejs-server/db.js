@@ -166,9 +166,15 @@ async function getStacks (gameid, dbCon) {
         dbCon.query (" SELECT c.id, c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
           function (err, actions) { if (err) throw err;
             var stacks = {};
+            var cardcounter = new Counter();
             for (action of actions) {
-              stacks[action.stack] =  actionsToStack(actions.filter(x=> x.stack === action.stack));
+              if(actions.filter(x=> x.stack === action.stack).length) {
+                stacks[action.stack] =  actionsToStack(actions.filter(x=> x.stack === action.stack), cardcounter);
+                actions =  actions.filter(x=> x.stack != action.stack);
+              }
             }
+            cardcounter = 0;
+            console.log(stacks);
             resolve (stacks);
           }
         )
@@ -210,13 +216,13 @@ async function determineStartingPlayer(redmalus, blackmalus) {
   return red >= black ? 'red' : 'black';
 }
 
-function actionsToStack (actions) {
-  var counter = 0;
-  var cards = {};
+function actionsToStack (actions, cardcounter) {
+  var stacknr = 0;
+  var stack = {};
   for(action of actions) {
-    cards[counter++] = {faceup : action.faceup, color : action.color, suit : action.suit, value : action.value};
+    stack[stacknr++] = {faceup : action.faceup, color : action.color, suit : action.suit, value : action.value, cardnr : cardcounter.next()};
   }
-  return cards;
+  return stack;
 }
 
 function sqlCompatibleDate(date) {
@@ -228,6 +234,14 @@ function sqlCompatibleDate(date) {
   ('00' + sqlcompatibledate.getUTCMinutes()).slice(-2) + ':' + 
   ('00' + sqlcompatibledate.getUTCSeconds()).slice(-2);
 }
+
+function Counter() {
+  this.value = 0;
+}
+
+Counter.prototype.next = function() {
+  return this.value++;
+};
 
 class Card {
   constructor (color, suit, value) { 

@@ -47,14 +47,13 @@ body {
 }
 
 .card{
-  position: relative;
   height: 50px;
   width: 37px;
+
+  
+
   border: 1px solid black;
   border-radius: .5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .card.red {
@@ -67,28 +66,22 @@ body {
   background-color: black;
 }
 
-.Sequence {
+.game {
   font-size: small;
-
-  display:block;
-  float:left;
   
- 
-  height: 50px;
-  width: 50px;
-  border: 1px solid black;
-  font-size: small;
- 
+}
+
+.Sequence {
+  height:auto;
+  width: auto;
+  float:left;
+  border: 3px solid black;
 }
 
 .Pile {
-  position: relative;
-  height: 50px;
-  width: 33px;
-  border: 1px solid black;
-
-  font-size: small;
- 
-  display:block;
+  height:auto;
+  width: auto;
   float:left;
+
+  border: 3px solid black;
 }
