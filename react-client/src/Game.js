@@ -29,10 +29,9 @@ export default class Game extends React.Component{
     }
 
     handleOnDragEnd(result) {
-        //this.state.stacks[name] = stack;
-        //this.setState(this.state.stacks);
-        console.log(result);
-        console.log(this.state.stacks[result.source.droppableId][result.source.index]);
+        this.state.stacks[result.destination.droppableId].push( this.state.stacks[result.source.droppableId][result.source.index]);
+        this.state.stacks[result.source.droppableId].splice(result.source.index ,1);
+        
     }
 
     render(){
@@ -162,29 +161,32 @@ class Stack extends React.Component {
     
     render () {
         return (
-            <Droppable droppableId = {this.props.name}  type="CARDS" direction={'horizontal'} >
-                {(provided) => ( 
-                    <ul className ={this.props.type+" "+this.props.name} ref = {provided.innerRef} {...provided.droppableProps} > 
-                        {this.props.name}
-                            {this.props.cards ? Object.keys(this.props.cards).map( (card, index) => 
-                                <Draggable key = {String(this.props.cards[card].cardnr)} draggableId= {String(this.props.cards[card].cardnr)} index={index} > 
-                                    {(provided) => (
-                                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} > 
-                                            <Card 
-                                                cardnr = {this.props.cards[card].cardnr}
-                                                faceup = {this.props.cards[card].faceup}
-                                                color = {this.props.cards[card].color} 
-                                                suit = {this.props.cards[card].suit} 
-                                                value = {this.props.cards[card].value}
-                                            ></Card>
-                                        </div>
-                                    )}
-                                </Draggable>
+            <div className={"stack"} >
+                <label>{this.props.name}</label>
+                <Droppable droppableId = {this.props.name}  type="CARDS" direction={'horizontal'} >
+                    {(provided) => ( 
+                        <ul className ={this.props.type+" "+this.props.name} ref = {provided.innerRef} {...provided.droppableProps} > 
+                        
+                        {this.props.cards ? Object.keys(this.props.cards).map( (card, index) => 
+                            <Draggable key = {String(this.props.cards[card].cardid)} draggableId= {String(this.props.cards[card].cardid)} index={index} > 
+                                {(provided) => (
+                                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} > 
+                                        <Card 
+                                            cardid = {this.props.cards[card].cardid}
+                                            faceup = {this.props.cards[card].faceup}
+                                            color = {this.props.cards[card].color} 
+                                            suit = {this.props.cards[card].suit} 
+                                            value = {this.props.cards[card].value}
+                                        ></Card>
+                                    </div>
+                                )}
+                            </Draggable>
                             ):''}
-                        {provided.placeholder}
-                    </ul>
-                )}
-            </Droppable>
+                            {provided.placeholder}
+                        </ul>
+                    )}
+                </Droppable>
+            </div>
         )
     }
 }

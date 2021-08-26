@@ -108,7 +108,30 @@ async function getStacks (gameid, dbCon) {
       function(err) { if (err) throw err;
         dbCon.query (" SELECT c.id, c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
           function (err, actions) { if (err) throw err;
-            var stacks = {};
+            var stacks = {
+              redmalus : [], 
+              redstock : [],  
+              redwaste : [], 
+              blackmalus : [], 
+              blackstock : [], 
+              blackwaste : [], 
+              tableau0r : [], 
+              tableau1r : [], 
+              tableau2r : [], 
+              tableau3r : [], 
+              tablau0b : [], 
+              tableau1b : [], 
+              tableau2b : [], 
+              tableau3b : [], 
+              foundation0r : [], 
+              foundation1r : [], 
+              foundation2r : [], 
+              foundation3r : [], 
+              foundation0b : [], 
+              foundation1b : [], 
+              foundation2b : [], 
+              foundation3b : [], 
+            };
             var cardcounter = new Counter();
             for (action of actions) {
               if(actions.filter(x=> x.stack === action.stack).length) {
@@ -138,11 +161,11 @@ async function determineStartingPlayer(redmalus, blackmalus) {
 
 function actionsToStack (actions, cardcounter) {
   var stacknr = 0;
-  var stack = {};
+  var cards = [];
   for(action of actions) {
-    stack[stacknr++] = {faceup : action.faceup, color : action.color, suit : action.suit, value : action.value, cardnr : cardcounter.next()};
+    cards[stacknr++] = {faceup : action.faceup, color : action.color, suit : action.suit, value : action.value, cardid : cardcounter.next()};
   }
-  return stack;
+  return cards;
 }
 
 async function dealCards( gameid, options, created, dbCon) {

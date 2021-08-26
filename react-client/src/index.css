@@ -62,6 +62,10 @@ body {
   display:flex;
 }
 
+.stacklabel::after {
+  content:"\a";
+    white-space: pre;
+}
 
 .card{
  border : 1px solid lightgrey;
@@ -85,7 +89,7 @@ body {
 }
 
 .card.black {
-  color: white;
+  color: black;
   border: 3px solid black;
 }
 
