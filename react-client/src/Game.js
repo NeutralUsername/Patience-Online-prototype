@@ -8,6 +8,7 @@ export default class Game extends React.Component{
     constructor(props) {
         super(props); 
         this.mounted = false;
+        this.handleOnDragEnd = this.handleOnDragEnd.bind (this);
         this.state = {
             stacks : '',
             playertimer : '',
@@ -20,7 +21,6 @@ export default class Game extends React.Component{
                 this.setState (data);
             }
         });
-        this.updateStack = this.updateStack.bind (this);
     }
     
     componentDidMount () {
@@ -29,9 +29,10 @@ export default class Game extends React.Component{
     }
 
     handleOnDragEnd(result) {
-        this.state.stacks[name] = stack;
-        this.setState(this.state.stacks);
+        //this.state.stacks[name] = stack;
+        //this.setState(this.state.stacks);
         console.log(result);
+        console.log(this.state.stacks[result.source.droppableId][result.source.index]);
     }
 
     render(){
@@ -161,22 +162,22 @@ class Stack extends React.Component {
     
     render () {
         return (
-            <Droppable droppableId = {this.props.name}  type="CARDS" >
+            <Droppable droppableId = {this.props.name}  type="CARDS" direction={'horizontal'} >
                 {(provided) => ( 
-                    <ul className ={this.props.name} ref = {provided.innerRef} {...provided.droppableProps} > 
+                    <ul className ={this.props.type+" "+this.props.name} ref = {provided.innerRef} {...provided.droppableProps} > 
                         {this.props.name}
                             {this.props.cards ? Object.keys(this.props.cards).map( (card, index) => 
                                 <Draggable key = {String(this.props.cards[card].cardnr)} draggableId= {String(this.props.cards[card].cardnr)} index={index} > 
                                     {(provided) => (
-                                        <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} > 
+                                        <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} > 
                                             <Card 
+                                                cardnr = {this.props.cards[card].cardnr}
                                                 faceup = {this.props.cards[card].faceup}
                                                 color = {this.props.cards[card].color} 
                                                 suit = {this.props.cards[card].suit} 
                                                 value = {this.props.cards[card].value}
-                                                cardnr = {this.props.cards[card].cardnr}
                                             ></Card>
-                                        </li>
+                                        </div>
                                     )}
                                 </Draggable>
                             ):''}
@@ -184,7 +185,6 @@ class Stack extends React.Component {
                     </ul>
                 )}
             </Droppable>
-            
         )
     }
 }
