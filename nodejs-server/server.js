@@ -85,6 +85,7 @@ async function startGame (red, black, options) {
     removePendingRoom (red);
     removePendingRoom (black);
     updateClientPendingRooms (); 
+    
     console.log(game.props.id);
     io.to (red).to(black).emit ('startOnlineGameRES', { id : game.props.id});
 }

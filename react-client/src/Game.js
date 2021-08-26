@@ -20,7 +20,7 @@ export default class Game extends React.Component{
                 this.setState (data);
             }
         });
- 
+        this.updateStack = this.updateStack.bind (this);
     }
     
     componentDidMount () {
@@ -28,61 +28,178 @@ export default class Game extends React.Component{
         this.props.socket.emit("GameMounted", {id : this.props.id});
     }
 
+    updateStack (stack, name) {;
+        this.state.stacks[name] = stack;
+        this.setState(this.state.stacks);
+    }
+
+    handleOnDragEnd(result) {
+        console.log(result);
+    }
+
     render(){
         return (
             <div className="game">
-                <Sequence cards = {this.state.stacks.playermalus} name ="pmalus" ></Sequence>
-                <Pile cards = {this.state.stacks.playerstock} name = "pstock" ></Pile>
-                <Pile cards = {this.state.stacks.playerwaste} name = "pwaste" ></Pile>
-                
-                <Sequence cards = {this.state.stacks.playertableau0} name = "ptableau0"></Sequence>
-                <Pile cards = {this.state.stacks.playerfoundation0} name = "pfoundation0"></Pile>
-                <Pile cards = {this.state.stacks.opponentfoundation0} name = "ofoundation0"></Pile>
-                <Sequence cards = {this.state.stacks.opponenttableau0} name = "otableau0"></Sequence>
-                
-                <Sequence cards = {this.state.stacks.playertableau1} name = "ptableau1"></Sequence>
-                <Pile cards = {this.state.stacks.playerfoundation1} name = "pfoundation1"></Pile>
-                <Pile cards = {this.state.stacks.opponentfoundation1} name = "ofoundation1"></Pile>
-                <Sequence cards = {this.state.stacks.opponenttableau1} name = "otableau1"></Sequence>
-
-                <Sequence cards = {this.state.stacks.playertableau2} name = "ptableau2"></Sequence>
-                <Pile cards = {this.state.stacks.playerfoundation2} name = "pfoundation2"></Pile>
-                <Pile cards = {this.state.stacks.opponentfoundation2} name = "ofoundation2"></Pile>
-                <Sequence cards = {this.state.stacks.opponenttableau2} name = "otableau2"></Sequence> 
-
-                <Sequence cards = {this.state.stacks.playertableau3} name = "ptableau3"></Sequence>
-                <Pile cards = {this.state.stacks.playerfoundation3} name = "pfoundation3"></Pile>
-                <Pile cards = {this.state.stacks.opponentfoundation3} name = "ofoundation3"></Pile>
-                <Sequence cards = {this.state.stacks.opponenttableau3} name = "otableau3"></Sequence>
-
-                <Sequence cards = {this.state.stacks.opponentmalus} name = "omalus"></Sequence>
-                <Pile cards = {this.state.stacks.opponentstock} name = "ostock"></Pile>
-                <Pile cards = {this.state.stacks.opponentwaste} name = "owaste"></Pile>
+                <DragDropContext onDragEnd = {this.handleOnDragEnd} >
+                    <Stack 
+                        cards = {this.state.stacks.playermalus} 
+                        name ="playermalus" type ="sequence" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.playerstock} 
+                        name = "playerstock" 
+                        type ="pile" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.playerwaste} 
+                        name = "playerwaste" 
+                        type ="pile" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.playertableau0} 
+                        name = "playertableau0" 
+                        type ="pile" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.playerfoundation0} 
+                        name = "playerfoundation0" 
+                        type ="sequence" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.opponentfoundation0} 
+                        name = "opponentfoundation0" 
+                        type ="sequence" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.opponenttableau0} 
+                        name = "opponenttableau0" 
+                        type ="pile" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.playertableau1} 
+                        name = "playertableau1" 
+                        type ="pile" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.playerfoundation1} 
+                        name = "playerfoundation1" 
+                        type ="sequence" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.opponentfoundation1} 
+                        name = "opponentfoundation1" 
+                        type ="sequence" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.opponenttableau1} 
+                        name = "opponenttableau1" 
+                        type ="pile" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.playertableau2} 
+                        name = "playertableau2" 
+                        type ="pile" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.playerfoundation2} 
+                        name = "playerfoundation2" 
+                        type ="sequence" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.opponentfoundation2} 
+                        name = "opponentfoundation2" 
+                        type ="sequence" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.opponenttableau2} 
+                        name = "opponenttableau2" 
+                        type ="pile" 
+                        updateStack = {this.updateStack}
+                    ></Stack> 
+                    <Stack 
+                        cards = {this.state.stacks.playertableau3} 
+                        name = "playertableau3" 
+                        type ="pile" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.playerfoundation3} 
+                        name = "playerfoundation3" 
+                        type ="sequence" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.opponentfoundation3} 
+                        name = "opponentfoundation3" 
+                        type ="sequence" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.opponenttableau3} 
+                        name = "opponenttableau3" 
+                        type ="pile" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.opponentmalus} 
+                        name = "opponentmalus" 
+                        type ="sequence" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.opponentstock} 
+                        name = "opponentstock" 
+                        type ="pile" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                    <Stack 
+                        cards = {this.state.stacks.opponentwaste} 
+                        name = "opponentwaste" 
+                        type ="pile" 
+                        updateStack = {this.updateStack}
+                    ></Stack>
+                </DragDropContext>
             </div>
         )
     }
 } 
 
-class Pile extends React.Component {
+class Stack extends React.Component {
     constructor(props) {
         super(props);
-        this.handleOnDragEnd = this.handleOnDragEnd.bind (this);
-    }
-
-    handleOnDragEnd(result) {
-        console.log(result);
     }
     
     render () {
         return (
-            <DragDropContext onDragEnd={this.handleOnDragEnd}>
-                <Droppable droppableId={"Pile "+this.props.name}>
-                    {(provided) => ( 
-                        <ul className ={"Pile "+this.props.name} {...provided.droppableProps} ref={provided.innerRef}>{this.props.name}
-                            {this.props.cards ? Object.keys(this.props.cards).map( (card, index) =>
-                                <Draggable key = {card} draggableId={card} index={index}> 
+            <Droppable 
+                droppableId = {this.props.name}  
+                type="card">
+                {(provided) => ( 
+                    <ul 
+                        className ={this.props.name} 
+                        ref = {provided.innerRef} {...provided.droppableProps} > 
+                        {this.props.name}
+                            {this.props.cards ? Object.keys(this.props.cards).map( (card, index) => 
+                                <Draggable 
+                                    key = {String(this.props.cards[card].cardnr)} 
+                                    draggableId= {String(this.props.cards[card].cardnr)} 
+                                    index={index}> 
                                     {(provided) => (
-                                        <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}> 
+                                        <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} > 
                                             <Card 
                                                 faceup = {this.props.cards[card].faceup}
                                                 color = {this.props.cards[card].color} 
@@ -94,51 +211,11 @@ class Pile extends React.Component {
                                     )}
                                 </Draggable>
                             ):''}
-                            {provided.placeholder}
-                        </ul>
-                    )}
-                </Droppable>
-            </DragDropContext>
-        )
-    }
-}
-class Sequence extends React.Component {
-    constructor(props) {
-        super(props);
-        this.handleOnDragEnd = this.handleOnDragEnd.bind (this);
-    }
-
-    handleOnDragEnd(result) {
-        console.log(result);
-    }
-
-    render () {
-        return (
+                        {provided.placeholder}
+                    </ul>
+                )}
+            </Droppable>
             
-            <DragDropContext onDragEnd={this.handleOnDragEnd}>
-                <Droppable droppableId={"Sequence "+this.props.name}>
-                    {(provided) => ( 
-                        <ul className ={"Sequence "+this.props.name} {...provided.droppableProps} ref={provided.innerRef}>{this.props.name}
-                            {this.props.cards ? Object.keys(this.props.cards).map( (card, index) =>
-                                <Draggable key = {card} draggableId={card}  index={index}> 
-                                    {(provided) => (
-                                        <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}> 
-                                            <Card 
-                                                faceup = {this.props.cards[card].faceup}
-                                                color = {this.props.cards[card].color} 
-                                                suit = {this.props.cards[card].suit} 
-                                                value = {this.props.cards[card].value}
-                                                cardnr = {this.props.cards[card].cardnr}
-                                            ></Card>
-                                        </li>
-                                    )}
-                                </Draggable>
-                            ):''}
-                            {provided.placeholder}
-                        </ul>
-                    )}
-                </Droppable>
-            </DragDropContext>
         )
     }
 }

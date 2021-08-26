@@ -48,15 +48,15 @@ body {
 }
 
 .card.black {
-  color: black;
+  color: white;
   border: 3px solid black;
 }
 .card{
   height: 50px;
   width: 37px;
 
-  display: inline-block;
-  vertical-align: top;
+  
+ 
 
   
   border-radius: .5rem;
