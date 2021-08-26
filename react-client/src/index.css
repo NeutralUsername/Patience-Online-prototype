@@ -46,20 +46,243 @@ body {
 
 }
 
-.pile {
-  padding: 8px;
+.playermalus {
   flex-grow:  1;
-  min-height: 100px;
-
+  min-height: 80px;
   display:flex;
+
+  position: fixed;
+  bottom: 0%;
 }
 
-.sequence {
-  padding: 8px;
+.playerstock {
   flex-grow:  1;
-  min-height: 100px;
-
+  min-height: 80px;
   display:flex;
+
+  position: fixed;
+  bottom: 7%;
+}
+
+.playerwaste {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 14%;
+}
+
+.playertableau0 {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 22%;
+  right: 60%;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.playertableau1 {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 36%;
+  right: 60%;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.playertableau2 {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 50%;
+  right: 60%;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.playertableau3 {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 64%;
+  right: 60%;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.playerfoundation0 {
+  flex-grow:  1;
+  min-height: 80px;
+ 
+
+  position: fixed;
+  top: 15%;
+  right : 3%
+}
+
+.playerfoundation1 {
+  flex-grow:  1;
+  min-height: 80px;
+ 
+
+  position: fixed;
+  top: 15%;
+  right : 6%;
+}
+
+
+.playerfoundation2 {
+  flex-grow:  1;
+  min-height: 80px;
+ 
+
+  position: fixed;
+  top: 15%;
+  right : 9%;
+}
+
+
+.playerfoundation3 {
+  flex-grow:  1;
+  min-height: 80px;
+ 
+
+  position: fixed;
+  top: 15%;
+  right :12%;
+}
+
+
+.opponentmalus {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 89%;
+  display: flex;
+ 
+}
+
+.opponentstock {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 82%;
+
+}
+
+.opponentwaste {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  top: 75%;
+
+}
+
+.opponenttableau0 {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 30%;
+  left: 60%;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.opponenttableau1 {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 40%;
+  left: 60%;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.opponenttableau2 {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 50%;
+  left: 60%;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.opponenttableau3 {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 60%;
+  left: 60%;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.opponentfoundation0 {
+  flex-grow:  1;
+  min-height: 80px;
+ 
+
+  position: fixed;
+  top: 15%;
+  right : 20%;
+}
+
+.opponentfoundation1 {
+  flex-grow:  1;
+  min-height: 80px;
+ 
+
+  position: fixed;
+  top: 15%;
+  right : 23%;
+}
+
+
+.opponentfoundation2 {
+  flex-grow:  1;
+  min-height: 80px;
+ 
+
+  position: fixed;
+  top: 15%;
+  right : 26%;
+}
+
+
+.opponentfoundation3 {
+  flex-grow:  1;
+  min-height: 80px;
+ 
+
+  position: fixed;
+  top: 15%;
+  right :29%;
 }
 
 .stacklabel::after {
@@ -69,16 +292,17 @@ body {
 
 .card{
  border : 1px solid lightgrey;
- border-radius : 50%;
+ border-radius: .5rem;
  padding : 8px;
  margin-right : 8px;
+ margin-bottom : 8px;
  display: flex;
  justify-content: center;
  align-items : center;
 
-  height: 50px;
-  width: 37px;
-  border-radius: .5rem;
+  height: 33px;
+  width: 20px;
+  
 
 }
 

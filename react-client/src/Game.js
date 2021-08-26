@@ -134,19 +134,19 @@ export default class Game extends React.Component{
                         type ="pile" 
                     ></Stack>
                     <Stack 
-                        cards = {this.state.stacks.opponentmalus} 
-                        name = "opponentmalus" 
-                        type ="sequence" 
+                        cards = {this.state.stacks.opponentwaste} 
+                        name = "opponentwaste" 
+                        type ="pile" 
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.opponentstock} 
                         name = "opponentstock" 
                         type ="pile" 
                     ></Stack>
-                    <Stack 
-                        cards = {this.state.stacks.opponentwaste} 
-                        name = "opponentwaste" 
-                        type ="pile" 
+                     <Stack 
+                        cards = {this.state.stacks.opponentmalus} 
+                        name = "opponentmalus" 
+                        type ="sequence" 
                     ></Stack>
                 </DragDropContext>
             </div>
@@ -162,7 +162,7 @@ class Stack extends React.Component {
     render () {
         return (
             <div className={"stack"} >
-                <label>{this.props.name}</label>
+                
                 <Droppable droppableId = {this.props.name}  type="CARDS" direction={'horizontal'} >
                     {(provided) => ( 
                         <ul className ={this.props.type+" "+this.props.name} ref = {provided.innerRef} {...provided.droppableProps} > 
