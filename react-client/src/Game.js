@@ -44,133 +44,111 @@ export default class Game extends React.Component{
                     <Stack 
                         cards = {this.state.stacks.playermalus} 
                         name ="playermalus" type ="sequence" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.playerstock} 
                         name = "playerstock" 
                         type ="pile" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.playerwaste} 
                         name = "playerwaste" 
                         type ="pile" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.playertableau0} 
                         name = "playertableau0" 
                         type ="pile" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.playerfoundation0} 
                         name = "playerfoundation0" 
                         type ="sequence" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.opponentfoundation0} 
                         name = "opponentfoundation0" 
                         type ="sequence" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.opponenttableau0} 
                         name = "opponenttableau0" 
                         type ="pile" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.playertableau1} 
                         name = "playertableau1" 
                         type ="pile" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.playerfoundation1} 
                         name = "playerfoundation1" 
                         type ="sequence" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.opponentfoundation1} 
                         name = "opponentfoundation1" 
                         type ="sequence" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.opponenttableau1} 
                         name = "opponenttableau1" 
                         type ="pile" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.playertableau2} 
                         name = "playertableau2" 
                         type ="pile" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.playerfoundation2} 
                         name = "playerfoundation2" 
                         type ="sequence" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.opponentfoundation2} 
                         name = "opponentfoundation2" 
                         type ="sequence" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.opponenttableau2} 
                         name = "opponenttableau2" 
                         type ="pile" 
-                        updateStack = {this.updateStack}
                     ></Stack> 
                     <Stack 
                         cards = {this.state.stacks.playertableau3} 
                         name = "playertableau3" 
                         type ="pile" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.playerfoundation3} 
                         name = "playerfoundation3" 
                         type ="sequence" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.opponentfoundation3} 
                         name = "opponentfoundation3" 
                         type ="sequence" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.opponenttableau3} 
                         name = "opponenttableau3" 
                         type ="pile" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.opponentmalus} 
                         name = "opponentmalus" 
                         type ="sequence" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.opponentstock} 
                         name = "opponentstock" 
                         type ="pile" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.opponentwaste} 
                         name = "opponentwaste" 
                         type ="pile" 
-                        updateStack = {this.updateStack}
                     ></Stack>
                 </DragDropContext>
             </div>
