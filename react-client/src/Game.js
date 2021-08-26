@@ -1,7 +1,6 @@
 import React from 'react';
 import socketIOClient from 'socket.io-client';
 import ReactDOM from 'react-dom';
-import { DragDropContext, Droppable, Draggable   } from 'react-beautiful-dnd';
 
 
 export default class Game extends React.Component{
@@ -177,6 +176,7 @@ class Stack extends React.Component {
                                             color = {this.props.cards[card].color} 
                                             suit = {this.props.cards[card].suit} 
                                             value = {this.props.cards[card].value}
+                                            stack = {this.props.name}
                                         ></Card>
                                     </div>
                                 )}
@@ -193,7 +193,7 @@ class Stack extends React.Component {
 
 function Card (props) {
     return (
-        <div className = {'card '+ props.color +' '+ (props.faceup ? 'faceup' : 'facedown')+ (props.faceup ? ' '+props.suit : '') +(props.faceup ? ' '+ props.value : '')} >
+        <div className = {'card '+"cards-"+ props.stack+' '+ props.color +' '+ (props.faceup ? 'faceup' : 'facedown')+ (props.faceup ? ' '+props.suit : '') +(props.faceup ? ' '+ props.value : '')} >
             {props.suit} {props.value}
         </div>
     )

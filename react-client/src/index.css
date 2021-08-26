@@ -46,13 +46,29 @@ body {
 
 }
 
+.cards-playerstock {
+  position: fixed;
+}
+.cards-playerwaste {
+  position: fixed;
+}
+
+.cards-opponentstock {
+  position: fixed;
+}
+.cards-opponentwaste {
+  position: fixed;
+}
+
+
 .playermalus {
   flex-grow:  1;
   min-height: 80px;
   display:flex;
 
   position: fixed;
-  bottom: 0%;
+  bottom: 3%;
+  left : 15%;
 }
 
 .playerstock {
@@ -61,7 +77,9 @@ body {
   display:flex;
 
   position: fixed;
-  bottom: 7%;
+  bottom: 9%;
+  left : 7%;
+  
 }
 
 .playerwaste {
@@ -70,7 +88,40 @@ body {
   display:flex;
 
   position: fixed;
-  bottom: 14%;
+  bottom: 9%;
+  left : 0%;
+}
+
+.opponentmalus {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  top: 0%;
+  left : 15%;
+}
+
+.opponentstock {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  top: 0%;
+  left : 7%;
+
+}
+
+.opponentwaste {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  top: 0%;
+  left : 0%;
+
 }
 
 .playertableau0 {
@@ -84,6 +135,7 @@ body {
   display: flex;
   flex-direction: row-reverse;
 }
+
 
 .playertableau1 {
   flex-grow:  1;
@@ -121,79 +173,6 @@ body {
   flex-direction: row-reverse;
 }
 
-.playerfoundation0 {
-  flex-grow:  1;
-  min-height: 80px;
- 
-
-  position: fixed;
-  top: 15%;
-  right : 3%
-}
-
-.playerfoundation1 {
-  flex-grow:  1;
-  min-height: 80px;
- 
-
-  position: fixed;
-  top: 15%;
-  right : 6%;
-}
-
-
-.playerfoundation2 {
-  flex-grow:  1;
-  min-height: 80px;
- 
-
-  position: fixed;
-  top: 15%;
-  right : 9%;
-}
-
-
-.playerfoundation3 {
-  flex-grow:  1;
-  min-height: 80px;
- 
-
-  position: fixed;
-  top: 15%;
-  right :12%;
-}
-
-
-.opponentmalus {
-  flex-grow:  1;
-  min-height: 80px;
-  display:flex;
-
-  position: fixed;
-  bottom: 89%;
-  display: flex;
- 
-}
-
-.opponentstock {
-  flex-grow:  1;
-  min-height: 80px;
-  display:flex;
-
-  position: fixed;
-  bottom: 82%;
-
-}
-
-.opponentwaste {
-  flex-grow:  1;
-  min-height: 80px;
-  display:flex;
-
-  position: fixed;
-  top: 75%;
-
-}
 
 .opponenttableau0 {
   flex-grow:  1;
@@ -201,10 +180,10 @@ body {
   display:flex;
 
   position: fixed;
-  bottom: 30%;
+  bottom: 22%;
   left: 60%;
   display: flex;
-  flex-direction: row-reverse;
+  
 }
 
 .opponenttableau1 {
@@ -213,10 +192,10 @@ body {
   display:flex;
 
   position: fixed;
-  bottom: 40%;
+  bottom: 36%;
   left: 60%;
   display: flex;
-  flex-direction: row-reverse;
+  
 }
 
 .opponenttableau2 {
@@ -228,7 +207,7 @@ body {
   bottom: 50%;
   left: 60%;
   display: flex;
-  flex-direction: row-reverse;
+ 
 }
 
 .opponenttableau3 {
@@ -237,58 +216,110 @@ body {
   display:flex;
 
   position: fixed;
-  bottom: 60%;
+  bottom: 64%;
   left: 60%;
   display: flex;
-  flex-direction: row-reverse;
+  
 }
+
+
+
+
+.playerfoundation0 {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 22%;
+  left: 51.4%;
+  display: flex;
+}
+
+.playerfoundation1 {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 36%;
+  left: 51.4%;
+  display: flex;
+}
+
+
+.playerfoundation2 {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 50%;
+  left: 51.4%;
+  display: flex;
+}
+
+
+.playerfoundation3 {
+  flex-grow:  1;
+  min-height: 80px;
+  display:flex;
+
+  position: fixed;
+  bottom: 64%;
+  left: 51.4%;
+  display: flex;
+}
+
+
+
 
 .opponentfoundation0 {
   flex-grow:  1;
   min-height: 80px;
- 
+  display:flex;
 
   position: fixed;
-  top: 15%;
-  right : 20%;
+  bottom: 22%;
+  left: 41%;
+  display: flex;
 }
 
 .opponentfoundation1 {
   flex-grow:  1;
   min-height: 80px;
- 
+  display:flex;
 
   position: fixed;
-  top: 15%;
-  right : 23%;
+  bottom: 36%;
+  left: 41%;
+  display: flex;
 }
 
 
 .opponentfoundation2 {
   flex-grow:  1;
   min-height: 80px;
- 
+  display:flex;
 
   position: fixed;
-  top: 15%;
-  right : 26%;
+  bottom: 50%;
+  left: 41%;
+  display: flex;
 }
 
 
 .opponentfoundation3 {
   flex-grow:  1;
   min-height: 80px;
- 
+  display:flex;
 
   position: fixed;
-  top: 15%;
-  right :29%;
+  bottom: 64%;
+  left: 41%;
+  display: flex;
 }
 
-.stacklabel::after {
-  content:"\a";
-    white-space: pre;
-}
 
 .card{
  border : 1px solid lightgrey;
@@ -300,8 +331,8 @@ body {
  justify-content: center;
  align-items : center;
 
-  height: 33px;
-  width: 20px;
+  height: 110px;
+  width: 75px;
   
 
 }
