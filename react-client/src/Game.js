@@ -28,12 +28,9 @@ export default class Game extends React.Component{
         this.props.socket.emit("GameMounted", {id : this.props.id});
     }
 
-    updateStack (stack, name) {;
+    handleOnDragEnd(result) {
         this.state.stacks[name] = stack;
         this.setState(this.state.stacks);
-    }
-
-    handleOnDragEnd(result) {
         console.log(result);
     }
 
@@ -43,7 +40,8 @@ export default class Game extends React.Component{
                 <DragDropContext onDragEnd = {this.handleOnDragEnd} >
                     <Stack 
                         cards = {this.state.stacks.playermalus} 
-                        name ="playermalus" type ="sequence" 
+                        name ="playermalus" 
+                        type ="sequence" 
                     ></Stack>
                     <Stack 
                         cards = {this.state.stacks.playerstock} 
@@ -163,19 +161,12 @@ class Stack extends React.Component {
     
     render () {
         return (
-            <Droppable 
-                droppableId = {this.props.name}  
-                type="card">
+            <Droppable droppableId = {this.props.name}  type="CARDS" >
                 {(provided) => ( 
-                    <ul 
-                        className ={this.props.name} 
-                        ref = {provided.innerRef} {...provided.droppableProps} > 
+                    <ul className ={this.props.name} ref = {provided.innerRef} {...provided.droppableProps} > 
                         {this.props.name}
                             {this.props.cards ? Object.keys(this.props.cards).map( (card, index) => 
-                                <Draggable 
-                                    key = {String(this.props.cards[card].cardnr)} 
-                                    draggableId= {String(this.props.cards[card].cardnr)} 
-                                    index={index}> 
+                                <Draggable key = {String(this.props.cards[card].cardnr)} draggableId= {String(this.props.cards[card].cardnr)} index={index} > 
                                     {(provided) => (
                                         <li ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} > 
                                             <Card 
@@ -200,7 +191,7 @@ class Stack extends React.Component {
 
 function Card (props) {
     return (
-        <div className ={'card '+ props.color +' '+ (props.faceup?'faceup':'facedown')+ (props.faceup?' '+props.suit:'') +(props.faceup?' '+ props.value:'')}>
+        <div className = {'card '+ props.color +' '+ (props.faceup ? 'faceup' : 'facedown')+ (props.faceup ? ' '+props.suit : '') +(props.faceup ? ' '+ props.value : '')} >
             {props.suit} {props.value}
         </div>
     )
