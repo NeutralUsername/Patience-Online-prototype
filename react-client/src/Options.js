@@ -205,290 +205,240 @@ export default class Options extends React.Component {
     }
 }
 
-class MalusSize extends React.Component {
-    constructor (props) {
-        super (props);
-        this.handleChange = this.handleChange.bind (this);
+function MalusSize (props) {
+    function handleChange (event) {
+        props.onChange (event.target.value);
     }
-    handleChange (event) {
+    return (
+        <div
+            className = "malussize">
+            <label
+                htmlFor = {"maluscountselect"} >
+                Malus Size
+            </label>
+            <select
+                value = { props.malusSize}
+                onChange = {handleChange}
+                id = {"maluscountselect"} >
+                <option value = {5} >5</option>
+                <option value = {6} >6</option>
+                <option value = {7} >7</option>
+                <option value = {8} >8</option>
+                <option value = {9} >9</option>
+                <option value = {10} >10</option>
+                <option value = {11} >11</option>
+                <option value = {12} >12</option>
+                <option value = {13} >13</option>
+                <option value = {14} >14</option>
+                <option value = {15} >15</option>
+                <option value = {16} >16</option>
+                <option value = {17} >17</option>
+                <option value = {18} >18</option>
+                <option value = {19} >19</option>
+                <option value = {20} >20</option>
+            </select>
+        </div>
+    )
+}
+function TableauSize(props) {
+    function handleChange (event) {
         this.props.onChange (event.target.value);
     }
-    render () {
-        return (
-            <div
-                className = "malussize">
-                <label
-                    htmlFor = {"maluscountselect"} >
-                    Malus Size
-                </label>
-                <select
-                    value = { this.props.malusSize}
-                    onChange = {this.handleChange}
-                    id = {"maluscountselect"} >
-                    <option value = {5} >5</option>
-                    <option value = {6} >6</option>
-                    <option value = {7} >7</option>
-                    <option value = {8} >8</option>
-                    <option value = {9} >9</option>
-                    <option value = {10} >10</option>
-                    <option value = {11} >11</option>
-                    <option value = {12} >12</option>
-                    <option value = {13} >13</option>
-                    <option value = {14} >14</option>
-                    <option value = {15} >15</option>
-                    <option value = {16} >16</option>
-                    <option value = {17} >17</option>
-                    <option value = {18} >18</option>
-                    <option value = {19} >19</option>
-                    <option value = {20} >20</option>
-                </select>
-            </div>
-        )
-    }
+    return (
+        <div
+            className = "tableausize" >
+            <label
+                htmlFor = {"tableausizeselect"} >
+                Tableau Size
+            </label>
+            <select
+                value = { props.tableauSize}
+                onChange = {handleChange}
+                id = {"tableauizeselect"} >
+                <option value = {1} >1</option>
+                <option value = {2} >2</option>
+                <option value = {3} >3</option>
+                <option value = {4} >4</option>
+                <option value = {5} >5</option>
+                <option value = {6} >6</option>
+            </select>
+        </div>
+    )
+
 }
-class TableauSize extends React.Component {
-    constructor (props) {
-        super (props);
-        this.handleChange = this.handleChange.bind (this);
-    }
-    handleChange (event) {
-        this.props.onChange (event.target.value);
-    }
-    render () {
-        return (
-            <div
-                className = "tableausize" >
-                <label
-                    htmlFor = {"tableausizeselect"} >
-                    Tableau Size
-                </label>
-                <select
-                    value = { this.props.tableauSize}
-                    onChange = {this.handleChange}
-                    id = {"tableauizeselect"} >
-                    <option value = {1} >1</option>
-                    <option value = {2} >2</option>
-                    <option value = {3} >3</option>
-                    <option value = {4} >4</option>
-                    <option value = {5} >5</option>
-                    <option value = {6} >6</option>
-                </select>
-            </div>
-        )
-    }
-}
-class ThrowOnWaste extends React.Component {
-    constructor (props) {
-        super (props);
-        this.handleChange = this.handleChange.bind (this);
-    }
-    handleChange (event) {
+function ThrowOnWaste (props) {
+    function handleChange (event) {
         this.props.onChange (event.target.checked);
     }
-    render () {
-        return (
-            <div
-                className = {"throwonWaste"} >
-                <label
-                    htmlFor = "throwonWaste-cb" >
-                    Throw on Opponent Waste Pile
-                </label>
-                <input
-                    checked = { this.props.throwOnWaste}
-                    onChange = {this.handleChange}
-                    id = {"throwonWastecb"}
-                    type = {"checkbox"}
-                ></input>
-            </div>
-        )
-    }
+    return (
+        <div
+            className = {"throwonWaste"} >
+            <label
+                htmlFor = "throwonWaste-cb" >
+                Throw on Opponent Waste Pile
+            </label>
+            <input
+                checked = { props.throwOnWaste}
+                onChange = {handleChange}
+                id = {"throwonWastecb"}
+                type = {"checkbox"}
+            ></input>
+        </div>
+    )
 }
-class ThrowOnMalus extends React.Component {
-    constructor (props) {
-        super (props);
-        this.handleChange = this.handleChange.bind (this);
+function ThrowOnMalus (props) {
+    function handleChange (event) {
+        props.onChange (event.target.checked);
     }
-    handleChange (event) {
-        this.props.onChange (event.target.checked);
-    }
-    render () {
-        return (
-            <div
-                className = {"throwonmalus"} >
-                <label
-                    htmlFor = "throwmaluscb" >
-                    Throw on Opponent Malus
-                </label>
-                <input
-                    checked = { this.props.throwOnMalus}
-                    onChange = {this.handleChange}
-                    id = {"throwmaluscb"}
-                    type = {"checkbox"}
-                ></input>
-            </div>
+    return (
+        <div
+            className = {"throwonmalus"} >
+            <label
+                htmlFor = "throwmaluscb" >
+                Throw on Opponent Malus
+            </label>
+            <input
+                checked = { props.throwOnMalus}
+                onChange = {handleChange}
+                id = {"throwmaluscb"}
+                type = {"checkbox"}
+            ></input>
+        </div>
         )
-    }
 }
-class Variant extends React.Component {
-    constructor (props) {
-        super (props);
-        this.handleChange = this.handleChange.bind (this);
-    }
-    handleChange (event) {
+function Variant (props) {
+    function handleChange (event) {
         this.props.onChange (event.target.value);
     }
-    render () {
-        return (
-            <div
-                className = {"variant"} >
-                <label>
-                    Patience Variant
-                </label>
-                <input
-                    name = 'variant'
-                    value = 'Patience'
-                    type = {"radio"}
-                    onChange = {this.handleChange}
-                    checked = {this.props.variant === "Patience"}
-                ></input>
-                <label>
-                    Klondike Variant
-                </label>
-                <input
-                    name = 'variant'
-                    value = 'Klondike'
-                    type = {"radio"}
-                    onChange = {this.handleChange}
-                    checked = {this.props.variant === "Klondike"}
-                ></input>
-            </div>
-        )
-    }
+    return (
+        <div
+            className = {"variant"} >
+            <label>
+                Patience Variant
+            </label>
+            <input
+                name = 'variant'
+                value = 'Patience'
+                type = {"radio"}
+                onChange = {handleChange}
+                checked = {props.variant === "Patience"}
+            ></input>
+            <label>
+                Klondike Variant
+            </label>
+            <input
+                name = 'variant'
+                value = 'Klondike'
+                type = {"radio"}
+                onChange = {handleChange}
+                checked = {props.variant === "Klondike"}
+            ></input>
+        </div>
+    )
 }
-class TimedTurns extends React.Component {
-    constructor (props) {
-        super (props);
-        this.handleBoolChange = this.handleBoolChange.bind (this);
-        this.handleValueChange = this.handleValueChange.bind (this);
-    }
-    handleBoolChange (event) {
+function TimedTurns (props) {
+    function handleBoolChange (event) {
         this.props.onBoolChange (event.target.checked);
     }
-    handleValueChange (event) {
+    function handleValueChange (event) {
         this.props.onValueChange (event.target.value);
     }
-    render () {
-        return (
-            <div
-                className = {"turnstimed"} >
-                <label
-                    htmlFor="turnstimed" >
-                    Limit time for each turn
-                </label>
-                <input
-                    checked = { this.props.turnsTimed}
-                    onChange = {this.handleBoolChange}
-                    id = {"turnstimed"}
-                    type = "checkbox" ></input>
-                <label
-                    htmlFor = "timeperturn" >
-                    Duration
-                </label>
-                <select
-                    value = { this.props.timePerTurn}
-                    onChange = {this.handleValueChange}
-                    id = {"timeperturn"} >
-                    <option value = {15} >15s</option>
-                    <option value = {30} >30s</option>
-                    <option value = {45} >45s</option>
-                    <option value = {60} >60s</option>
-                    <option value = {90} >90s</option>
-                    <option value = {120} >120s</option>
-                    <option value = {150} >150s</option>
-                    <option value = {180} >180s</option>
-                    <option value = {240} >240s</option>
-                    <option value = {300} >300s</option>
-                </select>
-            </div>
-        )
-    }
+    return (
+        <div
+            className = {"turnstimed"} >
+            <label
+                htmlFor="turnstimed" >
+                Limit time for each turn
+            </label>
+            <input
+                checked = { props.turnsTimed}
+                onChange = {handleBoolChange}
+                id = {"turnstimed"}
+                type = "checkbox" ></input>
+            <label
+                htmlFor = "timeperturn" >
+                Duration
+            </label>
+            <select
+                value = { props.timePerTurn}
+                onChange = {handleValueChange}
+                id = {"timeperturn"} >
+                <option value = {15} >15s</option>
+                <option value = {30} >30s</option>
+                <option value = {45} >45s</option>
+                <option value = {60} >60s</option>
+                <option value = {90} >90s</option>
+                <option value = {120} >120s</option>
+                <option value = {150} >150s</option>
+                <option value = {180} >180s</option>
+                <option value = {240} >240s</option>
+                <option value = {300} >300s</option>
+            </select>
+        </div>
+    )
 }
-class TimedPlayers extends React.Component {
-    constructor (props) {
-        super (props);
-        this.handleBoolChange = this.handleBoolChange.bind (this);
-        this.handleValueChange = this.handleValueChange.bind (this);
+function TimedPlayers (props) {
+    function handleBoolChange (event) {
+        props.onBoolChange (event.target.checked);
     }
-    handleBoolChange (event) {
-        this.props.onBoolChange (event.target.checked);
+    function handleValueChange (event) {
+        props.onValueChange (event.target.value);
     }
-    handleValueChange (event) {
-        this.props.onValueChange (event.target.value);
-    }
-    render () {
-        return (
-            <div
-                className = {"timedplayers"} >
-                <label
-                    htmlFor = "timedplayers" >
-                    Limit time for each player
-                </label>
-                <select
-                    value = { this.props.timePerPlayer}
-                    onChange = {this.handleValueChange}
-                    id = {"timeperplayer"} >
-                    <option value = {300} >5min</option>
-                    <option value = {600} >10min</option>
-                    <option value = {900} >15min</option>
-                    <option value = {1200} >20min</option>
-                    <option value = {1500} >25min</option>
-                    <option value = {1800} >30min</option>
-                    <option value = {2100} >35min</option>
-                    <option value = {2400} >40min</option>
-                    <option value = {2700} >45min</option>
-                    <option value = {3600} >60min</option>
-                </select>
-            </div>
-        )
-    }
+    return (
+        <div
+            className = {"timedplayers"} >
+            <label
+                htmlFor = "timedplayers" >
+                Limit time for each player
+            </label>
+            <select
+                value = { props.timePerPlayer}
+                onChange = {handleValueChange}
+                id = {"timeperplayer"} >
+                <option value = {300} >5min</option>
+                <option value = {600} >10min</option>
+                <option value = {900} >15min</option>
+                <option value = {1200} >20min</option>
+                <option value = {1500} >25min</option>
+                <option value = {1800} >30min</option>
+                <option value = {2100} >35min</option>
+                <option value = {2400} >40min</option>
+                <option value = {2700} >45min</option>
+                <option value = {3600} >60min</option>
+            </select>
+        </div>
+    )
 }
 
-class Room extends React.Component {
-    constructor ( props ) {
-        super (props);
-        this.handleRoomNameChange = this.handleRoomNameChange.bind (this);
-        this.handleRoomPasswordChange = this.handleRoomPasswordChange.bind (this);
+function  Room (props) {
+    function handleRoomNameChange (event) {
+        props.onNameChange (event.target.value);
     }
-    handleRoomNameChange (event) {
-        this.props.onNameChange (event.target.value);
+    function handleRoomPasswordChange (event) {
+        props.onPasswordChange (event.target.value);
     }
-    handleRoomPasswordChange (event) {
-        this.props.onPasswordChange (event.target.value);
-    }
-    render () {
-        return (
-            <div>
-                <label>
-                    Room Name
-                </label>
-                <input
-                    id = 'roomname'
-                    type = 'text'
-                    onChange = {this.handleRoomNameChange}
-                    value = { this.props.roomName}
-                ></input>
-                <label>
-                    Room Password
-                </label>
-                <input
-                    id = 'roompassword'
-                    type = 'password'
-                    onChange = {this.handleRoomPasswordChange}
-                    value = { this.props.roomPassword}
-                ></input>
-            </div>
-        )
-    }
+    return (
+        <div>
+            <label>
+                Room Name
+            </label>
+            <input
+                id = 'roomname'
+                type = 'text'
+                onChange = {handleRoomNameChange}
+                value = { props.roomName}
+            ></input>
+            <label>
+                Room Password
+            </label>
+            <input
+                id = 'roompassword'
+                type = 'password'
+                onChange = {handleRoomPasswordChange}
+                value = { props.roomPassword}
+            ></input>
+        </div>
+    )
 }
 
 function AI (props) {
@@ -521,37 +471,32 @@ function Online (props) {
     )
 }
 
-class PendingRooms extends React.Component {
-    constructor ( props ) {
-        super (props);
-        this.handleJoinClick = this.handleJoinClick.bind (this);
-        this.handleOptionClick = this.handleOptionClick.bind (this);
+function PendingRooms(props) {
+ 
+    function handleJoinClick (event) {
+        props.handleJoinClick (event.target.value);
     }
-    handleJoinClick (event) {
-        this.props.handleJoinClick (event.target.value);
+    function handleOptionClick (event) {
+        props.handleOptionClick (event.target.value);
     }
-    handleOptionClick (event) {
-        this.props.handleOptionClick (event.target.value);
-    }
-    render () {
         return (
             <div className ="pendingrooms">
                 <label> 
                      <div><b>Pending Rooms : </b><article className="pendingrooms-info">(click <i>Room Name</i> to inspect options)</article></div> 
                 </label>
                 <ul className="pendingrooms-list" > 
-                    {this.props.pendingRooms.map( (room) =>
+                    {props.pendingRooms.map( (room) =>
                         <li className="pendingrooms-listitem" key = {room.roomkey} > 
                             <button 
                                 className="pendingrooms-join" 
                                 value = {room.roomkey}
-                                onClick = {this.handleJoinClick} >
+                                onClick = {handleJoinClick} >
                                 Join
                             </button>
                             <button 
                                 className="pendingrooms-roomname" 
                                 value = {room.roomkey}
-                                onClick = {this.handleOptionClick} >
+                                onClick = {handleOptionClick} >
                                 {(!room.options.roomName.replace(/\s/g, '').length) ? room.roomkey : room.options.roomName.replace(/\s+/g,' ').trim()}   
                             </button>
                             <label className="pendingrooms-lock" hidden = {! room.options.roomPassword > 0}>🔒</label>
@@ -560,5 +505,4 @@ class PendingRooms extends React.Component {
                 </ul>
             </div>
         )
-    }
 }

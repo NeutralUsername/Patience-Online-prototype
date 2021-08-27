@@ -45,21 +45,19 @@ body {
 .game {
 
 }
-
 .cards-playerstock {
-  position: fixed;
+  position :fixed;
 }
 .cards-playerwaste {
-  position: fixed;
+  position :fixed;
 }
 
 .cards-opponentstock {
-  position: fixed;
+  position :fixed;
 }
 .cards-opponentwaste {
-  position: fixed;
+  position :fixed;
 }
-
 
 .playermalus {
   flex-grow:  1;
@@ -73,22 +71,22 @@ body {
 
 .playerstock {
   flex-grow:  1;
-  min-height: 80px;
+  min-height: 140px;
   display:flex;
 
   position: fixed;
-  bottom: 9%;
+  bottom: 3%;
   left : 7%;
   
 }
 
 .playerwaste {
   flex-grow:  1;
-  min-height: 80px;
+  min-height: 140px;
   display:flex;
 
   position: fixed;
-  bottom: 9%;
+  bottom: 3%;
   left : 0%;
 }
 
@@ -320,25 +318,25 @@ body {
   display: flex;
 }
 
-
 .card{
- border : 1px solid lightgrey;
- border-radius: .5rem;
- padding : 8px;
- margin-right : 8px;
- margin-bottom : 8px;
- display: flex;
- justify-content: center;
- align-items : center;
+  border : 1px solid lightgrey;
+  border-radius: .5rem;
+  padding : 8px;
+  margin-right : 8px;
+  margin-bottom : 8px;
+  display: flex;
+  justify-content: center;
+  align-items : center;
+ 
+   height: 110px;
+   width: 75px;
+   
+ 
+ }
 
-  height: 110px;
-  width: 75px;
-  
-
-}
 
 
-.card.red {
+ .card.red {
   color: red;
   border: 3px solid red;
 }
