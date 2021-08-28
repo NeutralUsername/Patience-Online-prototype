@@ -90,6 +90,24 @@ async function startGame (red, black, options) {
     console.log(game.props.id);
 }
 
+function prepareStateForClient (state) {
+    var stacks = JSON.parse(JSON.stringify(state.stacks));
+    for(stack in stacks) {
+        if(stacks[stack].type === 'pile') {
+            if(stacks[stack].cards.length)
+                stacks[stack].cards = [stacks[stack].cards.pop()]
+        }
+        for(card of stacks[stack].cards) {
+            if(card.faceup === 0) {
+                delete card.suit;
+                delete card.value;
+            } 
+        }    
+    }
+    state.stacks = stacks;
+    return state
+ }
+
 function startTurn (game) {
     if(game.turncolor === 'red')
         setTimeout(playertimeout, game.redtimer*1000);
@@ -123,29 +141,10 @@ function updateClientPendingRooms () {
     io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms});
 }
 
-
 app.route('/ping').get(controller.root);
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/testSocketConnection.html');
 });
-
-function prepareStateForClient (state) {
-    var stacks = JSON.parse(JSON.stringify(state.stacks));
-    for(stack in stacks) {
-        if(stacks[stack].type === 'pile') {
-            if(stacks[stack].cards.length)
-                stacks[stack].cards = [stacks[stack].cards.pop()]
-        }
-        for(card of stacks[stack].cards) {
-            if(card.faceup === 0) {
-                delete card.suit;
-                delete card.value;
-            } 
-        }    
-    }
-    state.stacks = stacks;
-    return state
- }
 
 

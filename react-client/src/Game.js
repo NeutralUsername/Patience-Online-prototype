@@ -158,7 +158,7 @@ export default class Game extends React.Component{
 function Stack (props) {
     console.log(props.stack.name)
     const [{hover  }, drop] = useDrop(() => ({
-        accept: "card",
+        accept: "cards",
         drop: monitor => {
             handleDrop(monitor, props.stack.name);
         },
@@ -171,29 +171,79 @@ function Stack (props) {
           props.onDrop({card,to});
       }
 
-      function bottomValue () {
-
+    function bottomValues () {
         if(props.player) {
             if(props.stack.name ==='malus')
                 return '0%'
             if(props.stack.name ==='stock')
                 return '0%'
+            if(props.stack.name ==='waste')
+                return '0%'
+            if(props.stack.name ==='tableau0')
+                return '17%'
+            if(props.stack.name ==='tableau1')
+                return '34%'
         }
-        else {
+        if(!props.player) {
+            if(props.stack.name ==='tableau0')
+                return '17%'
+            if(props.stack.name ==='tableau1')
+                return '34%'
+        }
+    }
+    function topValues () {
+        if(!props.player) {
             if(props.stack.name === 'malus')
-                return '80%'
+                return '0%'
             if(props.stack.name === 'stock')
-                return '80%'
+                return '0%'
+            if(props.stack.name ==='waste')
+                return '0%'
         }
-        return '20%'
-      }
+        if(props.player) {
+            if(props.stack.name ==='tableau2')
+                return '17%'
+            if(props.stack.name ==='tableau3')
+                return '34%'
+        }
+        if(!props.player) {
+            if(props.stack.name ==='tableau2')
+                return '17%'
+            if(props.stack.name ==='tableau3')
+                return '34%'
+        }
+    }
 
       function leftValue() {
-        if(props.stack.name ==='redstock')
+        if(props.stack.name ==='stock')
             return '0%'
-        if(props.stack.name === 'blackstock')
-            return '0%'
-        return '20%'
+        if(props.stack.name === 'malus')
+            return '13%'
+        if(props.stack.name === 'waste')
+            return '6%'  
+        if(props.player) {
+            if(props.stack.name ==='tableau0')
+                return '17%'
+            if(props.stack.name ==='tableau1')
+                return '17%'
+            if(props.stack.name ==='tableau2')
+                return '17%'
+            if(props.stack.name ==='tableau3')
+                return '17%'
+        }
+      }
+
+      function rightValue(){
+        if(!props.player) {
+            if(props.stack.name ==='tableau0')
+                return '17%'
+            if(props.stack.name ==='tableau1')
+                return '17%'
+            if(props.stack.name ==='tableau2')
+                return '17%'
+            if(props.stack.name ==='tableau3')
+                return '17%'
+        }
       }
 
         return (
@@ -202,11 +252,14 @@ function Stack (props) {
                 className ={props.stack.type+" "+props.stack.name}  
                 style = {{
                     position : 'fixed',
-                    bottom : bottomValue(),
+                    bottom : bottomValues(),
+                    top : topValues() ,
                     left : leftValue(),
+                    right : rightValue(),
                     display: 'flex',
+                    flexDirection: (props.player && props.stack.name.includes('tableau')) ? 'row-reverse' : ''
                 }}> 
-                {props.stack.cards.map( (card) => 
+                {props.stack.cards.map( (card,index) => 
                     <Card 
                         key = {card.cardid}
                         cardid = {card.cardid}
@@ -215,6 +268,7 @@ function Stack (props) {
                         suit = {card.suit} 
                         value = {card.value}
                         stack = {props.stack.name}
+                        uppermost = {index === (props.stack.cards.length-1)}
                     ></Card>
                 )}
             </ul>
@@ -224,8 +278,8 @@ function Stack (props) {
 function Card (props) {
 
     const [{ isDragging }, drag] = useDrag(() => ({
-        type: "card",
-        item : {id : props.cardid, stack : props.stack} ,
+        type: "cards",
+        item : {cardid : props.cardid} ,
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         })
@@ -235,25 +289,29 @@ function Card (props) {
         <div 
             ref={drag} 
             style={{
-                opacity: isDragging ? 0.3 : 1,
-                fontSize: 25,
+                transform : 'inherit',
+                fontSize: '1.2rem',
+                lineHeight :'1rem',
                 fontWeight: 'bold',
                 cursor: 'grab',
-                border : '1px solid lightgrey',
-                borderRadius: '.5rem',
-                padding : '8px',
-                marginRight : '8px',
-                marginBottom : '8px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems : 'center',
-                height: '110px',
-                width: '75px',
+                borderRadius: '.7rem',
+                padding : '.4rem',
+                marginRight : '-2rem',
+                marginBottom : '.4rem',
+                textAlign : 'end',
+                height: '6rem',
+                width: '4rem',
+                zIndex : '1',
+                background : props.faceup?'white':props.color==='red'?'url("https://opengameart.org/sites/default/files/card%20back%20red.png")':'url("https://lh3.googleusercontent.com/proxy/HZI6kYVdeqtmP1t3G4sUdNmj0u8PJxqCxswHuI9Qv7swKgLigikY_RqENxnrTSIqW3qvrTxuKDs4b0rYNHXpt_Jx0sJcK14")',
+                backgroundSize : "stretch",
+                backgroundPosition :'center',
+                opacity: isDragging ? 0.3 : 1,
                 color: props.color === 'red'?'red':'black',
-                border: '3px solid '+(props.color==='red'?'red':'black'),
+                border: '.15rem  solid black',
             }}
             className = {'card '+"cards-"+ props.stack+' '+ props.color +' '+ (props.faceup ? 'faceup' : 'facedown')+ (props.faceup ? ' '+props.suit : '') +(props.faceup ? ' '+ props.value : '')} >
-                {props.suit} {props.value}
+              <div>{props.suit}<br/>{props.value }</div>
+              <div className="cardCenter"> <br/>{props.suit}</div>
         </div>
     )
 }

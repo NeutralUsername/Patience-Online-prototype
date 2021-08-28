@@ -158,8 +158,7 @@ export default class Options extends React.Component {
 
     render () {
         return (
-            <div
-                className = {"options"} >
+            <div className = {"options"} >
                 <ServerTime
                     socket = {this.props.socket}
                 ></ServerTime>
@@ -220,10 +219,8 @@ function MalusSize (props) {
         props.onChange (event.target.value);
     }
     return (
-        <div
-            className = "malussize">
-            <label
-                htmlFor = {"maluscountselect"} >
+        <div className = "malussize">
+            <label htmlFor = {"maluscountselect"} >
                 Malus Size
             </label>
             <select
@@ -255,10 +252,8 @@ function TableauSize(props) {
         this.props.onChange (event.target.value);
     }
     return (
-        <div
-            className = "tableausize" >
-            <label
-                htmlFor = {"tableausizeselect"} >
+        <div className = "tableausize" >
+            <label htmlFor = {"tableausizeselect"} >
                 Tableau Size
             </label>
             <select
@@ -281,10 +276,8 @@ function ThrowOnWaste (props) {
         this.props.onChange (event.target.checked);
     }
     return (
-        <div
-            className = {"throwonWaste"} >
-            <label
-                htmlFor = "throwonWaste-cb" >
+        <div className = {"throwonWaste"} >
+            <label htmlFor = "throwonWaste-cb" >
                 Throw on Opponent Waste Pile
             </label>
             <input
@@ -301,10 +294,8 @@ function ThrowOnMalus (props) {
         props.onChange (event.target.checked);
     }
     return (
-        <div
-            className = {"throwonmalus"} >
-            <label
-                htmlFor = "throwmaluscb" >
+        <div className = {"throwonmalus"} >
+            <label htmlFor = "throwmaluscb" >
                 Throw on Opponent Malus
             </label>
             <input
@@ -321,8 +312,7 @@ function Variant (props) {
         this.props.onChange (event.target.value);
     }
     return (
-        <div
-            className = {"variant"} >
+        <div className = {"variant"} >
             <label>
                 Patience Variant
             </label>
@@ -354,10 +344,8 @@ function TimedTurns (props) {
         this.props.onValueChange (event.target.value);
     }
     return (
-        <div
-            className = {"turnstimed"} >
-            <label
-                htmlFor="turnstimed" >
+        <div className = {"turnstimed"} >
+            <label htmlFor="turnstimed" >
                 Limit time for each turn
             </label>
             <input
@@ -365,8 +353,7 @@ function TimedTurns (props) {
                 onChange = {handleBoolChange}
                 id = {"turnstimed"}
                 type = "checkbox" ></input>
-            <label
-                htmlFor = "timeperturn" >
+            <label htmlFor = "timeperturn" >
                 Duration
             </label>
             <select
@@ -388,17 +375,12 @@ function TimedTurns (props) {
     )
 }
 function TimedPlayers (props) {
-    function handleBoolChange (event) {
-        props.onBoolChange (event.target.checked);
-    }
     function handleValueChange (event) {
         props.onValueChange (event.target.value);
     }
     return (
-        <div
-            className = {"timedplayers"} >
-            <label
-                htmlFor = "timedplayers" >
+        <div className = {"timedplayers"} >
+            <label htmlFor = "timedplayers" >
                 Limit time for each player
             </label>
             <select
@@ -451,8 +433,7 @@ function  Room (props) {
 }
 function AI (props) {
     return (
-        <div
-            className = {"ai"} >
+        <div className = {"ai"} >
             <label>
                 vs. AI
             </label>
@@ -465,8 +446,7 @@ function AI (props) {
 }
 function Online (props) {
     return (
-        <div
-            className = {"online"} >
+        <div className = {"online"} >
             <label>
                 vs. Player
             </label>

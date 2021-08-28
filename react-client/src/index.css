@@ -41,3 +41,10 @@
 
 }
 
+.cardCenter {
+  font-size: 3.5vmax;
+  display: flex;
+  justify-content: center;
+  vertical-align: center;
+  line-height: .7vmax;
+}

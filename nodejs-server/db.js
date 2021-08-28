@@ -2,7 +2,7 @@ var mysql = require ('mysql2');
 module.exports = {
 
   createDBifNotExists : async function () {
-    if(await DBexists("gregaire")) 
+    if(await dbExists("gregaire")) 
       return;
     else {
       var createDBcon = mysql.createConnection({
@@ -20,7 +20,7 @@ module.exports = {
     }
   },
   initGame : async function (red, black, options, started) {
-    if(await DBexists("gregaire")) 
+    if(await dbExists("gregaire")) 
       var dbCon = mysql.createConnection({
         host:     "localhost",
         user:     "gregaire",
@@ -58,7 +58,7 @@ module.exports = {
                         await dealCards ( game.insertId , options, sqlstarted, dbCon); 
                         var stacks =  await getStacks(game.insertId, dbCon);
                         var startcolor = await determineStartingPlayer(stacks.redmalus, stacks.blackmalus);
-                      resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, stacks, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
+                      resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, stacks, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
                     }
                   )
                 }
@@ -87,7 +87,7 @@ module.exports = {
                             await dealCards ( game.insertId , options, sqlstarted, dbCon); 
                             var stacks =  await getStacks(game.insertId, dbCon);
                             var startcolor = await determineStartingPlayer(stacks.redmalus, stacks.blackmalus);
-                          resolve (newgame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, stacks, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
+                          resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, stacks, options.timePerPlayer, options.timePerPlayer, options.timePerTurn, startcolor ))   
                         }
                       )
                     } 
@@ -104,10 +104,10 @@ module.exports = {
 
 async function dealCards( gameid, options, created, dbCon) {
   return new Promise ((resolve) => {
-    var reddeck = shuffle(feshDeck("red"));
-    var blackdeck = shuffle(feshDeck("black"));
+    var reddeck = shuffle(freshDeck("red"));
+    var blackdeck = shuffle(freshDeck("black"));
     var actions = [];
-    function addtoactions(gameid, cardid, stack, faceup, player, turn, moved){
+    function addToActions(gameid, cardid, stack, faceup, player, turn, moved){
       actions.push([
         0,
         gameid,
@@ -130,7 +130,7 @@ async function dealCards( gameid, options, created, dbCon) {
                     player === 0 ? reddeck = shuffle(reddeck) : blackdeck = shuffle(blackdeck)
                   } 
                 var card = player === 0 ? reddeck.pop() : blackdeck.pop();
-                addtoactions ( gameid, cards.find( x=> x.color === card.color &&  x.suit == card.suit && x.value == card.value).id, ((player === 0) ? ('redmalus') : ('blackmalus')),(malussize === options.malusSize-1 ? 1 : 0 ) , ((player === 0) ? ('red') : ('black')), 0, created )
+                addToActions ( gameid, cards.find( x=> x.color === card.color &&  x.suit == card.suit && x.value == card.value).id, ((player === 0) ? ('redmalus') : ('blackmalus')),(malussize === options.malusSize-1 ? 1 : 0 ) , ((player === 0) ? ('red') : ('black')), 0, created )
               } 
               for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
                 for(var tableausize = 0 ; tableausize < options.tableauSize; tableausize++) {
@@ -139,12 +139,12 @@ async function dealCards( gameid, options, created, dbCon) {
                       player === 0 ? reddeck = shuffle(reddeck) : blackdeck = shuffle(blackdeck)
                     } 
                   var card = player === 0 ? reddeck.pop() : blackdeck.pop();
-                  addtoactions ( gameid, cards.find( x=> x.color === card.color && x.suit == card.suit && x.value == card.value).id, ((player === 0 ) ? 'redtableau'+tableaunr: 'blacktableau'+tableaunr), (tableausize === options.tableauSize-1 ? 1 : 0 ) , ((player === 0) ? ('red') : ('black')),0, created);
+                  addToActions ( gameid, cards.find( x=> x.color === card.color && x.suit == card.suit && x.value == card.value).id, ((player === 0 ) ? 'redtableau'+tableaunr: 'blacktableau'+tableaunr), (tableausize === options.tableauSize-1 ? 1 : 0 ) , ((player === 0) ? ('red') : ('black')),0, created);
                 } 
               }
               for(var stock = 0 ; stock <  52 -options.malusSize - 4*options.tableauSize ; stock ++ ) {
                 var card = player === 0 ? reddeck.pop() : blackdeck.pop();
-                addtoactions ( gameid,cards.find( x=> x.color === card.color &&  x.suit == card.suit && x.value == card.value).id, ((player === 0) ? ('redstock') : ('blackstock')), 0, ((player === 0) ? ('red') : ('black')),  0,  created);
+                addToActions ( gameid,cards.find( x=> x.color === card.color &&  x.suit == card.suit && x.value == card.value).id, ((player === 0) ? ('redstock') : ('blackstock')), 0, ((player === 0) ? ('red') : ('black')),  0,  created);
               }
             }
             dbCon.query ("INSERT INTO actions (id, gameid, cardid, stack, faceup, player, turn, moved) VALUES ?", [actions],
@@ -189,7 +189,7 @@ async function getStacks (gameid, dbCon) {
               blackfoundation2 : {cards : [], type : 'pile', name : 'foundation2'},
               blackfoundation3 : {cards : [], type : 'pile', name : 'foundation3'},
             };
-            var cardcounter = new Counter();
+            var cardcounter = new counter();
             for (action of actions) {
               if(actions.filter(x=> x.stack === action.stack).length) {
                 stacks[action.stack].cards =  actionsToCards(actions.filter(x=> x.stack === action.stack), cardcounter);
@@ -225,7 +225,7 @@ async function determineStartingPlayer(redmalus, blackmalus) {
   return red >= black ? 'red' : 'black';
 }
 
-function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, redtimer, blacktimer, turntimer, turncolor) {
+function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, redtimer, blacktimer, turntimer, turncolor) {
   return {
     red : red,
     black : black,
@@ -256,11 +256,11 @@ function sqlCompatibleDate(date) {
   ('00' + sqlcompatibledate.getUTCSeconds()).slice(-2);
 }
 
-function Counter() {
+function counter() {
   this.value = 0;
 }
 
-Counter.prototype.next = function() {
+counter.prototype.next = function() {
   return this.value++;
 };
 
@@ -273,7 +273,7 @@ class Card {
   }
 }
 
-function feshDeck (color) {
+function freshDeck (color) {
   const Suits = ["♥", "♠", "♦", "♣"];
   const Values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"];
   return Suits.flatMap(suit => {
@@ -294,7 +294,7 @@ function shuffle (deck) {
   return deck;
 }
 
-function DBexists(name) {
+function dbExists(name) {
   return new Promise ((resolve) => {
     var createDBcon = mysql.createConnection({
         host:     "localhost",
