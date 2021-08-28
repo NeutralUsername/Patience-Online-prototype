@@ -6,8 +6,10 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 
 export default class Game extends React.Component{
     constructor(props) {
+        console.log(props)
         super(props); 
         this.mounted = false;
+        this.opponent = props.color ==='red'?'black':'red'
         this.handleDrop = this.handleDrop.bind (this);
         this.state = {
             stacks : props.initialState.stacks,
@@ -16,6 +18,7 @@ export default class Game extends React.Component{
             turntimer : props.initialState.turntimer,
             turncolor : props.initialState.turncolor,
         };
+
         this.props.socket.on("UpdateGameState", data => {
             if (this.mounted) {
                 this.setState (data);
@@ -26,7 +29,7 @@ export default class Game extends React.Component{
     
     componentDidMount () {
         this.mounted = true;
-        console.log(this.state);
+        
     }
 
     handleDrop(result) {
@@ -38,91 +41,91 @@ export default class Game extends React.Component{
             <DndProvider backend={HTML5Backend}>
                 <div className="game">
                     <Stack 
-                        stack = {this.state.stacks.playermalus} 
+                        stack = {this.state.stacks[this.props.color+"malus"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.playerstock} 
+                        stack = {this.state.stacks[this.props.color+"stock"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.playerwaste} 
+                        stack = {this.state.stacks[this.props.color+"waste"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.playertableau0} 
+                        stack = {this.state.stacks[this.props.color+"tableau0"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.playerfoundation0} 
+                        stack = {this.state.stacks[this.props.color+"foundation0"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.opponentfoundation0} 
+                        stack = {this.state.stacks[this.opponent+"tableau0"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.opponenttableau0} 
+                        stack = {this.state.stacks[this.opponent+"foundation0"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.playertableau1} 
+                        stack = {this.state.stacks[this.props.color+"tableau1"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.playerfoundation1} 
+                        stack = {this.state.stacks[this.props.color+"foundation1"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.opponentfoundation1} 
+                        stack = {this.state.stacks[this.opponent+"tableau1"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.opponenttableau1}  
+                        stack = {this.state.stacks[this.opponent+"foundation1"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.playertableau2} 
+                        stack = {this.state.stacks[this.props.color+"tableau2"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.playerfoundation2}  
+                        stack = {this.state.stacks[this.props.color+"foundation2"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.opponentfoundation2} 
+                        stack = {this.state.stacks[this.opponent+"tableau2"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.opponenttableau2} 
+                        stack = {this.state.stacks[this.opponent+"foundation2"]} 
                         onDrop = {this.handleDrop}
-                    ></Stack> 
-                    <Stack 
-                        stack = {this.state.stacks.playertableau3} 
+                    ></Stack>
+                     <Stack 
+                        stack = {this.state.stacks[this.props.color+"tableau3"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.playerfoundation3} 
+                        stack = {this.state.stacks[this.props.color+"foundation3"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.opponentfoundation3} 
+                        stack = {this.state.stacks[this.opponent+"tableau3"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.opponenttableau3} 
+                        stack = {this.state.stacks[this.opponent+"foundation3"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.opponentwaste} 
+                        stack = {this.state.stacks[this.opponent+"waste"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.opponentstock} 
+                        stack = {this.state.stacks[this.opponent+"stock"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks.opponentmalus} 
+                        stack = {this.state.stacks[this.opponent+"malus"]} 
                         onDrop = {this.handleDrop}
                     ></Stack>
                 </div>
@@ -132,7 +135,7 @@ export default class Game extends React.Component{
 } 
 
 function Stack (props) {
-
+    console.log(props.stack.name)
     const [{hover  }, drop] = useDrop(() => ({
         accept: "card",
         drop: monitor => {
@@ -148,19 +151,23 @@ function Stack (props) {
       }
 
       function bottomValue () {
-        if(props.stack.name ==='playermalus')
+        if(props.stack.name ==='redmalus')
             return '0%'
-        if(props.stack.name === 'playerstock')
+        if(props.stack.name === 'blackmalus')
+            return '80%'
+         if(props.stack.name ==='redstock')
             return '0%'
-        return '0%'
+        if(props.stack.name === 'blackstock')
+            return '80%'
+        return '20%'
       }
 
       function leftValue() {
-        if(props.stack.name ==='playermalus')
-            return '10%'
-        if(props.stack.name === 'playerstock')
+        if(props.stack.name ==='redstock')
             return '0%'
-        return '0%'
+        if(props.stack.name === 'blackstock')
+            return '0%'
+        return '20%'
       }
 
         return (

@@ -87,8 +87,8 @@ async function startGame (red, black, options) {
     updateClientPendingRooms (); 
     
     console.log(game.props.id);
-    io.to (red).emit ('startOnlineGameRES', { props : game, initialState : prepareStateForClient(game.state, 'red')});
-    io.to(black).emit ('startOnlineGameRES', { props : game, initialState : prepareStateForClient(game.state, 'black')});
+    io.to (red).emit ('startOnlineGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
+    io.to(black).emit ('startOnlineGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)});
 }
 
 function startTurn (game) {
@@ -131,7 +131,7 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/testSocketConnection.html');
 });
 
-function prepareStateForClient (state, color) {
+function prepareStateForClient (state) {
     var stacks = JSON.parse(JSON.stringify(state.stacks));
     for(stack in stacks) {
         if(stacks[stack].type === 'pile') {
@@ -145,37 +145,8 @@ function prepareStateForClient (state, color) {
             } 
         }    
     }
-    return {
-        opponenttimer : color === 'red' ? state.blacktimer : state.redtimer,
-        playertimer : color === 'red' ? state.redtimer : state.blacktimer, 
-        turntimer : state.turntimer,
-        turncolor : state.turncolor,     
-        turn : state.turn,
-        stacks : {
-            playermalus : color === 'red' ? stacks.redmalus : stacks.blackmalus,
-            playerstock : color === 'red' ? stacks.redstock : stacks.blackstock,
-            playerwaste : color === 'red' ? stacks.redwaste : stacks.blackwaste,
-            opponentmalus : color === 'black' ? stacks.redmalus : stacks.blackmalus,
-            opponentstock : color === 'black' ? stacks.redstock : stacks.blackstock,
-            opponentwaste : color === 'black' ? stacks.redwaste : stacks.blackwaste,
-            playertableau0 : color === 'red' ? stacks.tableau0r : stacks.tableau0b,
-            playertableau1 : color === 'red' ? stacks.tableau1r : stacks.tableau1b,
-            playertableau2 : color === 'red' ? stacks.tableau2r : stacks.tableau2b,
-            playertableau3 : color === 'red' ? stacks.tableau3r : stacks.tableau3b,
-            opponenttableau0 : color === 'black' ? stacks.tableau0r : stacks.tableau0b,
-            opponenttableau1 : color === 'black' ? stacks.tableau1r : stacks.tableau1b,
-            opponenttableau2 : color === 'black' ? stacks.tableau2r : stacks.tableau2b,
-            opponenttableau3 : color === 'black' ? stacks.tableau3r : stacks.tableau3b,
-            playerfoundation0 : color === 'red' ? stacks.foundation0r : stacks.foundation0b,
-            playerfoundation1 : color === 'red' ? stacks.foundation1r : stacks.foundation1b,
-            playerfoundation2 : color === 'red' ? stacks.foundation2r : stacks.foundation2b,
-            playerfoundation3 : color === 'red' ? stacks.foundation3r : stacks.foundation3b,
-            opponentfoundation0 : color === 'black' ? stacks.foundation0r : stacks.foundation0b,
-            opponentfoundation1 : color === 'black' ? stacks.foundation1r : stacks.foundation1b,
-            opponentfoundation2 : color === 'black' ? stacks.foundation2r : stacks.foundation2b,
-            opponentfoundation3 : color === 'black' ? stacks.foundation3r : stacks.foundation3b,
-        }
-    };
+    state.stacks = stacks;
+    return state
  }
 
 

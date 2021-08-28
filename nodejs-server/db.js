@@ -115,22 +115,22 @@ async function getStacks (gameid, dbCon) {
               blackmalus : {cards : [], type : 'sequence', name : 'blackmalus'},
               blackstock : {cards : [], type : 'pile', name : 'blackstock'},
               blackwaste : {cards : [], type : 'pile', name : 'blackwaste'},
-              tableau0r : {cards : [], type : 'sequence', name : 'tableau0r'},
-              tableau1r : {cards : [], type : 'sequence', name : 'tableau1r'},
-              tableau2r : {cards : [], type : 'sequence', name : 'tableau2r'},
-              tableau3r : {cards : [], type : 'sequence', name : 'tableau3r'},
-              tableau0b : {cards : [], type : 'sequence', name : 'tableau0b'},
-              tableau1b : {cards : [], type : 'sequence', name : 'tableau1b'},
-              tableau2b : {cards : [], type : 'sequence', name : 'tableau2b'},
-              tableau3b : {cards : [], type : 'sequence', name : 'tableau3b'},
-              foundation0r : {cards : [], type : 'pile', name : 'foundation0r'},
-              foundation1r : {cards : [], type : 'pile', name : 'foundation1r'},
-              foundation2r : {cards : [], type : 'pile', name : 'foundation2r'},
-              foundation3r : {cards : [], type : 'pile', name : 'foundation3r'},
-              foundation0b : {cards : [], type : 'pile', name : 'foundation0b'},
-              foundation1b : {cards : [], type : 'pile', name : 'foundation1b'},
-              foundation2b : {cards : [], type : 'pile', name : 'foundation2b'},
-              foundation3b : {cards : [], type : 'pile', name : 'foundation3b'},
+              redtableau0 : {cards : [], type : 'sequence', name : 'redtableau0'},
+              redtableau1 : {cards : [], type : 'sequence', name : 'redtableau1'},
+              redtableau2 : {cards : [], type : 'sequence', name : 'redtableau2'},
+              redtableau3 : {cards : [], type : 'sequence', name : 'redtableau3'},
+              blacktableau0 : {cards : [], type : 'sequence', name : 'blacktableau0'},
+              blacktableau1 : {cards : [], type : 'sequence', name : 'blacktableau1'},
+              blacktableau2 : {cards : [], type : 'sequence', name : 'blacktableau2'},
+              blacktableau3 : {cards : [], type : 'sequence', name : 'blacktableau3'},
+              redfoundation0 : {cards : [], type : 'pile', name : 'redfoundation0'},
+              redfoundation1 : {cards : [], type : 'pile', name : 'redfoundation1'},
+              redfoundation2 : {cards : [], type : 'pile', name : 'redfoundation2'},
+              redfoundation3 : {cards : [], type : 'pile', name : 'redfoundation3'},
+              blackfoundation0 : {cards : [], type : 'pile', name : 'blackfoundation0'},
+              blackfoundation1 : {cards : [], type : 'pile', name : 'blackfoundation1'},
+              blackfoundation2 : {cards : [], type : 'pile', name : 'blackfoundation2'},
+              blackfoundation3 : {cards : [], type : 'pile', name : 'blackfoundation3'},
             };
             var cardcounter = new Counter();
             for (action of actions) {
@@ -196,7 +196,7 @@ async function dealCards( gameid, options, created, dbCon) {
                     player === 0 ? reddeck = shuffle(reddeck) : blackdeck = shuffle(blackdeck)
                   } 
                 var card = player === 0 ? reddeck.pop() : blackdeck.pop();
-                addtoactions ( gameid, cards.find( x=> x.color === card.color &&  x.suit == card.suit && x.value == card.value).id,((player === 0) ? ('redmalus') : ('blackmalus')),(malussize === options.malusSize-1 ? 1 : 0 ) , ((player === 0) ? ('red') : ('black')), 0, created )
+                addtoactions ( gameid, cards.find( x=> x.color === card.color &&  x.suit == card.suit && x.value == card.value).id, ((player === 0) ? ('redmalus') : ('blackmalus')),(malussize === options.malusSize-1 ? 1 : 0 ) , ((player === 0) ? ('red') : ('black')), 0, created )
               } 
               for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
                 for(var tableausize = 0 ; tableausize < options.tableauSize; tableausize++) {
@@ -205,7 +205,7 @@ async function dealCards( gameid, options, created, dbCon) {
                       player === 0 ? reddeck = shuffle(reddeck) : blackdeck = shuffle(blackdeck)
                     } 
                   var card = player === 0 ? reddeck.pop() : blackdeck.pop();
-                  addtoactions ( gameid, cards.find( x=> x.color === card.color && x.suit == card.suit && x.value == card.value).id,'tableau'+((player === 0 ) ? (tableaunr+'r') : (tableaunr+'b')), (tableausize === options.tableauSize-1 ? 1 : 0 ) , ((player === 0) ? ('red') : ('black')),0, created);
+                  addtoactions ( gameid, cards.find( x=> x.color === card.color && x.suit == card.suit && x.value == card.value).id, ((player === 0 ) ? 'redtableau'+tableaunr: 'blacktableau'+tableaunr), (tableausize === options.tableauSize-1 ? 1 : 0 ) , ((player === 0) ? ('red') : ('black')),0, created);
                 } 
               }
               for(var stock = 0 ; stock <  52 -options.malusSize - 4*options.tableauSize ; stock ++ ) {
