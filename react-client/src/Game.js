@@ -28,8 +28,7 @@ export default class Game extends React.Component{
     }
     
     componentDidMount () {
-        this.mounted = true;
-        
+        this.mounted = true;  
     }
 
     handleDrop(result) {
@@ -43,90 +42,112 @@ export default class Game extends React.Component{
                     <Stack 
                         stack = {this.state.stacks[this.props.color+"malus"]} 
                         onDrop = {this.handleDrop}
+                        player = {true}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.props.color+"stock"]} 
                         onDrop = {this.handleDrop}
+                        player = {true}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.props.color+"waste"]} 
                         onDrop = {this.handleDrop}
+                        player = {true}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.props.color+"tableau0"]} 
                         onDrop = {this.handleDrop}
+                        player = {true}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.props.color+"foundation0"]} 
                         onDrop = {this.handleDrop}
+                        player = {true}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.opponent+"tableau0"]} 
                         onDrop = {this.handleDrop}
+                        player = {false}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.opponent+"foundation0"]} 
                         onDrop = {this.handleDrop}
+                        player = {false}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.props.color+"tableau1"]} 
                         onDrop = {this.handleDrop}
+                        player = {true}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.props.color+"foundation1"]} 
                         onDrop = {this.handleDrop}
+                        player = {true}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.opponent+"tableau1"]} 
                         onDrop = {this.handleDrop}
+                        player = {false}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.opponent+"foundation1"]} 
                         onDrop = {this.handleDrop}
+                        player = {false}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.props.color+"tableau2"]} 
                         onDrop = {this.handleDrop}
+                        player = {true}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.props.color+"foundation2"]} 
                         onDrop = {this.handleDrop}
+                        player = {true}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.opponent+"tableau2"]} 
                         onDrop = {this.handleDrop}
+                        player = {false}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.opponent+"foundation2"]} 
                         onDrop = {this.handleDrop}
+                        player = {false}
                     ></Stack>
                      <Stack 
                         stack = {this.state.stacks[this.props.color+"tableau3"]} 
                         onDrop = {this.handleDrop}
+                        player = {true}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.props.color+"foundation3"]} 
                         onDrop = {this.handleDrop}
+                        player = {true}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.opponent+"tableau3"]} 
                         onDrop = {this.handleDrop}
+                        player = {false}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.opponent+"foundation3"]} 
                         onDrop = {this.handleDrop}
+                        player = {false}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.opponent+"waste"]} 
                         onDrop = {this.handleDrop}
+                        player = {false}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.opponent+"stock"]} 
                         onDrop = {this.handleDrop}
+                        player = {false}
                     ></Stack>
                     <Stack 
                         stack = {this.state.stacks[this.opponent+"malus"]} 
                         onDrop = {this.handleDrop}
+                        player = {false}
                     ></Stack>
                 </div>
             </DndProvider>
@@ -151,14 +172,19 @@ function Stack (props) {
       }
 
       function bottomValue () {
-        if(props.stack.name ==='redmalus')
-            return '0%'
-        if(props.stack.name === 'blackmalus')
-            return '80%'
-         if(props.stack.name ==='redstock')
-            return '0%'
-        if(props.stack.name === 'blackstock')
-            return '80%'
+
+        if(props.player) {
+            if(props.stack.name ==='malus')
+                return '0%'
+            if(props.stack.name ==='stock')
+                return '0%'
+        }
+        else {
+            if(props.stack.name === 'malus')
+                return '80%'
+            if(props.stack.name === 'stock')
+                return '80%'
+        }
         return '20%'
       }
 

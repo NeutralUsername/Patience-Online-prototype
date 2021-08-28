@@ -69,9 +69,7 @@ io.on ('connection', function (socket) {
     })
 
     socket.on ('GameMounted' , function ( data) {
-        var game = activeGames.find(game => game.props.id === data.id );
-        var color = socket.id === game.props.red ? 'red' : socket.id === game.props.black ? 'black' : '';
-        socket.emit ('UpdateGameState', prepareStateForClient(game.state, color));
+        
     })
 
     socket.on ('disconnect', function () {
@@ -80,15 +78,16 @@ io.on ('connection', function (socket) {
 });
 
 async function startGame (red, black, options) {
-    activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
-
+    
     removePendingRoom (red);
     removePendingRoom (black);
     updateClientPendingRooms (); 
-    
-    console.log(game.props.id);
+
+    activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
     io.to (red).emit ('startOnlineGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     io.to(black).emit ('startOnlineGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)});
+
+    console.log(game.props.id);
 }
 
 function startTurn (game) {

@@ -102,72 +102,6 @@ module.exports = {
   }
 }
 
-async function getStacks (gameid, dbCon) {
-  return new Promise ((resolve) => {
-    dbCon.connect (
-      function(err) { if (err) throw err;
-        dbCon.query (" SELECT c.id, c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
-          function (err, actions) { if (err) throw err;
-            var stacks = {
-              redmalus : {cards : [], type : 'sequence', name : 'redmalus'},
-              redstock : {cards : [], type : 'pile', name : 'redstock'},
-              redwaste : {cards : [], type : 'pile', name : 'redwaste'},
-              blackmalus : {cards : [], type : 'sequence', name : 'blackmalus'},
-              blackstock : {cards : [], type : 'pile', name : 'blackstock'},
-              blackwaste : {cards : [], type : 'pile', name : 'blackwaste'},
-              redtableau0 : {cards : [], type : 'sequence', name : 'redtableau0'},
-              redtableau1 : {cards : [], type : 'sequence', name : 'redtableau1'},
-              redtableau2 : {cards : [], type : 'sequence', name : 'redtableau2'},
-              redtableau3 : {cards : [], type : 'sequence', name : 'redtableau3'},
-              blacktableau0 : {cards : [], type : 'sequence', name : 'blacktableau0'},
-              blacktableau1 : {cards : [], type : 'sequence', name : 'blacktableau1'},
-              blacktableau2 : {cards : [], type : 'sequence', name : 'blacktableau2'},
-              blacktableau3 : {cards : [], type : 'sequence', name : 'blacktableau3'},
-              redfoundation0 : {cards : [], type : 'pile', name : 'redfoundation0'},
-              redfoundation1 : {cards : [], type : 'pile', name : 'redfoundation1'},
-              redfoundation2 : {cards : [], type : 'pile', name : 'redfoundation2'},
-              redfoundation3 : {cards : [], type : 'pile', name : 'redfoundation3'},
-              blackfoundation0 : {cards : [], type : 'pile', name : 'blackfoundation0'},
-              blackfoundation1 : {cards : [], type : 'pile', name : 'blackfoundation1'},
-              blackfoundation2 : {cards : [], type : 'pile', name : 'blackfoundation2'},
-              blackfoundation3 : {cards : [], type : 'pile', name : 'blackfoundation3'},
-            };
-            var cardcounter = new Counter();
-            for (action of actions) {
-              if(actions.filter(x=> x.stack === action.stack).length) {
-                stacks[action.stack].cards =  actionsToCards(actions.filter(x=> x.stack === action.stack), cardcounter);
-                actions =  actions.filter(x=> x.stack != action.stack);
-              }
-            }
-            resolve (stacks);
-          }
-        )
-      }
-    )
-  })
-}
-
-function actionsToCards (actions, cardcounter) {
-  var stacknr = 0;
-  var cards = [];
-  for(action of actions) {
-    cards[stacknr++] = {faceup : action.faceup, color : action.color, suit : action.suit, value : action.value, cardid : cardcounter.next()};
-  }
-  return cards;
-}
-
-async function determineStartingPlayer(redmalus, blackmalus) {
-  var red = 0;
-  var black = 0;
-  for(card in redmalus) {
-    red += parseInt(redmalus[card].value);
-  }
-  for(card in blackmalus) {
-    black += parseInt(blackmalus[card].value);
-  }
-  return red >= black ? 'red' : 'black';
-}
-
 async function dealCards( gameid, options, created, dbCon) {
   return new Promise ((resolve) => {
     var reddeck = shuffle(feshDeck("red"));
@@ -223,6 +157,72 @@ async function dealCards( gameid, options, created, dbCon) {
       }
     )
   })
+}
+
+async function getStacks (gameid, dbCon) {
+  return new Promise ((resolve) => {
+    dbCon.connect (
+      function(err) { if (err) throw err;
+        dbCon.query (" SELECT c.id, c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
+          function (err, actions) { if (err) throw err;
+            var stacks = {
+              redmalus : {cards : [], type : 'sequence', name : 'malus'},
+              redstock : {cards : [], type : 'pile', name : 'stock'},
+              redwaste : {cards : [], type : 'pile', name : 'waste'},
+              redtableau0 : {cards : [], type : 'sequence', name : 'tableau0'},
+              redtableau1 : {cards : [], type : 'sequence', name : 'tableau1'},
+              redtableau2 : {cards : [], type : 'sequence', name : 'tableau2'},
+              redtableau3 : {cards : [], type : 'sequence', name : 'tableau3'},   
+              redfoundation0 : {cards : [], type : 'pile', name : 'foundation0'},
+              redfoundation1 : {cards : [], type : 'pile', name : 'foundation1'},
+              redfoundation2 : {cards : [], type : 'pile', name : 'foundation2'},
+              redfoundation3 : {cards : [], type : 'pile', name : 'foundation3'},
+              blackmalus : {cards : [], type : 'sequence', name : 'malus'},
+              blackstock : {cards : [], type : 'pile', name : 'stock'},
+              blackwaste : {cards : [], type : 'pile', name : 'waste'},
+              blacktableau0 : {cards : [], type : 'sequence', name : 'tableau0'},
+              blacktableau1 : {cards : [], type : 'sequence', name : 'tableau1'},
+              blacktableau2 : {cards : [], type : 'sequence', name : 'tableau2'},
+              blacktableau3 : {cards : [], type : 'sequence', name : 'tableau3'},
+              blackfoundation0 : {cards : [], type : 'pile', name : 'foundation0'},
+              blackfoundation1 : {cards : [], type : 'pile', name : 'foundation1'},
+              blackfoundation2 : {cards : [], type : 'pile', name : 'foundation2'},
+              blackfoundation3 : {cards : [], type : 'pile', name : 'foundation3'},
+            };
+            var cardcounter = new Counter();
+            for (action of actions) {
+              if(actions.filter(x=> x.stack === action.stack).length) {
+                stacks[action.stack].cards =  actionsToCards(actions.filter(x=> x.stack === action.stack), cardcounter);
+                actions =  actions.filter(x=> x.stack != action.stack);
+              }
+            }
+            resolve (stacks);
+          }
+        )
+      }
+    )
+  })
+}
+
+function actionsToCards (actions, cardcounter) {
+  var stacknr = 0;
+  var cards = [];
+  for(action of actions) {
+    cards[stacknr++] = {faceup : action.faceup, color : action.color, suit : action.suit, value : action.value, cardid : cardcounter.next()};
+  }
+  return cards;
+}
+
+async function determineStartingPlayer(redmalus, blackmalus) {
+  var red = 0;
+  var black = 0;
+  for(card in redmalus) {
+    red += parseInt(redmalus[card].value);
+  }
+  for(card in blackmalus) {
+    black += parseInt(blackmalus[card].value);
+  }
+  return red >= black ? 'red' : 'black';
 }
 
 function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, redtimer, blacktimer, turntimer, turncolor) {
