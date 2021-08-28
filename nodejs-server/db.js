@@ -109,33 +109,33 @@ async function getStacks (gameid, dbCon) {
         dbCon.query (" SELECT c.id, c.color, c.suit, c.value, a.faceup, a.stack, MAX(a.moved) as moved FROM actions a LEFT JOIN cards c ON a.cardid = c.id WHERE a.gameid =" + gameid+" GROUP BY a.cardid",
           function (err, actions) { if (err) throw err;
             var stacks = {
-              redmalus : [], 
-              redstock : [],  
-              redwaste : [], 
-              blackmalus : [], 
-              blackstock : [], 
-              blackwaste : [], 
-              tableau0r : [], 
-              tableau1r : [], 
-              tableau2r : [], 
-              tableau3r : [], 
-              tablau0b : [], 
-              tableau1b : [], 
-              tableau2b : [], 
-              tableau3b : [], 
-              foundation0r : [], 
-              foundation1r : [], 
-              foundation2r : [], 
-              foundation3r : [], 
-              foundation0b : [], 
-              foundation1b : [], 
-              foundation2b : [], 
-              foundation3b : [], 
+              redmalus : {cards : [], type : 'sequence', name : 'redmalus'},
+              redstock : {cards : [], type : 'pile', name : 'redstock'},
+              redwaste : {cards : [], type : 'pile', name : 'redwaste'},
+              blackmalus : {cards : [], type : 'sequence', name : 'blackmalus'},
+              blackstock : {cards : [], type : 'pile', name : 'blackstock'},
+              blackwaste : {cards : [], type : 'pile', name : 'blackwaste'},
+              tableau0r : {cards : [], type : 'sequence', name : 'tableau0r'},
+              tableau1r : {cards : [], type : 'sequence', name : 'tableau1r'},
+              tableau2r : {cards : [], type : 'sequence', name : 'tableau2r'},
+              tableau3r : {cards : [], type : 'sequence', name : 'tableau3r'},
+              tableau0b : {cards : [], type : 'sequence', name : 'tableau0b'},
+              tableau1b : {cards : [], type : 'sequence', name : 'tableau1b'},
+              tableau2b : {cards : [], type : 'sequence', name : 'tableau2b'},
+              tableau3b : {cards : [], type : 'sequence', name : 'tableau3b'},
+              foundation0r : {cards : [], type : 'pile', name : 'foundation0r'},
+              foundation1r : {cards : [], type : 'pile', name : 'foundation1r'},
+              foundation2r : {cards : [], type : 'pile', name : 'foundation2r'},
+              foundation3r : {cards : [], type : 'pile', name : 'foundation3r'},
+              foundation0b : {cards : [], type : 'pile', name : 'foundation0b'},
+              foundation1b : {cards : [], type : 'pile', name : 'foundation1b'},
+              foundation2b : {cards : [], type : 'pile', name : 'foundation2b'},
+              foundation3b : {cards : [], type : 'pile', name : 'foundation3b'},
             };
             var cardcounter = new Counter();
             for (action of actions) {
               if(actions.filter(x=> x.stack === action.stack).length) {
-                stacks[action.stack] =  actionsToStack(actions.filter(x=> x.stack === action.stack), cardcounter);
+                stacks[action.stack].cards =  actionsToCards(actions.filter(x=> x.stack === action.stack), cardcounter);
                 actions =  actions.filter(x=> x.stack != action.stack);
               }
             }
@@ -145,6 +145,15 @@ async function getStacks (gameid, dbCon) {
       }
     )
   })
+}
+
+function actionsToCards (actions, cardcounter) {
+  var stacknr = 0;
+  var cards = [];
+  for(action of actions) {
+    cards[stacknr++] = {faceup : action.faceup, color : action.color, suit : action.suit, value : action.value, cardid : cardcounter.next()};
+  }
+  return cards;
 }
 
 async function determineStartingPlayer(redmalus, blackmalus) {
@@ -157,15 +166,6 @@ async function determineStartingPlayer(redmalus, blackmalus) {
     black += parseInt(blackmalus[card].value);
   }
   return red >= black ? 'red' : 'black';
-}
-
-function actionsToStack (actions, cardcounter) {
-  var stacknr = 0;
-  var cards = [];
-  for(action of actions) {
-    cards[stacknr++] = {faceup : action.faceup, color : action.color, suit : action.suit, value : action.value, cardid : cardcounter.next()};
-  }
-  return cards;
 }
 
 async function dealCards( gameid, options, created, dbCon) {
@@ -227,13 +227,13 @@ async function dealCards( gameid, options, created, dbCon) {
 
 function newgame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, redtimer, blacktimer, turntimer, turncolor) {
   return {
+    red : red,
+    black : black,
     props : { 
       id : id,
       throwOnWaste : throwOnWaste,
       throwOnMalus : throwOnMalus,
       variant : variant,
-      red : red,
-      black : black,
     },
     state : {
       stacks : stacks,

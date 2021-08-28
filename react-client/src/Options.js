@@ -42,8 +42,12 @@ export default class Options extends React.Component {
             return (
                 ReactDOM.render (
                     <Game
-                        id = {data.id}
-                        socket = {this.props.socket}         
+                        id = {data.props.id}
+                        throwOnWaste = {data.props.throwOnWaste}
+                        throwOnMalus = {data.props.throwOnMalus}
+                        variant = {data.props.variant}
+                        initialState = {data.initialState}
+                        socket = {this.props.socket}          
                     ></Game>,
                     document.getElementById ('root')
                 )
@@ -60,7 +64,11 @@ export default class Options extends React.Component {
             return (
                 ReactDOM.render (
                     <Game
-                        id = {data.id}
+                        id = {data.props.id}
+                        throwOnWaste = {data.props.throwOnWaste}
+                        throwOnMalus = {data.props.throwOnMalus}
+                        variant = {data.props.variant}
+                        initialState = {data.initialState}
                         socket = {this.props.socket}          
                     ></Game>,
                     document.getElementById ('root')
@@ -409,7 +417,6 @@ function TimedPlayers (props) {
         </div>
     )
 }
-
 function  Room (props) {
     function handleRoomNameChange (event) {
         props.onNameChange (event.target.value);
@@ -440,7 +447,6 @@ function  Room (props) {
         </div>
     )
 }
-
 function AI (props) {
     return (
         <div
@@ -455,7 +461,6 @@ function AI (props) {
         </div>
     )
 }
-
 function Online (props) {
     return (
         <div
@@ -470,7 +475,6 @@ function Online (props) {
         </div>
     )
 }
-
 function PendingRooms(props) {
  
     function handleJoinClick (event) {

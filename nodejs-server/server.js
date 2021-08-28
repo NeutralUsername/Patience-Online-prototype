@@ -87,7 +87,8 @@ async function startGame (red, black, options) {
     updateClientPendingRooms (); 
     
     console.log(game.props.id);
-    io.to (red).to(black).emit ('startOnlineGameRES', { id : game.props.id});
+    io.to (red).emit ('startOnlineGameRES', { props : game, initialState : prepareStateForClient(game.state, 'red')});
+    io.to(black).emit ('startOnlineGameRES', { props : game, initialState : prepareStateForClient(game.state, 'black')});
 }
 
 function startTurn (game) {

@@ -8,30 +8,29 @@ export default class Game extends React.Component{
     constructor(props) {
         super(props); 
         this.mounted = false;
-        this.handleOnDragEnd = this.handleOnDragEnd.bind (this);
+        this.handleDrop = this.handleDrop.bind (this);
         this.state = {
-            stacks : '',
-            playertimer : '',
-            opponenttimer : '',
-            turntimer : '',
-            turncolor : '',
+            stacks : props.initialState.stacks,
+            playertimer : props.initialState.redtimer,
+            opponenttimer : props.initialState.blacktimer,
+            turntimer : props.initialState.turntimer,
+            turncolor : props.initialState.turncolor,
         };
         this.props.socket.on("UpdateGameState", data => {
             if (this.mounted) {
                 this.setState (data);
+                console.log(data);
             }
         });
     }
     
     componentDidMount () {
         this.mounted = true;
-        this.props.socket.emit("GameMounted", {id : this.props.id});
+        console.log(this.state);
     }
 
-    handleOnDragEnd(result) {
-        this.state.stacks[result.destination.droppableId].push( this.state.stacks[result.source.droppableId][result.source.index]);
-        this.state.stacks[result.source.droppableId].splice(result.source.index ,1);
-        
+    handleDrop(result) {
+       console.log(result);
     }
 
     render(){
@@ -39,114 +38,92 @@ export default class Game extends React.Component{
             <DndProvider backend={HTML5Backend}>
                 <div className="game">
                         <Stack 
-                            cards = {this.state.stacks.playermalus} 
-                            name ="playermalus" 
-                            type ="sequence" 
+                            stack = {this.state.stacks.playermalus} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.playerstock} 
-                            name = "playerstock" 
-                            type ="pile" 
+                            stack = {this.state.stacks.playerstock} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.playerwaste} 
-                            name = "playerwaste" 
-                            type ="pile" 
+                            stack = {this.state.stacks.playerwaste} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.playertableau0} 
-                            name = "playertableau0" 
-                            type ="pile" 
+                            stack = {this.state.stacks.playertableau0} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.playerfoundation0} 
-                            name = "playerfoundation0" 
-                            type ="sequence" 
+                            stack = {this.state.stacks.playerfoundation0} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.opponentfoundation0} 
-                            name = "opponentfoundation0" 
-                            type ="sequence" 
+                            stack = {this.state.stacks.opponentfoundation0} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.opponenttableau0} 
-                            name = "opponenttableau0" 
-                            type ="pile" 
+                            stack = {this.state.stacks.opponenttableau0} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.playertableau1} 
-                            name = "playertableau1" 
-                            type ="pile" 
+                            stack = {this.state.stacks.playertableau1} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.playerfoundation1} 
-                            name = "playerfoundation1" 
-                            type ="sequence" 
+                            stack = {this.state.stacks.playerfoundation1} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.opponentfoundation1} 
-                            name = "opponentfoundation1" 
-                            type ="sequence" 
+                            stack = {this.state.stacks.opponentfoundation1} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.opponenttableau1} 
-                            name = "opponenttableau1" 
-                            type ="pile" 
+                            stack = {this.state.stacks.opponenttableau1}  
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.playertableau2} 
-                            name = "playertableau2" 
-                            type ="pile" 
+                            stack = {this.state.stacks.playertableau2} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.playerfoundation2} 
-                            name = "playerfoundation2" 
-                            type ="sequence" 
+                            stack = {this.state.stacks.playerfoundation2}  
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.opponentfoundation2} 
-                            name = "opponentfoundation2" 
-                            type ="sequence" 
+                            stack = {this.state.stacks.opponentfoundation2} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.opponenttableau2} 
-                            name = "opponenttableau2" 
-                            type ="pile" 
+                            stack = {this.state.stacks.opponenttableau2} 
+                            onDrop = {this.handleDrop}
                         ></Stack> 
                         <Stack 
-                            cards = {this.state.stacks.playertableau3} 
-                            name = "playertableau3" 
-                            type ="pile" 
+                            stack = {this.state.stacks.playertableau3} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.playerfoundation3} 
-                            name = "playerfoundation3" 
-                            type ="sequence" 
+                            stack = {this.state.stacks.playerfoundation3} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.opponentfoundation3} 
-                            name = "opponentfoundation3" 
-                            type ="sequence" 
+                            stack = {this.state.stacks.opponentfoundation3} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.opponenttableau3} 
-                            name = "opponenttableau3" 
-                            type ="pile" 
+                            stack = {this.state.stacks.opponenttableau3} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.opponentwaste} 
-                            name = "opponentwaste" 
-                            type ="pile" 
+                            stack = {this.state.stacks.opponentwaste} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.opponentstock} 
-                            name = "opponentstock" 
-                            type ="pile" 
+                            stack = {this.state.stacks.opponentstock} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                         <Stack 
-                            cards = {this.state.stacks.opponentmalus} 
-                            name = "opponentmalus" 
-                            type ="sequence" 
+                            stack = {this.state.stacks.opponentmalus} 
+                            onDrop = {this.handleDrop}
                         ></Stack>
                 </div>
             </DndProvider>
@@ -155,46 +132,76 @@ export default class Game extends React.Component{
 } 
 
 function Stack (props) {
-    const [{  }, drop] = useDrop(() => ({
+
+    const [{hover  }, drop] = useDrop(() => ({
         accept: "card",
-        drop: () => {},
-        collect: monitor => ({
-          isOver: !!monitor.isOver(),
-        }),
-      }), [])
-    
+        drop: monitor => {
+            handleDrop(monitor, props.stack.name);
+        },
+        hover: monitor => {
+            console.log(monitor)
+        },
+      }))
   
+      function handleDrop(card, to) {
+          props.onDrop({card,to});
+      }
+      
         return (
-            <div  ref={drop} className={"stack"} >
-                <ul className ={props.type+" "+props.name}  > 
-                    {props.cards ? Object.keys(props.cards).map( (card, index) => 
-                    <div  key = {String(props.cards[card].cardid)}> 
-                        <Card 
-                            cardid = {props.cards[card].cardid}
-                            faceup = {props.cards[card].faceup}
-                            color = {props.cards[card].color} 
-                            suit = {props.cards[card].suit} 
-                            value = {props.cards[card].value}
-                            stack = {props.name}
-                        ></Card>
-                    </div>
-                    ):''}
-                </ul>
-            </div>
+            <ul 
+                ref={drop}
+                className ={props.stack.type+" "+props.stack.name}  
+                style = {{
+            
+                }}> 
+                {props.stack.cards.map( (card) => 
+                    <Card 
+                        key = {card.cardid}
+                        cardid = {card.cardid}
+                        faceup = {card.faceup}
+                        color = {card.color} 
+                        suit = {card.suit} 
+                        value = {card.value}
+                        stack = {props.stack.name}
+                    ></Card>
+                )}
+            </ul>
         )
     }
 
-
 function Card (props) {
+
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "card",
+        item : {id : props.cardid, stack : props.stack} ,
         collect: (monitor) => ({
-          isDragging: !!monitor.isDragging()
+            isDragging: !!monitor.isDragging(),
         })
-      }))
+    }))
+ 
     return (
-        <div ref={drag}  className = {'card '+"cards-"+ props.stack+' '+ props.color +' '+ (props.faceup ? 'faceup' : 'facedown')+ (props.faceup ? ' '+props.suit : '') +(props.faceup ? ' '+ props.value : '')} >
-            {props.suit} {props.value}
+        <div 
+            ref={drag} 
+            style={{
+                opacity: isDragging ? 0.3 : 1,
+                fontSize: 25,
+                fontWeight: 'bold',
+                cursor: 'grab',
+                border : '1px solid lightgrey',
+                borderRadius: '.5rem',
+                padding : '8px',
+                marginRight : '8px',
+                marginBottom : '8px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems : 'center',
+                height: '110px',
+                width: '75px',
+                color: props.color === 'red'?'red':'black',
+                border: '3px solid '+(props.color==='red'?'red':'black'),
+            }}
+            className = {'card '+"cards-"+ props.stack+' '+ props.color +' '+ (props.faceup ? 'faceup' : 'facedown')+ (props.faceup ? ' '+props.suit : '') +(props.faceup ? ' '+ props.value : '')} >
+                {props.suit} {props.value}
         </div>
     )
 }
