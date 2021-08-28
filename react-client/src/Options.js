@@ -249,7 +249,7 @@ function MalusSize (props) {
 }
 function TableauSize(props) {
     function handleChange (event) {
-        this.props.onChange (event.target.value);
+        props.onChange (event.target.value);
     }
     return (
         <div className = "tableausize" >
@@ -273,7 +273,7 @@ function TableauSize(props) {
 }
 function ThrowOnWaste (props) {
     function handleChange (event) {
-        this.props.onChange (event.target.checked);
+        props.onChange (event.target.checked);
     }
     return (
         <div className = {"throwonWaste"} >
@@ -309,7 +309,7 @@ function ThrowOnMalus (props) {
 }
 function Variant (props) {
     function handleChange (event) {
-        this.props.onChange (event.target.value);
+        props.onChange (event.target.value);
     }
     return (
         <div className = {"variant"} >
@@ -338,10 +338,10 @@ function Variant (props) {
 }
 function TimedTurns (props) {
     function handleBoolChange (event) {
-        this.props.onBoolChange (event.target.checked);
+        props.onBoolChange (event.target.checked);
     }
     function handleValueChange (event) {
-        this.props.onValueChange (event.target.value);
+        props.onValueChange (event.target.value);
     }
     return (
         <div className = {"turnstimed"} >

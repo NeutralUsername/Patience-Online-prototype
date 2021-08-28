@@ -171,27 +171,7 @@ function Stack (props) {
           props.onDrop({card,to});
       }
 
-    function bottomValues () {
-        if(props.player) {
-            if(props.stack.name ==='malus')
-                return '0%'
-            if(props.stack.name ==='stock')
-                return '0%'
-            if(props.stack.name ==='waste')
-                return '0%'
-            if(props.stack.name ==='tableau0')
-                return '17%'
-            if(props.stack.name ==='tableau1')
-                return '34%'
-        }
-        if(!props.player) {
-            if(props.stack.name ==='tableau0')
-                return '17%'
-            if(props.stack.name ==='tableau1')
-                return '34%'
-        }
-    }
-    function topValues () {
+      function topValues () {
         if(!props.player) {
             if(props.stack.name === 'malus')
                 return '0%'
@@ -200,64 +180,93 @@ function Stack (props) {
             if(props.stack.name ==='waste')
                 return '0%'
         }
-        if(props.player) {
-            if(props.stack.name ==='tableau2')
-                return '17%'
-            if(props.stack.name ==='tableau3')
-                return '34%'
-        }
-        if(!props.player) {
-            if(props.stack.name ==='tableau2')
-                return '17%'
-            if(props.stack.name ==='tableau3')
-                return '34%'
-        }
     }
-
+    function bottomValues () {
+        if(props.player) {
+            if(props.stack.name ==='malus')
+                return '0%'
+            if(props.stack.name ==='stock')
+                return '0%'
+            if(props.stack.name ==='waste')
+                return '0%'
+        }
+        if(props.stack.name === 'tableau0' || props.stack.name ===  'foundation0')
+            return '16%'
+        if(props.stack.name === 'tableau1'|| props.stack.name === 'foundation1')
+            return '32%'
+        if(props.stack.name === 'tableau2'|| props.stack.name === 'foundation2')
+            return '48%'
+        if(props.stack.name === 'tableau3'|| props.stack.name === 'foundation3')
+            return '64%'
+    }
+    
       function leftValue() {
         if(props.stack.name ==='stock')
             return '0%'
         if(props.stack.name === 'malus')
-            return '13%'
+            return '35%'
         if(props.stack.name === 'waste')
-            return '6%'  
-        if(props.player) {
-            if(props.stack.name ==='tableau0')
-                return '17%'
-            if(props.stack.name ==='tableau1')
-                return '17%'
-            if(props.stack.name ==='tableau2')
-                return '17%'
-            if(props.stack.name ==='tableau3')
-                return '17%'
-        }
-      }
-
-      function rightValue(){
+            return '12%'  
+      
         if(!props.player) {
             if(props.stack.name ==='tableau0')
-                return '17%'
+                return '55%'
             if(props.stack.name ==='tableau1')
-                return '17%'
+                return '55%'
             if(props.stack.name ==='tableau2')
-                return '17%'
+                return '55%'
             if(props.stack.name ==='tableau3')
-                return '17%'
+                return '55%'
+        }
+        if(!props.player) {
+            if(props.stack.name ==='foundation0')
+                return '39%'
+            if(props.stack.name ==='foundation1')
+                return '39%'
+            if(props.stack.name ==='foundation2')
+                return '39%'
+            if(props.stack.name ==='foundation3')
+                return '39%'
+        }
+        if(props.player) {
+            if(props.stack.name ==='foundation0')
+                return '47%'
+            if(props.stack.name ==='foundation1')
+                return '47%'
+            if(props.stack.name ==='foundation2')
+                return '47%'
+            if(props.stack.name ==='foundation3')
+                return '47%'
         }
       }
-
+      function rightValue () {
+      
+        if(props.player) {
+            if(props.stack.name ==='tableau0')
+                return '65%'
+            if(props.stack.name ==='tableau1')
+                return '65%'
+            if(props.stack.name ==='tableau2')
+                return '65%'
+            if(props.stack.name ==='tableau3')
+                return '65%'
+        }
+      }
         return (
             <ul 
                 ref={drop}
                 className ={props.stack.type+" "+props.stack.name}  
                 style = {{
+                    border: '.15rem  solid black',
                     position : 'fixed',
                     bottom : bottomValues(),
                     top : topValues() ,
                     left : leftValue(),
                     right : rightValue(),
                     display: 'flex',
-                    flexDirection: (props.player && props.stack.name.includes('tableau')) ? 'row-reverse' : ''
+                    flexDirection: (props.player && props.stack.name.includes('tableau')) ? 'row-reverse' : '',
+                    minWidth : '5rem',
+                    minHeight : '7.5rem'
                 }}> 
                 {props.stack.cards.map( (card,index) => 
                     <Card 
