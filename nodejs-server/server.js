@@ -133,13 +133,18 @@ app.get('/', function (req, res) {
 
 function prepareStateForClient (state, color) {
     var stacks = JSON.parse(JSON.stringify(state.stacks));
-    for(stack in stacks) 
+    for(stack in stacks) {
+        if(stacks[stack].type === 'pile') {
+            if(stacks[stack].cards.length)
+                stacks[stack].cards = [stacks[stack].cards.pop()]
+        }
         for(card of stacks[stack].cards) {
             if(card.faceup === 0) {
                 delete card.suit;
                 delete card.value;
             } 
         }    
+    }
     return {
         opponenttimer : color === 'red' ? state.blacktimer : state.redtimer,
         playertimer : color === 'red' ? state.redtimer : state.blacktimer, 

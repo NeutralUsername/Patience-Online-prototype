@@ -37,94 +37,94 @@ export default class Game extends React.Component{
         return (
             <DndProvider backend={HTML5Backend}>
                 <div className="game">
-                        <Stack 
-                            stack = {this.state.stacks.playermalus} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.playerstock} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.playerwaste} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.playertableau0} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.playerfoundation0} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.opponentfoundation0} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.opponenttableau0} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.playertableau1} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.playerfoundation1} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.opponentfoundation1} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.opponenttableau1}  
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.playertableau2} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.playerfoundation2}  
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.opponentfoundation2} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.opponenttableau2} 
-                            onDrop = {this.handleDrop}
-                        ></Stack> 
-                        <Stack 
-                            stack = {this.state.stacks.playertableau3} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.playerfoundation3} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.opponentfoundation3} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.opponenttableau3} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.opponentwaste} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.opponentstock} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
-                        <Stack 
-                            stack = {this.state.stacks.opponentmalus} 
-                            onDrop = {this.handleDrop}
-                        ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.playermalus} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.playerstock} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.playerwaste} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.playertableau0} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.playerfoundation0} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.opponentfoundation0} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.opponenttableau0} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.playertableau1} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.playerfoundation1} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.opponentfoundation1} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.opponenttableau1}  
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.playertableau2} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.playerfoundation2}  
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.opponentfoundation2} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.opponenttableau2} 
+                        onDrop = {this.handleDrop}
+                    ></Stack> 
+                    <Stack 
+                        stack = {this.state.stacks.playertableau3} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.playerfoundation3} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.opponentfoundation3} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.opponenttableau3} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.opponentwaste} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.opponentstock} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
+                    <Stack 
+                        stack = {this.state.stacks.opponentmalus} 
+                        onDrop = {this.handleDrop}
+                    ></Stack>
                 </div>
             </DndProvider>
         )
