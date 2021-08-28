@@ -134,10 +134,10 @@ app.get('/', function (req, res) {
 function prepareStateForClient (state, color) {
     var stacks = JSON.parse(JSON.stringify(state.stacks));
     for(stack in stacks) 
-        for(card in stacks[stack]) {
-            if(stacks[stack][card].faceup === 0) {
-                delete stacks[stack][card].suit;
-                delete stacks[stack][card].value;
+        for(card of stacks[stack].cards) {
+            if(card.faceup === 0) {
+                delete card.suit;
+                delete card.value;
             } 
         }    
     return {

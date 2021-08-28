@@ -146,13 +146,32 @@ function Stack (props) {
       function handleDrop(card, to) {
           props.onDrop({card,to});
       }
-      
+
+      function bottomValue () {
+        if(props.stack.name ==='playermalus')
+            return '0%'
+        if(props.stack.name === 'playerstock')
+            return '0%'
+        return '0%'
+      }
+
+      function leftValue() {
+        if(props.stack.name ==='playermalus')
+            return '10%'
+        if(props.stack.name === 'playerstock')
+            return '0%'
+        return '0%'
+      }
+
         return (
             <ul 
                 ref={drop}
                 className ={props.stack.type+" "+props.stack.name}  
                 style = {{
-            
+                    position : 'fixed',
+                    bottom : bottomValue(),
+                    left : leftValue(),
+                    display: 'flex',
                 }}> 
                 {props.stack.cards.map( (card) => 
                     <Card 
