@@ -211,41 +211,41 @@ function Stack (props) {
     
       function leftValue() {
         if(props.stack.name.includes('stock'))
-            return '20vw'
+            return '20.5vw'
         if(props.stack.name.includes('malus'))
-            return '34vw'
+            return '34.5vw'
         if(props.stack.name.includes('waste'))
-            return '12vw'  
+            return '12.5vw'  
       
         if(!props.player) {
             if(props.stack.name.includes('tableau0'))
-                return '59vw'
+                return '59.5vw'
             if(props.stack.name.includes('tableau1'))
-                return '59vw'
+                return '59.5vw'
             if(props.stack.name.includes('tableau2'))
-                return '59vw'
+                return '59.5vw'
             if(props.stack.name.includes('tableau3'))
-                return '59vw'
+                return '59.5vw'
         }
         if(!props.player) {
             if(props.stack.name.includes('foundation0'))
-                return '42vw'
+                return '42.5vw'
             if(props.stack.name.includes('foundation1'))
-                return '42vw'
+                return '42.5vw'
             if(props.stack.name.includes('foundation2'))
-                return '42vw'
+                return '42.5vw'
             if(props.stack.name.includes('foundation3'))
-                return '42vw'
+                return '42.5vw'
         }
         if(props.player) {
             if(props.stack.name.includes('foundation0'))
-                return '51vw'
+                return '51.5vw'
             if(props.stack.name.includes('foundation1'))
-                return '51vw'
+                return '51.5vw'
             if(props.stack.name.includes('foundation2'))
-                return '51vw'
+                return '51.5vw'
             if(props.stack.name.includes('foundation3'))
-                return '51vw'
+                return '51.5vw'
         }
       }
 
@@ -253,13 +253,13 @@ function Stack (props) {
       
         if(props.player) {
             if(props.stack.name.includes('tableau0'))
-                return '61vw'
+                return '60.5vw'
             if(props.stack.name.includes('tableau1'))
-                return '61vw'
+                return '60.5vw'
             if(props.stack.name.includes('tableau2'))
-                return '61vw'
+                return '60.5vw'
             if(props.stack.name.includes('tableau3'))
-                return '61vw'
+                return '60.5vw'
         }
       }
         return (
@@ -285,7 +285,7 @@ function Stack (props) {
                     paddingTop : '.01vh',
                     paddingBottom : '.01vh',
 
-                    width : (2+(props.stack.cards.length>0?props.stack.cards.length*3:3))+'vw',
+                    width : (2+(props.stack.cards.length>0?props.stack.cards.length*2.5:2.5))+'vw',
                     height : '14vh',
                 
                 }}> 
@@ -336,8 +336,8 @@ function Card (props) {
                 borderRadius: '.7vw',
                 padding : '.4vw',
            
-                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2vw':'0' : props.stack.includes('tableau') && ! props.player && ! props.uppermost? '-2vw':'0',
-                marginLeft : props.stack.includes('tableau')  && props.player ? !props.uppermost ? '-2vw' :'0' : '0',
+                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.5vw':'0' : props.stack.includes('tableau') && ! props.player && ! props.uppermost? '-2.5vw':'0',
+                marginLeft : props.stack.includes('tableau')  && props.player ? !props.uppermost ? '-2.5vw' :'0' : '0',
                 
                 textAlign : 'end',
                 height: height(),
