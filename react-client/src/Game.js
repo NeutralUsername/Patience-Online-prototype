@@ -6,11 +6,11 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 
 export default class Game extends React.Component{
     constructor(props) {
-        console.log(props)
         super(props); 
         this.mounted = false;
         this.opponent = props.color ==='red'?'black':'red'
         this.handleDrop = this.handleDrop.bind (this);
+        
         this.state = {
             stacks : props.initialState.stacks,
             playertimer : props.initialState.redtimer,
@@ -26,13 +26,18 @@ export default class Game extends React.Component{
             }
         });
     }
-    
-    componentDidMount () {
-        this.mounted = true;  
-    }
-
+   
     handleDrop(result) {
-       console.log(result);
+
+        
+        
+        
+
+        this.state.stacks[result.to.stack].cards.push(this.state.stacks[result.from.stack].cards.find(x=>x.cardid === result.from.id));
+        this.state.stacks[result.from.stack].cards.pop();
+
+
+        this.setState({stacks : this.state.stacks})
     }
 
     render(){
@@ -155,100 +160,98 @@ export default class Game extends React.Component{
     }
 } 
 
+
 function Stack (props) {
-    console.log(props.stack.name)
     const [{hover  }, drop] = useDrop(() => ({
-        accept: "cards",
+        accept: "card",
         drop: monitor => {
-            handleDrop(monitor, props.stack.name);
+            handleDrop(monitor, {stack : props.stack.name});
         },
         hover: monitor => {
             console.log(monitor)
         },
       }))
   
-      function handleDrop(card, to) {
-          props.onDrop({card,to});
+      function handleDrop(from, to) {
+          props.onDrop({from,to});
       }
 
-      function topValues () {
-        if(!props.player) {
-            if(props.stack.name === 'malus')
-                return '0%'
-            if(props.stack.name === 'stock')
-                return '0%'
-            if(props.stack.name ==='waste')
-                return '0%'
-        }
-    }
     function bottomValues () {
         if(props.player) {
-            if(props.stack.name ==='malus')
+            if(props.stack.name.includes('malus'))
                 return '0%'
-            if(props.stack.name ==='stock')
+            if(props.stack.name.includes('stock'))
                 return '0%'
-            if(props.stack.name ==='waste')
+            if(props.stack.name.includes('waste'))
                 return '0%'
         }
-        if(props.stack.name === 'tableau0' || props.stack.name ===  'foundation0')
+        if(!props.player) {
+            if(props.stack.name.includes('malus'))
+                return '82%'
+            if(props.stack.name.includes('stock'))
+                return '82%'
+            if(props.stack.name.includes('waste'))
+                return '82%'
+        }
+        if(props.stack.name.includes('tableau0' || props.stack.name.includes('foundation0')))
             return '16%'
-        if(props.stack.name === 'tableau1'|| props.stack.name === 'foundation1')
+        if(props.stack.name.includes('tableau1'|| props.stack.name.includes('foundation1')))
             return '32%'
-        if(props.stack.name === 'tableau2'|| props.stack.name === 'foundation2')
+        if(props.stack.name.includes('tableau2'|| props.stack.name.includes('foundation2')))
             return '48%'
-        if(props.stack.name === 'tableau3'|| props.stack.name === 'foundation3')
+        if(props.stack.name.includes('tableau3'|| props.stack.name.includes('foundation3')))
             return '64%'
     }
     
       function leftValue() {
-        if(props.stack.name ==='stock')
+        if(props.stack.name.includes('stock'))
             return '0%'
-        if(props.stack.name === 'malus')
+        if(props.stack.name.includes('malus'))
             return '35%'
-        if(props.stack.name === 'waste')
+        if(props.stack.name.includes('waste'))
             return '12%'  
       
         if(!props.player) {
-            if(props.stack.name ==='tableau0')
+            if(props.stack.name.includes('tableau0'))
                 return '55%'
-            if(props.stack.name ==='tableau1')
+            if(props.stack.name.includes('tableau1'))
                 return '55%'
-            if(props.stack.name ==='tableau2')
+            if(props.stack.name.includes('tableau2'))
                 return '55%'
-            if(props.stack.name ==='tableau3')
+            if(props.stack.name.includes('tableau3'))
                 return '55%'
         }
         if(!props.player) {
-            if(props.stack.name ==='foundation0')
+            if(props.stack.name.includes('foundation0'))
                 return '39%'
-            if(props.stack.name ==='foundation1')
+            if(props.stack.name.includes('foundation1'))
                 return '39%'
-            if(props.stack.name ==='foundation2')
+            if(props.stack.name.includes('foundation2'))
                 return '39%'
-            if(props.stack.name ==='foundation3')
+            if(props.stack.name.includes('foundation3'))
                 return '39%'
         }
         if(props.player) {
-            if(props.stack.name ==='foundation0')
+            if(props.stack.name.includes('foundation0'))
                 return '47%'
-            if(props.stack.name ==='foundation1')
+            if(props.stack.name.includes('foundation1'))
                 return '47%'
-            if(props.stack.name ==='foundation2')
+            if(props.stack.name.includes('foundation2'))
                 return '47%'
-            if(props.stack.name ==='foundation3')
+            if(props.stack.name.includes('foundation3'))
                 return '47%'
         }
       }
       function rightValue () {
       
         if(props.player) {
-            if(props.stack.name ==='tableau0')
+            if(props.stack.name.includes('tableau0'))
                 return '65%'
-            if(props.stack.name ==='tableau1')
+            if(props.stack.name.includes('tableau1'))
                 return '65%'
-            if(props.stack.name ==='tableau2')
+            if(props.stack.name.includes('tableau2'))
                 return '65%'
-            if(props.stack.name ==='tableau3')
+            if(props.stack.name.includes('tableau3'))
                 return '65%'
         }
       }
@@ -260,13 +263,13 @@ function Stack (props) {
                     border: '.15rem  solid black',
                     position : 'fixed',
                     bottom : bottomValues(),
-                    top : topValues() ,
                     left : leftValue(),
                     right : rightValue(),
                     display: 'flex',
                     flexDirection: (props.player && props.stack.name.includes('tableau')) ? 'row-reverse' : '',
-                    minWidth : '5rem',
-                    minHeight : '7.5rem'
+                    minWidth : '4vw',
+                    minHeight : '14vh',
+                
                 }}> 
                 {props.stack.cards.map( (card,index) => 
                     <Card 
@@ -286,37 +289,46 @@ function Stack (props) {
 
 function Card (props) {
 
-    const [{ isDragging }, drag] = useDrag(() => ({
-        type: "cards",
-        item : {cardid : props.cardid} ,
+    const [{ isDragging, canDrag }, drag] = useDrag(() => ({
+        type: "card",
+        item : {id : props.cardid, stack : props.stack} ,
+        canDrag : props.uppermost,
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         })
     }))
- 
+    
+    function height () {
+        return 10+"vh"
+    }
+    function width () {
+        return 3.3+"vw"
+    }
     return (
         <div 
             ref={drag} 
             style={{
                 transform : 'inherit',
-                fontSize: '1.2rem',
-                lineHeight :'1rem',
+                fontSize: '1.2vw',
+                lineHeight :'1vw',
                 fontWeight: 'bold',
                 cursor: 'grab',
-                borderRadius: '.7rem',
-                padding : '.4rem',
-                marginRight : '-2rem',
-                marginBottom : '.4rem',
+                borderRadius: '.7vw',
+                padding : '.4vw',
+                marginRight : '-2vw',
+                marginBottom : '.4vw',
                 textAlign : 'end',
-                height: '6rem',
-                width: '4rem',
+                height: height(),
+                width: width(),
                 zIndex : '1',
                 background : props.faceup?'white':props.color==='red'?'url("https://opengameart.org/sites/default/files/card%20back%20red.png")':'url("https://lh3.googleusercontent.com/proxy/HZI6kYVdeqtmP1t3G4sUdNmj0u8PJxqCxswHuI9Qv7swKgLigikY_RqENxnrTSIqW3qvrTxuKDs4b0rYNHXpt_Jx0sJcK14")',
                 backgroundSize : "stretch",
                 backgroundPosition :'center',
                 opacity: isDragging ? 0.3 : 1,
                 color: props.color === 'red'?'red':'black',
-                border: '.15rem  solid black',
+                border: '.15vw  solid black',
+          
+                
             }}
             className = {'card '+"cards-"+ props.stack+' '+ props.color +' '+ (props.faceup ? 'faceup' : 'facedown')+ (props.faceup ? ' '+props.suit : '') +(props.faceup ? ' '+ props.value : '')} >
               <div>{props.suit}<br/>{props.value }</div>
