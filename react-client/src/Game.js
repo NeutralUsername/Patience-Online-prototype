@@ -43,7 +43,12 @@ export default class Game extends React.Component{
     render(){
         return (
             <DndProvider backend={HTML5Backend}>
-                <div className="game">
+                <div 
+                    className="game"
+                    style = {{
+                        position: 'fixed',
+                        left:'20vw'
+                    }}>
                     <Stack 
                         stack = {this.state.stacks[this.props.color+"malus"]} 
                         onDrop = {this.handleDrop}
@@ -178,40 +183,40 @@ function Stack (props) {
           props.onDrop({from,to});
       }
 
-    function bottomValues () {
-        if(props.player) {
-            if(props.stack.name.includes('malus'))
-                return '0%'
-            if(props.stack.name.includes('stock'))
-                return '0%'
-            if(props.stack.name.includes('waste'))
-                return '0%'
-        }
+      function topValues (){
         if(!props.player) {
             if(props.stack.name.includes('malus'))
-                return '82%'
+                return '0vh'
             if(props.stack.name.includes('stock'))
-                return '82%'
+                return '0vh'
             if(props.stack.name.includes('waste'))
-                return '82%'
+                return '0vh'
         }
-        if(props.stack.name.includes('tableau0' || props.stack.name.includes('foundation0')))
-            return '16%'
-        if(props.stack.name.includes('tableau1'|| props.stack.name.includes('foundation1')))
-            return '32%'
-        if(props.stack.name.includes('tableau2'|| props.stack.name.includes('foundation2')))
-            return '48%'
-        if(props.stack.name.includes('tableau3'|| props.stack.name.includes('foundation3')))
-            return '64%'
+        if(props.player) {
+            if(props.stack.name.includes('malus'))
+                return '82vh'
+            if(props.stack.name.includes('stock'))
+                return '82vh'
+            if(props.stack.name.includes('waste'))
+                return '82vh'
+        }
+        if(props.stack.name.includes('tableau0') || props.stack.name.includes('foundation0'))
+            return '17vh'
+        if(props.stack.name.includes('tableau1')|| props.stack.name.includes('foundation1'))
+            return '33vh'
+        if(props.stack.name.includes('tableau2')|| props.stack.name.includes('foundation2'))
+            return '49vh'
+        if(props.stack.name.includes('tableau3')|| props.stack.name.includes('foundation3'))
+            return '65vh'
     }
     
       function leftValue() {
         if(props.stack.name.includes('stock'))
-            return '0%'
+            return '10vw'
         if(props.stack.name.includes('malus'))
-            return '35%'
+            return '30vw'
         if(props.stack.name.includes('waste'))
-            return '12%'  
+            return '20vw'  
       
         if(!props.player) {
             if(props.stack.name.includes('tableau0'))
@@ -244,6 +249,7 @@ function Stack (props) {
                 return '47%'
         }
       }
+
       function rightValue () {
       
         if(props.player) {
@@ -263,14 +269,26 @@ function Stack (props) {
                 className ={props.stack.type+" "+props.stack.name}  
                 style = {{
                     border: '.15rem  solid black',
+                    
                     position : 'fixed',
-                    bottom : bottomValues(),
                     left : leftValue(),
                     right : rightValue(),
+                    top : topValues(),
                     display: 'flex',
+                    alignItems :'center',
+                    
                     flexDirection: (props.player && props.stack.name.includes('tableau')) ? 'row-reverse' : '',
-                    minWidth : '4vw',
-                    minHeight : '14vh',
+
+                    overflow:'hidden',
+                    background : 'white',
+
+                    paddingLeft : '.5vw',
+                    paddingRight : '.5vw',
+                    paddingTop : '.1vw',
+                    paddingBottom : '.1vw',
+                    
+                    width : (2+(props.stack.cards.length>0?props.stack.cards.length*2:2))+'vw',
+                    height : '14vh',
                 
                 }}> 
                 {props.stack.cards.map( (card,index) => 
@@ -300,10 +318,10 @@ function Card (props) {
     }))
 
     function height () {
-        return 10+"vh"
+        return 10+"vmin"
     }
     function width () {
-        return 3.3+"vw"
+        return 3.3+"vmax"
     }
     return (
         <div 
@@ -313,15 +331,15 @@ function Card (props) {
             }}
             ref={drag} 
             style={{
-                transform : 'inherit',
                 fontSize: '1.2vw',
                 lineHeight :'1vw',
                 fontWeight: 'bold',
-                cursor: 'grab',
+                cursor: props.uppermost? 'grab' :'mouse',
                 borderRadius: '.7vw',
                 padding : '.4vw',
-                marginRight : '-2vw',
-                marginBottom : '.4vw',
+                marginRight : !props.stack.includes('redtableau')? !props.uppermost ?'-2vw':'0' :'0',
+                marginLeft : props.stack.includes('redtableau') ? !props.uppermost ? '-2vw' :'0' : '0',
+                
                 textAlign : 'end',
                 height: height(),
                 width: width(),
@@ -332,12 +350,36 @@ function Card (props) {
                 opacity: isDragging ? 0.3 : 1,
                 color: props.color === 'red'?'red':'black',
                 border: '.15vw  solid black',
-          
+                scale : 'scale(2,2)',
+                
+                verticalAlign : 'middle'
                 
             }}
             className = {'card '+"cards-"+ props.stack+' '+ props.color +' '+ (props.faceup ? 'faceup' : 'facedown')+ (props.faceup ? ' '+props.suit : '') +(props.faceup ? ' '+ props.value : '')} >
-              <div>{props.suit}<br/>{props.value }</div>
-              <div className="cardCenter"> <br/>{props.suit}</div>
+                <div
+                    className="cardCorner"
+                    style={{
+
+
+                    }} >
+                    {props.suit}<br/>{props.value }
+                </div>
+                <div 
+                    className="cardCenter"
+                    style={{
+                        fontSize: '3.5vw',
+                        display: 'table',
+                        position:'relative',
+                        bottom : '-10%',
+                        justifyContent: 'center',
+                        verticalAlign:'center',
+                        alignItems: 'center',
+                        alignSelf: 'center',
+                        alignContent:'center',
+                        textAlign: 'center',
+                    }}> 
+                    <br/>{props.suit}
+                </div>
         </div>
     )
 }

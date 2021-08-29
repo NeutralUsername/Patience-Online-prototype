@@ -42,9 +42,15 @@
 }
 
 .cardCenter {
-  font-size: 3.5vmax;
-  display: flex;
+  font-size: 3.5vw;
+  display: table;
+  position:relative;
+  bottom : -10%;
   justify-content: center;
   vertical-align: center;
-  line-height: .7vmax;
+  align-items: center;
+  align-self: center;
+  align-content: center;
+  text-align: center;
+  
 }
