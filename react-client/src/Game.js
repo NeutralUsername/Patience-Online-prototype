@@ -167,7 +167,7 @@ export default class Game extends React.Component{
 
 
 function Stack (props) {
-    const [{hover  }, drop] = useDrop(() => ({
+    const [{ hover }, drop] = useDrop(() => ({
         accept: "card",
         drop: monitor => {
             handleDrop(monitor, {stack : props.stack.name});
@@ -211,41 +211,41 @@ function Stack (props) {
     
       function leftValue() {
         if(props.stack.name.includes('stock'))
-            return '16vw'
+            return '20vw'
         if(props.stack.name.includes('malus'))
-            return '30vw'
+            return '34vw'
         if(props.stack.name.includes('waste'))
-            return '8vw'  
+            return '12vw'  
       
         if(!props.player) {
             if(props.stack.name.includes('tableau0'))
-                return '55%'
+                return '59vw'
             if(props.stack.name.includes('tableau1'))
-                return '55%'
+                return '59vw'
             if(props.stack.name.includes('tableau2'))
-                return '55%'
+                return '59vw'
             if(props.stack.name.includes('tableau3'))
-                return '55%'
+                return '59vw'
         }
         if(!props.player) {
             if(props.stack.name.includes('foundation0'))
-                return '38%'
+                return '42vw'
             if(props.stack.name.includes('foundation1'))
-                return '38%'
+                return '42vw'
             if(props.stack.name.includes('foundation2'))
-                return '38%'
+                return '42vw'
             if(props.stack.name.includes('foundation3'))
-                return '38%'
+                return '42vw'
         }
         if(props.player) {
             if(props.stack.name.includes('foundation0'))
-                return '47%'
+                return '51vw'
             if(props.stack.name.includes('foundation1'))
-                return '47%'
+                return '51vw'
             if(props.stack.name.includes('foundation2'))
-                return '47%'
+                return '51vw'
             if(props.stack.name.includes('foundation3'))
-                return '47%'
+                return '51vw'
         }
       }
 
@@ -253,13 +253,13 @@ function Stack (props) {
       
         if(props.player) {
             if(props.stack.name.includes('tableau0'))
-                return '65%'
+                return '61vw'
             if(props.stack.name.includes('tableau1'))
-                return '65%'
+                return '61vw'
             if(props.stack.name.includes('tableau2'))
-                return '65%'
+                return '61vw'
             if(props.stack.name.includes('tableau3'))
-                return '65%'
+                return '61vw'
         }
       }
         return (
@@ -278,16 +278,14 @@ function Stack (props) {
 
                     flexDirection: props.player && props.stack.name.includes("tableau") ? 'row-reverse' : '',
                     
-
                     overflow:'hidden',
                     background : 'white',
-
                     paddingLeft : '.5vw',
                     paddingRight : '.5vw',
-                    paddingTop : '.1vw',
-                    paddingBottom : '.1vw',
-                    
-                    width : (2+(props.stack.cards.length>0?props.stack.cards.length*2:2))+'vw',
+                    paddingTop : '.01vh',
+                    paddingBottom : '.01vh',
+
+                    width : (2+(props.stack.cards.length>0?props.stack.cards.length*3:3))+'vw',
                     height : '14vh',
                 
                 }}> 
@@ -321,7 +319,7 @@ function Card (props) {
         return 10+"vmin"
     }
     function width () {
-        return 3.3+"vmax"
+        return 4+"vmax"
     }
     return (
         <div 

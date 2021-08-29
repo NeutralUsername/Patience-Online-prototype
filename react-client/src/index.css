@@ -37,15 +37,12 @@
   width: 129px;
 }
 
-.game {
-
-}
 
 .cardCenter {
   font-size: 3.5vw;
   display: table;
   position:relative;
-  bottom : -10%;
+  bottom : 30%;
   justify-content: center;
   vertical-align: center;
   align-items: center;
