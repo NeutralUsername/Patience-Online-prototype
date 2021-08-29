@@ -47,7 +47,6 @@ export default class Game extends React.Component{
                     className="game"
                     style = {{
                         position: 'fixed',
-                        left:'20vw'
                     }}>
                     <Stack 
                         stack = {this.state.stacks[this.props.color+"malus"]} 
@@ -229,13 +228,13 @@ function Stack (props) {
         }
         if(!props.player) {
             if(props.stack.name.includes('foundation0'))
-                return '41.5vw'
+                return '41vw'
             if(props.stack.name.includes('foundation1'))
-                return '41.5vw'
+                return '41vw'
             if(props.stack.name.includes('foundation2'))
-                return '41.5vw'
+                return '41vw'
             if(props.stack.name.includes('foundation3'))
-                return '41.5vw'
+                return '41vw'
         }
         if(props.player) {
             if(props.stack.name.includes('foundation0'))
@@ -253,13 +252,13 @@ function Stack (props) {
       
         if(props.player) {
             if(props.stack.name.includes('tableau0'))
-                return '60.5vw'
+                return '-39.5vw'
             if(props.stack.name.includes('tableau1'))
-                return '60.5vw'
+                return '-39.5vw'
             if(props.stack.name.includes('tableau2'))
-                return '60.5vw'
+                return '-39.5vw'
             if(props.stack.name.includes('tableau3'))
-                return '60.5vw'
+                return '-39.5vw'
         }
       }
         return (
@@ -269,7 +268,7 @@ function Stack (props) {
                 style = {{
                     border: '.15rem  solid black',
                     
-                    position : 'fixed',
+                    position : 'absolute',
                     left : leftValue(),
                     right : rightValue(),
                     top : topValues(),
@@ -356,9 +355,7 @@ function Card (props) {
                         position : 'absolute',
                         textAlign : 'center',
                         marginLeft : '3.15vmax',
-                        marginTop :'-.5vmin'
-                        
-                        
+                        marginTop :'-.5vmin'  
                     }} >
                     {props.suit}<br/>{props.value }
                 </div>
@@ -376,8 +373,8 @@ function Card (props) {
                     style={{
                         fontSize: '3.4vmax',
                         position : 'absolute',
-                        marginBottom : '2.2vmin',
-                        marginLeft : '.9vmax'
+                        marginBottom : '2vmin',
+                        marginLeft : '1vmax'
                     }}> 
                     {props.suit}
                 </div>
