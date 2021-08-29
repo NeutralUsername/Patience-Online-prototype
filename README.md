@@ -5,7 +5,7 @@ gregaire is a 2 player solitaire type card game.
 
 it consists of two 52 card decks and is played in alternating turns against each other.
 
-each turn players try to stack cards from the malus and tableau to the foundation. if no possible move is found the player flips the upper most card of his stock and tries to play it. if no possible move is found the card goes to the waste and the turn ends. once the stock card is flipped, no other card can be touched until the card is played.
+each turn players try to stack cards from the malus and tableau to the foundation. if no possible move is found the player repeatedly flips the upper most card of his stock and tries to play it. if no possible move is found the card goes to the waste and the turn ends. once the stock card is flipped, no other card can be touched until the card is played.
 
 at the beginning of the game each player receives X malus cards. the player that is first able to play all of his malus cards wins.
 
