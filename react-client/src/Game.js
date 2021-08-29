@@ -229,13 +229,13 @@ function Stack (props) {
         }
         if(!props.player) {
             if(props.stack.name.includes('foundation0'))
-                return '39%'
+                return '38%'
             if(props.stack.name.includes('foundation1'))
-                return '39%'
+                return '38%'
             if(props.stack.name.includes('foundation2'))
-                return '39%'
+                return '38%'
             if(props.stack.name.includes('foundation3'))
-                return '39%'
+                return '38%'
         }
         if(props.player) {
             if(props.stack.name.includes('foundation0'))
