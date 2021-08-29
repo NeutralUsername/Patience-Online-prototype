@@ -229,13 +229,13 @@ function Stack (props) {
         }
         if(!props.player) {
             if(props.stack.name.includes('foundation0'))
-                return '42.5vw'
+                return '41.5vw'
             if(props.stack.name.includes('foundation1'))
-                return '42.5vw'
+                return '41.5vw'
             if(props.stack.name.includes('foundation2'))
-                return '42.5vw'
+                return '41.5vw'
             if(props.stack.name.includes('foundation3'))
-                return '42.5vw'
+                return '41.5vw'
         }
         if(props.player) {
             if(props.stack.name.includes('foundation0'))
@@ -285,7 +285,7 @@ function Stack (props) {
                     paddingTop : '.01vh',
                     paddingBottom : '.01vh',
 
-                    width : (2+(props.stack.cards.length>0?props.stack.cards.length*2.5:2.5))+'vw',
+                    width : (2.6+(props.stack.cards.length>0?props.stack.cards.length*2.5:2.5))+'vw',
                     height : '14vh',
                 
                 }}> 
@@ -336,48 +336,50 @@ function Card (props) {
                 borderRadius: '.7vw',
                 padding : '.4vw',
            
-                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.5vw':'0' : props.stack.includes('tableau') && ! props.player && ! props.uppermost? '-2.5vw':'0',
-                marginLeft : props.stack.includes('tableau')  && props.player ? !props.uppermost ? '-2.5vw' :'0' : '0',
+                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.6vw':'0' : props.stack.includes('tableau') && ! props.player && ! props.uppermost? '-2.6vw':'0',
+                marginLeft : props.stack.includes('tableau')  && props.player ? !props.uppermost ? '-2.6vw' :'0' : '0',
                 
-                textAlign : 'end',
                 height: height(),
                 width: width(),
                 zIndex : '1',
                 background : props.faceup?'white':props.color==='red'?'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-red-sticker-1600042082.903987.png")':'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-blue-sticker-1600041775.9919636.png")',
-                backgroundSize : '110%',
+                backgroundSize : '150%',
                 backgroundPosition :'center',
                 opacity: isDragging ? 0.3 : 1,
-                color: props.color === 'red'?'red':'black',
-                border: '.15vw  solid black',
-                scale : 'scale(2,2)',
-                
-                verticalAlign : 'middle'
-                
+                color: props.suit === '♥' || props.suit === '♦'?'red':'black',
+                border: '.15vw  solid black',            
             }}
             className = {'card '+"cards-"+ props.stack+' '+ props.color +' '+ (props.faceup ? 'faceup' : 'facedown')+ (props.faceup ? ' '+props.suit : '') +(props.faceup ? ' '+ props.value : '')} >
                 <div
                     className="cardCorner"
                     style={{
-
-
+                        position : 'absolute',
+                        textAlign : 'center',
+                        marginLeft : '3.15vmax',
+                        marginTop :'-.5vmin'
+                        
+                        
+                    }} >
+                    {props.suit}<br/>{props.value }
+                </div>
+                <div
+                    className="cardCorner"
+                    style={{
+                        position : 'absolute',
+                        marginTop : '6.5vmin',
+                        textAlign : 'center',
                     }} >
                     {props.suit}<br/>{props.value }
                 </div>
                 <div 
                     className="cardCenter"
                     style={{
-                        fontSize: '3.5vw',
-                        display: 'table',
-                        position:'relative',
-                        bottom : '-10%',
-                        justifyContent: 'center',
-                        verticalAlign:'center',
-                        alignItems: 'center',
-                        alignSelf: 'center',
-                        alignContent:'center',
-                        textAlign: 'center',
+                        fontSize: '3.4vmax',
+                        position : 'absolute',
+                        marginBottom : '2.2vmin',
+                        marginLeft : '.9vmax'
                     }}> 
-                    <br/>{props.suit}
+                    {props.suit}
                 </div>
         </div>
     )
