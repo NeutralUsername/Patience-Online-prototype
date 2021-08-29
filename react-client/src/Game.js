@@ -254,8 +254,8 @@ function Stack (props) {
             ref={drop}
             className ={props.stack.type+" "+props.stack.name}  
             style = {{
-                border: '.15rem  solid black',
-                
+                border: '.01vmax  solid Silver',
+                backgroundColor: '#EEEEEE',
                 position : 'absolute',
                 left : leftValue(),
                 right : rightValue(),
@@ -266,13 +266,13 @@ function Stack (props) {
                 flexDirection: props.player && props.stack.name.includes("tableau") ? 'row-reverse' : '',
                 
                 overflow:'hidden',
-                background : 'white',
+              
                 paddingLeft : '.5vw',
                 paddingRight : '.5vw',
                 paddingTop : '.01vh',
                 paddingBottom : '.01vh',
 
-                width : (2.6+(props.stack.cards.length>0?props.stack.cards.length*2.5:2.5))+'vw',
+                width : 2.6 + (props.stack.type != 'pile' ? (props.stack.cards.length>0?(props.stack.cards.length*2.5) : 2.5) : 2.5 )+'vw' ,
                 height : '14vh',
             }}> 
             {props.stack.cards.map( (card,index) => 
@@ -320,7 +320,7 @@ function Card (props) {
                 cursor: props.uppermost? 'grab' :'mouse',
                 borderRadius: '.7vw',
                 padding : '.4vw',
-           
+                position : props.stack.includes('stock') || props.stack.includes('foundation') || props.stack.includes('waste') ?'absolute':'',
                 marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.6vw':'0' : props.stack.includes('tableau') && ! props.player && ! props.uppermost? '-2.6vw':'0',
                 marginLeft : props.stack.includes('tableau')  && props.player ? !props.uppermost ? '-2.6vw' :'0' : '0',
                 

@@ -95,7 +95,7 @@ function prepareStateForClient (state) {
     for(stack in stacks) {
         if(stacks[stack].type === 'pile') {
             if(stacks[stack].cards.length)
-                stacks[stack].cards = [stacks[stack].cards.pop()]
+                stacks[stack].cards = [stacks[stack].cards.pop(),stacks[stack].cards.pop()]
         }
         for(card of stacks[stack].cards) {
             if(card.faceup === 0) {
