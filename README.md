@@ -1,3 +1,4 @@
+![ui game](https://user-images.githubusercontent.com/39095721/131253091-87e23b25-4366-43d6-9117-c372c73091c5.JPG)
 
 gregaire is a 2 player solitaire type card game.
 it consists of two 52 card decks and is played in alternating turns against each other.
