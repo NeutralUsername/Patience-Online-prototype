@@ -176,8 +176,7 @@ function Stack (props) {
             console.log(monitor)
         },
       }))
-
-
+ 
   
       function handleDrop(from, to) {
           props.onDrop({from,to});
@@ -212,11 +211,11 @@ function Stack (props) {
     
       function leftValue() {
         if(props.stack.name.includes('stock'))
-            return '10vw'
+            return '16vw'
         if(props.stack.name.includes('malus'))
             return '30vw'
         if(props.stack.name.includes('waste'))
-            return '20vw'  
+            return '8vw'  
       
         if(!props.player) {
             if(props.stack.name.includes('tableau0'))
@@ -276,8 +275,9 @@ function Stack (props) {
                     top : topValues(),
                     display: 'flex',
                     alignItems :'center',
+
+                    flexDirection: props.player && props.stack.name.includes("tableau") ? 'row-reverse' : '',
                     
-                    flexDirection: (props.player && props.stack.name.includes('tableau')) ? 'row-reverse' : '',
 
                     overflow:'hidden',
                     background : 'white',
@@ -292,14 +292,14 @@ function Stack (props) {
                 
                 }}> 
                 {props.stack.cards.map( (card,index) => 
-                    <Card 
-                        key = {card.cardid}
+                    <Card key = {card.cardid}
                         cardid = {card.cardid}
                         faceup = {card.faceup}
                         color = {card.color} 
                         suit = {card.suit} 
                         value = {card.value}
                         stack = {props.stack.name}
+                        player = {props.player}
                         uppermost = {index === (props.stack.cards.length-1)}
                     ></Card>
                 )}
@@ -337,8 +337,9 @@ function Card (props) {
                 cursor: props.uppermost? 'grab' :'mouse',
                 borderRadius: '.7vw',
                 padding : '.4vw',
-                marginRight : !props.stack.includes('redtableau')? !props.uppermost ?'-2vw':'0' :'0',
-                marginLeft : props.stack.includes('redtableau') ? !props.uppermost ? '-2vw' :'0' : '0',
+           
+                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2vw':'0' : props.stack.includes('tableau') && ! props.player && ! props.uppermost? '-2vw':'0',
+                marginLeft : props.stack.includes('tableau')  && props.player ? !props.uppermost ? '-2vw' :'0' : '0',
                 
                 textAlign : 'end',
                 height: height(),
