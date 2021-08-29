@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import socketIOClient from 'socket.io-client';
 import ReactDOM from 'react-dom';
 import { useDrag, DndProvider, useDrop  } from 'react-dnd'
@@ -171,6 +171,8 @@ function Stack (props) {
             console.log(monitor)
         },
       }))
+
+
   
       function handleDrop(from, to) {
           props.onDrop({from,to});
@@ -289,15 +291,14 @@ function Stack (props) {
 
 function Card (props) {
 
-    const [{ isDragging, canDrag }, drag] = useDrag(() => ({
+    const [{ isDragging }, drag] = useDrag(() => ({
         type: "card",
         item : {id : props.cardid, stack : props.stack} ,
-        canDrag : props.uppermost,
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         })
     }))
-    
+
     function height () {
         return 10+"vh"
     }
@@ -306,6 +307,10 @@ function Card (props) {
     }
     return (
         <div 
+            onDragStart ={e=> {
+                if(!props.uppermost)
+                    e.preventDefault()
+            }}
             ref={drag} 
             style={{
                 transform : 'inherit',
