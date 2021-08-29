@@ -2,7 +2,9 @@
 
 
 gregaire is a 2 player solitaire type card game.
+
 it consists of two 52 card decks and is played in alternating turns against each other.
+
 at the beginning of the game each player receives X malus cards. the player that is first able to play all of his malus cards wins.
 _______
 install mysql, nodejs
