@@ -314,8 +314,9 @@ function Card (props) {
             }}
             ref={drag} 
             style={{
-                fontSize: '1.2vw',
-                lineHeight :'1vw',
+                fontSize: '1.5vw',
+                lineHeight :'1.2vw',
+                
                 fontWeight: 'bold',
                 cursor: props.uppermost? 'grab' :'mouse',
                 borderRadius: '.7vw',
@@ -338,21 +339,24 @@ function Card (props) {
                 <div
                     className="cardCorner"
                     style={{
+                        letterSpacing :'-.2rem',
                         position : 'absolute',
                         textAlign : 'center',
-                        marginLeft : '3.15vmax',
+                        marginLeft : '3.1vmax',
                         marginTop :'-.5vmin'  
                     }} >
-                    {props.suit}<br/>{props.value }
+                    {props.suit}<br/>{props.value === '1' ? 'A' : props.value === '11' ? 'J' : props.value === '12' ? 'Q' : props.value === '13' ? 'K' : props.value}
                 </div>
                 <div
                     className="cardCorner"
                     style={{
+                        letterSpacing :'-.2rem',
                         position : 'absolute',
-                        marginTop : '6.5vmin',
+                        marginTop : '5.6vmin',
                         textAlign : 'center',
+                        marginLeft : '-.2vmax'
                     }} >
-                    {props.suit}<br/>{props.value }
+                    {props.suit}<br/>{props.value === '1' ? 'A' : props.value === '11' ? 'J' : props.value === '12' ? 'Q' : props.value === '13' ? 'K' : props.value}
                 </div>
                 <div 
                     className="cardCenter"

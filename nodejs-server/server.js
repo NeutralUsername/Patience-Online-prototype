@@ -7,10 +7,10 @@ const io = require ('socket.io') (server);
 const { RateLimiterMemory } = require ('rate-limiter-flexible');
 const rateLimiter = new RateLimiterMemory ({
     points: 1,
-    duration: 1,
+    duration: .1,
 });
 var db = require('./db.js');
-db.createDBifNotExists();
+//db.createDBifNotExists()
 const pendingOnlineRooms = [];
 const activeGames = [];
 
@@ -82,12 +82,15 @@ async function startGame (red, black, options) {
     removePendingRoom (red);
     removePendingRoom (black);
     updateClientPendingRooms (); 
-
-    activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
+    for(var i = 0; i< 1; i++) {
+        activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
+        console.log(game.props.id);
+    }
+   
     io.to (red).emit ('startOnlineGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     io.to(black).emit ('startOnlineGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)});
 
-    console.log(game.props.id);
+    
 }
 
 function prepareStateForClient (state) {
