@@ -91,20 +91,33 @@ async function startGame (red, black, options) {
 
 function prepareStateForClient (state) {
     var clientState = JSON.parse(JSON.stringify(state));
-    Object.keys(clientState.stacks).map(stack=> {
-        var stacklength = clientState.stacks[stack].cards.length
-        for(var i = 0; i< stacklength ; i++) {
-            var card = clientState.stacks[stack].cards[i]
-            var carddata = db.cardIdDataPairs.find(x=>x.cardid === card.cardid)
-            delete card.cardid
-            card.color = carddata.color
-            if(i === (stacklength-1)) {
-                card.suit = carddata.suit
-                card.value = carddata.value
+    mapDataToStacks(clientState.stacks)
+    return clientState
+ }
+
+ async function mapDataToStacks(stacks) {
+    Object.keys(stacks).map(stack=> {
+        if(stacks[stack].cards.length> 0) {
+            if(stacks[stack].type === 'pile') {
+                stacks[stack].cards = [stacks[stack].cards.pop(), stacks[stack].cards.pop()]
+            }
+            var stacklength = stacks[stack].cards.length
+            for(var i = 0; i< stacklength ; i++) {
+                var card = stacks[stack].cards[i]
+                var carddata = db.cardIdDataPairs.find(x=>x.cardid === card.cardid)
+                delete card.cardid
+                card.color = carddata.color
+                if(card.faceup) {
+                    card.suit = carddata.suit
+                    card.value = carddata.value
+                }
             }
         }
      })
-    return clientState
+ }
+
+ function mapIdsToStacks(stacks) {
+
  }
 
 function removePendingRoom(roomkey)  {

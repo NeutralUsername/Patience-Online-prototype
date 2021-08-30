@@ -167,8 +167,8 @@ function Stack (props) {
         },
     }))
  
-    function handleDrop(from, toStack) {
-          props.onDrop({from,toStack});
+    function handleDrop(card, toStack) {
+          props.onDrop({card,toStack});
     }
 
     function topValues (){
@@ -274,7 +274,7 @@ function Stack (props) {
                 height : '14vmin',
             }}> 
             {props.stack.cards.map( (card,index) => 
-                <Card key = {card.cardid}
+                <Card 
                     faceup = {card.faceup}
                     color = {card.color} 
                     suit = {card.suit} 

@@ -77,7 +77,7 @@ module.exports = {
                 + "'"+ black + "'"  + ");", 
 
                 async function (err, game) { if (err) throw err;
-                  resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerPlayer, options.timePerTurn, await startcolor(stacks.redmalus, stacks.blackmalus) ))   
+                  resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerPlayer, options.timePerTurn, await startcolor() ))   
                 }
               )
             }
@@ -101,7 +101,7 @@ module.exports = {
                     + "'"+ red+"'"         + ", "
                     + "'"+ black+"'"       + ");", 
                     async function (err, game) { if (err) throw err;
-                      resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerPlayer, options.timePerTurn, await startcolor(stacks.redmalus, stacks.blackmalus) ))   
+                      resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerPlayer, options.timePerTurn, await startcolor() ))   
                     }
                   )
                 } 
@@ -184,16 +184,9 @@ async function stacks( gameid, options, created) {
     }
   )
 }
-async function startcolor(redmalus, blackmalus) {
-  var red = 0;
-  var black = 0;
-  for(card in redmalus) {
-    red += parseInt(redmalus[card].value);
-  }
-  for(card in blackmalus) {
-    black += parseInt(blackmalus[card].value);
-  }
-  return red >= black ? 'red' : 'black';
+async function startcolor() {
+
+  return shuffle([0,1])[0] === 0 ? 'red' : 'black'
 }
 function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, redtimer, blacktimer, turntimer, turncolor) {
   return {
@@ -224,15 +217,15 @@ function sqlCompatibleDate(date) {
   ('00' + sqlcompatibledate.getUTCMinutes()).slice(-2) + ':' + 
   ('00' + sqlcompatibledate.getUTCSeconds()).slice(-2);
 }
-function shuffle (deck) {
-  var currentIndex = deck.length,  randomIndex;
+function shuffle (array) {
+  var currentIndex = array.length,  randomIndex;
   while (0 !== currentIndex) {
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
-      [deck[currentIndex], deck[randomIndex]] = [
-          deck[randomIndex], deck[currentIndex]];
+      [array[currentIndex], array[randomIndex]] = [
+          array[randomIndex], array[currentIndex]];
   } 
-  return deck;
+  return array;
 }
 function dbExists(name) {
   return new Promise ((resolve) => {
