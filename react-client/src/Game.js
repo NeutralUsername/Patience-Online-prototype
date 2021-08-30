@@ -28,9 +28,7 @@ export default class Game extends React.Component{
     }
    
     handleDrop(result) {
-        this.state.stacks[result.to.stack].cards.push(this.state.stacks[result.from.stack].cards.find(x=>x.cardid === result.from.id));
-        this.state.stacks[result.from.stack].cards.pop();
-        this.setState({stacks : this.state.stacks})
+       console.log(result)
     }
 
     render(){
@@ -169,84 +167,84 @@ function Stack (props) {
         },
     }))
  
-    function handleDrop(from, to) {
-          props.onDrop({from,to});
+    function handleDrop(from, toStack) {
+          props.onDrop({from,toStack});
     }
 
     function topValues (){
         if(!props.player) {
             if(props.stack.name.includes('malus'))
-                return '0vh'
+                return '0vmin'
             if(props.stack.name.includes('stock'))
-                return '0vh'
+                return '0vmin'
             if(props.stack.name.includes('waste'))
-                return '0vh'
+                return '0vmin'
         }
         if(props.player) {
             if(props.stack.name.includes('malus'))
-                return '82vh'
+                return '82vmin'
             if(props.stack.name.includes('stock'))
-                return '82vh'
+                return '82vmin'
             if(props.stack.name.includes('waste'))
-                return '82vh'
+                return '82vmin'
         }
         if(props.stack.name.includes('tableau0') || props.stack.name.includes('foundation0'))
-            return '17vh'
+            return '17vmin'
         if(props.stack.name.includes('tableau1')|| props.stack.name.includes('foundation1'))
-            return '33vh'
+            return '33vmin'
         if(props.stack.name.includes('tableau2')|| props.stack.name.includes('foundation2'))
-            return '49vh'
+            return '49vmin'
         if(props.stack.name.includes('tableau3')|| props.stack.name.includes('foundation3'))
-            return '65vh'
+            return '65vmin'
     }
     function leftValue() {
         if(props.stack.name.includes('stock'))
-            return '20.5vw'
+            return '20.5vmax'
         if(props.stack.name.includes('malus'))
-            return '34.5vw'
+            return '34.5vmax'
         if(props.stack.name.includes('waste'))
-            return '12.5vw'   
+            return '12.5vmax'   
         if(!props.player) {
             if(props.stack.name.includes('tableau0'))
-                return '59.5vw'
+                return '59.5vmax'
             if(props.stack.name.includes('tableau1'))
-                return '59.5vw'
+                return '59.5vmax'
             if(props.stack.name.includes('tableau2'))
-                return '59.5vw'
+                return '59.5vmax'
             if(props.stack.name.includes('tableau3'))
-                return '59.5vw'
+                return '59.5vmax'
         }
         if(!props.player) {
             if(props.stack.name.includes('foundation0'))
-                return '41vw'
+                return '41vmax'
             if(props.stack.name.includes('foundation1'))
-                return '41vw'
+                return '41vmax'
             if(props.stack.name.includes('foundation2'))
-                return '41vw'
+                return '41vmax'
             if(props.stack.name.includes('foundation3'))
-                return '41vw'
+                return '41vmax'
         }
         if(props.player) {
             if(props.stack.name.includes('foundation0'))
-                return '51.5vw'
+                return '51.5vmax'
             if(props.stack.name.includes('foundation1'))
-                return '51.5vw'
+                return '51.5vmax'
             if(props.stack.name.includes('foundation2'))
-                return '51.5vw'
+                return '51.5vmax'
             if(props.stack.name.includes('foundation3'))
-                return '51.5vw'
+                return '51.5vmax'
         }
     }
     function rightValue () {
         if(props.player) {
             if(props.stack.name.includes('tableau0'))
-                return '-39.5vw'
+                return '-39.5vmax'
             if(props.stack.name.includes('tableau1'))
-                return '-39.5vw'
+                return '-39.5vmax'
             if(props.stack.name.includes('tableau2'))
-                return '-39.5vw'
+                return '-39.5vmax'
             if(props.stack.name.includes('tableau3'))
-                return '-39.5vw'
+                return '-39.5vmax'
         }
     }
     return (
@@ -267,21 +265,21 @@ function Stack (props) {
                 
                 overflow:'hidden',
               
-                paddingLeft : '.5vw',
-                paddingRight : '.5vw',
-                paddingTop : '.01vh',
-                paddingBottom : '.01vh',
+                paddingLeft : '.5vmax',
+                paddingRight : '.5vmax',
+                paddingTop : '.01vmin',
+                paddingBottom : '.01vmin',
 
-                width : 2.6 + (props.stack.type != 'pile' ? (props.stack.cards.length>0?(props.stack.cards.length*2.5) : 2.5) : 2.5 )+'vw' ,
-                height : '14vh',
+                width : 2.6 + (props.stack.type != 'pile' ? (props.stack.cards.length>0?(props.stack.cards.length*2.5) : 2.5) : 2.5 )+'vmax' ,
+                height : '14vmin',
             }}> 
             {props.stack.cards.map( (card,index) => 
                 <Card key = {card.cardid}
-                    cardid = {card.cardid}
                     faceup = {card.faceup}
                     color = {card.color} 
                     suit = {card.suit} 
                     value = {card.value}
+
                     stack = {props.stack.name}
                     player = {props.player}
                     uppermost = {index === (props.stack.cards.length-1)}
@@ -295,7 +293,7 @@ function Card (props) {
 
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "card",
-        item : {id : props.cardid, stack : props.stack} ,
+        item : {color : props.color, suit : props.suit, value : props.value, stack : props.stack} ,
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         })
@@ -314,36 +312,36 @@ function Card (props) {
             }}
             ref={drag} 
             style={{
-                fontSize: '1.5vw',
-                lineHeight :'1.2vw',
-                
+                fontSize: '1.5vmax',
+                lineHeight :'1.2vmax',
+                position : 'inherit',
                 fontWeight: 'bold',
                 cursor: props.uppermost? 'grab' :'mouse',
-                borderRadius: '.7vw',
-                padding : '.4vw',
+                borderRadius: '.7vmax',
+                padding : '.4vmax',
                 position : props.stack.includes('stock') || props.stack.includes('foundation') || props.stack.includes('waste') ?'absolute':'',
-                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.6vw':'0' : props.stack.includes('tableau') && ! props.player && ! props.uppermost? '-2.6vw':'0',
-                marginLeft : props.stack.includes('tableau')  && props.player ? !props.uppermost ? '-2.6vw' :'0' : '0',
+                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.6vmax':'0' : props.stack.includes('tableau') && ! props.player && ! props.uppermost? '-2.6vmax':'0',
+                marginLeft : props.stack.includes('tableau')  && props.player ? !props.uppermost ? '-2.6vmax' :'0' : '0',
                 
                 height: height(),
                 width: width(),
+
                 zIndex : '1',
                 background : props.faceup?'white':props.color==='red'?'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-red-sticker-1600042082.903987.png")':'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-blue-sticker-1600041775.9919636.png")',
-                backgroundSize : '150%',
+                backgroundSize : '10vmax',
                 backgroundPosition :'center',
                 opacity: isDragging ? 0.3 : 1,
                 color: props.suit === '♥' || props.suit === '♦'?'red':'black',
-                border: '.15vw  solid black',            
+                border: '.15vmax  solid black',            
             }}
             className = {'card '+"cards-"+ props.stack+' '+ props.color +' '+ (props.faceup ? 'faceup' : 'facedown')+ (props.faceup ? ' '+props.suit : '') +(props.faceup ? ' '+ props.value : '')} >
                 <div
                     className="cardCorner"
                     style={{
-                        letterSpacing :'-.2rem',
+                        letterSpacing :'-.2vmax',
                         position : 'absolute',
-                        textAlign : 'center',
+                        marginTop :'1.5vmin'  ,
                         marginLeft : '3.1vmax',
-                        marginTop :'-.5vmin'  
                     }} >
                     {props.suit}<br/>{props.value === '1' ? 'A' : props.value === '11' ? 'J' : props.value === '12' ? 'Q' : props.value === '13' ? 'K' : props.value}
                 </div>
@@ -352,8 +350,7 @@ function Card (props) {
                     style={{
                         letterSpacing :'-.2rem',
                         position : 'absolute',
-                        marginTop : '5.6vmin',
-                        textAlign : 'center',
+                        marginTop : '4vmin',
                         marginLeft : '-.2vmax'
                     }} >
                     {props.suit}<br/>{props.value === '1' ? 'A' : props.value === '11' ? 'J' : props.value === '12' ? 'Q' : props.value === '13' ? 'K' : props.value}
@@ -361,11 +358,10 @@ function Card (props) {
                 <div 
                     className="cardCenter"
                     style={{
-                        fontSize: '3.4vmax',
+                        fontSize: props.suit != '♣' ? '3.4vmax' : '2.9vmax',
                         position : 'absolute',
                         marginTop : '3.5vmin',
-                        marginLeft : '1vmax',
-                        textAlign : 'center',
+                        marginLeft : '1.1vmax',
                     }}> 
                     {props.suit}
                 </div>

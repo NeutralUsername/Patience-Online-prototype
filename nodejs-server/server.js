@@ -1,8 +1,8 @@
+const server = require ('http').Server(app);
 var express = require ('express'),
     app = express (),
-    port = 3000,
-    controller = require ('./controller');
-const server = require ('http').Server(app);
+    port = 3000;
+server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
 const io = require ('socket.io') (server);
 const { RateLimiterMemory } = require ('rate-limiter-flexible');
 const rateLimiter = new RateLimiterMemory ({
@@ -78,39 +78,35 @@ io.on ('connection', function (socket) {
 });
 
 async function startGame (red, black, options) {
-    
     removePendingRoom (red);
-    removePendingRoom (black);
+    black != 'AI' ? removePendingRoom (black):'';
     updateClientPendingRooms (); 
     for(var i = 0; i< 1; i++) {
         activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
         console.log(game.props.id);
     }
-   
     io.to (red).emit ('startOnlineGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
-    io.to(black).emit ('startOnlineGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)});
+    black != 'AI' ? io.to(black).emit ('startOnlineGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) :'';
 }
 
 function prepareStateForClient (state) {
-    var stacks = JSON.parse(JSON.stringify(state.stacks));
-    for(stack in stacks) {
-        if(stacks[stack].type === 'pile') {
-            if(stacks[stack].cards.length)
-                stacks[stack].cards = [stacks[stack].cards.pop(),stacks[stack].cards.pop()]
-        }
-        for(card of stacks[stack].cards) {
-            if(card.faceup === 0) {
-                delete card.suit;
-                delete card.value;
-            } 
-        }    
-    }
-    state.stacks = stacks;
-    return state
+    var clientState = JSON.parse(JSON.stringify(state));
+    Object.keys(clientState.stacks).map(stack=> {
+        clientState.stacks[stack].cards.map(card => {
+            var carddata = db.cardIdDataPairs.find(x=>x.cardid === card.cardid)
+            delete card.cardid
+            card.color = carddata.color
+            card.suit = carddata.suit
+            card.value = carddata.value
+
+        return {stack}
+        })
+     })
+     console.log(clientState.stacks)
+    return clientState
  }
 
 function removePendingRoom(roomkey)  {
-    if(roomkey != 'AI')
         if (getPendingRoom (roomkey)) {
             pendingOnlineRooms.splice (pendingOnlineRooms.findIndex (e => e.roomkey == roomkey), 1);
             updateClientPendingRooms ();
@@ -141,9 +137,3 @@ function startTurn (game) {
     socket.emit ('UpdateTimerRES', {roomkey : data.roomkey});
     socket.emit ('UpdateTurnColorRES', {roomkey : data.roomkey});
 }
-
-app.route('/ping').get(controller.root);
-server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/testSocketConnection.html');
-});
