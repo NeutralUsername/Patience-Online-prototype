@@ -10,7 +10,7 @@ const rateLimiter = new RateLimiterMemory ({
     duration: .1,
 });
 var db = require('./db.js');
-//db.createDBifNotExists()
+db.createDBifNotExists()
 const pendingOnlineRooms = [];
 const activeGames = [];
 
@@ -89,8 +89,6 @@ async function startGame (red, black, options) {
    
     io.to (red).emit ('startOnlineGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     io.to(black).emit ('startOnlineGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)});
-
-    
 }
 
 function prepareStateForClient (state) {
@@ -111,20 +109,6 @@ function prepareStateForClient (state) {
     return state
  }
 
-function startTurn (game) {
-    if(game.turncolor === 'red')
-        setTimeout(playertimeout, game.redtimer*1000);
-    else 
-        setTimeout(playertimeout, game.blacktimer*1000);
-    function playertimeout () {
-        game.turncolor === 'red' ? "black won" : "red won"
-    }
-    //emit initialstate 
-    socket.emit ('UpdateFieldRES', {roomkey : data.roomkey});
-    socket.emit ('UpdateTimerRES', {roomkey : data.roomkey});
-    socket.emit ('UpdateTurnColorRES', {roomkey : data.roomkey});
-}
-
 function removePendingRoom(roomkey)  {
     if(roomkey != 'AI')
         if (getPendingRoom (roomkey)) {
@@ -144,10 +128,22 @@ function updateClientPendingRooms () {
     io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms});
 }
 
+function startTurn (game) {
+    if(game.turncolor === 'red')
+        setTimeout(playertimeout, game.redtimer*1000);
+    else 
+        setTimeout(playertimeout, game.blacktimer*1000);
+    function playertimeout () {
+        game.turncolor === 'red' ? "black won" : "red won"
+    }
+    //emit initialstate 
+    socket.emit ('UpdateFieldRES', {roomkey : data.roomkey});
+    socket.emit ('UpdateTimerRES', {roomkey : data.roomkey});
+    socket.emit ('UpdateTurnColorRES', {roomkey : data.roomkey});
+}
+
 app.route('/ping').get(controller.root);
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/testSocketConnection.html');
 });
-
-

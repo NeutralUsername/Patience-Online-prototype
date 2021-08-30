@@ -33,7 +33,26 @@ var black = freshDeck ('black');
 
 module.exports = {
 
-  idvaluepairs : {red : red, black : black},
+  createDBifNotExists : async function () {
+    if(await dbExists("gregaire")) 
+      return;
+    else {
+      var createDBcon = mysql.createConnection({
+          host:     "localhost",
+          user:     "gregaire",
+          password: "password",
+      });
+      createDBcon.connect(function(err) {
+          if (err) throw err;
+          createDBcon.query("CREATE DATABASE IF NOT EXISTS gregaire", 
+          function (err, result) {
+              insertTablesAndDataIntoDB() 
+          });
+      }); 
+    }
+  },
+
+  idcarddatapairs : {red : red, black : black},
 
   initGame : async function (red, black, options, started) {
       var sqlstarted = sqlCompatibleDate(started);
@@ -243,3 +262,193 @@ function shuffle (deck) {
   return deck;
 }
 
+function dbExists(name) {
+  return new Promise ((resolve) => {
+    var createDBcon = mysql.createConnection({
+        host:     "localhost",
+        user:     "gregaire",
+        password: "password",
+    });
+    createDBcon.connect(function(err) {
+      if (err) throw err;
+        createDBcon.query("SHOW DATABASES LIKE '"+name+"';", 
+          function (err, result) {
+            resolve( result.length);
+          }
+        );
+    }); 
+  })
+}
+
+function insertTablesAndDataIntoDB() {
+    var dbCon = mysql.createConnection({
+        host:     "localhost",
+        user:     "gregaire",
+        password: "password",
+        database: "gregaire"
+      });
+      dbCon.connect(function(err) {
+        if (err) throw err;
+        dbCon.query("CREATE TABLE IF NOT EXISTS options ("
+          +"id            INT AUTO_INCREMENT PRIMARY KEY, "
+          +"malussize     INT, "
+          +"tableausize   INT, "
+          +"throwonwaste  BOOLEAN, "
+          +"throwonmalus  BOOLEAN, "
+          +"variant       VARCHAR(20), "
+          +"turntime      INT, "
+          +"timeperplayer INT, "
+          +"roomname      VARCHAR(20), "
+          +"roompassword  VARCHAR(20))",
+          function (err, result) {
+            if (err) throw err;
+        });
+          dbCon.query("CREATE TABLE IF NOT EXISTS games ("
+          +"id                   INT AUTO_INCREMENT PRIMARY KEY, "
+          +"optionid             INT, "
+          +"started              DATETIME, "
+          +"redid                VARCHAR(20), "
+          +"blackid              VARCHAR(20), "
+          +"CONSTRAINT `option`  FOREIGN KEY (`optionid`)    REFERENCES `options`(`id`))", 
+          function (err, result) {
+            if (err) throw err;
+        });
+        dbCon.query("CREATE TABLE IF NOT EXISTS cards ("
+        +"id           INT AUTO_INCREMENT PRIMARY KEY, "
+        +"color        VARCHAR(5), "
+        +"suit         VARCHAR(1), "
+        +"value        VARCHAR(2)) ",
+        function (err, result) {
+          if (err) throw err;
+        });
+        dbCon.query("CREATE TABLE IF NOT EXISTS actions ("
+          +"id                   INT AUTO_INCREMENT PRIMARY KEY, "
+          +"gameid               INT, "
+          +"cardid               INT, "
+          +"stack                VARCHAR(20), "
+          +"faceup               BOOLEAN, "
+          +"player               VARCHAR(20), "
+          +"turn                 INT, "
+          +"moved                DATETIME, "
+          +"CONSTRAINT  `card`   FOREIGN KEY (`cardid`)    REFERENCES `cards`(`id`), "
+          +"CONSTRAINT  `game`   FOREIGN KEY (`gameid`)    REFERENCES `games`(`id`)) ",
+          function (err, result) {
+            if (err) throw err;
+        });
+    }); 
+    dbCon.connect(function(err) {
+      if (err) throw err;
+      console.log("Connected!");
+      var sql = "INSERT INTO cards (color, suit, value) VALUES ?";
+      var values = [
+        ['red', '♥', '1'],
+        ['red', '♥', '2'],
+        ['red', '♥', '3'],
+        ['red', '♥', '4'],
+        ['red', '♥', '5'],
+        ['red', '♥', '6'],
+        ['red', '♥', '7'],
+        ['red', '♥', '8'],
+        ['red', '♥', '9'],
+        ['red', '♥', '10'],
+        ['red', '♥', '11'],
+        ['red', '♥', '12'],
+        ['red', '♥', '13'],
+        ['red', '♦', '1'],
+        ['red', '♦', '2'],
+        ['red', '♦', '3'],
+        ['red', '♦', '4'],
+        ['red', '♦', '5'],
+        ['red', '♦', '6'],
+        ['red', '♦', '7'],
+        ['red', '♦', '8'],
+        ['red', '♦', '9'],
+        ['red', '♦', '10'],
+        ['red', '♦', '11'],
+        ['red', '♦', '12'],
+        ['red', '♦', '13'],
+        ['red', '♠', '1'],
+        ['red', '♠', '2'],
+        ['red', '♠', '3'],
+        ['red', '♠', '4'],
+        ['red', '♠', '5'],
+        ['red', '♠', '6'],
+        ['red', '♠', '7'],
+        ['red', '♠', '8'],
+        ['red', '♠', '9'],
+        ['red', '♠', '10'],
+        ['red', '♠', '11'],
+        ['red', '♠', '12'],
+        ['red', '♠', '13'],
+        ['red', '♣', '1'],
+        ['red', '♣', '2'],
+        ['red', '♣', '3'],
+        ['red', '♣', '4'],
+        ['red', '♣', '5'],
+        ['red', '♣', '6'],
+        ['red', '♣', '7'],
+        ['red', '♣', '8'],
+        ['red', '♣', '9'],
+        ['red', '♣', '10'],
+        ['red', '♣', '11'],
+        ['red', '♣', '12'],
+        ['red', '♣', '13'],
+        ['black', '♥', '1'],
+        ['black', '♥', '2'],
+        ['black', '♥', '3'],
+        ['black', '♥', '4'],
+        ['black', '♥', '5'],
+        ['black', '♥', '6'],
+        ['black', '♥', '7'],
+        ['black', '♥', '8'],
+        ['black', '♥', '9'],
+        ['black', '♥', '10'],
+        ['black', '♥', '11'],
+        ['black', '♥', '12'],
+        ['black', '♥', '13'],
+        ['black', '♦', '1'],
+        ['black', '♦', '2'],
+        ['black', '♦', '3'],
+        ['black', '♦', '4'],
+        ['black', '♦', '5'],
+        ['black', '♦', '6'],
+        ['black', '♦', '7'],
+        ['black', '♦', '8'],
+        ['black', '♦', '9'],
+        ['black', '♦', '10'],
+        ['black', '♦', '11'],
+        ['black', '♦', '12'],
+        ['black', '♦', '13'],
+        ['black', '♠', '1'],
+        ['black', '♠', '2'],
+        ['black', '♠', '3'],
+        ['black', '♠', '4'],
+        ['black', '♠', '5'],
+        ['black', '♠', '6'],
+        ['black', '♠', '7'],
+        ['black', '♠', '8'],
+        ['black', '♠', '9'],
+        ['black', '♠', '10'],
+        ['black', '♠', '11'],
+        ['black', '♠', '12'],
+        ['black', '♠', '13'],
+        ['black', '♣', '1'],
+        ['black', '♣', '2'],
+        ['black', '♣', '3'],
+        ['black', '♣', '4'],
+        ['black', '♣', '5'],
+        ['black', '♣', '6'],
+        ['black', '♣', '7'],
+        ['black', '♣', '8'],
+        ['black', '♣', '9'],
+        ['black', '♣', '10'],
+        ['black', '♣', '11'],
+        ['black', '♣', '12'],
+        ['black', '♣', '13'],
+      ];
+      dbCon.query(sql, [values], function (err, result) {
+        if (err) throw err;
+        console.log("Number of records inserted: " + result.affectedRows);
+      });
+    });
+  }
