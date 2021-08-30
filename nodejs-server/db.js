@@ -1,11 +1,18 @@
 var mysql = require ('mysql2');
 
-var dbCon = mysql.createConnection({
-  host:     "localhost",
-  user:     "gregaire",
-  password: "password",
-  database: "gregaire",
-});
+
+var dbCon ;
+
+Promise.resolve(dbExists("gregaire")).then(async data => {
+  if(data)
+  dbCon = mysql.createConnection({
+    host:     "localhost",
+    user:     "gregaire",
+    password: "password",
+    database: "gregaire",
+  });
+  
+})
 
 class Card {
   constructor (color, suit, value, cardid) { 
@@ -46,7 +53,9 @@ module.exports = {
           if (err) throw err;
           createDBcon.query("CREATE DATABASE IF NOT EXISTS gregaire", 
           function (err, result) {
+              console.log("created DB")
               insertTablesAndDataIntoDB() 
+            
           });
       }); 
     }
@@ -287,8 +296,7 @@ function insertTablesAndDataIntoDB() {
         password: "password",
         database: "gregaire"
       });
-      dbCon.connect(function(err) {
-        if (err) throw err;
+
         dbCon.query("CREATE TABLE IF NOT EXISTS options ("
           +"id            INT AUTO_INCREMENT PRIMARY KEY, "
           +"malussize     INT, "
@@ -334,11 +342,9 @@ function insertTablesAndDataIntoDB() {
           +"CONSTRAINT  `game`   FOREIGN KEY (`gameid`)    REFERENCES `games`(`id`)) ",
           function (err, result) {
             if (err) throw err;
+            console.log("Inserted Tables")
         });
-    }); 
-    dbCon.connect(function(err) {
-      if (err) throw err;
-      console.log("Connected!");
+
       var sql = "INSERT INTO cards (color, suit, value) VALUES ?";
       var values = [
         ['red', '♥', '1'],
@@ -449,6 +455,7 @@ function insertTablesAndDataIntoDB() {
       dbCon.query(sql, [values], function (err, result) {
         if (err) throw err;
         console.log("Number of records inserted: " + result.affectedRows);
+        console.log("initialized db")
+        console.log("**Restart Server**")
       });
-    });
   }
