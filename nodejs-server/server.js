@@ -92,17 +92,18 @@ async function startGame (red, black, options) {
 function prepareStateForClient (state) {
     var clientState = JSON.parse(JSON.stringify(state));
     Object.keys(clientState.stacks).map(stack=> {
-        clientState.stacks[stack].cards.map(card => {
+        var stacklength = clientState.stacks[stack].cards.length
+        for(var i = 0; i< stacklength ; i++) {
+            var card = clientState.stacks[stack].cards[i]
             var carddata = db.cardIdDataPairs.find(x=>x.cardid === card.cardid)
             delete card.cardid
             card.color = carddata.color
-            card.suit = carddata.suit
-            card.value = carddata.value
-
-        return {stack}
-        })
+            if(i === (stacklength-1)) {
+                card.suit = carddata.suit
+                card.value = carddata.value
+            }
+        }
      })
-     console.log(clientState.stacks)
     return clientState
  }
 
