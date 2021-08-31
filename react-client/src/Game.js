@@ -62,7 +62,6 @@ export default class Game extends React.Component{
     }
     
     componentDidMount() {
-        this.mounted = true;
         mounted = true;
         this.props.socket.emit('startREQ');
     }
@@ -333,7 +332,7 @@ function Stack (props) {
             }}> 
             {props.stack.map( (card,index) => 
                 <Card 
-                    key = {card.number}
+                    key = {card.color+" "+card.suit+" "+card.value+" "+card.faceup+" "+props.stackname+" "+card.number+" "+props.player+" "+(index === (props.stack.length-1))}
                     card = {card}
                     stack = {props.stackname}
                     playerStack = {props.player}
@@ -376,8 +375,7 @@ function Card (props) {
         props.onClick(props.card, props.stack)
     }
     function cursor () {
-        if( !props.uppermost || props.stack.includes(opponentcolor+"waste") || props.stack.includes(opponentcolor+"malus")||
-                props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn )
+        if( !props.uppermost )
             return "cursor"
         else
             return "grab"
