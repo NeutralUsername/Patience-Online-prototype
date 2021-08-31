@@ -292,7 +292,7 @@ function Stack (props) {
 }
 
 function Card (props) {
-    
+    if(props.card.faceup) {
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "card",
         item : {
@@ -339,6 +339,74 @@ function Card (props) {
                 background : (!props.card.faceup ?  props.card.color==='red' ? 'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-red-sticker-1600042082.903987.png")':'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-blue-sticker-1600041775.9919636.png")' : '') + 'center',
                 backgroundColor : props.card.faceup ? 'white'  : ' ',
                 opacity: isDragging ? 0.3 : 1,
+                color: props.card.suit === '♥' || props.card.suit === '♦'?'red':'black',
+                border: '.15vmax  solid black',            
+            }}
+            className = {'card '+"cards-"+ props.stack+' '+ props.card.color +' '+ (props.card.faceup ? 'faceup' : 'facedown')+ (props.card.faceup ? ' '+props.card.suit : '') +(props.card.faceup ? ' '+ props.card.value : '')} >
+                <div
+                    className="cardCorner"
+                    style={{
+                        letterSpacing :'-.2vmax',
+                        position : 'absolute',
+                        marginTop :'1.5vmin'  ,
+                        marginLeft : '3.1vmax',
+                    }} >
+                    {props.card.suit}<br/>{props.card.value === '1' ? 'A' : props.card.value === '11' ? 'J' : props.card.value === '12' ? 'Q' : props.card.value === '13' ? 'K' : props.card.value}
+                </div>
+                <div
+                    className="cardCorner"
+                    style={{
+                        letterSpacing :'-.2rem',
+                        position : 'absolute',
+                        marginTop : '4vmin',
+                        marginLeft : '-.2vmax'
+                    }} >
+                    {props.suit}<br/>{props.card.value === '1' ? 'A' : props.card.value === '11' ? 'J' : props.card.value === '12' ? 'Q' : props.card.value === '13' ? 'K' : props.card.value}
+                </div>
+                <div 
+                    className="cardCenter"
+                    style={{
+                        fontSize: props.suit != '♣' ? '3.4vmax' : '2.9vmax',
+                        position : 'absolute',
+                        marginTop : '3.5vmin',
+                        marginLeft : '1.1vmax',
+                    }}> 
+                    {props.card.suit}
+                </div>
+        </div>
+    )
+}
+function height () {
+    return 10+"vmin"
+}
+function width () {
+    return 4+"vmax"
+}
+    return (
+        <div 
+            onDragStart ={e=> {
+                if(!props.uppermost || !props.card.faceup)
+                    e.preventDefault()
+            }}
+            style={{
+                fontSize: '1.5vmax',
+                lineHeight :'1.2vmax',
+                position : 'inherit',
+                fontWeight: 'bold',
+                cursor: props.uppermost? 'grab' :'mouse',
+                borderRadius: '.7vmax',
+                padding : '.4vmax',
+                position : props.stack.includes('stock') || props.stack.includes('foundation') || props.stack.includes('waste') ?'absolute':'',
+                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.6vmax':'0' : props.stack.includes('tableau') && ! props.player && ! props.uppermost? '-2.6vmax':'0',
+                marginLeft : props.stack.includes('tableau')  && props.player ? !props.uppermost ? '-2.6vmax' :'0' : '0',
+                
+                height: height(),
+                width: width(),
+
+                zIndex : '1',
+                background : (!props.card.faceup ?  props.card.color==='red' ? 'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-red-sticker-1600042082.903987.png")':'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-blue-sticker-1600041775.9919636.png")' : '') + 'center',
+                backgroundColor : props.card.faceup ? 'white'  : ' ',
+                opacity: 1,
                 color: props.card.suit === '♥' || props.card.suit === '♦'?'red':'black',
                 border: '.15vmax  solid black',            
             }}

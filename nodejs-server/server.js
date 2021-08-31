@@ -71,18 +71,25 @@ io.on ('connection', function (socket) {
     socket.on ('startREQ' , function ( data) {
         
     })
-    
+
     socket.on ('actionREQ' , function ( data) {
+        console.log(data)
         var game = activeGames.find(game => game.props.id === data.gameid)
         var cardid = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value).cardid
-      
+        var stackFrom = game.state.stacks[data.card.stack]
+        
         game.state.stacks[data.to].cards.push({cardid : cardid, faceup : 1 , number : data.card.number})
-        game.state.stacks[data.card.stack].cards.pop()
+
+        stackFrom.cards.pop()
+        if(stackFrom.cards[stackFrom.cards.length-1])
+            if( ! stackFrom.name.includes('pile'))
+                stackFrom.cards[stackFrom.cards.length-1].faceup = 1
 
         io.to(game.red).emit('actionRES',prepareStateForClient(game.state))
         if(game.black != 'AI')
             io.to(game.black).emit('actionRES', prepareStateForClient(game.state))
     }) 
+
     socket.on ('disconnect', function () {
         removePendingRoom (socket.id);
     });
