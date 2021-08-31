@@ -353,8 +353,9 @@ function Card (props) {
                     style={{
                         letterSpacing :'-.2vmax',
                         position : 'absolute',
+                        textAlign : 'center',
                         marginTop :'1.5vmin'  ,
-                        marginLeft : '3.1vmax',
+                        marginLeft : (props.card.value == "1" || props.card.value == "10" || props.card.value == "12" || props.card.value == "13 ")?'3.1vmax' : '3.3vmax'
                     }} >
                     {props.card.suit}<br/>{props.card.value === '1' ? 'A' : props.card.value === '11' ? 'J' : props.card.value === '12' ? 'Q' : props.card.value === '13' ? 'K' : props.card.value}
                 </div>
@@ -363,10 +364,11 @@ function Card (props) {
                     style={{
                         letterSpacing :'-.2rem',
                         position : 'absolute',
+                        textAlign : 'center',
                         marginTop : '4vmin',
-                        marginLeft : '-.2vmax'
+                        marginLeft : (props.card.value == "1" || props.card.value == "10" || props.card.value == "12" || props.card.value == "13 ")?'-.2vmax' : '-.3vmax'
                     }} >
-                    {props.suit}<br/>{props.card.value === '1' ? 'A' : props.card.value === '11' ? 'J' : props.card.value === '12' ? 'Q' : props.card.value === '13' ? 'K' : props.card.value}
+                    {props.card.suit}<br/>{props.card.value === '1' ? 'A' : props.card.value === '11' ? 'J' : props.card.value === '12' ? 'Q' : props.card.value === '13' ? 'K' : props.card.value}
                 </div>
                 <div 
                     className="cardCenter"

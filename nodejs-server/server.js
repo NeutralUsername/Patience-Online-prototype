@@ -73,7 +73,7 @@ io.on ('connection', function (socket) {
     })
 
     socket.on ('actionREQ' , function ( data) {
-        console.log(data)
+        
         var game = activeGames.find(game => game.props.id === data.gameid)
         var cardid = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value).cardid
         var stackFrom = game.state.stacks[data.card.stack]
