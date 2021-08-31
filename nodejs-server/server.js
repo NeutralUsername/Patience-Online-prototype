@@ -73,7 +73,7 @@ io.on ('connection', function (socket) {
     })
 
     socket.on ('actionREQ' , function ( data) {
-        
+
         var game = activeGames.find(game => game.props.id === data.gameid)
         var cardid = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value).cardid
         var stackFrom = game.state.stacks[data.card.stack]
@@ -82,12 +82,14 @@ io.on ('connection', function (socket) {
 
         stackFrom.cards.pop()
         if(stackFrom.cards[stackFrom.cards.length-1])
-            if( ! stackFrom.name.includes('pile'))
+            if( ! stackFrom.name.includes('stock'))
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
 
-        io.to(game.red).emit('actionRES',prepareStateForClient(game.state))
+        var clientState = prepareStateForClient(game.state)
+
+        io.to(game.red).emit('actionRES', [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]])
         if(game.black != 'AI')
-            io.to(game.black).emit('actionRES', prepareStateForClient(game.state))
+            io.to(game.black).emit('actionRES', [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]])
     }) 
 
     socket.on ('disconnect', function () {

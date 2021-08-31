@@ -4,39 +4,66 @@ import ReactDOM from 'react-dom';
 import { useDrag, DndProvider, useDrop  } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
+
+var gameid ="";
+var socket ="";
+var playercolor="";
+var mounted = false;
+var turn ;
+var opponentcolor ;
+
 export default class Game extends React.Component{
     constructor(props) {
         super(props); 
-        this.mounted = false;
-        this.opponent = props.color ==='red'?'black':'red'
-        this.handleDrop = this.handleDrop.bind (this);
-        
+        gameid = this.props.id
+        socket = this.props.socket
+        playercolor = this.props.color 
+        opponentcolor= this.props.color ==='red'?'black':'red'
         this.state = {
-            stacks : props.initialState.stacks,
+            redmalus : props.initialState.stacks.redmalus.cards,
+            redstock : props.initialState.stacks.redstock.cards,
+            redwaste : props.initialState.stacks.redwaste.cards,
+            redtableau0 : props.initialState.stacks.redtableau0.cards,
+            redtableau1 : props.initialState.stacks.redtableau1.cards,
+            redtableau2 : props.initialState.stacks.redtableau2.cards,
+            redtableau3 : props.initialState.stacks.redtableau3.cards,
+            redfoundation0 : props.initialState.stacks.redfoundation0.cards,
+            redfoundation1 : props.initialState.stacks.redfoundation1.cards,
+            redfoundation2 : props.initialState.stacks.redfoundation2.cards,
+            redfoundation3 : props.initialState.stacks.redfoundation3.cards,
+            blackmalus : props.initialState.stacks.blackmalus.cards,
+            blackstock : props.initialState.stacks.blackstock.cards,
+            blackwaste : props.initialState.stacks.blackwaste.cards,
+            blacktableau0 : props.initialState.stacks.blacktableau0.cards,
+            blacktableau1 : props.initialState.stacks.blacktableau1.cards,
+            blacktableau2 : props.initialState.stacks.blacktableau2.cards,
+            blacktableau3 : props.initialState.stacks.blacktableau3.cards,
+            blackfoundation0 : props.initialState.stacks.blackfoundation0.cards,
+            blackfoundation1 : props.initialState.stacks.blackfoundation1.cards,
+            blackfoundation2 : props.initialState.stacks.blackfoundation2.cards,
+            blackfoundation3 : props.initialState.stacks.blackfoundation3.cards,
             playertimer : props.initialState.redtimer,
             opponenttimer : props.initialState.blacktimer,
             turntimer : props.initialState.turntimer,
             turn : props.initialState.turnplayer === props.socket.id ? true : false
         };
-
+        turn = this.state.turn
         this.props.socket.on("actionRES", data => {
-            if (this.mounted) {
-               this.setState(data) 
+            if (mounted) {
+                this.setState({[data[0].name] : data[0].cards})
+                this.setState({[data[1].name] : data[1].cards})
             }
         });
         this.props.socket.on("timerRES", data => {
-            if (this.mounted) {
+            if (mounted) {
                 this.setState (data);
             }
         });
     }
-   
-    handleDrop(card, stack) {
-        this.props.socket.emit('actionREQ', {gameid : this.props.id , card : card, to : stack})
-    }
-
+    
     componentDidMount() {
         this.mounted = true;
+        mounted = true;
         this.props.socket.emit('startREQ');
     }
 
@@ -49,113 +76,135 @@ export default class Game extends React.Component{
                         position: 'fixed',
                     }}>
                     <Stack 
-                        stack = {this.state.stacks[this.props.color+"malus"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[playercolor+"malus"]} 
+                        stackname = {playercolor+"malus"}
+                        stacktype = "sequence"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.props.color+"stock"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[playercolor+"stock"]} 
+                        stackname = {playercolor+"stock"}
+                        stacktype = "pile"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.props.color+"waste"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[playercolor+"waste"]} 
+                        stackname = {playercolor+"waste"}
+                        stacktype = "pile"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.props.color+"tableau0"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[playercolor+"tableau0"]} 
+                        stackname = {playercolor+"tableau0"}
+                        stacktype = "sequence"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.props.color+"foundation0"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[playercolor+"foundation0"]}
+                        stackname = {playercolor+"foundation0"}
+                        stacktype = "pile" 
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.opponent+"tableau0"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[opponentcolor+"tableau0"]} 
+                        stackname = {opponentcolor+"tableau0"}
+                        stacktype = "sequence"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.opponent+"foundation0"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[opponentcolor+"foundation0"]} 
+                        stackname = {opponentcolor+"foundation0"}
+                        stacktype = "pile"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.props.color+"tableau1"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[playercolor+"tableau1"]} 
+                        stackname = {playercolor+"tableau1"}
+                        stacktype = "sequence"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.props.color+"foundation1"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[playercolor+"foundation1"]} 
+                        stackname = {playercolor+"foundation1"}
+                        stacktype = "pile"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.opponent+"tableau1"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[opponentcolor+"tableau1"]} 
+                        stackname = {opponentcolor+"tableau1"}
+                        stacktype = "sequence"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.opponent+"foundation1"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[opponentcolor+"foundation1"]} 
+                        stackname = {opponentcolor+"foundation1"}
+                        stacktype = "pile"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.props.color+"tableau2"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[playercolor+"tableau2"]} 
+                        stackname = {playercolor+"tableau2"}
+                        stacktype = "sequence"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.props.color+"foundation2"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[playercolor+"foundation2"]} 
+                        stackname = {playercolor+"foundation2"}
+                        stacktype = "pile"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.opponent+"tableau2"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[opponentcolor+"tableau2"]} 
+                        stackname = {opponentcolor+"tableau2"}
+                        stacktype = "sequence"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.opponent+"foundation2"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[opponentcolor+"foundation2"]} 
+                        stackname = {opponentcolor+"foundation2"}
+                        stacktype = "pile"
                         player = {false}
                     ></Stack>
                      <Stack 
-                        stack = {this.state.stacks[this.props.color+"tableau3"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[playercolor+"tableau3"]} 
+                        stackname = {playercolor+"tableau3"}
+                        stacktype = "sequence"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.props.color+"foundation3"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[playercolor+"foundation3"]} 
+                        stackname = {playercolor+"foundation3"}
+                        stacktype = "pile"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.opponent+"tableau3"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[opponentcolor+"tableau3"]} 
+                        stackname = {opponentcolor+"tableau3"}
+                        stacktype = "sequence"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.opponent+"foundation3"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[opponentcolor+"foundation3"]} 
+                        stackname = {opponentcolor+"foundation3"}
+                        stacktype = "pile"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.opponent+"waste"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[opponentcolor+"waste"]} 
+                        stackname = {opponentcolor+"waste"}
+                        stacktype = "pile"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.opponent+"stock"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[opponentcolor+"stock"]} 
+                        stackname = {opponentcolor+"stock"}
+                        stacktype = "pile"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state.stacks[this.opponent+"malus"]} 
-                        onDrop = {this.handleDrop}
+                        stack = {this.state[opponentcolor+"malus"]} 
+                        stackname = {opponentcolor+"malus"}
+                        stacktype = "sequence"
                         player = {false}
                     ></Stack>
                 </div>
@@ -164,98 +213,102 @@ export default class Game extends React.Component{
     }
 } 
 
-
 function Stack (props) {
     const [{ hover }, drop] = useDrop(() => ({
         accept: "card",
         drop: monitor => {
-            props.onDrop(monitor, props.stack.name);
+            handleDrop(monitor, props.stackname);
         },
       //  hover: monitor => {
       //      console.log(monitor)
       // },
     }))
- 
+    
+    function handleDrop(card, stack) {
+       
+        socket.emit('actionREQ', {gameid : gameid , card : card, to : stack})
+    }
+    
     function topValues (){
         if(!props.player) {
-            if(props.stack.name.includes('malus'))
+            if(props.stackname.includes('malus'))
                 return '0vmin'
-            if(props.stack.name.includes('stock'))
+            if(props.stackname.includes('stock'))
                 return '0vmin'
-            if(props.stack.name.includes('waste'))
+            if(props.stackname.includes('waste'))
                 return '0vmin'
         }
         if(props.player) {
-            if(props.stack.name.includes('malus'))
+            if(props.stackname.includes('malus'))
                 return '82vmin'
-            if(props.stack.name.includes('stock'))
+            if(props.stackname.includes('stock'))
                 return '82vmin'
-            if(props.stack.name.includes('waste'))
+            if(props.stackname.includes('waste'))
                 return '82vmin'
         }
-        if(props.stack.name.includes('tableau0') || props.stack.name.includes('foundation0'))
+        if(props.stackname.includes('tableau0') || props.stackname.includes('foundation0'))
             return '17vmin'
-        if(props.stack.name.includes('tableau1')|| props.stack.name.includes('foundation1'))
+        if(props.stackname.includes('tableau1')|| props.stackname.includes('foundation1'))
             return '33vmin'
-        if(props.stack.name.includes('tableau2')|| props.stack.name.includes('foundation2'))
+        if(props.stackname.includes('tableau2')|| props.stackname.includes('foundation2'))
             return '49vmin'
-        if(props.stack.name.includes('tableau3')|| props.stack.name.includes('foundation3'))
+        if(props.stackname.includes('tableau3')|| props.stackname.includes('foundation3'))
             return '65vmin'
     }
     function leftValue() {
-        if(props.stack.name.includes('stock'))
+        if(props.stackname.includes('stock'))
             return '20.5vmax'
-        if(props.stack.name.includes('malus'))
+        if(props.stackname.includes('malus'))
             return '34.5vmax'
-        if(props.stack.name.includes('waste'))
+        if(props.stackname.includes('waste'))
             return '12.5vmax'   
         if(!props.player) {
-            if(props.stack.name.includes('tableau0'))
+            if(props.stackname.includes('tableau0'))
                 return '59.5vmax'
-            if(props.stack.name.includes('tableau1'))
+            if(props.stackname.includes('tableau1'))
                 return '59.5vmax'
-            if(props.stack.name.includes('tableau2'))
+            if(props.stackname.includes('tableau2'))
                 return '59.5vmax'
-            if(props.stack.name.includes('tableau3'))
+            if(props.stackname.includes('tableau3'))
                 return '59.5vmax'
         }
         if(!props.player) {
-            if(props.stack.name.includes('foundation0'))
+            if(props.stackname.includes('foundation0'))
                 return '41vmax'
-            if(props.stack.name.includes('foundation1'))
+            if(props.stackname.includes('foundation1'))
                 return '41vmax'
-            if(props.stack.name.includes('foundation2'))
+            if(props.stackname.includes('foundation2'))
                 return '41vmax'
-            if(props.stack.name.includes('foundation3'))
+            if(props.stackname.includes('foundation3'))
                 return '41vmax'
         }
         if(props.player) {
-            if(props.stack.name.includes('foundation0'))
+            if(props.stackname.includes('foundation0'))
                 return '51.5vmax'
-            if(props.stack.name.includes('foundation1'))
+            if(props.stackname.includes('foundation1'))
                 return '51.5vmax'
-            if(props.stack.name.includes('foundation2'))
+            if(props.stackname.includes('foundation2'))
                 return '51.5vmax'
-            if(props.stack.name.includes('foundation3'))
+            if(props.stackname.includes('foundation3'))
                 return '51.5vmax'
         }
     }
     function rightValue () {
         if(props.player) {
-            if(props.stack.name.includes('tableau0'))
+            if(props.stackname.includes('tableau0'))
                 return '-39.5vmax'
-            if(props.stack.name.includes('tableau1'))
+            if(props.stackname.includes('tableau1'))
                 return '-39.5vmax'
-            if(props.stack.name.includes('tableau2'))
+            if(props.stackname.includes('tableau2'))
                 return '-39.5vmax'
-            if(props.stack.name.includes('tableau3'))
+            if(props.stackname.includes('tableau3'))
                 return '-39.5vmax'
         }
     }
     return (
         <ul 
             ref={drop}
-            className ={props.stack.type+" "+props.stack.name}  
+            className ={props.stacktype+" "+props.stackname}  
             style = {{
                 border: '.01vmax  solid Silver',
                 backgroundColor: '#EEEEEE',
@@ -266,7 +319,7 @@ function Stack (props) {
                 display: 'flex',
                 alignItems :'center',
 
-                flexDirection: props.player && props.stack.name.includes("tableau") ? 'row-reverse' : '',
+                flexDirection: props.player && props.stackname.includes("tableau") ? 'row-reverse' : '',
                 
                 overflow:'hidden',
               
@@ -275,16 +328,17 @@ function Stack (props) {
                 paddingTop : '.01vmin',
                 paddingBottom : '.01vmin',
 
-                width : 2.6 + (props.stack.type != 'pile' ? (props.stack.cards.length>0?(props.stack.cards.length*2.5) : 2.5) : 2.5 )+'vmax' ,
+                width : 2.6 + (props.stacktype != 'pile' ? (props.stack.length>0?(props.stack.length*2.5) : 2.5) : 2.5 )+'vmax' ,
                 height : '14vmin',
             }}> 
-            {props.stack.cards.map( (card,index) => 
+            {props.stack.map( (card,index) => 
                 <Card 
                     key = {card.number}
                     card = {card}
-                    stack = {props.stack.name}
-                    player = {props.player}
-                    uppermost = {index === (props.stack.cards.length-1)}
+                    stack = {props.stackname}
+                    playerStack = {props.player}
+                    uppermost = {index === (props.stack.length-1)}
+                    onClick = {props.onDrop}
                 ></Card>
             )}
         </ul>
@@ -318,24 +372,37 @@ function Card (props) {
     function width () {
         return 4+"vmax"
     }
+    function handleClick() {
+        props.onClick(props.card, props.stack)
+    }
+    function cursor () {
+        if( !props.uppermost || props.stack.includes(opponentcolor+"waste") || props.stack.includes(opponentcolor+"malus")||
+                props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn )
+            return "cursor"
+        else
+            return "grab"
+    }
+
     return (
         <div 
             onDragStart ={e=> {
-                if(!props.uppermost || !props.card.faceup)
+                if(!props.uppermost  || props.stack.includes(opponentcolor+"waste") || props.stack.includes(opponentcolor+"malus")||
+                props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn  )
                     e.preventDefault()
             }}
             ref={props.card.faceup? dragRef : React.createRef()} 
+            onClick = {e=> props.stack.includes('stock') ? handleClick(): ''}
             style={{
                 fontSize: '1.5vmax',
                 lineHeight :'1.2vmax',
                 position : 'inherit',
                 fontWeight: 'bold',
-                cursor: props.uppermost? 'grab' :'mouse',
+                cursor: cursor ()  ,
                 borderRadius: '.7vmax',
                 padding : '.4vmax',
                 position : props.stack.includes('stock') || props.stack.includes('foundation') || props.stack.includes('waste') ?'absolute':'',
-                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.6vmax':'0' : props.stack.includes('tableau') && ! props.player && ! props.uppermost? '-2.6vmax':'0',
-                marginLeft : props.stack.includes('tableau')  && props.player ? !props.uppermost ? '-2.6vmax' :'0' : '0',
+                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.6vmax':'0' : props.stack.includes('tableau') && ! props.playerStack && ! props.uppermost? '-2.6vmax':'0',
+                marginLeft : props.stack.includes('tableau')  && props.playerStack ? !props.uppermost ? '-2.6vmax' :'0' : '0',
                 
                 height: height(),
                 width: width(),
@@ -375,6 +442,7 @@ function Card (props) {
                     style={{
                         fontSize: props.suit != '♣' ? '3.4vmax' : '2.9vmax',
                         position : 'absolute',
+                        textAlign : 'center',
                         marginTop : '3.5vmin',
                         marginLeft : '1.1vmax',
                     }}> 
