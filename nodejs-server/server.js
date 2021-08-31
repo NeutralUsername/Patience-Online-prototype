@@ -71,11 +71,12 @@ io.on ('connection', function (socket) {
     socket.on ('startREQ' , function ( data) {
         
     })
+    
     socket.on ('actionREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
-        var cardid = db.cardIdDataPairs.find(card=> card.color === data.card.data.color && card.suit === data.card.data.suit && card.value === data.card.data.value).cardid
+        var cardid = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value).cardid
       
-        game.state.stacks[data.to].cards.push({cardid : cardid, faceup : 1 , number : data.card.data.number})
+        game.state.stacks[data.to].cards.push({cardid : cardid, faceup : 1 , number : data.card.number})
         game.state.stacks[data.card.stack].cards.pop()
 
         io.to(game.red).emit('actionRES',prepareStateForClient(game.state))
@@ -96,14 +97,14 @@ async function startGame (red, black, options) {
         console.log(game.props.id);
     }
     io.to (red).emit ('startOnlineGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
-    black != 'AI' ? io.to(black).emit ('startOnlineGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) :'';
-
+    if(black != 'AI')
+        io.to(black).emit ('startOnlineGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
 }
 
 function prepareStateForClient (state) {
     var clientState = JSON.parse(JSON.stringify(state));
     Object.keys( clientState.stacks).map(stack=> {
-        if( clientState.stacks[stack].cards.length> 0) {
+        if( clientState.stacks[stack].cards.length> 0) 
             for(card of  clientState.stacks[stack].cards) {
                 var carddata = db.cardIdDataPairs.find(x=>x.cardid === card.cardid)
                 delete card.cardid
@@ -113,12 +114,9 @@ function prepareStateForClient (state) {
                     card.value = carddata.value
                 }
             }
-        
-        }
      })
     return clientState
  }
-
 
 function removePendingRoom(roomkey)  {
         if (getPendingRoom (roomkey)) {
@@ -146,7 +144,6 @@ function startTurn (game) {
     function playertimeout () {
         game.turncolor === 'red' ? "black won" : "red won"
     }
-    //emit initialstate 
     socket.emit ('UpdateFieldRES', {roomkey : data.roomkey});
     socket.emit ('UpdateTimerRES', {roomkey : data.roomkey});
     socket.emit ('UpdateTurnColorRES', {roomkey : data.roomkey});

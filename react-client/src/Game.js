@@ -21,27 +21,18 @@ export default class Game extends React.Component{
 
         this.props.socket.on("actionRES", data => {
             if (this.mounted) {
-
-                
-               this.setState(data)
-               
+               this.setState(data) 
             }
         });
         this.props.socket.on("timerRES", data => {
             if (this.mounted) {
                 this.setState (data);
-               
             }
         });
-
     }
    
     handleDrop(card, stack) {
-    
-      // this.props.socket.emit('actionREQ', {gameid : this.props.id,  card : result.card,  to : result.toStack});
-
         this.props.socket.emit('actionREQ', {gameid : this.props.id , card : card, to : stack})
-
     }
 
     componentDidMount() {
@@ -304,7 +295,14 @@ function Card (props) {
     
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "card",
-        item : {data : props.card, stack : props.stack} ,
+        item : {
+            color : props.card.color, 
+            faceup : props.card.faceup, 
+            number : props.card.number, 
+            suit : props.card.suit, 
+            value : props.card.value, 
+            stack : props.stack
+        } ,
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         })
