@@ -16,19 +16,37 @@ export default class Game extends React.Component{
             playertimer : props.initialState.redtimer,
             opponenttimer : props.initialState.blacktimer,
             turntimer : props.initialState.turntimer,
-            turncolor : props.initialState.turncolor,
+            turn : props.initialState.turnplayer === props.socket.id ? true : false
         };
 
-        this.props.socket.on("UpdateGameState", data => {
+        this.props.socket.on("actionRES", data => {
             if (this.mounted) {
-                this.setState (data);
-                console.log(data);
+
+                
+               this.setState(data)
+               
             }
         });
+        this.props.socket.on("timerRES", data => {
+            if (this.mounted) {
+                this.setState (data);
+               
+            }
+        });
+
     }
    
-    handleDrop(result) {
-       console.log(result)
+    handleDrop(card, stack) {
+    
+      // this.props.socket.emit('actionREQ', {gameid : this.props.id,  card : result.card,  to : result.toStack});
+
+        this.props.socket.emit('actionREQ', {gameid : this.props.id , card : card, to : stack})
+
+    }
+
+    componentDidMount() {
+        this.mounted = true;
+        this.props.socket.emit('startREQ');
     }
 
     render(){
@@ -160,17 +178,13 @@ function Stack (props) {
     const [{ hover }, drop] = useDrop(() => ({
         accept: "card",
         drop: monitor => {
-            handleDrop(monitor, {stack : props.stack.name});
+            props.onDrop(monitor, props.stack.name);
         },
-        hover: monitor => {
-            console.log(monitor)
-        },
+      //  hover: monitor => {
+      //      console.log(monitor)
+      // },
     }))
  
-    function handleDrop(card, toStack) {
-          props.onDrop({card,toStack});
-    }
-
     function topValues (){
         if(!props.player) {
             if(props.stack.name.includes('malus'))
@@ -275,11 +289,8 @@ function Stack (props) {
             }}> 
             {props.stack.cards.map( (card,index) => 
                 <Card 
-                    faceup = {card.faceup}
-                    color = {card.color} 
-                    suit = {card.suit} 
-                    value = {card.value}
-
+                    key = {card.number}
+                    card = {card}
                     stack = {props.stack.name}
                     player = {props.player}
                     uppermost = {index === (props.stack.cards.length-1)}
@@ -290,10 +301,10 @@ function Stack (props) {
 }
 
 function Card (props) {
-
+    
     const [{ isDragging }, drag] = useDrag(() => ({
         type: "card",
-        item : {color : props.color, suit : props.suit, value : props.value, stack : props.stack} ,
+        item : {data : props.card, stack : props.stack} ,
         collect: (monitor) => ({
             isDragging: !!monitor.isDragging(),
         })
@@ -307,7 +318,7 @@ function Card (props) {
     return (
         <div 
             onDragStart ={e=> {
-                if(!props.uppermost)
+                if(!props.uppermost || !props.card.faceup)
                     e.preventDefault()
             }}
             ref={drag} 
@@ -327,14 +338,13 @@ function Card (props) {
                 width: width(),
 
                 zIndex : '1',
-                background : props.faceup?'white':props.color==='red'?'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-red-sticker-1600042082.903987.png")':'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-blue-sticker-1600041775.9919636.png")',
-                backgroundSize : '10vmax',
-                backgroundPosition :'center',
+                background : (!props.card.faceup ?  props.card.color==='red' ? 'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-red-sticker-1600042082.903987.png")':'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-blue-sticker-1600041775.9919636.png")' : '') + 'center',
+                backgroundColor : props.card.faceup ? 'white'  : ' ',
                 opacity: isDragging ? 0.3 : 1,
-                color: props.suit === '♥' || props.suit === '♦'?'red':'black',
+                color: props.card.suit === '♥' || props.card.suit === '♦'?'red':'black',
                 border: '.15vmax  solid black',            
             }}
-            className = {'card '+"cards-"+ props.stack+' '+ props.color +' '+ (props.faceup ? 'faceup' : 'facedown')+ (props.faceup ? ' '+props.suit : '') +(props.faceup ? ' '+ props.value : '')} >
+            className = {'card '+"cards-"+ props.stack+' '+ props.card.color +' '+ (props.card.faceup ? 'faceup' : 'facedown')+ (props.card.faceup ? ' '+props.card.suit : '') +(props.card.faceup ? ' '+ props.card.value : '')} >
                 <div
                     className="cardCorner"
                     style={{
@@ -343,7 +353,7 @@ function Card (props) {
                         marginTop :'1.5vmin'  ,
                         marginLeft : '3.1vmax',
                     }} >
-                    {props.suit}<br/>{props.value === '1' ? 'A' : props.value === '11' ? 'J' : props.value === '12' ? 'Q' : props.value === '13' ? 'K' : props.value}
+                    {props.card.suit}<br/>{props.card.value === '1' ? 'A' : props.card.value === '11' ? 'J' : props.card.value === '12' ? 'Q' : props.card.value === '13' ? 'K' : props.card.value}
                 </div>
                 <div
                     className="cardCorner"
@@ -353,7 +363,7 @@ function Card (props) {
                         marginTop : '4vmin',
                         marginLeft : '-.2vmax'
                     }} >
-                    {props.suit}<br/>{props.value === '1' ? 'A' : props.value === '11' ? 'J' : props.value === '12' ? 'Q' : props.value === '13' ? 'K' : props.value}
+                    {props.suit}<br/>{props.card.value === '1' ? 'A' : props.card.value === '11' ? 'J' : props.card.value === '12' ? 'Q' : props.card.value === '13' ? 'K' : props.card.value}
                 </div>
                 <div 
                     className="cardCenter"
@@ -363,7 +373,7 @@ function Card (props) {
                         marginTop : '3.5vmin',
                         marginLeft : '1.1vmax',
                     }}> 
-                    {props.suit}
+                    {props.card.suit}
                 </div>
         </div>
     )

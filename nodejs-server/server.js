@@ -68,10 +68,20 @@ io.on ('connection', function (socket) {
                 startGame (data.roomkey, socket.id, getPendingRoom (data.roomkey).options );
     })
 
-    socket.on ('GameMounted' , function ( data) {
+    socket.on ('startREQ' , function ( data) {
         
     })
+    socket.on ('actionREQ' , function ( data) {
+        var game = activeGames.find(game => game.props.id === data.gameid)
+        var cardid = db.cardIdDataPairs.find(card=> card.color === data.card.data.color && card.suit === data.card.data.suit && card.value === data.card.data.value).cardid
+      
+        game.state.stacks[data.to].cards.push({cardid : cardid, faceup : 1 , number : data.card.data.number})
+        game.state.stacks[data.card.stack].cards.pop()
 
+        io.to(game.red).emit('actionRES',prepareStateForClient(game.state))
+        if(game.black != 'AI')
+            io.to(game.black).emit('actionRES', prepareStateForClient(game.state))
+    }) 
     socket.on ('disconnect', function () {
         removePendingRoom (socket.id);
     });
@@ -87,23 +97,14 @@ async function startGame (red, black, options) {
     }
     io.to (red).emit ('startOnlineGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     black != 'AI' ? io.to(black).emit ('startOnlineGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) :'';
+
 }
 
 function prepareStateForClient (state) {
     var clientState = JSON.parse(JSON.stringify(state));
-    mapDataToStacks(clientState.stacks)
-    return clientState
- }
-
- async function mapDataToStacks(stacks) {
-    Object.keys(stacks).map(stack=> {
-        if(stacks[stack].cards.length> 0) {
-            if(stacks[stack].type === 'pile') {
-                stacks[stack].cards = [stacks[stack].cards.pop(), stacks[stack].cards.pop()]
-            }
-            var stacklength = stacks[stack].cards.length
-            for(var i = 0; i< stacklength ; i++) {
-                var card = stacks[stack].cards[i]
+    Object.keys( clientState.stacks).map(stack=> {
+        if( clientState.stacks[stack].cards.length> 0) {
+            for(card of  clientState.stacks[stack].cards) {
                 var carddata = db.cardIdDataPairs.find(x=>x.cardid === card.cardid)
                 delete card.cardid
                 card.color = carddata.color
@@ -112,13 +113,12 @@ function prepareStateForClient (state) {
                     card.value = carddata.value
                 }
             }
+        
         }
      })
+    return clientState
  }
 
- function mapIdsToStacks(stacks) {
-
- }
 
 function removePendingRoom(roomkey)  {
         if (getPendingRoom (roomkey)) {

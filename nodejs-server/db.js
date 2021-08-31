@@ -77,7 +77,7 @@ module.exports = {
                 + "'"+ black + "'"  + ");", 
 
                 async function (err, game) { if (err) throw err;
-                  resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerPlayer, options.timePerTurn, await startcolor() ))   
+                  resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerPlayer, options.timePerTurn, await startcolor() ==='red' ? red: black)) 
                 }
               )
             }
@@ -101,7 +101,7 @@ module.exports = {
                     + "'"+ red+"'"         + ", "
                     + "'"+ black+"'"       + ");", 
                     async function (err, game) { if (err) throw err;
-                      resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerPlayer, options.timePerTurn, await startcolor() ))   
+                      resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerPlayer, options.timePerTurn, await startcolor() ==='red' ? red: black))   
                     }
                   )
                 } 
@@ -169,11 +169,13 @@ async function stacks( gameid, options, created) {
             blackfoundation1 : {cards : [], type : 'pile', name : 'blackfoundation1'},
             blackfoundation2 : {cards : [], type : 'pile', name : 'blackfoundation2'},
             blackfoundation3 : {cards : [], type : 'pile', name : 'blackfoundation3'},
-          };         
+          };     
+          var counter = 0;    
           for (action of actions) {
+            
             if(actions.filter(x=> x[3] === action[3]).length) {
               stacks[action[3]].cards =  actions.filter(x=> x[3] === action[3]).map(x=> {
-                return {faceup : x[4], cardid : x[2]}
+                return {faceup : x[4], cardid : x[2], number : counter++}
               })
               actions = actions.filter(x=> x[3] != action[3]);
             }
@@ -186,9 +188,9 @@ async function stacks( gameid, options, created) {
 }
 async function startcolor() {
 
-  return shuffle([0,1])[0] === 0 ? 'red' : 'black'
+  return 'red' //shuffle([0,1])[0] ? 'red' : 'black'
 }
-function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, redtimer, blacktimer, turntimer, turncolor) {
+function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, redtimer, blacktimer, turntimer, turnPlayer) {
   return {
     red : red,
     black : black,
@@ -204,7 +206,7 @@ function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, re
       blacktimer : blacktimer,
       turn :  0,
       turntimer : turntimer,
-      turncolor : turncolor
+      turnplayer : turnPlayer
     }
   }
 }
