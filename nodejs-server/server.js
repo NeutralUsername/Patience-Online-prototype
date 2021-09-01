@@ -75,22 +75,81 @@ io.on ('connection', function (socket) {
     socket.on ('actionMoveREQ' , function ( data) {
 
         var game = activeGames.find(game => game.props.id === data.gameid)
-        var cardid = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value).cardid
+        var actorcolor = socket.id ===game.red ? "red" : socket.id ===game.black ? 'black': ''
+        var opponentcolor = socket.id === game.red ? "black" : socket.id ===game.black ? 'red': ''
+        var turncolor = game.state.turnplayer === game.red ? 'red' : 'black'
+        if(actorcolor != turncolor)
+            return
+        var movingCard = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value)
         var stackFrom = game.state.stacks[data.card.stack]
-        var turn = game.state.turnplayer;
- 
-        if((stackFrom.name === 'redstock' && data.to === 'redwaste') ||( stackFrom.name === 'blackstock'&& data.to === 'blackwaste')) {
-            turn = game.red === game.state.turnplayer ? game.state.turnplayer = game.black : game.state.turnplayer = game.red
+        var stackTo =  game.state.stacks[data.to]
+       
+        
+        if(data.to === actorcolor + 'waste' ){
+            return 
         }
-        game.state.stacks[data.to].cards.push({cardid : cardid, faceup : 1 , number : data.card.number})
+        if(data.to === actorcolor + 'stock' ){
+            return 
+        }
+        if(data.to === actorcolor + 'malus' ){
+            return 
+        }  
+
+        if(stackTo.cards.length){
+            var stackUppermostCard =  db.cardIdDataPairs.find(card=> card.cardid === stackTo.cards[stackTo.cards.length-1].cardid)
+     
+            if(data.to === opponentcolor + 'malus' ){
+                if ( stackUppermostCard.suit != movingCard.suit )
+                    return 
+            }
+            if(data.to === opponentcolor + 'waste' ){
+                if ( stackUppermostCard.suit != movingCard.suit )
+                    return 
+            }
+            if(data.to === opponentcolor + 'stock' ){
+                if ( stackUppermostCard.suit != movingCard.suit )
+                    return 
+            }
+            if(data.to.includes('foundation') ) {
+                if ( stackUppermostCard.suit != movingCard.suit )
+                    if(stackUppermostCard.value != movingCard.value)
+                        return 
+            }
+            if(data.to.includes('tableau')) {
+                if(  (stackUppermostCard.value -1 ) != movingCard.value )
+                    return
+                if(movingCard.suit === '♥' || movingCard.suit === '♦') {
+                    if(stackUppermostCard.suit  === '♥' )
+                        return
+                    if(stackUppermostCard.suit  === '♦' )
+                        return
+                }
+                if(movingCard.suit === '♠' || movingCard.suit === '♣'){
+                    if(stackUppermostCard.suit  === '♠' )
+                        return
+                    if(stackUppermostCard.suit  === '♣' )
+                        return
+                }
+            }
+        }
+      
+        if(stackFrom.name === actorcolor+'stock' && stackTo.name === actorcolor+'waste') {
+            game.state.turnplayer = game[opponentcolor];
+        }
+
         stackFrom.cards.pop()
-        if(stackFrom.cards[stackFrom.cards.length-1])
+
+        if(stackFrom.cards.length) {
             if( ! stackFrom.name.includes('stock'))
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
+        }
+       
+        stackTo.cards.push({cardid : movingCard.cardid, faceup : 1 , number : data.card.number})
+
         var clientState = prepareStateForClient(game.state)
-        io.to(game.red).emit('actionMoveRES', {stacks : [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]], turn : turn})
+        io.to(game.red).emit('actionMoveRES', {stacks : [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]], turn : game.state.turnplayer})
         if(game.black != 'AI')
-            io.to(game.black).emit('actionMoveRES', {stacks : [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]], turn : turn})
+            io.to(game.black).emit('actionMoveRES', {stacks : [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]], turn : game.state.turnplayer})
     }) 
 
     socket.on ('actionFlipREQ' , function ( data) {

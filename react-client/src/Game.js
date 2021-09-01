@@ -13,7 +13,7 @@ var turn ;
 var opponentcolor ;
 var lastmovefrom;
 var lastmoveto;
-var stockflipped;
+var stockflipped = false;
 export default class Game extends React.Component{
     constructor(props) {
         super(props); 
@@ -52,9 +52,9 @@ export default class Game extends React.Component{
         turn = this.state.turn
         this.props.socket.on("actionMoveRES", data => {
             if (mounted) {
-                console.log(data.turn)
                 stockflipped = false;
                 turn = data.turn === socket.id ? true : false
+                this.setState({turn : turn});
                 
                 lastmovefrom = data.stacks[0].name;
                 lastmoveto = data.stacks[1].name
@@ -300,13 +300,13 @@ function Stack (props) {
         }
         if(props.player) {
             if(props.stackname.includes('foundation0'))
-                return '51.5vmax'
+                return '51.7vmax'
             if(props.stackname.includes('foundation1'))
-                return '51.5vmax'
+                return '51.7vmax'
             if(props.stackname.includes('foundation2'))
-                return '51.5vmax'
+                return '51.7vmax'
             if(props.stackname.includes('foundation3'))
-                return '51.5vmax'
+                return '51.7vmax'
         }
     }
     function rightValue () {
@@ -413,8 +413,8 @@ function Card (props) {
         return 4+"vmax"
     }
     function cursor () {
-        if( (stockflipped && ! props.stack.includes('stock') ) || !props.uppermost || props.stack.includes('foundation')  || props.stack.includes(opponentcolor+"waste") || props.stack.includes(opponentcolor+"malus")||
-                props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn )
+        if( (stockflipped && ! props.stack.includes('stock') ) || !props.uppermost || props.stack.includes('foundation')  || props.stack.includes(opponentcolor+"waste") 
+                || props.stack.includes(opponentcolor+"malus")|| props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn )
             return "cursor"
         else if(props.stack.includes(playercolor+"stock") && !props.card.faceup)
             return "grabbing"
@@ -430,7 +430,7 @@ function Card (props) {
                     e.preventDefault()
             }}
             ref = { dragRef } 
-            onClick = {e=> props.stack.includes('stock') && !props.card.faceup && turn ? handleClick(): ''}
+            onClick = {()=> props.stack.includes('stock') && !props.card.faceup && turn ? handleClick(): ''}
             style={{
                 fontSize: '1.5vmax',
                 lineHeight :'1.2vmax',
