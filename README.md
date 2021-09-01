@@ -13,7 +13,7 @@ only one card can be moved at once.
 
 - on the foundation cards are stacked from ace to king with all cards being the same suit (heart 1, heart 2, heart 3,...)
 - on the tableau cards are stacked from highest to lowest value with repeating colors (black Q, red J, black 10, red 9,...)
-- cards can also be stacked on the opponents malus and waste with the same suit and colors and the value being 1 higher or lower (red 8, black 7, red 8, black 9, red 10 ,...)
+- cards can also be stacked on the opponents malus and waste with the same suit and colors and the value being 1 higher or lower (spades 3, spades 2, spades 3, spades 4,....)
 
 
 
