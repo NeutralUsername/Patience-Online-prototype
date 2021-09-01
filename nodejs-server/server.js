@@ -84,7 +84,7 @@ io.on ('connection', function (socket) {
         var stackFrom = game.state.stacks[data.card.stack]
         var stackTo =  game.state.stacks[data.to]
        
-        
+
         if(data.to === actorcolor + 'waste' ){
             return 
         }
@@ -132,6 +132,11 @@ io.on ('connection', function (socket) {
                 }
             }
         }
+        else
+            if(data.to.includes('foundation') ) {
+                if(movingCard.value != 1)
+                    return
+            }
       
         if(stackFrom.name === actorcolor+'stock' && stackTo.name === actorcolor+'waste') {
             game.state.turnplayer = game[opponentcolor];
