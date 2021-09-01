@@ -77,15 +77,20 @@ io.on ('connection', function (socket) {
         var game = activeGames.find(game => game.props.id === data.gameid)
         var cardid = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value).cardid
         var stackFrom = game.state.stacks[data.card.stack]
+        var turn = game.state.turnplayer;
+ 
+        if((stackFrom.name === 'redstock' && data.to === 'redwaste') ||( stackFrom.name === 'blackstock'&& data.to === 'blackwaste')) {
+            turn = game.red === game.state.turnplayer ? game.state.turnplayer = game.black : game.state.turnplayer = game.red
+        }
         game.state.stacks[data.to].cards.push({cardid : cardid, faceup : 1 , number : data.card.number})
         stackFrom.cards.pop()
         if(stackFrom.cards[stackFrom.cards.length-1])
             if( ! stackFrom.name.includes('stock'))
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
         var clientState = prepareStateForClient(game.state)
-        io.to(game.red).emit('actionMoveRES', [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]])
+        io.to(game.red).emit('actionMoveRES', {stacks : [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]], turn : turn})
         if(game.black != 'AI')
-            io.to(game.black).emit('actionMoveRES', [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]])
+            io.to(game.black).emit('actionMoveRES', {stacks : [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]], turn : turn})
     }) 
 
     socket.on ('actionFlipREQ' , function ( data) {

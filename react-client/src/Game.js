@@ -52,11 +52,14 @@ export default class Game extends React.Component{
         turn = this.state.turn
         this.props.socket.on("actionMoveRES", data => {
             if (mounted) {
+                console.log(data.turn)
                 stockflipped = false;
-                lastmovefrom = data[0].name;
-                lastmoveto = data[1].name
-                this.setState({[data[0].name] : data[0].cards})
-                this.setState({[data[1].name] : data[1].cards})
+                turn = data.turn === socket.id ? true : false
+                
+                lastmovefrom = data.stacks[0].name;
+                lastmoveto = data.stacks[1].name
+                this.setState({[data.stacks[0].name] : data.stacks[0].cards})
+                this.setState({[data.stacks[1].name] : data.stacks[1].cards})
             }
         });
         this.props.socket.on("actionFlipRES", data => {
@@ -238,7 +241,8 @@ function Stack (props) {
     }))
     
     function handleDrop(card, stack) {
-        socket.emit('actionMoveREQ', {gameid : gameid , card : card, to : stack})
+        if(card.stack != stack)
+            socket.emit('actionMoveREQ', {gameid : gameid , card : card, to : stack})
     }
     
     function topValues (){
@@ -409,7 +413,7 @@ function Card (props) {
         return 4+"vmax"
     }
     function cursor () {
-        if( (stockflipped && ! props.stack.includes('stock') ) || !props.uppermost || props.stack.includes(opponentcolor+"waste") || props.stack.includes(opponentcolor+"malus")||
+        if( (stockflipped && ! props.stack.includes('stock') ) || !props.uppermost || props.stack.includes('foundation')  || props.stack.includes(opponentcolor+"waste") || props.stack.includes(opponentcolor+"malus")||
                 props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn )
             return "cursor"
         else if(props.stack.includes(playercolor+"stock") && !props.card.faceup)
@@ -420,7 +424,7 @@ function Card (props) {
     return (
         <div 
             onDragStart ={e=> {
-                if( stockflipped && ! props.stack.includes('stock') || !props.uppermost  || props.stack.includes(opponentcolor+"waste") || props.stack.includes(opponentcolor+"malus")||
+                if( stockflipped && ! props.stack.includes('stock') || !props.uppermost  || props.stack.includes(opponentcolor+"waste") || props.stack.includes('foundation')  || props.stack.includes(opponentcolor+"malus")||
                         props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn  ||
                         (props.stack.includes(playercolor+"stock") && !props.card.faceup))
                     e.preventDefault()
