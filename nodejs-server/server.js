@@ -100,20 +100,14 @@ io.on ('connection', function (socket) {
         if(stackTo.cards.length){
             var stackUppermostCard =  db.cardIdDataPairs.find(card=> card.cardid === stackTo.cards[stackTo.cards.length-1].cardid)
 
-            if(data.to === opponentcolor + 'malus' ) 
-                if ( stackUppermostCard.suit != movingCard.suit )
-                    return 
-                else 
-                    if(stackUppermostCard.value != movingCard.value+1)
-                        if(stackUppermostCard.value != movingCard.value-1)
-                            return    
-            if(data.to === opponentcolor + 'waste' ) 
-                if ( stackUppermostCard.suit != movingCard.suit )
-                    return 
-                 else 
-                    if(stackUppermostCard.value != movingCard.value+1)
-                        if(stackUppermostCard.value != movingCard.value-1)
-                            return     
+            if(data.to === opponentcolor + 'malus' || data.to === opponentcolor + 'waste' ) 
+                if (  stackUppermostCard.suit === movingCard.suit ){
+                    if ( parseInt(stackUppermostCard.value) != parseInt(movingCard.value)+1 )
+                        if ( parseInt(stackUppermostCard.value) != parseInt(movingCard.value)-1 )
+                            return
+                }
+                else
+                    return
             if(data.to.includes('foundation') ) 
                 if ( stackUppermostCard.suit != movingCard.suit )
                     return

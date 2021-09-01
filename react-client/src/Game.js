@@ -43,11 +43,12 @@ export default class Game extends React.Component{
         };
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {
-                (console.log("test"))
                 this.setState({stockflipped : false})
                 this.setState({isturn : data.turn === this.props.socket.id ? true : false});
-                this.setState({lastmovefrom : data.stacks[0].name})
-                this.setState({lastmoveto : data.stacks[1].name})
+                if( !data.stacks[0].name.includes('stock') && ! data.stacks[1].name.includes('waste'))  {
+                    this.setState({lastmovefrom : data.stacks[0].name})
+                    this.setState({lastmoveto : data.stacks[1].name})
+                }
                 this.setState({[data.stacks[0].name] : data.stacks[0].cards})
                 this.setState({[data.stacks[1].name] : data.stacks[1].cards})
             }
@@ -496,11 +497,10 @@ function Stack (props) {
                     if(props.stackname ===props.lastmoveto)
                         return  '#00ffef'
             }
-            else if(props.stackname ===props.lastmovefrom)
-                if(props.opponentcolor ==='red')
+            else if(props.stackname === props.lastmovefrom)
+                if(props.stockflipped)
                     return '#ff6770 '
-                else
-                    return '#ff6770 '
+                
         if(((props.stackname === props.playercolor+"stock" ||props.stackname === props.playercolor+"waste"||props.stackname === props.playercolor+"malus") && props.isturn )) 
             return '#c0ffb4 '
         else if ((props.stackname === props.opponentcolor+"stock" ||props.stackname ===  props.opponentcolor+"waste"||props.stackname ===  props.opponentcolor+"malus"  )&& !props.isturn ) 
@@ -535,7 +535,7 @@ function Stack (props) {
             }}> 
             {props.stack.map( (card,index) => 
                 <Card 
-                    key = {card.color+" "+card.suit+" "+card.value+" "+card.faceup+" "+props.stackname+" "+card.number+" "+props.player+" "+(index === (props.stack.length-1))+" "+props.stockflipped}
+                    key = {card.color+" "+card.suit+" "+card.value+" "+card.faceup+" "+props.stackname+" "+card.number+" "+props.player+" "+(index === (props.stack.length-1))+" "+props.stockflipped+" "+props.isturn}
                     card = {card}
                     stack = {props.stackname}
                     playerStack = {props.player}
@@ -543,8 +543,6 @@ function Stack (props) {
                     onClick = {props.onDrop}
                     playercolor = {props.playercolor}
                     opponentcolor = {props.opponentcolor}
-                    lastmovefrom = {props.lastmovefrom}
-                    lastmoveto = {props.lastmoveto}
                     stockflipped = {props.stockflipped}
                     isturn = {props.isturn}
                     gameid = {props.gameid}
@@ -558,7 +556,7 @@ function Stack (props) {
 function Card (props) {
     var dragRef ;
     var isdragging;
-    if(props.card.faceup){
+    if(props.card.faceup && props.uppermost){
         const [{ isDragging }, drag] = useDrag(() => ({
             type: "card",
             item : {
@@ -586,27 +584,54 @@ function Card (props) {
         return 4+"vmax"
     }
     function cursor () {
-        if( (props.stockflipped && ! props.stack.includes('stock') ) || !props.uppermost || props.stack.includes('foundation')  || props.stack.includes(props.opponentcolor+"waste") 
-                || props.stack.includes(props.opponentcolor+"malus")|| props.stack.includes(props.opponentcolor+"stock") ||  props.stack.includes(props.playercolor+"waste")  || ! props.isturn )
+        if( (props.stockflipped && ! props.stack.includes('stock') ) || !props.uppermost || props.stack.includes('foundation')  || props.stack.includes(props.opponentcolor+"waste") || props.stack.includes(props.opponentcolor+"malus")|| props.stack.includes(props.opponentcolor+"stock") ||  props.stack.includes(props.playercolor+"waste")  || ! props.isturn )
             return "cursor"
         else if(props.stack.includes(props.playercolor+"stock") && !props.card.faceup)
             return "grabbing"
         else
             return "grab"
     }
+    function marginleft() {
+        if(props.card.value === 1)
+            "3.1 vmax"
+        if(props.card.value === 2)
+            "3.1 vmax"
+        if(props.card.value === 3)
+            "3.1 vmax"
+        if(props.card.value === 4)
+            "3.1 vmax"
+        if(props.card.value === 5)
+            "3.1 vmax"
+        if(props.card.value === 6)
+            "3.1 vmax"
+        if(props.card.value === 7)
+            "3.1 vmax"
+        if(props.card.value === 8)
+            "3.1 vmax"
+        if(props.card.value === 9)
+            "3.1 vmax"
+        if(props.card.value === 10)
+            "3.1 vmax"
+        if(props.card.value === 11)
+            "3.1 vmax"
+        if(props.card.value === 12)
+            "3.1 vmax"
+        if(props.card.value === 13)
+            "3.1 vmax"
+    }
     return (
         <div 
             onDragStart ={e=> {
                 if( props.stockflipped && ! props.stack.includes('stock') || !props.uppermost  || props.stack.includes(props.opponentcolor+"waste") || props.stack.includes('foundation')  || props.stack.includes(props.opponentcolor+"malus")||
                         props.stack.includes(props.opponentcolor+"stock") ||  props.stack.includes(props.playercolor+"waste")  || ! props.isturn  ||
-                        (props.stack.includes(props.playercolor+"stock") && !props.card.faceup))
+                        (props.stack === props.playercolor+"stock" && !props.card.faceup))
                     e.preventDefault()
             }}
             ref = { dragRef } 
             onClick = {()=> props.stack === props.playercolor+'stock' && !props.card.faceup && props.isturn ? handleClick(): ''}
             style={{
                 fontSize: '1.5vmax',
-                lineHeight :'1.2vmax',
+                lineHeight :'1.5vmax',
                 position : 'inherit',
                 fontWeight: 'bold',
                 cursor: cursor ()  ,
@@ -630,11 +655,11 @@ function Card (props) {
                 <div
                     className="cardCorner"
                     style={{
-                        letterSpacing :'-.2vmax',
+                        letterSpacing :'-.1vmax',
                         position : 'absolute',
                         textAlign : 'center',
                         marginTop :'1.5vmin'  ,
-                        marginLeft : (props.card.value == "1" || props.card.value == "10" || props.card.value == "12" || props.card.value == "13 ")?'3.1vmax' : '3.3vmax'
+                        marginLeft : (props.card.value == "1" || props.card.value == "10" || props.card.value == "12" || props.card.value == "13 ")?'3vmax' : '3.3vmax'
                     }} >
                     {props.card.suit}<br/>{props.card.value === '1' ? 'A' : props.card.value === '11' ? 'J' : props.card.value === '12' ? 'Q' : props.card.value === '13' ? 'K' : props.card.value}
                 </div>
