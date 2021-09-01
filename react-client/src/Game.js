@@ -5,24 +5,19 @@ import { useDrag, DndProvider, useDrop  } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
 
-var gameid ="";
-var socket ="";
-var playercolor="";
-var mounted = false;
-var turn ;
-var opponentcolor ;
-var lastmovefrom;
-var lastmoveto;
-var stockflipped ;
 export default class Game extends React.Component{
     constructor(props) {
         super(props); 
-        stockflipped = false;
-        gameid = this.props.id
-        socket = this.props.socket
-        playercolor = this.props.color 
-        opponentcolor= this.props.color ==='red'?'black':'red'
+
         this.state = {
+            playertimer : props.initialState.redtimer,
+            opponenttimer : props.initialState.blacktimer,
+            turntimer : props.initialState.turntimer,
+            isturn : props.initialState.turnplayer === props.socket.id ? true : false,
+            mounted : false,
+            lastmovefrom : {},
+            lastmoveto : {},
+            stockflipped : false,
             redmalus : props.initialState.stacks.redmalus.cards,
             redstock : props.initialState.stacks.redstock.cards,
             redwaste : props.initialState.stacks.redwaste.cards,
@@ -45,41 +40,35 @@ export default class Game extends React.Component{
             blackfoundation1 : props.initialState.stacks.blackfoundation1.cards,
             blackfoundation2 : props.initialState.stacks.blackfoundation2.cards,
             blackfoundation3 : props.initialState.stacks.blackfoundation3.cards,
-            playertimer : props.initialState.redtimer,
-            opponenttimer : props.initialState.blacktimer,
-            turntimer : props.initialState.turntimer,
-            turn : props.initialState.turnplayer === props.socket.id ? true : false
         };
-        turn = this.state.turn
         this.props.socket.on("actionMoveRES", data => {
-            if (mounted) {
-                stockflipped = false;
-                turn = data.turn === socket.id ? true : false
-                this.setState({turn : turn});
-                
-                lastmovefrom = data.stacks[0].name;
-                lastmoveto = data.stacks[1].name
+            if (this.state.mounted) {
+                (console.log("test"))
+                this.setState({stockflipped : false})
+                this.setState({isturn : data.turn === this.props.socket.id ? true : false});
+                this.setState({lastmovefrom : data.stacks[0].name})
+                this.setState({lastmoveto : data.stacks[1].name})
                 this.setState({[data.stacks[0].name] : data.stacks[0].cards})
                 this.setState({[data.stacks[1].name] : data.stacks[1].cards})
             }
         });
         this.props.socket.on("actionFlipRES", data => {
-            if (mounted) {
-                lastmovefrom = data.name
-                lastmoveto = lastmovefrom
-                stockflipped = true;
+            if (this.state.mounted) {
+                this.setState({lastmovefrom : data.name})
+                this.setState({lastmoveto : data.name})
+                this.setState({stockflipped : true})
                 this.setState({[data.name] : data.cards})
             }
         });
         this.props.socket.on("timerRES", data => {
-            if (mounted) {
+            if (this.state.mounted) {
                 this.setState (data);
             }
         });
     }
     
     componentDidMount() {
-        mounted = true;
+        this.setState({mounted : true})
         this.props.socket.emit('startREQ');
     }
 
@@ -91,138 +80,313 @@ export default class Game extends React.Component{
                     style = {{
                         position: 'fixed',
                     }}>
-                  
                     <Stack 
-                        stack = {this.state[playercolor+"malus"]} 
-                        stackname = {playercolor+"malus"}
+                        stack = {this.state[this.props.playercolor+"malus"]} 
+                        stackname = {this.props.playercolor+"malus"}
                         stacktype = "sequence"
                         player = {true}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[playercolor+"stock"]} 
-                        stackname = {playercolor+"stock"}
+                        stack = {this.state[this.props.playercolor+"stock"]} 
+                        stackname = {this.props.playercolor+"stock"}
                         stacktype = "pile"
                         player = {true}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[playercolor+"waste"]} 
-                        stackname = {playercolor+"waste"}
+                        stack = {this.state[this.props.playercolor+"waste"]} 
+                        stackname = {this.props.playercolor+"waste"}
                         stacktype = "pile"
                         player = {true}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[playercolor+"tableau0"]} 
-                        stackname = {playercolor+"tableau0"}
+                        stack = {this.state[this.props.playercolor+"tableau0"]} 
+                        stackname = {this.props.playercolor+"tableau0"}
                         stacktype = "sequence"
                         player = {true}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[playercolor+"foundation0"]}
-                        stackname = {playercolor+"foundation0"}
+                        stack = {this.state[this.props.playercolor+"foundation0"]}
+                        stackname = {this.props.playercolor+"foundation0"}
                         stacktype = "pile" 
                         player = {true}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[opponentcolor+"tableau0"]} 
-                        stackname = {opponentcolor+"tableau0"}
+                        stack = {this.state[this.props.opponentcolor+"tableau0"]} 
+                        stackname = {this.props.opponentcolor+"tableau0"}
                         stacktype = "sequence"
                         player = {false}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[opponentcolor+"foundation0"]} 
-                        stackname = {opponentcolor+"foundation0"}
+                        stack = {this.state[this.props.opponentcolor+"foundation0"]} 
+                        stackname = {this.props.opponentcolor+"foundation0"}
                         stacktype = "pile"
                         player = {false}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[playercolor+"tableau1"]} 
-                        stackname = {playercolor+"tableau1"}
+                        stack = {this.state[this.props.playercolor+"tableau1"]} 
+                        stackname = {this.props.playercolor+"tableau1"}
                         stacktype = "sequence"
                         player = {true}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[playercolor+"foundation1"]} 
-                        stackname = {playercolor+"foundation1"}
+                        stack = {this.state[this.props.playercolor+"foundation1"]} 
+                        stackname = {this.props.playercolor+"foundation1"}
                         stacktype = "pile"
                         player = {true}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[opponentcolor+"tableau1"]} 
-                        stackname = {opponentcolor+"tableau1"}
+                        stack = {this.state[this.props.opponentcolor+"tableau1"]} 
+                        stackname = {this.props.opponentcolor+"tableau1"}
                         stacktype = "sequence"
                         player = {false}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[opponentcolor+"foundation1"]} 
-                        stackname = {opponentcolor+"foundation1"}
+                        stack = {this.state[this.props.opponentcolor+"foundation1"]} 
+                        stackname = {this.props.opponentcolor+"foundation1"}
                         stacktype = "pile"
                         player = {false}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[playercolor+"tableau2"]} 
-                        stackname = {playercolor+"tableau2"}
+                        stack = {this.state[this.props.playercolor+"tableau2"]} 
+                        stackname = {this.props.playercolor+"tableau2"}
                         stacktype = "sequence"
                         player = {true}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[playercolor+"foundation2"]} 
-                        stackname = {playercolor+"foundation2"}
+                        stack = {this.state[this.props.playercolor+"foundation2"]} 
+                        stackname = {this.props.playercolor+"foundation2"}
                         stacktype = "pile"
                         player = {true}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[opponentcolor+"tableau2"]} 
-                        stackname = {opponentcolor+"tableau2"}
+                        stack = {this.state[this.props.opponentcolor+"tableau2"]} 
+                        stackname = {this.props.opponentcolor+"tableau2"}
                         stacktype = "sequence"
                         player = {false}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[opponentcolor+"foundation2"]} 
-                        stackname = {opponentcolor+"foundation2"}
+                        stack = {this.state[this.props.opponentcolor+"foundation2"]} 
+                        stackname = {this.props.opponentcolor+"foundation2"}
                         stacktype = "pile"
                         player = {false}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                      <Stack 
-                        stack = {this.state[playercolor+"tableau3"]} 
-                        stackname = {playercolor+"tableau3"}
+                        stack = {this.state[this.props.playercolor+"tableau3"]} 
+                        stackname = {this.props.playercolor+"tableau3"}
                         stacktype = "sequence"
                         player = {true}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[playercolor+"foundation3"]} 
-                        stackname = {playercolor+"foundation3"}
+                        stack = {this.state[this.props.playercolor+"foundation3"]} 
+                        stackname = {this.props.playercolor+"foundation3"}
                         stacktype = "pile"
                         player = {true}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[opponentcolor+"tableau3"]} 
-                        stackname = {opponentcolor+"tableau3"}
+                        stack = {this.state[this.props.opponentcolor+"tableau3"]} 
+                        stackname = {this.props.opponentcolor+"tableau3"}
                         stacktype = "sequence"
                         player = {false}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[opponentcolor+"foundation3"]} 
-                        stackname = {opponentcolor+"foundation3"}
+                        stack = {this.state[this.props.opponentcolor+"foundation3"]} 
+                        stackname = {this.props.opponentcolor+"foundation3"}
                         stacktype = "pile"
                         player = {false}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[opponentcolor+"waste"]} 
-                        stackname = {opponentcolor+"waste"}
+                        stack = {this.state[this.props.opponentcolor+"waste"]} 
+                        stackname = {this.props.opponentcolor+"waste"}
                         stacktype = "pile"
                         player = {false}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[opponentcolor+"stock"]} 
-                        stackname = {opponentcolor+"stock"}
+                        stack = {this.state[this.props.opponentcolor+"stock"]} 
+                        stackname = {this.props.opponentcolor+"stock"}
                         stacktype = "pile"
                         player = {false}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[opponentcolor+"malus"]} 
-                        stackname = {opponentcolor+"malus"}
+                        stack = {this.state[this.props.opponentcolor+"malus"]} 
+                        stackname = {this.props.opponentcolor+"malus"}
                         stacktype = "sequence"
                         player = {false}
+                        playercolor = {this.props.playercolor}
+                        opponentcolor = {this.props.opponentcolor}
+                        lastmovefrom = {this.state.lastmovefrom}
+                        lastmoveto = {this.state.lastmoveto}
+                        stockflipped = {this.state.stockflipped}
+                        isturn = {this.state.isturn}
+                        gameid = {this.props.id}
+                        socket = {this.props.socket}
                     ></Stack>
                 </div>
             </DndProvider>
@@ -243,7 +407,7 @@ function Stack (props) {
     
     function handleDrop(card, stack) {
         if(card.stack != stack)
-            socket.emit('actionMoveREQ', {gameid : gameid , card : card, to : stack})
+        props.socket.emit('actionMoveREQ', {gameid : props.gameid , card : card, to : stack})
     }
     
     function topValues (){
@@ -323,23 +487,23 @@ function Stack (props) {
         }
     }
     function backgroundcolor() {
-        if ( lastmovefrom)  
-            if(lastmovefrom != lastmoveto) {
-                if(!turn)
-                    if(props.stackname === lastmovefrom)
+        if ( props.lastmovefrom)  
+            if(props.lastmovefrom != props.lastmoveto) {
+                if(!props.isturn)
+                    if(props.stackname === props.lastmovefrom)
                         return '#e7fffe' 
-                if(!turn)
-                    if(props.stackname ===lastmoveto)
+                if(!props.isturn)
+                    if(props.stackname ===props.lastmoveto)
                         return  '#00ffef'
             }
-            else if(props.stackname ===lastmovefrom)
-                if(opponentcolor ==='red')
+            else if(props.stackname ===props.lastmovefrom)
+                if(props.opponentcolor ==='red')
                     return '#ff6770 '
                 else
                     return '#ff6770 '
-        if(((props.stackname === playercolor+"stock" ||props.stackname === playercolor+"waste"||props.stackname === playercolor+"malus") && turn )) 
+        if(((props.stackname === props.playercolor+"stock" ||props.stackname === props.playercolor+"waste"||props.stackname === props.playercolor+"malus") && props.isturn )) 
             return '#c0ffb4 '
-        else if ((props.stackname === opponentcolor+"stock" ||props.stackname === opponentcolor+"waste"||props.stackname === opponentcolor+"malus"  )&& !turn ) 
+        else if ((props.stackname === props.opponentcolor+"stock" ||props.stackname ===  props.opponentcolor+"waste"||props.stackname ===  props.opponentcolor+"malus"  )&& !props.isturn ) 
             return '#fdffb4'
         return '#EEEEEE'
     }
@@ -371,12 +535,20 @@ function Stack (props) {
             }}> 
             {props.stack.map( (card,index) => 
                 <Card 
-                    key = {card.color+" "+card.suit+" "+card.value+" "+card.faceup+" "+props.stackname+" "+card.number+" "+props.player+" "+(index === (props.stack.length-1))+" "+stockflipped}
+                    key = {card.color+" "+card.suit+" "+card.value+" "+card.faceup+" "+props.stackname+" "+card.number+" "+props.player+" "+(index === (props.stack.length-1))+" "+props.stockflipped}
                     card = {card}
                     stack = {props.stackname}
                     playerStack = {props.player}
                     uppermost = {index === (props.stack.length-1)}
                     onClick = {props.onDrop}
+                    playercolor = {props.playercolor}
+                    opponentcolor = {props.opponentcolor}
+                    lastmovefrom = {props.lastmovefrom}
+                    lastmoveto = {props.lastmoveto}
+                    stockflipped = {props.stockflipped}
+                    isturn = {props.isturn}
+                    gameid = {props.gameid}
+                    socket = {props.socket}
                 ></Card>
             )}
         </ul>
@@ -405,7 +577,7 @@ function Card (props) {
         isdragging = isDragging
     }
     function handleClick() {
-        socket.emit('actionFlipREQ', {gameid : gameid , stack: props.stack})
+        props.socket.emit('actionFlipREQ', {gameid : props.gameid , stack: props.stack})
     }
     function height () {
         return 10+"vmin"
@@ -414,10 +586,10 @@ function Card (props) {
         return 4+"vmax"
     }
     function cursor () {
-        if( (stockflipped && ! props.stack.includes('stock') ) || !props.uppermost || props.stack.includes('foundation')  || props.stack.includes(opponentcolor+"waste") 
-                || props.stack.includes(opponentcolor+"malus")|| props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn )
+        if( (props.stockflipped && ! props.stack.includes('stock') ) || !props.uppermost || props.stack.includes('foundation')  || props.stack.includes(props.opponentcolor+"waste") 
+                || props.stack.includes(props.opponentcolor+"malus")|| props.stack.includes(props.opponentcolor+"stock") ||  props.stack.includes(props.playercolor+"waste")  || ! props.isturn )
             return "cursor"
-        else if(props.stack.includes(playercolor+"stock") && !props.card.faceup)
+        else if(props.stack.includes(props.playercolor+"stock") && !props.card.faceup)
             return "grabbing"
         else
             return "grab"
@@ -425,13 +597,13 @@ function Card (props) {
     return (
         <div 
             onDragStart ={e=> {
-                if( stockflipped && ! props.stack.includes('stock') || !props.uppermost  || props.stack.includes(opponentcolor+"waste") || props.stack.includes('foundation')  || props.stack.includes(opponentcolor+"malus")||
-                        props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn  ||
-                        (props.stack.includes(playercolor+"stock") && !props.card.faceup))
+                if( props.stockflipped && ! props.stack.includes('stock') || !props.uppermost  || props.stack.includes(props.opponentcolor+"waste") || props.stack.includes('foundation')  || props.stack.includes(props.opponentcolor+"malus")||
+                        props.stack.includes(props.opponentcolor+"stock") ||  props.stack.includes(props.playercolor+"waste")  || ! props.isturn  ||
+                        (props.stack.includes(props.playercolor+"stock") && !props.card.faceup))
                     e.preventDefault()
             }}
             ref = { dragRef } 
-            onClick = {()=> props.stack === playercolor+'stock' && !props.card.faceup && turn ? handleClick(): ''}
+            onClick = {()=> props.stack === props.playercolor+'stock' && !props.card.faceup && props.isturn ? handleClick(): ''}
             style={{
                 fontSize: '1.5vmax',
                 lineHeight :'1.2vmax',
