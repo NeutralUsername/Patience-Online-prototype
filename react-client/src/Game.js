@@ -13,6 +13,7 @@ var turn ;
 var opponentcolor ;
 var lastmovefrom;
 var lastmoveto;
+var stockflipped;
 export default class Game extends React.Component{
     constructor(props) {
         super(props); 
@@ -51,6 +52,7 @@ export default class Game extends React.Component{
         turn = this.state.turn
         this.props.socket.on("actionMoveRES", data => {
             if (mounted) {
+                stockflipped = false;
                 lastmovefrom = data[0].name;
                 lastmoveto = data[1].name
                 this.setState({[data[0].name] : data[0].cards})
@@ -61,6 +63,7 @@ export default class Game extends React.Component{
             if (mounted) {
                 lastmovefrom = data.name
                 lastmoveto = lastmovefrom
+                stockflipped = true;
                 this.setState({[data.name] : data.cards})
             }
         });
@@ -84,6 +87,7 @@ export default class Game extends React.Component{
                     style = {{
                         position: 'fixed',
                     }}>
+                  
                     <Stack 
                         stack = {this.state[playercolor+"malus"]} 
                         stackname = {playercolor+"malus"}
@@ -314,24 +318,24 @@ function Stack (props) {
         }
     }
     function backgroundcolor() {
-      
         if ( lastmovefrom)  
-            if(!turn)
-                if(lastmovefrom != lastmoveto) {
+            if(lastmovefrom != lastmoveto) {
+                if(!turn)
                     if(props.stackname === lastmovefrom)
-                        return '#cefffd' 
+                        return '#e7fffe' 
+                if(!turn)
                     if(props.stackname ===lastmoveto)
                         return  '#00ffef'
-                }
-                else if(props.stackname ===lastmovefrom)
-                    if(opponentcolor ==='red')
-                        return '#FF0000'
-                    else
-                        return '#FF0000'
-        if(((props.stackname === playercolor+"stock" ||props.stackname === playercolor+"waste") && turn )) 
-            return '#bcf5cb'
-        else if ((props.stackname === opponentcolor+"stock" ||props.stackname === opponentcolor+"waste" )&& !turn ) 
-            return '#FFFFCC'
+            }
+            else if(props.stackname ===lastmovefrom)
+                if(opponentcolor ==='red')
+                    return '#ff6770 '
+                else
+                    return '#ff6770 '
+        if(((props.stackname === playercolor+"stock" ||props.stackname === playercolor+"waste"||props.stackname === playercolor+"malus") && turn )) 
+            return '#c0ffb4 '
+        else if ((props.stackname === opponentcolor+"stock" ||props.stackname === opponentcolor+"waste"||props.stackname === opponentcolor+"malus"  )&& !turn ) 
+            return '#fdffb4'
         return '#EEEEEE'
     }
     return (
@@ -362,7 +366,7 @@ function Stack (props) {
             }}> 
             {props.stack.map( (card,index) => 
                 <Card 
-                    key = {card.color+" "+card.suit+" "+card.value+" "+card.faceup+" "+props.stackname+" "+card.number+" "+props.player+" "+(index === (props.stack.length-1))}
+                    key = {card.color+" "+card.suit+" "+card.value+" "+card.faceup+" "+props.stackname+" "+card.number+" "+props.player+" "+(index === (props.stack.length-1))+" "+stockflipped}
                     card = {card}
                     stack = {props.stackname}
                     playerStack = {props.player}
@@ -405,7 +409,7 @@ function Card (props) {
         return 4+"vmax"
     }
     function cursor () {
-        if( !props.uppermost || props.stack.includes(opponentcolor+"waste") || props.stack.includes(opponentcolor+"malus")||
+        if( (stockflipped && ! props.stack.includes('stock') ) || !props.uppermost || props.stack.includes(opponentcolor+"waste") || props.stack.includes(opponentcolor+"malus")||
                 props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn )
             return "cursor"
         else if(props.stack.includes(playercolor+"stock") && !props.card.faceup)
@@ -416,9 +420,9 @@ function Card (props) {
     return (
         <div 
             onDragStart ={e=> {
-                if(!props.uppermost  || props.stack.includes(opponentcolor+"waste") || props.stack.includes(opponentcolor+"malus")||
-                props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn  ||
-                (props.stack.includes(playercolor+"stock") && !props.card.faceup))
+                if( stockflipped && ! props.stack.includes('stock') || !props.uppermost  || props.stack.includes(opponentcolor+"waste") || props.stack.includes(opponentcolor+"malus")||
+                        props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn  ||
+                        (props.stack.includes(playercolor+"stock") && !props.card.faceup))
                     e.preventDefault()
             }}
             ref = { dragRef } 
