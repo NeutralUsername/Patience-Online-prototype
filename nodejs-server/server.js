@@ -72,25 +72,32 @@ io.on ('connection', function (socket) {
         
     })
 
-    socket.on ('actionREQ' , function ( data) {
+    socket.on ('actionMoveREQ' , function ( data) {
 
         var game = activeGames.find(game => game.props.id === data.gameid)
         var cardid = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value).cardid
         var stackFrom = game.state.stacks[data.card.stack]
-        
         game.state.stacks[data.to].cards.push({cardid : cardid, faceup : 1 , number : data.card.number})
-
         stackFrom.cards.pop()
         if(stackFrom.cards[stackFrom.cards.length-1])
             if( ! stackFrom.name.includes('stock'))
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
-
         var clientState = prepareStateForClient(game.state)
-
-        io.to(game.red).emit('actionRES', [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]])
+        io.to(game.red).emit('actionMoveRES', [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]])
         if(game.black != 'AI')
-            io.to(game.black).emit('actionRES', [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]])
+            io.to(game.black).emit('actionMoveRES', [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]])
     }) 
+
+    socket.on ('actionFlipREQ' , function ( data) {
+        var game = activeGames.find(game => game.props.id === data.gameid)
+        var stack = game.state.stacks[data.stack]
+        stack.cards[stack.cards.length-1].faceup = 1;
+        var clientState = prepareStateForClient(game.state)
+        io.to(game.red).emit('actionFlipRES', clientState.stacks[data.stack])
+        if(game.black != 'AI')
+            io.to(game.black).emit('actionFlipRES', clientState.stacks[data.stack])
+    })
+
 
     socket.on ('disconnect', function () {
         removePendingRoom (socket.id);

@@ -11,7 +11,8 @@ var playercolor="";
 var mounted = false;
 var turn ;
 var opponentcolor ;
-
+var lastmovefrom;
+var lastmoveto;
 export default class Game extends React.Component{
     constructor(props) {
         super(props); 
@@ -48,10 +49,19 @@ export default class Game extends React.Component{
             turn : props.initialState.turnplayer === props.socket.id ? true : false
         };
         turn = this.state.turn
-        this.props.socket.on("actionRES", data => {
+        this.props.socket.on("actionMoveRES", data => {
             if (mounted) {
+                lastmovefrom = data[0].name;
+                lastmoveto = data[1].name
                 this.setState({[data[0].name] : data[0].cards})
                 this.setState({[data[1].name] : data[1].cards})
+            }
+        });
+        this.props.socket.on("actionFlipRES", data => {
+            if (mounted) {
+                lastmovefrom = data.name
+                lastmoveto = lastmovefrom
+                this.setState({[data.name] : data.cards})
             }
         });
         this.props.socket.on("timerRES", data => {
@@ -224,8 +234,7 @@ function Stack (props) {
     }))
     
     function handleDrop(card, stack) {
-       
-        socket.emit('actionREQ', {gameid : gameid , card : card, to : stack})
+        socket.emit('actionMoveREQ', {gameid : gameid , card : card, to : stack})
     }
     
     function topValues (){
@@ -304,13 +313,34 @@ function Stack (props) {
                 return '-39.5vmax'
         }
     }
+    function backgroundcolor() {
+      
+        if ( lastmovefrom)  
+            if(!turn)
+                if(lastmovefrom != lastmoveto) {
+                    if(props.stackname === lastmovefrom)
+                        return '#cefffd' 
+                    if(props.stackname ===lastmoveto)
+                        return  '#00ffef'
+                }
+                else if(props.stackname ===lastmovefrom)
+                    if(opponentcolor ==='red')
+                        return '#FF0000'
+                    else
+                        return '#FF0000'
+        if(((props.stackname === playercolor+"stock" ||props.stackname === playercolor+"waste") && turn )) 
+            return '#bcf5cb'
+        else if ((props.stackname === opponentcolor+"stock" ||props.stackname === opponentcolor+"waste" )&& !turn ) 
+            return '#FFFFCC'
+        return '#EEEEEE'
+    }
     return (
         <ul 
             ref={drop}
             className ={props.stacktype+" "+props.stackname}  
             style = {{
                 border: '.01vmax  solid Silver',
-                backgroundColor: '#EEEEEE',
+                backgroundColor: backgroundcolor(),
                 position : 'absolute',
                 left : leftValue(),
                 right : rightValue(),
@@ -347,7 +377,7 @@ function Stack (props) {
 function Card (props) {
     var dragRef ;
     var isdragging;
-    if(props.card.faceup) {
+    if(props.card.faceup){
         const [{ isDragging }, drag] = useDrag(() => ({
             type: "card",
             item : {
@@ -365,31 +395,34 @@ function Card (props) {
         dragRef = drag;
         isdragging = isDragging
     }
+    function handleClick() {
+        socket.emit('actionFlipREQ', {gameid : gameid , stack: props.stack})
+    }
     function height () {
         return 10+"vmin"
     }
     function width () {
         return 4+"vmax"
     }
-    function handleClick() {
-        props.onClick(props.card, props.stack)
-    }
     function cursor () {
-        if( !props.uppermost )
+        if( !props.uppermost || props.stack.includes(opponentcolor+"waste") || props.stack.includes(opponentcolor+"malus")||
+                props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn )
             return "cursor"
+        else if(props.stack.includes(playercolor+"stock") && !props.card.faceup)
+            return "grabbing"
         else
             return "grab"
     }
-
     return (
         <div 
             onDragStart ={e=> {
                 if(!props.uppermost  || props.stack.includes(opponentcolor+"waste") || props.stack.includes(opponentcolor+"malus")||
-                props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn  )
+                props.stack.includes(opponentcolor+"stock") ||  props.stack.includes(playercolor+"waste")  || ! turn  ||
+                (props.stack.includes(playercolor+"stock") && !props.card.faceup))
                     e.preventDefault()
             }}
-            ref={props.card.faceup? dragRef : React.createRef()} 
-            onClick = {e=> props.stack.includes('stock') ? handleClick(): ''}
+            ref = { dragRef } 
+            onClick = {e=> props.stack.includes('stock') && !props.card.faceup && turn ? handleClick(): ''}
             style={{
                 fontSize: '1.5vmax',
                 lineHeight :'1.2vmax',
