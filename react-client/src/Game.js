@@ -13,10 +13,11 @@ var turn ;
 var opponentcolor ;
 var lastmovefrom;
 var lastmoveto;
-var stockflipped = false;
+var stockflipped ;
 export default class Game extends React.Component{
     constructor(props) {
         super(props); 
+        stockflipped = false;
         gameid = this.props.id
         socket = this.props.socket
         playercolor = this.props.color 
@@ -430,7 +431,7 @@ function Card (props) {
                     e.preventDefault()
             }}
             ref = { dragRef } 
-            onClick = {()=> props.stack.includes('stock') && !props.card.faceup && turn ? handleClick(): ''}
+            onClick = {()=> props.stack === playercolor+'stock' && !props.card.faceup && turn ? handleClick(): ''}
             style={{
                 fontSize: '1.5vmax',
                 lineHeight :'1.2vmax',

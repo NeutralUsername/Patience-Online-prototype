@@ -84,37 +84,41 @@ io.on ('connection', function (socket) {
         var stackFrom = game.state.stacks[data.card.stack]
         var stackTo =  game.state.stacks[data.to]
        
-
-        if(data.to === actorcolor + 'waste' ){
+        if(data.to === opponentcolor + 'stock' )
             return 
-        }
-        if(data.to === actorcolor + 'stock' ){
+        if(data.to === actorcolor + 'stock' )
             return 
-        }
-        if(data.to === actorcolor + 'malus' ){
+        if(data.to === actorcolor + 'malus' )
             return 
-        }  
-
+        if(data.to === actorcolor + 'waste' )
+            if(data.card.stack != actorcolor+'stock')
+                return 
+        if(stackTo.cards.length<1) 
+            if(data.to.includes('foundation') )
+                if(movingCard.value != 1)
+                    return 
         if(stackTo.cards.length){
             var stackUppermostCard =  db.cardIdDataPairs.find(card=> card.cardid === stackTo.cards[stackTo.cards.length-1].cardid)
-     
-            if(data.to === opponentcolor + 'malus' ){
+
+            if(data.to === opponentcolor + 'malus' ) 
                 if ( stackUppermostCard.suit != movingCard.suit )
                     return 
-            }
-            if(data.to === opponentcolor + 'waste' ){
+                else 
+                    if(stackUppermostCard.value != movingCard.value+1)
+                        if(stackUppermostCard.value != movingCard.value-1)
+                            return    
+            if(data.to === opponentcolor + 'waste' ) 
                 if ( stackUppermostCard.suit != movingCard.suit )
                     return 
-            }
-            if(data.to === opponentcolor + 'stock' ){
+                 else 
+                    if(stackUppermostCard.value != movingCard.value+1)
+                        if(stackUppermostCard.value != movingCard.value-1)
+                            return     
+            if(data.to.includes('foundation') ) 
                 if ( stackUppermostCard.suit != movingCard.suit )
-                    return 
-            }
-            if(data.to.includes('foundation') ) {
-                if ( stackUppermostCard.suit != movingCard.suit )
-                    if(stackUppermostCard.value != movingCard.value)
-                        return 
-            }
+                    return
+                else if ( stackUppermostCard.value != movingCard.value-1 )
+                    return
             if(data.to.includes('tableau')) {
                 if(  (stackUppermostCard.value -1 ) != movingCard.value )
                     return
@@ -132,23 +136,12 @@ io.on ('connection', function (socket) {
                 }
             }
         }
-        else
-            if(data.to.includes('foundation') ) {
-                if(movingCard.value != 1)
-                    return
-            }
-      
-        if(stackFrom.name === actorcolor+'stock' && stackTo.name === actorcolor+'waste') {
+        if(stackFrom.name === actorcolor+'stock' && stackTo.name === actorcolor+'waste') 
             game.state.turnplayer = game[opponentcolor];
-        }
-
         stackFrom.cards.pop()
-
-        if(stackFrom.cards.length) {
+        if(stackFrom.cards.length) 
             if( ! stackFrom.name.includes('stock'))
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
-        }
-       
         stackTo.cards.push({cardid : movingCard.cardid, faceup : 1 , number : data.card.number})
 
         var clientState = prepareStateForClient(game.state)
@@ -159,15 +152,19 @@ io.on ('connection', function (socket) {
 
     socket.on ('actionFlipREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
-        var stack = game.state.stacks[data.stack]
+        var actorcolor = socket.id === game.red ? "red" : socket.id ===game.black ? 'black': ''
+        var turncolor = game.state.turnplayer === game.red ? 'red' : 'black'
+        if(!data.stack.includes(actorcolor))
+            return
+        if(actorcolor != turncolor)
+            return
+         var stack = game.state.stacks[data.stack]
         stack.cards[stack.cards.length-1].faceup = 1;
         var clientState = prepareStateForClient(game.state)
         io.to(game.red).emit('actionFlipRES', clientState.stacks[data.stack])
         if(game.black != 'AI')
             io.to(game.black).emit('actionFlipRES', clientState.stacks[data.stack])
     })
-
-
     socket.on ('disconnect', function () {
         removePendingRoom (socket.id);
     });
