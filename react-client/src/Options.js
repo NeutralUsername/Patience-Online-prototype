@@ -171,18 +171,6 @@ export default class Options extends React.Component {
                     tableauSize = {this.state.tableauSize}
                     onChange = {this.handleTableauSizeChange}
                 ></TableauSize>
-                <ThrowOnWaste
-                    throwOnWaste = {this.state.throwOnWaste}
-                    onChange = {this.handleThrowOnWasteChange}
-                ></ThrowOnWaste>
-                <ThrowOnMalus
-                    throwOnMalus = {this.state.throwOnMalus}
-                    onChange = {this.handleThrowOnMalusChange}
-                ></ThrowOnMalus>
-                <Variant
-                    variant = {this.state.variant}
-                    onChange = {this.handleVariantChange}
-                ></Variant>
                 <TimedTurns
                     turnsTimed = {this.state.turnsTimed}
                     timePerTurn = {this.state.timePerTurn}
