@@ -1,7 +1,7 @@
 const server = require ('http').Server(app);
 var express = require ('express'),
     app = express (),
-    port = 3000;
+    port = process.env.PORT || 3000
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
 const io = require ('socket.io') (server);
 const { RateLimiterMemory } = require ('rate-limiter-flexible');
@@ -68,12 +68,7 @@ io.on ('connection', function (socket) {
                 startGame (data.roomkey, socket.id, getPendingRoom (data.roomkey).options );
     })
 
-    socket.on ('startREQ' , function ( data) {
-        
-    })
-
     socket.on ('actionMoveREQ' , function ( data) {
-
         var game = activeGames.find(game => game.props.id === data.gameid)
         var actorcolor = socket.id ===game.red ? "red" : socket.id ===game.black ? 'black': ''
         var opponentcolor = socket.id === game.red ? "black" : socket.id ===game.black ? 'red': ''
@@ -81,7 +76,7 @@ io.on ('connection', function (socket) {
         var movingCard = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value)
         var stackFrom = game.state.stacks[data.card.stack]
         var stackTo =  game.state.stacks[data.to]
-
+    
         if(actorcolor != turncolor)
             return
         if(data.to === opponentcolor + 'stock' )
@@ -130,8 +125,7 @@ io.on ('connection', function (socket) {
         }
         stackFrom.cards.pop()
         stackTo.cards.push({cardid : movingCard.cardid, faceup : 1 , number : data.card.number})
-
-
+        
         if(stackFrom.name === actorcolor+'stock') {
             if( stackTo.name === actorcolor+'waste')
                 game.state.turnplayer = game[opponentcolor];
@@ -179,6 +173,8 @@ async function startGame (red, black, options) {
         activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
         console.log(game.props.id);
     }
+
+
     io.to (red).emit ('startOnlineGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     if(black != 'AI')
         io.to(black).emit ('startOnlineGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
@@ -219,15 +215,19 @@ function updateClientPendingRooms () {
     io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms});
 }
 
-function startTurn (game) {
-    if(game.turncolor === 'red')
-        setTimeout(playertimeout, game.redtimer*1000);
-    else 
-        setTimeout(playertimeout, game.blacktimer*1000);
-    function playertimeout () {
-        game.turncolor === 'red' ? "black won" : "red won"
-    }
+function roundtimer (game) {
+  
+
+    
     socket.emit ('UpdateFieldRES', {roomkey : data.roomkey});
     socket.emit ('UpdateTimerRES', {roomkey : data.roomkey});
     socket.emit ('UpdateTurnColorRES', {roomkey : data.roomkey});
+}
+
+function playertimeout () {
+    return 
+}
+
+function opponenttimeout () {
+    game.turncolor === 'red' ? "black won" : "red won"
 }

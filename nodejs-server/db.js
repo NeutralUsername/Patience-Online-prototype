@@ -77,7 +77,7 @@ module.exports = {
                 + "'"+ black + "'"  + ");", 
 
                 async function (err, game) { if (err) throw err;
-                  resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerPlayer, options.timePerTurn, await startcolor() ==='red' ? red: black)) 
+                  resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerTurn, await startcolor() ==='red' ? red: black)) 
                 }
               )
             }
@@ -101,7 +101,7 @@ module.exports = {
                     + "'"+ red+"'"         + ", "
                     + "'"+ black+"'"       + ");", 
                     async function (err, game) { if (err) throw err;
-                      resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerPlayer, options.timePerTurn, await startcolor() ==='red' ? red: black))   
+                      resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerTurn, await startcolor() ==='red' ? red: black))   
                     }
                   )
                 } 
@@ -190,7 +190,7 @@ async function startcolor() {
 
   return 'red' //shuffle([0,1])[0] ? 'red' : 'black'
 }
-function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, redtimer, blacktimer, turntimer, turnPlayer) {
+function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, playertime, turntime, turnPlayer) {
   return {
     red : red,
     black : black,
@@ -199,13 +199,12 @@ function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, re
       throwOnWaste : throwOnWaste,
       throwOnMalus : throwOnMalus,
       variant : variant,
+      playertime : playertime,
+      turntime : turntime,
     },
     state : {
       stacks : stacks,
-      redtimer : redtimer,
-      blacktimer : blacktimer,
       turn :  0,
-      turntimer : turntimer,
       turnplayer : turnPlayer
     }
   }

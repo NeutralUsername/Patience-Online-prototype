@@ -31,9 +31,6 @@ export default class Game extends React.Component{
         GameContext.throwOnWaste = props.throwOnWaste
         GameContext.throwOnMalus = props.throwOnMalus
         GameContext.variant = props.variant
-        GameContext.playertimer = props.playercolor === 'red' ? props.initialState.redtimer : props.initialState.blacktimer
-        GameContext.opponenttimer = props.playercolor === 'black' ? props.initialState.redtimer : props.initialState.blacktimer
-        GameContext.turntimer = props.initialState.turntimer
         GameContext.isturn = props.initialState.turnplayer === props.socket.id ? true : false
         GameContext.lastmovefrom = {}
         GameContext.lastmoveto = {}
@@ -62,6 +59,8 @@ export default class Game extends React.Component{
             blackfoundation1 : props.initialState.stacks.blackfoundation1.cards,
             blackfoundation2 : props.initialState.stacks.blackfoundation2.cards,
             blackfoundation3 : props.initialState.stacks.blackfoundation3.cards,
+            playertimer: GameContext.playercolor === 'red' ? props.initialState.redtimer : props.initialState.blacktimer,
+            opponenttimer: GameContext.playercolor === 'black' ? props.initialState.redtimer : props.initialState.blacktimer
         };
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {
@@ -88,11 +87,15 @@ export default class Game extends React.Component{
                 this.setState (data);
             }
         });
+        this.props.socket.on("updatetimerRES", data => {
+            if(this.state.mounted)
+              this.setState({ playertimer: data.playertimer })
+              this.setState({ opponenttimer: data.opponenttimer })
+          });
     }
     
     componentDidMount() {
         this.setState({mounted : true})
-        this.props.socket.emit('startREQ');
     }
 
     render(){
@@ -103,6 +106,8 @@ export default class Game extends React.Component{
                     style = {{
                         position: 'fixed',
                     }}>
+                    <div>{this.state.playertimer}</div>
+                    <div>{this.state.opponenttimer}</div>
                     <Stack 
                         stack = {this.state[this.props.playercolor+"malus"]} 
                         stackname = {this.props.playercolor+"malus"}
@@ -240,7 +245,6 @@ export default class Game extends React.Component{
         )
     }
 } 
-
 function Stack (props) {
     const [{ hover }, drop] = useDrop(() => ({
         accept: "card",
@@ -365,16 +369,12 @@ function Stack (props) {
                 top : topValues(),
                 display: 'flex',
                 alignItems :'center',
-
                 flexDirection: props.player && props.stackname.includes("tableau") ? 'row-reverse' : '',
-                
                 overflow:'hidden',
-              
                 paddingLeft : '.5vmax',
                 paddingRight : '.5vmax',
                 paddingTop : '.01vmin',
                 paddingBottom : '.01vmin',
-
                 width : 2.6 + (props.stacktype != 'pile' ? (props.stack.length>0?(props.stack.length*2.5) : 2.5) : 2.5 )+'vmax' ,
                 height : '14vmin',
             }}> 
@@ -395,7 +395,7 @@ function Stack (props) {
 function Card (props) {
     var dragRef ;
     var isdragging;
-    if(props.card.faceup && props.uppermost){
+    if(props.card.faceup && props.uppermost && GameContext.isturn){
         const [{ isDragging }, drag] = useDrag(() => ({
             type: "card",
             item : {
@@ -452,10 +452,8 @@ function Card (props) {
                 position : props.stack.includes('stock') || props.stack.includes('foundation') || props.stack.includes('waste') ?'absolute':'',
                 marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.6vmax':'0' : props.stack.includes('tableau') && ! props.playerStack && ! props.uppermost? '-2.6vmax':'0',
                 marginLeft : props.stack.includes('tableau')  && props.playerStack ? !props.uppermost ? '-2.6vmax' :'0' : '0',
-                
                 height: height(),
                 width: width(),
-
                 zIndex : '1',
                 background : (!props.card.faceup ?  props.card.color==='red' ? 'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-red-sticker-1600042082.903987.png")':'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-blue-sticker-1600041775.9919636.png")' : '') + 'center',
                 backgroundColor : props.card.faceup ? 'white'  : ' ',
@@ -465,7 +463,7 @@ function Card (props) {
             }}
             className = {'card '+"cards-"+ props.stack+' '+ props.card.color +' '+ (props.card.faceup ? 'faceup' : 'facedown')+ (props.card.faceup ? ' '+props.card.suit : '') +(props.card.faceup ? ' '+ props.card.value : '')} >
                 <div
-                    className="cardCorner"
+                    className="cardsmallright"
                     style={{
                         letterSpacing :'-.1vmax',
                         position : 'absolute',
@@ -476,7 +474,7 @@ function Card (props) {
                     {props.card.suit}<br/>{props.card.value === '1' ? 'A' : props.card.value === '11' ? 'J' : props.card.value === '12' ? 'Q' : props.card.value === '13' ? 'K' : props.card.value}
                 </div>
                 <div
-                    className="cardCorner"
+                    className="cardsmallleft"
                     style={{
                         letterSpacing :'-.2rem',
                         position : 'absolute',
@@ -487,7 +485,7 @@ function Card (props) {
                     {props.card.suit}<br/>{props.card.value === '1' ? 'A' : props.card.value === '11' ? 'J' : props.card.value === '12' ? 'Q' : props.card.value === '13' ? 'K' : props.card.value}
                 </div>
                 <div 
-                    className="cardCenter"
+                    className="cardbigcenter"
                     style={{
                         fontSize: props.suit != '♣' ? '3.4vmax' : '2.9vmax',
                         position : 'absolute',
