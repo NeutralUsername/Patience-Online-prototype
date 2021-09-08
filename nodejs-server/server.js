@@ -81,16 +81,9 @@ io.on ('connection', function (socket) {
     socket.on ('actionMoveREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
         var actorcolor = socket.id ===game.red ? "red" : socket.id ===game.black ? 'black': ''
-        var opponentcolor = socket.id === game.red ? "black" : socket.id ===game.black ? 'red': ''
         var turncolor = game.state.turnplayer === game.red ? 'red' : 'black' 
-        var movingCard = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value)
-        var stackFrom = game.state.stacks[data.card.stack]
-        var stackTo =  game.state.stacks[data.to]
-    
         if(actorcolor != turncolor)
             return
-        if(data.to === opponentcolor + 'stock' )
-            return 
         if(data.to === actorcolor + 'stock' )
             return 
         if(data.to === actorcolor + 'malus' )
@@ -98,6 +91,11 @@ io.on ('connection', function (socket) {
         if(data.to === actorcolor + 'waste' )
             if(data.card.stack != actorcolor+'stock')
                 return 
+        var movingCard = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value)
+        var stackTo =  game.state.stacks[data.to]
+        var opponentcolor = socket.id === game.red ? "black" : socket.id ===game.black ? 'red': ''
+        if(data.to === opponentcolor + 'stock' )
+             return 
         if(stackTo.cards.length<1) {
             if(data.to.includes('foundation') )
                 if(movingCard.value != 1)
@@ -133,18 +131,22 @@ io.on ('connection', function (socket) {
                         return
             }
         }
-        stackFrom.cards.pop()
-        stackTo.cards.push({cardid : movingCard.cardid, faceup : 1 , number : data.card.number})
+        var stackFrom = game.state.stacks[data.card.stack]
+        
+        stackTo.cards.push(stackFrom.cards.pop() )
         
         if(stackFrom.name === actorcolor+'stock') {
             if( stackTo.name === actorcolor+'waste')
                 game.state.turnplayer = game[opponentcolor];
             if(!stackFrom.cards.length) 
-                if(!game.state.stacks[actorcolor+waste].cards.length)
-                    for(var i = 0 ; i< game.state.stacks[actorcolor+waste].cards.length; i++) 
-                        game.state.stacks[actorcolor+stock].cards.push(game.state.stacks[actorcolor+waste].cards.pop());
-                else
-                    console.log("player has no cards left")
+                if(game.state.stacks[actorcolor+"stock"].cards.length === 0) {
+                    var length = game.state.stacks[actorcolor+"waste"].cards.length
+                    for(var i = 0 ; i< length; i++) {
+                        var card = game.state.stacks[actorcolor+"waste"].cards.pop()
+                        card.faceup = 0
+                        game.state.stacks[actorcolor+"stock"].cards.push(card);
+                    }
+                }
         }
         if(stackFrom.cards.length) 
             if (stackFrom.name != actorcolor+'stock' )
@@ -184,6 +186,25 @@ async function startGame (red, black, options) {
         console.log(game.props.id);
     }
 
+
+    game.redtimer = setTimeout(function() {
+        console.log("Hello"); 
+       // newTimeout(3000); 
+    }, 
+    3000);
+    game.blacktimer = setTimeout(function() {
+        console.log("Hello"); 
+        //newTimeout(3000);
+    }, 
+    3000);
+
+    function newTimeout(duration) {
+         setTimeout(function() {
+            console.log("loop")
+            newTimeout(3000); 
+        }, 
+        3000);
+    }
 
     io.to (red).emit ('startOnlineGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     if(black != 'AI')
