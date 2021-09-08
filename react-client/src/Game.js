@@ -257,7 +257,7 @@ function Stack (props) {
     }))
     function handleDrop(card, stack) {
         if(card.stack != stack)
-        GameContext.socket.emit('actionMoveREQ', {gameid : GameContext.id , card : card, to : stack})
+            GameContext.socket.emit('actionMoveREQ', {gameid : GameContext.id , card : card, to : stack})
     }
     
     function topValues (){
