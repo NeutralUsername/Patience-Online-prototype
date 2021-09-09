@@ -137,7 +137,7 @@ io.on ('connection', function (socket) {
         
         if(stackFrom.name === actorcolor+'stock') {
             if( stackTo.name === actorcolor+'waste')
-                game.state.turnplayer = game[opponentcolor];
+                game.state.turnplayer = game.props[opponentcolor];
             if(!stackFrom.cards.length) 
                 if(game.state.stacks[actorcolor+"stock"].cards.length === 0) {
                     var length = game.state.stacks[actorcolor+"waste"].cards.length
