@@ -169,6 +169,7 @@ io.on ('connection', function (socket) {
             return
         var stack = game.state.stacks[data.stack]
         stack.cards[stack.cards.length-1].faceup = 1;
+        db.insertMove(game.props.id, stack.cards[stack.cards.length-1].cardid, data.stack, 1, actorcolor, -999, new Date())
         var clientStack = prepareStackForClient(game.state.stacks[data.stack])
         io.to(game.props.red).emit('actionFlipRES', clientStack)
         if(game.props.black != 'AI')
