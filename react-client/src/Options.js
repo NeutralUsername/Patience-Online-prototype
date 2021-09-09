@@ -44,13 +44,16 @@ export default class Options extends React.Component {
             }
         });
 
-        this.props.socket.on("startOnlineGameRES", data => {
+        this.props.socket.on("startGameRES", data => {
             return (
                 ReactDOM.render (
                     <Game
                         id = {data.props.id}
                         playercolor = {data.color}
                         opponentcolor = {data.color === 'red' ? 'black' : 'red'}
+                        throwOnWaste = {data.props.throwOnWaste}
+                        throwOnMalus = {data.props.throwOnMalus}
+                        variant = {data.props.variant}
                         initialState = {data.initialState}
                         socket = {this.props.socket}          
                     ></Game>,

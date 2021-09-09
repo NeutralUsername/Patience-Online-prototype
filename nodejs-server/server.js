@@ -98,14 +98,6 @@ io.on ('connection', function (socket) {
                 return 
         if(data.to === opponentcolor + 'stock' )
              return 
-        if(stackTo.cards.length<1) {
-            if(data.to.includes('foundation') )
-                if(movingCardData.value != 1)
-                    return 
-            if(data.to === opponentcolor+'waste')
-                if(!stackTo.length)
-                    return
-        }
         if(stackTo.cards.length){
             var stackUppermostCard =  db.cardIdDataPairs.find(card=> card.cardid === stackTo.cards[stackTo.cards.length-1].cardid)
             if(data.to === opponentcolor + 'malus' || data.to === opponentcolor + 'waste' ) 
@@ -131,6 +123,14 @@ io.on ('connection', function (socket) {
                     if(stackUppermostCard.suit  === '♠' || stackUppermostCard.suit  === '♣' )
                         return
             }
+        }
+        else {
+            if(data.to.includes('foundation') )
+                if(movingCardData.value != 1)
+                    return 
+            if(data.to === opponentcolor+'waste')
+                if(!stackTo.length)
+                    return
         }
       
         var movingCard = stackFrom.cards.pop()
@@ -191,9 +191,9 @@ async function startGame (red, black, options) {
         activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
         console.log(game.props.id);
     }
-    io.to (red).emit ('startOnlineGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
+    io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     if(black != 'AI')
-        io.to(black).emit ('startOnlineGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
+        io.to(black).emit ('starGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
 }
 
 function prepareStackForClient (stack) {

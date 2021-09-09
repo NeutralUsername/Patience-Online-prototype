@@ -43,11 +43,11 @@ module.exports = {
       createDBcon.connect(function(err) {
           if (err) throw err;
           createDBcon.query("CREATE DATABASE IF NOT EXISTS gregaire", 
-          function (err, result) {
-              console.log("created DB")
-              insertTablesAndDataIntoDB() 
-            
-          });
+            function (err, result) {
+                console.log("created DB")
+                insertTablesAndDataIntoDB() 
+            }
+          );
       }); 
     }
   },
@@ -62,10 +62,7 @@ module.exports = {
       +"'"+faceup+"'"+" ,"
       +"'"+player+"'"+" ,"
       +turn+" ,"
-      +"'"+sqlMoved+"')" ,
-      function (err, result) { if (err) throw err;
-          
-      }
+      +"'"+sqlMoved+"')" 
     )    
   },
   initGame : async function (red, black, options, started) {
@@ -204,7 +201,7 @@ async function stacks( gameid, options, created) {
 }
 async function startcolor() {
 
-  return 'red' //shuffle([0,1])[0] ? 'red' : 'black'
+  return shuffle([0,1])[0] ? 'red' : 'black'
 }
 function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, playertime, turntime, turnPlayer) {
   return {
@@ -213,6 +210,9 @@ function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, pl
       black : black,
       id : id,
       turntime : turntime,
+      throwOnWaste : throwOnWaste,
+      throwOnMalus : throwOnMalus,
+      variant : variant
     },
     state : {
       stacks : stacks,
