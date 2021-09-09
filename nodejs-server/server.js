@@ -151,10 +151,11 @@ io.on ('connection', function (socket) {
         if(stackFrom.cards.length) 
             if (stackFrom.name != actorcolor+'stock' )
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
-        var clientState = prepareStateForClient(game.state)
-        io.to(game.red).emit('actionMoveRES', {stacks : [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]], turn : game.state.turnplayer})
+        var clientStackFrom = prepareStackForClient(stackFrom)
+        var clientStackTo = prepareStackForClient(stackTo)
+        io.to(game.red).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turn : game.state.turnplayer})
         if(game.black != 'AI')
-            io.to(game.black).emit('actionMoveRES', {stacks : [clientState.stacks[data.card.stack] ,clientState.stacks[data.to]], turn : game.state.turnplayer})
+            io.to(game.black).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turn : game.state.turnplayer})
     }) 
 
     socket.on ('actionFlipREQ' , function ( data) {
@@ -209,6 +210,21 @@ async function startGame (red, black, options) {
     io.to (red).emit ('startOnlineGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     if(black != 'AI')
         io.to(black).emit ('startOnlineGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
+}
+
+function prepareStackForClient (stack) {
+    var clientStack =  JSON.parse(JSON.stringify(stack));
+    if( clientStack.cards.length> 0) 
+        for(card of  clientStack.cards) {
+            var carddata = db.cardIdDataPairs.find(x=>x.cardid === card.cardid)
+            delete card.cardid
+            card.color = carddata.color
+            if(card.faceup) {
+                card.suit = carddata.suit
+                card.value = carddata.value
+            }
+        }
+    return clientStack
 }
 
 function prepareStateForClient (state) {
