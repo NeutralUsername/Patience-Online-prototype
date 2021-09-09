@@ -80,8 +80,8 @@ io.on ('connection', function (socket) {
 
     socket.on ('actionMoveREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
-        var actorcolor = socket.id ===game.red ? "red" : socket.id ===game.black ? 'black': ''
-        var turncolor = game.state.turnplayer === game.red ? 'red' : 'black' 
+        var actorcolor = socket.id ===game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
+        var turncolor = game.state.turnplayer === game.props.red ? 'red' : 'black' 
         if(actorcolor != turncolor)
             return
         if(data.to === actorcolor + 'stock' )
@@ -93,7 +93,7 @@ io.on ('connection', function (socket) {
                 return 
         var movingCard = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value)
         var stackTo =  game.state.stacks[data.to]
-        var opponentcolor = socket.id === game.red ? "black" : socket.id ===game.black ? 'red': ''
+        var opponentcolor = socket.id === game.props.red ? "black" : socket.id ===game.props.black ? 'red': ''
         if(data.to === opponentcolor + 'stock' )
              return 
         if(stackTo.cards.length<1) {
@@ -153,25 +153,25 @@ io.on ('connection', function (socket) {
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
         var clientStackFrom = prepareStackForClient(stackFrom)
         var clientStackTo = prepareStackForClient(stackTo)
-        io.to(game.red).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turn : game.state.turnplayer})
-        if(game.black != 'AI')
-            io.to(game.black).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turn : game.state.turnplayer})
+        io.to(game.props.red).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turn : game.state.turnplayer})
+        if(game.props.black != 'AI')
+            io.to(game.props.black).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turn : game.state.turnplayer})
     }) 
 
     socket.on ('actionFlipREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
-        var actorcolor = socket.id === game.red ? "red" : socket.id ===game.black ? 'black': ''
-        var turncolor = game.state.turnplayer === game.red ? 'red' : 'black'
+        var actorcolor = socket.id === game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
+        var turncolor = game.state.turnplayer === game.props.red ? 'red' : 'black'
         if(!data.stack.includes(actorcolor))
             return
         if(actorcolor != turncolor)
             return
         var stack = game.state.stacks[data.stack]
         stack.cards[stack.cards.length-1].faceup = 1;
-        var clientState = prepareStateForClient(game.state)
-        io.to(game.red).emit('actionFlipRES', clientState.stacks[data.stack])
-        if(game.black != 'AI')
-            io.to(game.black).emit('actionFlipRES', clientState.stacks[data.stack])
+        var clientStack = prepareStackForClient(game.state.stacks[data.stack])
+        io.to(game.props.red).emit('actionFlipRES', clientStack)
+        if(game.props.black != 'AI')
+            io.to(game.props.black).emit('actionFlipRES', clientStack)
     })
     socket.on ('disconnect', function () {
         removePendingRoom (socket.id);
@@ -187,7 +187,7 @@ async function startGame (red, black, options) {
         console.log(game.props.id);
     }
 
-
+/*
     game.redtimer = setTimeout(function() {
         console.log("Hello"); 
        // newTimeout(3000); 
@@ -206,6 +206,7 @@ async function startGame (red, black, options) {
         }, 
         3000);
     }
+*/
 
     io.to (red).emit ('startOnlineGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     if(black != 'AI')

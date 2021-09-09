@@ -38,23 +38,6 @@ export default class Options extends React.Component {
 
     componentDidMount () {
         this.mounted = true;
-        this.props.socket.on("startAIgameRES", data => {
-            return (
-                ReactDOM.render (
-                    <Game
-                        id = {data.props.id}
-                        color = {data.color}
-                        throwOnWaste = {data.props.throwOnWaste}
-                        throwOnMalus = {data.props.throwOnMalus}
-                        variant = {data.props.variant}
-                        initialState = {data.initialState}
-                        socket = {this.props.socket}       
-                    ></Game>,
-                    document.getElementById ('root')
-                )
-            )
-        });
-
         this.props.socket.on("UpdatePendingRoomsRES", data => {
             if(this.mounted){
                 this.setState ({pendingRooms : data.pendingRooms });
@@ -68,9 +51,6 @@ export default class Options extends React.Component {
                         id = {data.props.id}
                         playercolor = {data.color}
                         opponentcolor = {data.color === 'red' ? 'black' : 'red'}
-                        throwOnWaste = {data.props.throwOnWaste}
-                        throwOnMalus = {data.props.throwOnMalus}
-                        variant = {data.props.variant}
                         initialState = {data.initialState}
                         socket = {this.props.socket}          
                     ></Game>,

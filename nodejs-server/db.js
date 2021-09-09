@@ -192,20 +192,18 @@ async function startcolor() {
 }
 function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, playertime, turntime, turnPlayer) {
   return {
-    red : red,
-    black : black,
     props : { 
+      red : red,
+      black : black,
       id : id,
-      throwOnWaste : throwOnWaste,
-      throwOnMalus : throwOnMalus,
-      variant : variant,
-      playertime : playertime,
       turntime : turntime,
     },
     state : {
       stacks : stacks,
       turn :  0,
-      turnplayer : turnPlayer
+      turnplayer : turnPlayer,
+      redtimer : playertime,
+      blacktimer : playertime,
     }
   }
 }

@@ -11,8 +11,6 @@ var GameContext = {
     throwOnWaste : {},
     throwOnMalus : {},
     variant : {},
-    playertimer : {},
-    opponenttimer : {},
     turntimer : {},
     isturn : {},
     mounted : {},
@@ -106,8 +104,13 @@ export default class Game extends React.Component{
                     style = {{
                         position: 'fixed',
                     }}>
-                    <div>{this.state.playertimer}</div>
-                    <div>{this.state.opponenttimer}</div>
+                    <div  style = {{
+                        position: 'fixed',
+                        marginTop : '41vmax'
+                    }}>{this.state.playertimer}</div>
+                    <div  style = {{
+                        position: 'fixed',
+                    }}>{this.state.opponenttimer}</div>
                     <Stack 
                         stack = {this.state[this.props.playercolor+"malus"]} 
                         stackname = {this.props.playercolor+"malus"}
