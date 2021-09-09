@@ -1,4 +1,5 @@
-Player vs Player is now fully playable. 
+Player vs Player is now playable without timers.
+
 ![ui game](https://user-images.githubusercontent.com/39095721/131553342-1f9394ac-119a-4d2c-8366-fa66d564fa55.JPG)
 
 
