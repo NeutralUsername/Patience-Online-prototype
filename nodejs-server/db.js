@@ -52,6 +52,22 @@ module.exports = {
     }
   },
   cardIdDataPairs : redIdDataPair.concat(blackIdDataPair),
+  insertMove : async function (gameid, cardid, stack, faceup, player, turn, moved) {
+    var sqlMoved = sqlCompatibleDate(moved)
+    dbCon.query ("INSERT INTO actions VALUES ("
+      +"0, "
+      +gameid+" ,"
+      +cardid+" ,"
+      +"'"+stack+"'"+" ,"
+      +"'"+faceup+"'"+" ,"
+      +"'"+player+"'"+" ,"
+      +turn+" ,"
+      +"'"+sqlMoved+"')" ,
+      function (err, result) { if (err) throw err;
+          
+      }
+    )    
+  },
   initGame : async function (red, black, options, started) {
       var sqlstarted = sqlCompatibleDate(started);
       options.timePerTurn = options.turnsTimed ? options.timePerTurn : 0;

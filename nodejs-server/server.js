@@ -91,14 +91,14 @@ io.on ('connection', function (socket) {
         if(data.to === actorcolor + 'waste' )
             if(data.card.stack != actorcolor+'stock')
                 return 
-        var movingCard = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value)
+        var movingCardData = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value)
         var stackTo =  game.state.stacks[data.to]
         var opponentcolor = socket.id === game.props.red ? "black" : socket.id ===game.props.black ? 'red': ''
         if(data.to === opponentcolor + 'stock' )
              return 
         if(stackTo.cards.length<1) {
             if(data.to.includes('foundation') )
-                if(movingCard.value != 1)
+                if(movingCardData.value != 1)
                     return 
             if(data.to === opponentcolor+'waste')
                 if(!stackTo.length)
@@ -108,32 +108,32 @@ io.on ('connection', function (socket) {
             var stackUppermostCard =  db.cardIdDataPairs.find(card=> card.cardid === stackTo.cards[stackTo.cards.length-1].cardid)
 
             if(data.to === opponentcolor + 'malus' || data.to === opponentcolor + 'waste' ) 
-                if (  stackUppermostCard.suit === movingCard.suit ){
-                    if ( parseInt(stackUppermostCard.value) != parseInt(movingCard.value)+1 )
-                        if ( parseInt(stackUppermostCard.value) != parseInt(movingCard.value)-1 )
+                if (  stackUppermostCard.suit === movingCardData.suit ){
+                    if ( parseInt(stackUppermostCard.value) != parseInt(movingCardData.value)+1 )
+                        if ( parseInt(stackUppermostCard.value) != parseInt(movingCardData.value)-1 )
                             return
                 }
                 else
                     return
             if(data.to.includes('foundation') ) 
-                if ( stackUppermostCard.suit != movingCard.suit )
+                if ( stackUppermostCard.suit != movingCardData.suit )
                     return
-                else if ( stackUppermostCard.value != movingCard.value-1 )
+                else if ( stackUppermostCard.value != movingCardData.value-1 )
                     return
             if(data.to.includes('tableau')) {
-                if( (stackUppermostCard.value -1 ) != movingCard.value )
+                if( (stackUppermostCard.value -1 ) != movingCardData.value )
                     return
-                if(movingCard.suit === '♥' || movingCard.suit === '♦') 
+                if(movingCardData.suit === '♥' || movingCardData.suit === '♦') 
                     if(stackUppermostCard.suit  === '♥' || stackUppermostCard.suit  === '♦'  )
                         return
-                if(movingCard.suit === '♠' || movingCard.suit === '♣')
+                if(movingCardData.suit === '♠' || movingCardData.suit === '♣')
                     if(stackUppermostCard.suit  === '♠' || stackUppermostCard.suit  === '♣' )
                         return
             }
         }
         var stackFrom = game.state.stacks[data.card.stack]
-        
-        stackTo.cards.push(stackFrom.cards.pop() )
+        var movingCard = stackFrom.cards.pop()
+        stackTo.cards.push( movingCard )
         
         if(stackFrom.name === actorcolor+'stock') {
             if( stackTo.name === actorcolor+'waste')
@@ -151,6 +151,7 @@ io.on ('connection', function (socket) {
         if(stackFrom.cards.length) 
             if (stackFrom.name != actorcolor+'stock' )
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
+        db.insertMove(game.props.id,movingCard.cardid, data.to, 1, actorcolor, -999, new Date())
         var clientStackFrom = prepareStackForClient(stackFrom)
         var clientStackTo = prepareStackForClient(stackTo)
         io.to(game.props.red).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turn : game.state.turnplayer})
@@ -186,28 +187,6 @@ async function startGame (red, black, options) {
         activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
         console.log(game.props.id);
     }
-
-/*
-    game.redtimer = setTimeout(function() {
-        console.log("Hello"); 
-       // newTimeout(3000); 
-    }, 
-    3000);
-    game.blacktimer = setTimeout(function() {
-        console.log("Hello"); 
-        //newTimeout(3000);
-    }, 
-    3000);
-
-    function newTimeout(duration) {
-         setTimeout(function() {
-            console.log("loop")
-            newTimeout(3000); 
-        }, 
-        3000);
-    }
-*/
-
     io.to (red).emit ('startOnlineGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     if(black != 'AI')
         io.to(black).emit ('startOnlineGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
