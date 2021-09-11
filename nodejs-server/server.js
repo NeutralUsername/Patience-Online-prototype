@@ -192,8 +192,8 @@ async function startGame (red, black, options) {
         console.log(game.props.id);
     }
     io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
-    if(black != 'AI')
-        io.to(black).emit ('starGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
+    if(black != 'AI') 
+        io.to(black).emit ('startGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
 }
 
 function prepareStackForClient (stack) {
