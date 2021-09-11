@@ -64,7 +64,8 @@ export default class Game extends React.Component{
             if (this.state.mounted) {
                 GameContext.stockflipped = false
                 GameContext.isturn = data.turn === this.props.socket.id ? true : false
-                if( !data.stacks[0].name.includes('stock') && ! data.stacks[1].name.includes('waste'))  {
+                if( ! (data.stacks[0].name.includes('stock') &&  data.stacks[1].name.includes('waste'))) 
+                 {
                     GameContext.lastmovefrom = data.stacks[0].name
                     GameContext.lastmoveto = data.stacks[1].name
                 }
