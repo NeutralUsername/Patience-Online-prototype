@@ -83,7 +83,6 @@ export default class Game extends React.Component{
             }
         });
         this.props.socket.on("updateTimerRES", data => {
-            console.log(data)
             this.setState({ playertimer: data[GameContext.playercolor+'timer'] })
             this.setState({ opponenttimer: data[GameContext.opponentcolor+'timer'] })
         });
