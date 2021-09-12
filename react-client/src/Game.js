@@ -104,11 +104,16 @@ export default class Game extends React.Component{
                     }}>
                     <div  style = {{
                         position: 'fixed',
-                        marginTop : '41vmax'
-                    }}>{this.state.playertimer}</div>
+                        marginTop : '95vmin',
+                        marginLeft : '2vmax',
+                        fontSize : '1.5vmax'
+                    }}>{this.state.playertimer.toFixed(2)}</div>
                     <div  style = {{
                         position: 'fixed',
-                    }}>{this.state.opponenttimer}</div>
+                        marginTop : '1vmin',
+                        marginLeft : '2vmax',
+                        fontSize : '1.5vmax'
+                    }}>{this.state.opponenttimer.toFixed(2)}</div>
                     <Stack 
                         stack = {this.state[this.props.playercolor+"malus"]} 
                         stackname = {this.props.playercolor+"malus"}
