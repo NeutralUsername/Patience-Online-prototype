@@ -68,7 +68,6 @@ module.exports = {
   },
   initGame : async function (red, black, options, started) {
       var sqlstarted = sqlCompatibleDate(started);
-      options.timePerTurn = options.turnsTimed ? options.timePerTurn : 0;
 
       return new Promise (async function (resolve) {
         dbCon.query ("SELECT id FROM options WHERE ( "
@@ -77,7 +76,6 @@ module.exports = {
           +"throwonwaste  =  " +     options.throwOnWaste       + " AND "
           +"throwonmalus  =  " +     options.throwOnMalus       + " AND "
           +"variant       =  " +"'"+ options.variant +"'"       + " AND "
-          +"turntime      =  " +     options.timePerTurn        + " AND "
           +"timeperplayer =  " +     options.timePerPlayer      + " AND "
           +"roomname         " +    (options.roomName     != "" ? " = '"+ options.roomName.replace(/\s+/g,' ').trim() +"'"  : "is null" ) +" AND "
           +"roompassword     " +    (options.roomPassword != "" ? " = '"+options.roomPassword +"'"  : "is null" ) +" );",  
@@ -91,7 +89,7 @@ module.exports = {
                 + "'"+ black + "'"  + ");", 
 
                 async function (err, game) { if (err) throw err;
-                  resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerTurn, await startcolor())) 
+                  resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, await startcolor())) 
                 }
               )
             }
@@ -103,7 +101,6 @@ module.exports = {
                 +     options.throwOnWaste       +", "
                 +     options.throwOnMalus       +", "
                 + "'"+options.variant  +"'"      +", "
-                +     options.timePerTurn        +", "
                 +     options.timePerPlayer      +", "
                 +    (options.roomName     != "" ? "'"+ options.roomName.replace(/\s+/g,' ').trim()+"'"     : "null" ) +", "
                 +    (options.roomPassword != "" ? "'"+ options.roomPassword+"'" : "null" ) +");", 
@@ -115,7 +112,7 @@ module.exports = {
                     + "'"+ red+"'"         + ", "
                     + "'"+ black+"'"       + ");", 
                     async function (err, game) { if (err) throw err;
-                      resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerTurn, await startcolor()))   
+                      resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, await startcolor()))   
                     }
                   )
                 } 
@@ -204,13 +201,12 @@ async function startcolor() {
 
   return shuffle([0,1])[0] ? 'red' : 'black'
 }
-function newGame(id, throwOnWaste, throwOnMalus, variant, redid, blackid, stacks, playertime, turntime, turnColor) {
+function newGame(id, throwOnWaste, throwOnMalus, variant, redid, blackid, stacks, playertime, turnColor) {
   return {
     props : { 
       red : redid,
       black : blackid,
       id : id,
-      turntime : turntime,
       throwOnWaste : throwOnWaste,
       throwOnMalus : throwOnMalus,
       variant : variant
@@ -274,7 +270,6 @@ function insertTablesAndDataIntoDB() {
     +"throwonwaste  BOOLEAN, "
     +"throwonmalus  BOOLEAN, "
     +"variant       VARCHAR(20), "
-    +"turntime      INT, "
     +"timeperplayer INT, "
     +"roomname      VARCHAR(20), "
     +"roompassword  VARCHAR(20))",

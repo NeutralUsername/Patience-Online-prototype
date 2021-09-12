@@ -12,7 +12,6 @@ var GameContext = {
     throwOnWaste : {},
     throwOnMalus : {},
     variant : {},
-    turntimer : {},
     isturn : {},
     lastmovefrom : {},
     lastmoveto : {},

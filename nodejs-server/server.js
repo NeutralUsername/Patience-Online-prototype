@@ -95,11 +95,11 @@ io.on ('connection', function (socket) {
         if(data.to === opponentcolor + 'stock' )
              return 
         if(stackTo.cards.length){
-            var stackUppermostCard =  db.cardIdDataPairs.find(card=> card.cardid === stackTo.cards[stackTo.cards.length-1].cardid)
+            var stackUppermostCard =  db.cardIdDataPairs.find ( card=> card.cardid === stackTo.cards[stackTo.cards.length - 1 ].cardid )
             if(data.to === opponentcolor + 'malus' || data.to === opponentcolor + 'waste' ) 
-                if (  stackUppermostCard.suit === movingCardData.suit ){
-                    if ( parseInt(stackUppermostCard.value) != parseInt(movingCardData.value)+1 )
-                        if ( parseInt(stackUppermostCard.value) != parseInt(movingCardData.value)-1 )
+                if (  stackUppermostCard.suit === movingCardData.suit ) {
+                    if ( parseInt(stackUppermostCard.value) != parseInt(movingCardData.value) + 1 )
+                        if ( parseInt(stackUppermostCard.value) != parseInt(movingCardData.value) - 1 )
                             return
                 }
                 else
@@ -214,6 +214,8 @@ async function startGame (red, black, options) {
     io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     if(black != 'AI') 
         io.to(black).emit ('startGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
+
+   
 }
 
 function prepareStackForClient (stack) {
@@ -264,19 +266,4 @@ function getPendingRoom (roomkey) {
 
 function updateClientPendingRooms () {
     io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms});
-}
-
-function roundtimer (game) {
-    socket.emit ('UpdateFieldRES', {roomkey : data.roomkey});
-
-    socket.emit ('UpdateTimerRES', {roomkey : data.roomkey});
-    socket.emit ('UpdateTurnColorRES', {roomkey : data.roomkey});
-}
-
-function playertimeout () {
-    return 
-}
-
-function opponenttimeout () {
-    game.turncolor === 'red' ? "black won" : "red won"
 }

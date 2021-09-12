@@ -11,8 +11,6 @@ export default class Options extends React.Component {
             throwOnWaste : true,
             throwOnMalus : true,
             variant : "Patience",
-            turnsTimed : false,
-            timePerTurn : 90,
             timePerPlayer : 1800,
             roomName : '',
             roomPassword : '',
@@ -24,8 +22,6 @@ export default class Options extends React.Component {
         this.handleThrowOnWasteChange = this.handleThrowOnWasteChange.bind (this);
         this.handleThrowOnMalusChange = this.handleThrowOnMalusChange.bind (this);
         this.handleVariantChange = this.handleVariantChange.bind (this);
-        this.handleTurnsTimedChange = this.handleTurnsTimedChange.bind (this);
-        this.handleTimePerTurnChange = this.handleTimePerTurnChange.bind (this);
         this.handleTimePerPlayerChange = this.handleTimePerPlayerChange.bind (this);
         this.handleRoomNameChange = this.handleRoomNameChange.bind (this);
         this.handleRoomPasswordChange = this.handleRoomPasswordChange.bind (this);
@@ -99,8 +95,6 @@ export default class Options extends React.Component {
             throwOnWaste : options.throwOnWaste,
             throwOnMalus : options.throwOnMalus,
             variant : options.variant,
-            turnsTimed : options.turnsTimed,
-            timePerTurn : options.timePerTurn,
             timePerPlayer : options.timePerPlayer,
             roomName : (!options.roomName.replace(/\s/g, '').length) ? roomkey : options.roomName.replace(/\s+/g,' ').trim() 
         })
@@ -120,12 +114,6 @@ export default class Options extends React.Component {
     }
     handleVariantChange (variant) {
         this.setState ({variant : variant })
-    }
-    handleTurnsTimedChange (turnsTimed) {
-        this.setState ({turnsTimed : turnsTimed })
-    }
-    handleTimePerTurnChange (timePerTurn) {
-        this.setState ({timePerTurn : timePerTurn })
     }
     handleTimePerPlayerChange (timePerPlayer) {
         this.setState ({timePerPlayer : timePerPlayer })
@@ -150,12 +138,6 @@ export default class Options extends React.Component {
                     tableauSize = {this.state.tableauSize}
                     onChange = {this.handleTableauSizeChange}
                 ></TableauSize>
-                <TimedTurns
-                    turnsTimed = {this.state.turnsTimed}
-                    timePerTurn = {this.state.timePerTurn}
-                    onBoolChange = {this.handleTurnsTimedChange}
-                    onValueChange = {this.handleTimePerTurnChange}
-                ></TimedTurns>
                 <TimedPlayers
                     timePerPlayer = {this.state.timePerPlayer}
                     onValueChange = {this.handleTimePerPlayerChange}
@@ -301,44 +283,6 @@ function Variant (props) {
                 onChange = {handleChange}
                 checked = {props.variant === "Klondike"}
             ></input>
-        </div>
-    )
-}
-function TimedTurns (props) {
-    function handleBoolChange (event) {
-        props.onBoolChange (event.target.checked);
-    }
-    function handleValueChange (event) {
-        props.onValueChange (event.target.value);
-    }
-    return (
-        <div className = {"turnstimed"} >
-            <label htmlFor="turnstimed" >
-                Limit time for each turn
-            </label>
-            <input
-                checked = { props.turnsTimed}
-                onChange = {handleBoolChange}
-                id = {"turnstimed"}
-                type = "checkbox" ></input>
-            <label htmlFor = "timeperturn" >
-                Duration
-            </label>
-            <select
-                value = { props.timePerTurn}
-                onChange = {handleValueChange}
-                id = {"timeperturn"} >
-                <option value = {15} >15s</option>
-                <option value = {30} >30s</option>
-                <option value = {45} >45s</option>
-                <option value = {60} >60s</option>
-                <option value = {90} >90s</option>
-                <option value = {120} >120s</option>
-                <option value = {150} >150s</option>
-                <option value = {180} >180s</option>
-                <option value = {240} >240s</option>
-                <option value = {300} >300s</option>
-            </select>
         </div>
     )
 }
