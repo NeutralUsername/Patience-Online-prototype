@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ServerTime from './ServerTime';
 import Game from './Game';
 
 export default class Options extends React.Component {
@@ -143,9 +142,6 @@ export default class Options extends React.Component {
     render () {
         return (
             <div className = {"options"} >
-                <ServerTime
-                    socket = {this.props.socket}
-                ></ServerTime>
                 <MalusSize
                     malusSize = {this.state.malusSize}
                     onChange = {this.handleMalusSizeChange}

@@ -26,12 +26,6 @@ const activeGames = [];
 
 io.on ('connection', function (socket) {
     updateClientPendingRooms ();
-    socket.on('serverTimeREQ',  () => {
-        setInterval(function () {
-            socket.emit ('serverTimeRES', { data: new Date () });
-        },96);
-    });
-
     socket.on ('startAIgameREQ', async function (data) {
         try {
             await rateLimiter.consume (socket.handshake.address);
@@ -183,18 +177,11 @@ io.on ('connection', function (socket) {
             io.to(game.props.black).emit('actionFlipRES', clientStack)
     })
 
-    socket.on ('updateTimerREQ' , function ( data) {
-        var game = activeGames.find(game => game.props.id === data.gameid)
-        setInterval(function () {
-            game.state[game.state.turncolor+'timer'] = (game.state[game.state.turncolor+'timer']*1000 - 96)/1000
-            socket.emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
-        },96 );
-    })
-
     socket.on ('disconnect', function () {
         removePendingRoom (socket.id);
         var game = activeGames.find(game => game.props.red === socket.id || game.props.black === socket.id)
         if(game) {
+            clearInterval(game.playertimer);
             var gameindex = activeGames.findIndex(game => game.props.red === socket.id || game.props.black === socket.id)
             activeGames.splice(gameindex,1)
             if(game.props.red === socket.id) {
@@ -215,6 +202,13 @@ async function startGame (red, black, options) {
         activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
         console.log(activeGames.length);
     }
+
+    game.playertimer = setInterval(function () {
+        game.state[game.state.turncolor+'timer'] = (game.state[game.state.turncolor+'timer']*1000 - 96)/1000
+        io.to(red).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
+        if(black != 'AI') 
+            io.to(black).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
+    },96 );
 
     io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     if(black != 'AI') 

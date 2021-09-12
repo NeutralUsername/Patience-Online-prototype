@@ -14,7 +14,6 @@ var GameContext = {
     variant : {},
     turntimer : {},
     isturn : {},
-    mounted : {},
     lastmovefrom : {},
     lastmoveto : {},
     stockflipped : {},
@@ -84,19 +83,24 @@ export default class Game extends React.Component{
             }
         });
         this.props.socket.on("updateTimerRES", data => {
-            this.setState({ playertimer: data[GameContext.playercolor+'timer'] })
-            this.setState({ opponenttimer: data[GameContext.opponentcolor+'timer'] })
+            if (this.state.mounted) {
+                this.setState({ playertimer: data[GameContext.playercolor+'timer'] })
+                this.setState({ opponenttimer: data[GameContext.opponentcolor+'timer'] })
+            }
         });
 
         this.props.socket.on("gameAbortedRES", data => {
-            return (
-                ReactDOM.render (
-                    <Options
-                        socket = {this.props.socket}          
-                    ></Options>,
-                    document.getElementById ('root')
+            if (this.state.mounted) {
+                this.setState({mounted : false})
+                return (
+                    ReactDOM.render (
+                        <Options
+                            socket = {this.props.socket}          
+                        ></Options>,
+                        document.getElementById ('root')
+                    )
                 )
-            )
+            }
         });
     }
     
