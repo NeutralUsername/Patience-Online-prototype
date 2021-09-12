@@ -59,12 +59,12 @@ export default class Game extends React.Component{
             blackfoundation3 : props.initialState.stacks.blackfoundation3.cards,
             mounted : false,
             playertimer: GameContext.playercolor === 'red' ? props.initialState.redtimer : props.initialState.blacktimer,
-            opponenttimer: GameContext.playercolor === 'black' ? props.initialState.redtimer : props.initialState.blacktimer
+            opponenttimer: GameContext.playercolor === 'black' ? props.initialState.redtimer : props.initialState.blacktimer,
         };
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {
                 GameContext.stockflipped = false
-                GameContext.isturn = data.turn === GameContext.playercolor ? true : false
+                GameContext.isturn = data.turncolor === GameContext.playercolor ? true : false
                 if( ! (data.stacks[0].name.includes('stock') &&  data.stacks[1].name.includes('waste'))) 
                  {
                     GameContext.lastmovefrom = data.stacks[0].name

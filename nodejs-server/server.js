@@ -128,7 +128,7 @@ io.on ('connection', function (socket) {
                 if(!stackTo.length)
                     return
         }
-        
+
         var movingCard = stackFrom.cards.pop()
         db.insertMove(game.props.id,movingCard.cardid, data.to, 1, actorcolor, game.state.turn, new Date())
         stackTo.cards.push( movingCard )
@@ -150,13 +150,11 @@ io.on ('connection', function (socket) {
         if(stackFrom.cards.length) 
             if (stackFrom.name != actorcolor+'stock' )
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
-                
-        
         var clientStackFrom = prepareStackForClient(stackFrom)
         var clientStackTo = prepareStackForClient(stackTo)
-        io.to(game.props.red).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turn : game.state.turncolor})
+        io.to(game.props.red).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turncolor : game.state.turncolor})
         if(game.props.black != 'AI')
-            io.to(game.props.black).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turn : game.state.turncolor})
+            io.to(game.props.black).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turncolor : game.state.turncolor})
     }) 
 
     socket.on ('actionFlipREQ' , function ( data) {
