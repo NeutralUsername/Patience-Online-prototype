@@ -80,6 +80,8 @@ io.on ('connection', function (socket) {
 
     socket.on ('actionMoveREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
+        if(!game)
+            return
         var actorcolor = socket.id ===game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
         var turncolor = game.state.turncolor
         var movingCardData = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value)
@@ -162,6 +164,8 @@ io.on ('connection', function (socket) {
 
     socket.on ('actionFlipREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
+        if(!game)
+            return
         var actorcolor = socket.id === game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
         var turncolor = game.state.turncolor 
         if(!data.stack.includes(actorcolor))
@@ -189,7 +193,17 @@ io.on ('connection', function (socket) {
 
     socket.on ('disconnect', function () {
         removePendingRoom (socket.id);
-
+        var game = activeGames.find(game => game.props.red === socket.id || game.props.black === socket.id)
+        if(game) {
+            var gameindex = activeGames.findIndex(game => game.props.red === socket.id || game.props.black === socket.id)
+            activeGames.splice(gameindex,1)
+            if(game.props.red === socket.id) {
+                if(game.props.black != 'AI')
+                    io.to(game.props.black).emit('gameAbortedRES')
+            }
+            else
+                io.to(game.props.red).emit('gameAbortedRES')
+        }
     });
 });
 
@@ -199,7 +213,7 @@ async function startGame (red, black, options) {
     updateClientPendingRooms (); 
     for(var i = 0; i< 1; i++) {
         activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
-        console.log(game.props.id);
+        console.log(activeGames.length);
     }
 
     io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});

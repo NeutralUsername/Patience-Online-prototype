@@ -3,6 +3,7 @@ import socketIOClient from 'socket.io-client';
 import ReactDOM from 'react-dom';
 import { useDrag, DndProvider, useDrop  } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import Options from './Options';
 
 var GameContext = {
     id : {},
@@ -85,6 +86,17 @@ export default class Game extends React.Component{
         this.props.socket.on("updateTimerRES", data => {
             this.setState({ playertimer: data[GameContext.playercolor+'timer'] })
             this.setState({ opponenttimer: data[GameContext.opponentcolor+'timer'] })
+        });
+
+        this.props.socket.on("gameAbortedRES", data => {
+            return (
+                ReactDOM.render (
+                    <Options
+                        socket = {this.props.socket}          
+                    ></Options>,
+                    document.getElementById ('root')
+                )
+            )
         });
     }
     
