@@ -152,9 +152,6 @@ export default class Options extends React.Component {
                 <Online
                     handleNewClick = {this.handleCreateClick}         
                 ></Online>
-                <AI
-                    handleClick = {this.handleAIClick}
-                ></AI>
                 <PendingRooms
                     pendingRooms = {this.state.pendingRooms}
                     handleJoinClick = {this.handleJoinClick}
