@@ -90,7 +90,7 @@ module.exports = {
                 + "'"+ black + "'"  + ");", 
 
                 async function (err, game) { if (err) throw err;
-                  resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerTurn, await startcolor() ==='red' ? red: black)) 
+                  resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerTurn, await startcolor())) 
                 }
               )
             }
@@ -114,7 +114,7 @@ module.exports = {
                     + "'"+ red+"'"         + ", "
                     + "'"+ black+"'"       + ");", 
                     async function (err, game) { if (err) throw err;
-                      resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerTurn, await startcolor() ==='red' ? red: black))   
+                      resolve (newGame(game.insertId, options.throwOnWaste, options.throwOnMalus, options.variant, red, black, await stacks ( game.insertId , options, sqlstarted), options.timePerPlayer, options.timePerTurn, await startcolor()))   
                     }
                   )
                 } 
@@ -203,7 +203,7 @@ async function startcolor() {
 
   return shuffle([0,1])[0] ? 'red' : 'black'
 }
-function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, playertime, turntime, turnPlayer) {
+function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, playertime, turntime, turnColor) {
   return {
     props : { 
       red : red,
@@ -217,7 +217,7 @@ function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, pl
     state : {
       stacks : stacks,
       turn :  0,
-      turnplayer : turnPlayer,
+      turncolor : turnColor,
       redtimer : playertime,
       blacktimer : playertime,
     }

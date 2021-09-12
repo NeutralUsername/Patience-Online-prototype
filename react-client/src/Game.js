@@ -29,7 +29,7 @@ export default class Game extends React.Component{
         GameContext.throwOnWaste = props.throwOnWaste
         GameContext.throwOnMalus = props.throwOnMalus
         GameContext.variant = props.variant
-        GameContext.isturn = props.initialState.turnplayer === props.socket.id ? true : false
+        GameContext.isturn = props.initialState.turncolor === props.playercolor
         GameContext.lastmovefrom = {}
         GameContext.lastmoveto = {}
         GameContext.stockflipped = false
@@ -57,13 +57,14 @@ export default class Game extends React.Component{
             blackfoundation1 : props.initialState.stacks.blackfoundation1.cards,
             blackfoundation2 : props.initialState.stacks.blackfoundation2.cards,
             blackfoundation3 : props.initialState.stacks.blackfoundation3.cards,
+            mounted : false,
             playertimer: GameContext.playercolor === 'red' ? props.initialState.redtimer : props.initialState.blacktimer,
             opponenttimer: GameContext.playercolor === 'black' ? props.initialState.redtimer : props.initialState.blacktimer
         };
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {
                 GameContext.stockflipped = false
-                GameContext.isturn = data.turn === this.props.socket.id ? true : false
+                GameContext.isturn = data.turn === GameContext.playercolor ? true : false
                 if( ! (data.stacks[0].name.includes('stock') &&  data.stacks[1].name.includes('waste'))) 
                  {
                     GameContext.lastmovefrom = data.stacks[0].name
@@ -81,21 +82,18 @@ export default class Game extends React.Component{
                 this.setState({[data.name] : data.cards})
             }
         });
-        this.props.socket.on("timerRES", data => {
-            if (this.state.mounted) {
-                this.setState (data);
-            }
+        this.props.socket.on("updateTimerRES", data => {
+            console.log(data)
+            this.setState({ playertimer: data.data })
+            this.setState({ opponenttimer: data.data })
         });
-        this.props.socket.on("updatetimerRES", data => {
-            if(this.state.mounted)
-              this.setState({ playertimer: data.playertimer })
-              this.setState({ opponenttimer: data.opponenttimer })
-          });
     }
     
     componentDidMount() {
         this.setState({mounted : true})
+        GameContext.socket.emit('updateTimerREQ', {gameid : GameContext.id })
     }
+    
 
     render(){
         return (

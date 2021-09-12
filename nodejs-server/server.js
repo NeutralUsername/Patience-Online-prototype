@@ -81,7 +81,7 @@ io.on ('connection', function (socket) {
     socket.on ('actionMoveREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
         var actorcolor = socket.id ===game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
-        var turncolor = game.state.turnplayer === game.props.red ? 'red' : 'black' 
+        var turncolor = game.state.turncolor
         var movingCardData = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value)
         var stackTo =  game.state.stacks[data.to]
         var opponentcolor = socket.id === game.props.red ? "black" : socket.id ===game.props.black ? 'red': ''
@@ -137,7 +137,7 @@ io.on ('connection', function (socket) {
         stackTo.cards.push( movingCard )
         if(stackFrom.name === actorcolor+'stock') {
             if( stackTo.name === actorcolor+'waste')
-                game.state.turnplayer = game.props[opponentcolor];
+                game.state.turncolor = game.state.turncolor === 'red' ? 'black' : 'red'
             if(!stackFrom.cards.length) 
                 if(game.state.stacks[actorcolor+"stock"].cards.length === 0) {
                     var length = game.state.stacks[actorcolor+"waste"].cards.length
@@ -155,15 +155,15 @@ io.on ('connection', function (socket) {
         db.insertMove(game.props.id,movingCard.cardid, data.to, 1, actorcolor, -999, new Date())
         var clientStackFrom = prepareStackForClient(stackFrom)
         var clientStackTo = prepareStackForClient(stackTo)
-        io.to(game.props.red).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turn : game.state.turnplayer})
+        io.to(game.props.red).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turn : game.state.turncolor})
         if(game.props.black != 'AI')
-            io.to(game.props.black).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turn : game.state.turnplayer})
+            io.to(game.props.black).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turn : game.state.turncolor})
     }) 
 
     socket.on ('actionFlipREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
         var actorcolor = socket.id === game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
-        var turncolor = game.state.turnplayer === game.props.red ? 'red' : 'black'
+        var turncolor = game.state.turncolor 
         if(!data.stack.includes(actorcolor))
             return
         if(!data.stack.includes('stock'))
@@ -178,8 +178,18 @@ io.on ('connection', function (socket) {
         if(game.props.black != 'AI')
             io.to(game.props.black).emit('actionFlipRES', clientStack)
     })
+
+    socket.on ('updateTimerREQ' , function ( data) {
+        var game = activeGames.find(game => game.props.id === data.gameid)
+        console.log(game)
+        setInterval(function () {
+            socket.emit ('updateTimerRES', { data: new Date () });
+        },96);
+    })
+
     socket.on ('disconnect', function () {
         removePendingRoom (socket.id);
+
     });
 });
 
@@ -191,6 +201,7 @@ async function startGame (red, black, options) {
         activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
         console.log(game.props.id);
     }
+
     io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     if(black != 'AI') 
         io.to(black).emit ('startGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
@@ -247,10 +258,8 @@ function updateClientPendingRooms () {
 }
 
 function roundtimer (game) {
-  
-
-    
     socket.emit ('UpdateFieldRES', {roomkey : data.roomkey});
+
     socket.emit ('UpdateTimerRES', {roomkey : data.roomkey});
     socket.emit ('UpdateTurnColorRES', {roomkey : data.roomkey});
 }
