@@ -130,6 +130,7 @@ export default class Options extends React.Component {
     render () {
         return (
             <div className = {"options"} >
+                <label><i><b>{this.props.status ? this.props.status : ""}</b></i></label>
                 <MalusSize
                     malusSize = {this.state.malusSize}
                     onChange = {this.handleMalusSizeChange}

@@ -204,18 +204,17 @@ async function startGame (red, black, options) {
         console.log(activeGames.length);
     }
 
+  
+    io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
+    if(black != 'AI') 
+        io.to(black).emit ('startGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
+
     game.playertimer = setInterval(function () {
         game.state[game.state.turncolor+'timer'] = (game.state[game.state.turncolor+'timer']*1000 - 96)/1000
         io.to(red).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
         if(black != 'AI') 
             io.to(black).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
     },96 );
-
-    io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
-    if(black != 'AI') 
-        io.to(black).emit ('startGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
-
-   
 }
 
 function prepareStackForClient (stack) {

@@ -94,7 +94,8 @@ export default class Game extends React.Component{
                 return (
                     ReactDOM.render (
                         <Options
-                            socket = {this.props.socket}          
+                            socket = {this.props.socket}    
+                            status = {"other player disconnected. aborted game"}      
                         ></Options>,
                         document.getElementById ('root')
                     )
