@@ -21,7 +21,7 @@ only one card can be moved at once.
 _______
 install mysql, nodejs; 
 
-Create mysql user / password. (default gregaire / password)
+create mysql user / password. (default gregaire / password)
 
 
 
