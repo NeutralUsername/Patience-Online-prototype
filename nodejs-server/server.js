@@ -97,7 +97,7 @@ io.on ('connection', function (socket) {
         if(stackTo.cards.length){
             var stackUppermostCard =  db.cardIdDataPairs.find ( card=> card.cardid === stackTo.cards[stackTo.cards.length - 1 ].cardid )
             if(data.to === opponentcolor + 'malus' || data.to === opponentcolor + 'waste' ) 
-                if (  stackUppermostCard.suit === movingCardData.suit ) {
+                if ( stackUppermostCard.suit === movingCardData.suit ) {
                     if ( parseInt(stackUppermostCard.value) != parseInt(movingCardData.value) + 1 )
                         if ( parseInt(stackUppermostCard.value) != parseInt(movingCardData.value) - 1 )
                             return
@@ -203,7 +203,6 @@ async function startGame (red, black, options) {
         activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
         console.log(activeGames.length);
     }
-
   
     io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     if(black != 'AI') 

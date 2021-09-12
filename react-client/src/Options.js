@@ -116,7 +116,7 @@ export default class Options extends React.Component {
         this.setState ({variant : variant })
     }
     handleTimePerPlayerChange (timePerPlayer) {
-        this.setState ({timePerPlayer : timePerPlayer })
+        this.setState ({timePerPlayer : parseInt(timePerPlayer)})
     }
     handleRoomNameChange (roomName) {
         if(roomName.length <= 20)
