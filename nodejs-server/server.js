@@ -181,10 +181,10 @@ io.on ('connection', function (socket) {
 
     socket.on ('updateTimerREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
-        console.log(game)
         setInterval(function () {
-            socket.emit ('updateTimerRES', { data: new Date () });
-        },96);
+            game.state[game.state.turncolor+'timer'] = (game.state[game.state.turncolor+'timer']*10 - 1)/10
+            socket.emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
+        },100);
     })
 
     socket.on ('disconnect', function () {

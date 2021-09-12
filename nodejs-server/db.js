@@ -203,11 +203,11 @@ async function startcolor() {
 
   return shuffle([0,1])[0] ? 'red' : 'black'
 }
-function newGame(id, throwOnWaste, throwOnMalus, variant, red, black, stacks, playertime, turntime, turnColor) {
+function newGame(id, throwOnWaste, throwOnMalus, variant, redid, blackid, stacks, playertime, turntime, turnColor) {
   return {
     props : { 
-      red : red,
-      black : black,
+      red : redid,
+      black : blackid,
       id : id,
       turntime : turntime,
       throwOnWaste : throwOnWaste,
