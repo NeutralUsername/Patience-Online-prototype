@@ -53,6 +53,7 @@ module.exports = {
   },
   cardIdDataPairs : redIdDataPair.concat(blackIdDataPair),
   insertMove : async function (gameid, cardid, stack, faceup, player, turn, moved) {
+    console.log(turn)
     var sqlMoved = sqlCompatibleDate(moved)
     dbCon.query ("INSERT INTO actions VALUES ("
       +"0, "
@@ -216,7 +217,7 @@ function newGame(id, throwOnWaste, throwOnMalus, variant, redid, blackid, stacks
     },
     state : {
       stacks : stacks,
-      turn :  0,
+      turn :  1,
       turncolor : turnColor,
       redtimer : playertime,
       blacktimer : playertime,

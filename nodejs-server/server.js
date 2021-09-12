@@ -128,12 +128,15 @@ io.on ('connection', function (socket) {
                 if(!stackTo.length)
                     return
         }
-      
+        
         var movingCard = stackFrom.cards.pop()
+        db.insertMove(game.props.id,movingCard.cardid, data.to, 1, actorcolor, game.state.turn, new Date())
         stackTo.cards.push( movingCard )
         if(stackFrom.name === actorcolor+'stock') {
-            if( stackTo.name === actorcolor+'waste')
+            if( stackTo.name === actorcolor+'waste') {
+                game.state.turn++
                 game.state.turncolor = game.state.turncolor === 'red' ? 'black' : 'red'
+            }
             if(!stackFrom.cards.length) 
                 if(game.state.stacks[actorcolor+"stock"].cards.length === 0) {
                     var length = game.state.stacks[actorcolor+"waste"].cards.length
@@ -148,7 +151,7 @@ io.on ('connection', function (socket) {
             if (stackFrom.name != actorcolor+'stock' )
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
                 
-        db.insertMove(game.props.id,movingCard.cardid, data.to, 1, actorcolor, -999, new Date())
+        
         var clientStackFrom = prepareStackForClient(stackFrom)
         var clientStackTo = prepareStackForClient(stackTo)
         io.to(game.props.red).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turn : game.state.turncolor})
@@ -170,7 +173,7 @@ io.on ('connection', function (socket) {
             return 
         var stack = game.state.stacks[data.stack]
         stack.cards[stack.cards.length-1].faceup = 1;
-        db.insertMove(game.props.id, stack.cards[stack.cards.length-1].cardid, data.stack, 1, actorcolor, -999, new Date())
+        db.insertMove(game.props.id, stack.cards[stack.cards.length-1].cardid, data.stack, 1, actorcolor, game.state.turn, new Date())
         var clientStack = prepareStackForClient(game.state.stacks[data.stack])
         io.to(game.props.red).emit('actionFlipRES', clientStack)
         if(game.props.black != 'AI')
