@@ -60,6 +60,11 @@ export default class Game extends React.Component{
             playertimer: props.initialState.redtimer,  //doesnt matter which one since value is initially the same 
             opponenttimer: props.initialState.redtimer
         };
+      
+    }
+    
+    componentDidMount() {
+        this.setState({mounted : true})
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {
                 GameContext.stockflipped = false
@@ -101,10 +106,6 @@ export default class Game extends React.Component{
                 )
             }
         });
-    }
-    
-    componentDidMount() {
-        this.setState({mounted : true})
         GameContext.socket.emit('updateTimerREQ', {gameid : GameContext.id })
     }
     

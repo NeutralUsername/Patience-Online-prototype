@@ -151,18 +151,7 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
           if(malussize === malusSize-1)
             card.faceup = true
           stacks[((player === 0) ? ('redmalus') : ('blackmalus'))].cards.push(card)
-          actions.push( [
-            0, 
-            gameid, 
-            card.color, 
-            card.suit, 
-            card.value ,
-            ((player === 0) ? ('redmalus') : ('blackmalus')), 
-            ((player === 0) ? ('red') : ('black')), 
-            0,
-            timePerPlayer, 
-            timePerPlayer
-          ] )  
+          actions.push( [0, gameid, card.color, card.suit, card.value ,((player === 0) ? ('redmalus') : ('blackmalus')), ((player === 0) ? ('red') : ('black')),  0, timePerPlayer, timePerPlayer] )  
       }  
       
       for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
@@ -176,36 +165,14 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
           if(tableausize === tableauSize-1)
             card.faceup = true
           stacks[((player === 0 ) ? 'redtableau'+tableaunr: 'blacktableau'+tableaunr)].cards.push(card)
-          actions.push( [
-            0, 
-            gameid, 
-            card.color, 
-            card.suit, 
-            card.value ,
-            ((player === 0 ) ? 'redtableau'+tableaunr: 'blacktableau'+tableaunr),
-            ((player === 0) ? ('red') : ('black')), 
-            0,
-            timePerPlayer, 
-            timePerPlayer
-          ] )
+          actions.push( [ 0,  gameid,  card.color,  card.suit, card.value , ((player === 0 ) ? 'redtableau'+tableaunr: 'blacktableau'+tableaunr),((player === 0) ? ('red') : ('black')),  0, timePerPlayer,  timePerPlayer] )
         } 
       }
       for(var stock = 0 ; stock <  52 -malusSize - 4*tableauSize ; stock ++ ) {
         var card = player === 0 ? redDeck[counter++]  : blackDeck[counter++] ;
         card.number = cardcounter++
         stacks[((player === 0) ? ('redstock') : ('blackstock'))].cards.push(card)
-        actions.push( [
-          0, 
-          gameid, 
-          card.color, 
-          card.suit, 
-          card.value ,
-          ((player === 0) ? ('redstock') : ('blackstock')),
-          ((player === 0) ? ('red') : ('black')), 
-          0,
-          timePerPlayer, 
-          timePerPlayer
-        ] )
+        actions.push( [0,  gameid, card.color,  card.suit, card.value ,((player === 0) ? ('redstock') : ('blackstock')), ((player === 0) ? ('red') : ('black')),  0, timePerPlayer,  timePerPlayer] )
       }
     } 
     dbCon.query ("INSERT INTO actions (id, gameid, cardcolor,suit,value, stack, player, turn, redtimer, blacktimer) VALUES ?", [actions],
