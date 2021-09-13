@@ -137,15 +137,14 @@ io.on ('connection', function (socket) {
                 game.state.turn++
                 game.state.turncolor = game.state.turncolor === 'red' ? 'black' : 'red'
             }
-            if(!stackFrom.cards.length) 
-                if(game.state.stacks[actorcolor+"stock"].cards.length === 0) {
-                    var length = game.state.stacks[actorcolor+"waste"].cards.length
-                    for(var i = 0 ; i< length; i++) {
-                        var card = game.state.stacks[actorcolor+"waste"].cards.pop()
-                        card.faceup = 0
-                        game.state.stacks[actorcolor+"stock"].cards.push(card);
-                    }
+            if(!stackFrom.cards.length) {
+                var wasteSize = game.state.stacks[actorcolor+"waste"].cards.length
+                for(var i = 0 ; i< wasteSize; i++) {
+                    var card = game.state.stacks[actorcolor+"waste"].cards.pop()
+                    card.faceup = 0
+                    game.state.stacks[actorcolor+"stock"].cards.push(card);
                 }
+            }
         }
         if(stackFrom.cards.length) 
             if (stackFrom.name != actorcolor+'stock' )
@@ -202,7 +201,6 @@ async function startGame (red, black, options) {
     for(var i = 0; i< 1; i++) {
         activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
     }
-  
     io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     if(black != 'AI') 
         io.to(black).emit ('startGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
@@ -216,7 +214,6 @@ async function startGame (red, black, options) {
             activeGames.find(x=>x.props.id === game.props.id).state[game.state.turncolor+"timer"] = game.state[game.state.turncolor+"timer"]
         }
     }
-
     game.playertimer = setInterval(timer(game),1000 );
 }
 
