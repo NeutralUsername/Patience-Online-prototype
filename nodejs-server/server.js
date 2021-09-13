@@ -20,7 +20,7 @@ const rateLimiter = new RateLimiterMemory ({
     duration: .1,
 });
 var db = require('./db.js');
-db.createDBifNotExists()
+db.tryCreateDB()
 const pendingOnlineRooms = [];
 const activeGames = [];
 
@@ -78,7 +78,7 @@ io.on ('connection', function (socket) {
             return
         var actorcolor = socket.id ===game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
         var turncolor = game.state.turncolor
-        var movingCardData = db.cardIdDataPairs.find(card=> card.color === data.card.color && card.suit === data.card.suit && card.value === data.card.value)
+        var movingCardData = data.card
         var stackTo =  game.state.stacks[data.to]
         var opponentcolor = socket.id === game.props.red ? "black" : socket.id ===game.props.black ? 'red': ''
         var stackFrom = game.state.stacks[data.card.stack]
@@ -95,7 +95,7 @@ io.on ('connection', function (socket) {
         if(data.to === opponentcolor + 'stock' )
              return 
         if(stackTo.cards.length){
-            var stackUppermostCard =  db.cardIdDataPairs.find ( card=> card.cardid === stackTo.cards[stackTo.cards.length - 1 ].cardid )
+            var stackUppermostCard = stackTo.cards[stackTo.cards.length - 1 ]
             if(data.to === opponentcolor + 'malus' || data.to === opponentcolor + 'waste' ) 
                 if ( stackUppermostCard.suit === movingCardData.suit ) {
                     if ( parseInt(stackUppermostCard.value) != parseInt(movingCardData.value) + 1 )
@@ -130,7 +130,7 @@ io.on ('connection', function (socket) {
         }
 
         var movingCard = stackFrom.cards.pop()
-        db.insertMove(game.props.id,movingCard.cardid, data.to, 1, actorcolor, game.state.turn, new Date())
+        db.insertAction(game.props.id, movingCard.color, movingCard.suit, movingCard.value, data.to, "redtimer", "blacktimer", actorcolor, game.state.turn)
         stackTo.cards.push( movingCard )
         if(stackFrom.name === actorcolor+'stock') {
             if( stackTo.name === actorcolor+'waste') {
@@ -171,7 +171,7 @@ io.on ('connection', function (socket) {
             return 
         var stack = game.state.stacks[data.stack]
         stack.cards[stack.cards.length-1].faceup = 1;
-        db.insertMove(game.props.id, stack.cards[stack.cards.length-1].cardid, data.stack, 1, actorcolor, game.state.turn, new Date())
+        db.insertAction(game.props.id, stack.cards[stack.cards.length-1].color, stack.cards[stack.cards.length-1].suit, stack.cards[stack.cards.length-1].value,  data.to, "redtimer", "blacktimer", actorcolor, game.state.turn)
         var clientStack = prepareStackForClient(game.state.stacks[data.stack])
         io.to(game.props.red).emit('actionFlipRES', clientStack)
         if(game.props.black != 'AI')
@@ -201,7 +201,6 @@ async function startGame (red, black, options) {
     updateClientPendingRooms (); 
     for(var i = 0; i< 1; i++) {
         activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
-        console.log(activeGames.length);
     }
   
     io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
@@ -220,12 +219,9 @@ function prepareStackForClient (stack) {
     var clientStack =  JSON.parse(JSON.stringify(stack));
     if( clientStack.cards.length> 0) 
         for(card of  clientStack.cards) {
-            var carddata = db.cardIdDataPairs.find(x=>x.cardid === card.cardid)
-            delete card.cardid
-            card.color = carddata.color
-            if(card.faceup) {
-                card.suit = carddata.suit
-                card.value = carddata.value
+            if(!card.faceup) {
+                delete card.suit
+                delete card.value
             }
         }
     return clientStack
@@ -236,12 +232,9 @@ function prepareStateForClient (state) {
     Object.keys( clientState.stacks).map(stack=> {
         if( clientState.stacks[stack].cards.length> 0) 
             for(card of  clientState.stacks[stack].cards) {
-                var carddata = db.cardIdDataPairs.find(x=>x.cardid === card.cardid)
-                delete card.cardid
-                card.color = carddata.color
-                if(card.faceup) {
-                    card.suit = carddata.suit
-                    card.value = carddata.value
+                if(!card.faceup) {
+                    delete card.suit
+                    delete card.value
                 }
             }
      })

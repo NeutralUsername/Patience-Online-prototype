@@ -33,7 +33,6 @@ export default class Game extends React.Component{
         GameContext.lastmoveto = {}
         GameContext.stockflipped = false
         GameContext.socket = props.socket
-        console.log(props.initialState)
         this.state = {
             redmalus : props.initialState.stacks.redmalus.cards,
             redstock : props.initialState.stacks.redstock.cards,
@@ -91,7 +90,6 @@ export default class Game extends React.Component{
 
         this.props.socket.on("gameAbortedRES", data => {
             if (this.state.mounted) {
-                this.setState({mounted : false})
                 return (
                     ReactDOM.render (
                         <Options
@@ -110,7 +108,9 @@ export default class Game extends React.Component{
         GameContext.socket.emit('updateTimerREQ', {gameid : GameContext.id })
     }
     
-
+    componentWillUnmount() {
+        this.setState({mounted : false})
+    }
     render(){
         return (
             <DndProvider backend={HTML5Backend}>
