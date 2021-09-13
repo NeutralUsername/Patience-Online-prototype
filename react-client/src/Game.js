@@ -57,8 +57,8 @@ export default class Game extends React.Component{
             blackfoundation2 : props.initialState.stacks.blackfoundation2.cards,
             blackfoundation3 : props.initialState.stacks.blackfoundation3.cards,
             mounted : false,
-            playertimer: GameContext.playercolor === 'red' ? props.initialState.redtimer : props.initialState.blacktimer,
-            opponenttimer: GameContext.playercolor === 'black' ? props.initialState.redtimer : props.initialState.blacktimer,
+            playertimer: props.initialState.redtimer,  //doesnt matter which one since value is initially the same 
+            opponenttimer: props.initialState.redtimer
         };
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {

@@ -207,12 +207,17 @@ async function startGame (red, black, options) {
     if(black != 'AI') 
         io.to(black).emit ('startGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
 
-    game.playertimer = setInterval(function () {
-        game.state[game.state.turncolor+'timer'] = (game.state[game.state.turncolor+'timer']*1000 - 96)/1000
-        io.to(red).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
-        if(black != 'AI') 
-            io.to(black).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
-    },96 );
+    function timer (game) {
+        return  () => {
+            game.state[game.state.turncolor+'timer'] = (game.state[game.state.turncolor+'timer']*1000 - 96)/1000
+            io.to(red).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
+            if(black != 'AI') 
+                io.to(black).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
+            activeGames.find(x=>x.props.id === game.props.id).state[game.state.turncolor+"timer"] = game.state[game.state.turncolor+"timer"]
+        }
+    }
+
+    game.playertimer = setInterval(timer(game),96 );
 }
 
 function prepareStackForClient (stack) {
