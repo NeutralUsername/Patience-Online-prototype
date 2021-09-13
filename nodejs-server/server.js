@@ -209,7 +209,7 @@ async function startGame (red, black, options) {
 
     function timer (game) {
         return  () => {
-            game.state[game.state.turncolor+'timer'] = (game.state[game.state.turncolor+'timer']*1000 - 96)/1000
+            game.state[game.state.turncolor+'timer'] = (game.state[game.state.turncolor+'timer']*1000 - 1000)/1000
             io.to(red).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
             if(black != 'AI') 
                 io.to(black).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
@@ -217,7 +217,7 @@ async function startGame (red, black, options) {
         }
     }
 
-    game.playertimer = setInterval(timer(game),96 );
+    game.playertimer = setInterval(timer(game),1000 );
 }
 
 function prepareStackForClient (stack) {
