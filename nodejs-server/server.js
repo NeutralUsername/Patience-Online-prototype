@@ -211,7 +211,6 @@ async function startGame (red, black, options) {
             io.to(red).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
             if(black != 'AI') 
                 io.to(black).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
-            activeGames.find(x=>x.props.id === game.props.id).state[game.state.turncolor+"timer"] = game.state[game.state.turncolor+"timer"]
         }
     }
     game.playertimer = setInterval(timer(game),1000 );
