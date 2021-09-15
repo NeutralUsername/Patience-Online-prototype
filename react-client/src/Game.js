@@ -92,13 +92,11 @@ export default class Game extends React.Component{
                 this.setState({ opponenttimer: data[GameContext.opponentcolor+'timer'] })
             }
         });
-
         this.props.socket.on("gameAbortedRES", data => {
             if (this.state.mounted) {
                 return (
                     ReactDOM.render (
                         <Options
-                            socket = {this.props.socket}    
                             status = {"other player disconnected. aborted game"}      
                         ></Options>,
                         document.getElementById ('root')
@@ -106,7 +104,18 @@ export default class Game extends React.Component{
                 )
             }
         });
-        GameContext.socket.emit('updateTimerREQ', {gameid : GameContext.id })
+        this.props.socket.on("gameEndedRES", data => {
+            if (this.state.mounted) {
+                return (
+                    ReactDOM.render (
+                        <Options
+                            status = {"other player disconnected. aborted game"}      
+                        ></Options>,
+                        document.getElementById ('root')
+                    )
+                )
+            }
+        });
     }
     
     componentWillUnmount() {

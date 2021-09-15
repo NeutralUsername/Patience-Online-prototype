@@ -85,12 +85,12 @@ io.on ('connection', function (socket) {
 
         if(actorcolor != turncolor)
             return
-        if(data.to === actorcolor + 'stock' )
+        if(data.to === turncolor + 'stock' )
             return 
-        if(data.to === actorcolor + 'malus' )
+        if(data.to === turncolor + 'malus' )
             return 
-        if(data.to === actorcolor + 'waste' )
-            if(data.card.stack != actorcolor+'stock')
+        if(data.to === turncolor + 'waste' )
+            if(data.card.stack != turncolor+'stock')
                 return 
         if(data.to === opponentcolor + 'stock' )
              return 
@@ -132,28 +132,37 @@ io.on ('connection', function (socket) {
         var movingCard = stackFrom.cards.pop()
         db.insertAction(game.props.id, movingCard.color, movingCard.suit, movingCard.value, data.to, "redtimer", "blacktimer", actorcolor, game.state.turn)
         stackTo.cards.push( movingCard )
-        if(stackFrom.name === actorcolor+'stock') {
-            if( stackTo.name === actorcolor+'waste') {
+        if(stackFrom.name === turncolor+'stock') {
+            if( stackTo.name === turncolor+'waste') {
                 game.state.turn++
-                game.state.turncolor = game.state.turncolor === 'red' ? 'black' : 'red'
+                if(game.state.turncolor === 'red' ? game.state.blacktimer > 0 : game.state.redtimer > 0)
+                    game.state.turncolor = game.state.turncolor === 'red' ? 'black' : 'red'
             }
             if(!stackFrom.cards.length) {
-                var wasteSize = game.state.stacks[actorcolor+"waste"].cards.length
+                var wasteSize = game.state.stacks[turncolor+"waste"].cards.length
                 for(var i = 0 ; i< wasteSize; i++) {
-                    var card = game.state.stacks[actorcolor+"waste"].cards.pop()
+                    var card = game.state.stacks[turncolor+"waste"].cards.pop()
                     card.faceup = 0
-                    game.state.stacks[actorcolor+"stock"].cards.push(card);
+                    game.state.stacks[turncolor+"stock"].cards.push(card);
                 }
             }
         }
         if(stackFrom.cards.length) 
-            if (stackFrom.name != actorcolor+'stock' )
+            if (stackFrom.name != turncolor+'stock' )
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
         var clientStackFrom = prepareStackForClient(stackFrom)
         var clientStackTo = prepareStackForClient(stackTo)
         io.to(game.props.red).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turncolor : game.state.turncolor})
         if(game.props.black != 'AI')
             io.to(game.props.black).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turncolor : game.state.turncolor})
+
+        if(stackFrom.name.includes('malus')) 
+            if(!stackFrom.cards.length) {
+                clearInterval(game.playertimer);
+                io.to(game.props.red).emit('gameEndedRES', {result : ""})
+                if(game.props.black != 'AI')
+                    io.to(game.props.black).emit('gameEndedRES', {result : ""})
+            }
     }) 
 
     socket.on ('actionFlipREQ' , function ( data) {
@@ -162,12 +171,13 @@ io.on ('connection', function (socket) {
             return
         var actorcolor = socket.id === game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
         var turncolor = game.state.turncolor 
-        if(!data.stack.includes(actorcolor))
+        if(actorcolor != turncolor)
+            return 
+        if(!data.stack.includes(turncolor))
             return
         if(!data.stack.includes('stock'))
             return
-        if(actorcolor != turncolor)
-            return 
+       
         var stack = game.state.stacks[data.stack]
         stack.cards[stack.cards.length-1].faceup = 1;
         db.insertAction(game.props.id, stack.cards[stack.cards.length-1].color, stack.cards[stack.cards.length-1].suit, stack.cards[stack.cards.length-1].value,  data.to, "redtimer", "blacktimer", actorcolor, game.state.turn)
@@ -207,10 +217,31 @@ async function startGame (red, black, options) {
 
     function timer (game) {
         return  () => {
+            console.log("test")
             game.state[game.state.turncolor+'timer'] = (game.state[game.state.turncolor+'timer']*1000 - 1000)/1000
-            io.to(red).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
+            io.to(game.props.red).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
             if(black != 'AI') 
-                io.to(black).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
+                io.to(game.props.black).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
+            
+            if(!game.state[game.state.turncolor+"timer"]){
+                var opponentcolor = game.state.turncolor === 'red' ? 'black' : 'red'
+                if(game.state[opponentcolor+"timer"]) {
+                    var card = game.state.stacks[game.state.turncolor+"stock"].cards.pop()
+                    card.faceup = 1
+                    game.state.stacks[game.state.turncolor+"waste"].cards.push(card)
+                    io.to(game.props.red).emit('actionMoveRES', {stacks : [prepareStackForClient(game.state.stacks[game.state.turncolor+"stock"]) , prepareStackForClient(game.state.stacks[game.state.turncolor+"waste"])], turncolor : opponentcolor})
+                    if(game.props.black != 'AI')
+                        io.to(game.props.black).emit('actionMoveRES', {stacks : [prepareStackForClient(game.state.stacks[game.state.turncolor+"stock"]) , prepareStackForClient(game.state.stacks[game.state.turncolor+"waste"])], turncolor : opponentcolor})
+                    game.state.turncolor = opponentcolor
+                }
+                else {
+                    clearInterval(game.playertimer);
+                    io.to(game.props.red).emit ('gameEndedRES', { result :"???"});
+                    if(black != 'AI') 
+                        io.to(game.props.black).emit ('gameEndedRES', { result :"???"}); 
+                }       
+            }
+
         }
     }
     game.playertimer = setInterval(timer(game),1000 );
