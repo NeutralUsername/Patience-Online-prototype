@@ -1,9 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Game from './Game';
-
+import socketIOClient from 'socket.io-client';
+var socket
 export default class Options extends React.Component {
     constructor (props) {
+        
+        socket = socketIOClient ("http://127.0.0.1:3000", { transports : ['websocket'] });
+        console.log(socket)
         super (props);
         this.state = {
             malusSize : 14,
@@ -33,13 +37,13 @@ export default class Options extends React.Component {
 
     componentDidMount () {
         this.mounted = true;
-        this.props.socket.on("UpdatePendingRoomsRES", data => {
+        socket.on("UpdatePendingRoomsRES", data => {
             if(this.mounted){
                 this.setState ({pendingRooms : data.pendingRooms });
             }
         });
 
-        this.props.socket.on("startGameRES", data => {
+        socket.on("startGameRES", data => {
             if(this.mounted)
                 return (
                     ReactDOM.render (
@@ -51,15 +55,15 @@ export default class Options extends React.Component {
                             throwOnMalus = {data.props.throwOnMalus}
                             variant = {data.props.variant}
                             initialState = {data.initialState}
-                            socket = {this.props.socket}          
+                            socket = {socket}          
                         ></Game>,
                         document.getElementById ('root')
                     )
                 )
         });
 
-        this.props.socket.on("roomPasswordREQ", (data) => {
-            this.props.socket.emit('roomPasswordRES', {
+        socket.on("roomPasswordREQ", (data) => {
+            socket.emit('roomPasswordRES', {
                 password : prompt("Enter Room Password"),
                 roomkey : data.roomkey,
             });
@@ -70,19 +74,19 @@ export default class Options extends React.Component {
     }
 
     handleAIClick () {
-        this.props.socket.emit('startAIgameREQ', {
+        socket.emit('startAIgameREQ', {
             options : this.state,
         });
     };
 
     handleCreateClick () {
-        this.props.socket.emit('createOnlineRoomREQ', {
+        socket.emit('createOnlineRoomREQ', {
             options : this.state
         });
     };
 
     handleJoinClick (roomkey) {
-        this.props.socket.emit('joinOnlineRoomREQ', {
+        socket.emit('joinOnlineRoomREQ', {
             roomkey : roomkey
         });
       
