@@ -352,25 +352,25 @@ function Stack (props) {
                 return '59.5vmax'
         }
       
-        if(!props.player) {
-            if(props.stackname.includes('foundation0'))
-                return '40.8vmax'
-            if(props.stackname.includes('foundation1'))
-                return '40.8vmax'
-            if(props.stackname.includes('foundation2'))
-                return '40.8vmax'
-            if(props.stackname.includes('foundation3'))
-                return '40.8vmax'
-        }
         if(props.player) {
             if(props.stackname.includes('foundation0'))
-                return '52.5vmax'
+                return '41.3vmax'
             if(props.stackname.includes('foundation1'))
-                return '52.5vmax'
+                return '41.3vmax'
             if(props.stackname.includes('foundation2'))
-                return '52.5vmax'
+                return '41.3vmax'
             if(props.stackname.includes('foundation3'))
-                return '52.5vmax'
+                return '41.3vmax'
+        }
+        if(!props.player) {
+            if(props.stackname.includes('foundation0'))
+                return '52vmax'
+            if(props.stackname.includes('foundation1'))
+                return '52vmax'
+            if(props.stackname.includes('foundation2'))
+                return '52vmax'
+            if(props.stackname.includes('foundation3'))
+                return '52vmax'
         }
     }
     function rightValue () {
