@@ -391,13 +391,13 @@ function Stack (props) {
     function rightValue () {
         if(props.player) {
             if(props.stackname.includes('tableau0'))
-                return '-36vmax'
+                return '-40vmax'
             if(props.stackname.includes('tableau1'))
-                return '-36vmax'
+                return '-40vmax'
             if(props.stackname.includes('tableau2'))
-                return '-36vmax'
+                return '-40vmax'
             if(props.stackname.includes('tableau3'))
-                return '-36vmax'
+                return '-40vmax'
         }
     }
     function backgroundcolor() {
