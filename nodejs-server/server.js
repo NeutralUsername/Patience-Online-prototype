@@ -186,7 +186,12 @@ io.on ('connection', function (socket) {
         if(game.props.black != 'AI')
             io.to(game.props.black).emit('actionFlipRES', clientStack)
     })
-
+    socket.on ('endGameREQ' , function ( data) {
+       
+    })
+    socket.on ('surrenderREQ' , function ( data) {
+       
+    })
     socket.on ('disconnect', function () {
         removePendingRoom (socket.id);
         var game = activeGames.find(game => game.props.red === socket.id || game.props.black === socket.id)
@@ -217,7 +222,6 @@ async function startGame (red, black, options) {
 
     function timer (game) {
         return  () => {
-            console.log("test")
             game.state[game.state.turncolor+'timer'] = (game.state[game.state.turncolor+'timer']*1000 - 1000)/1000
             io.to(game.props.red).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
             if(black != 'AI') 
@@ -241,7 +245,6 @@ async function startGame (red, black, options) {
                         io.to(game.props.black).emit ('gameEndedRES', { result :"???"}); 
                 }       
             }
-
         }
     }
     game.playertimer = setInterval(timer(game),1000 );

@@ -127,20 +127,35 @@ export default class Game extends React.Component{
                 <div 
                     className="game"
                     style = {{
-                        position: 'fixed',
+                        position: 'absolute',
+                        textAlign:'center',
                     }}>
                     <div  style = {{
-                        position: 'fixed',
-                        marginTop : '95vmin',
-                        marginLeft : '2vmax',
-                        fontSize : '1.5vmax'
-                    }}>{this.state.playertimer.toFixed(0)}</div>
+                        position: 'relative',
+                        top : '75vmin',
+                        left : '48.8vmax',
+                        fontSize : '1.5vmax',
+                        textAlign:'center',
+                        minWidth : '1.8vmax'
+                        }}>{this.state.playertimer.toFixed(0)}
+                    </div>
+                    <div  style = {{
+                        position: 'relative',
+                        top : '17vmin',
+                        left : '48.8vmax',
+                        fontSize : '1.5vmax',
+                        textAlign :'center',
+                        minWidth : '1.8vmax'
+                        }}>{this.state.opponenttimer.toFixed(0)}
+                    </div>
                     <div  style = {{
                         position: 'fixed',
-                        marginTop : '1vmin',
-                        marginLeft : '2vmax',
-                        fontSize : '1.5vmax'
-                    }}>{this.state.opponenttimer.toFixed(0)}</div>
+                        marginTop : '82vmin',
+                        marginLeft : '75vmax',
+                        }}><button>
+                            End Game
+                        </button>
+                    </div>
                     <Stack 
                         stack = {this.state[this.props.playercolor+"malus"]} 
                         stackname = {this.props.playercolor+"malus"}
@@ -328,46 +343,47 @@ function Stack (props) {
             return '12.5vmax'   
         if(!props.player) {
             if(props.stackname.includes('tableau0'))
-                return '59.5vmax'
+                return '60vmax'
             if(props.stackname.includes('tableau1'))
-                return '59.5vmax'
+                return '60vmax'
             if(props.stackname.includes('tableau2'))
-                return '59.5vmax'
+                return '60vmax'
             if(props.stackname.includes('tableau3'))
-                return '59.5vmax'
+                return '60vmax'
+        }
+        if(props.player) {
+            if(props.stackname.includes('tableau0'))
+                return '29vmax'
+            if(props.stackname.includes('tableau1'))
+                return '29vmax'
+            if(props.stackname.includes('tableau2'))
+                return '29vmax'
+            if(props.stackname.includes('tableau3'))
+                return '29vmax'
         }
         if(!props.player) {
             if(props.stackname.includes('foundation0'))
-                return '41vmax'
+                return '41.5vmax'
             if(props.stackname.includes('foundation1'))
-                return '41vmax'
+                return '41.5vmax'
             if(props.stackname.includes('foundation2'))
-                return '41vmax'
+                return '41.5vmax'
             if(props.stackname.includes('foundation3'))
-                return '41vmax'
+                return '41.5vmax'
         }
         if(props.player) {
             if(props.stackname.includes('foundation0'))
-                return '51.7vmax'
+                return '52.5vmax'
             if(props.stackname.includes('foundation1'))
-                return '51.7vmax'
+                return '52.5vmax'
             if(props.stackname.includes('foundation2'))
-                return '51.7vmax'
+                return '52.5vmax'
             if(props.stackname.includes('foundation3'))
-                return '51.7vmax'
+                return '52.5vmax'
         }
     }
     function rightValue () {
-        if(props.player) {
-            if(props.stackname.includes('tableau0'))
-                return '-39.5vmax'
-            if(props.stackname.includes('tableau1'))
-                return '-39.5vmax'
-            if(props.stackname.includes('tableau2'))
-                return '-39.5vmax'
-            if(props.stackname.includes('tableau3'))
-                return '-39.5vmax'
-        }
+   
     }
     function backgroundcolor() {
         if ( GameContext.lastmovefrom)  
@@ -396,7 +412,7 @@ function Stack (props) {
             style = {{
                 border: '.01vmax  solid Silver',
                 backgroundColor: backgroundcolor(),
-                position : 'absolute',
+                position : 'fixed',
                 left : leftValue(),
                 right : rightValue(),
                 top : topValues(),

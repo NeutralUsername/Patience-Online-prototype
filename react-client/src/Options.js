@@ -5,7 +5,6 @@ import socketIOClient from 'socket.io-client';
 var socket
 export default class Options extends React.Component {
     constructor (props) {
-        
         socket = socketIOClient ("http://127.0.0.1:3000", { transports : ['websocket'] });
         console.log(socket)
         super (props);
@@ -15,7 +14,7 @@ export default class Options extends React.Component {
             throwOnWaste : true,
             throwOnMalus : true,
             variant : "Patience",
-            timePerPlayer : 1800,
+            timePerPlayer : 12,
             roomName : '',
             roomPassword : '',
             pendingRooms : [],
