@@ -150,8 +150,8 @@ export default class Game extends React.Component{
                     </div>
                     <div  style = {{
                         position: 'fixed',
-                        marginTop : '82vmin',
-                        marginLeft : '75vmax',
+                        marginTop : '88vmin',
+                        marginLeft : '0vmax',
                         }}><button>
                             End Game
                         </button>
@@ -343,24 +343,24 @@ function Stack (props) {
             return '12.5vmax'   
         if(!props.player) {
             if(props.stackname.includes('tableau0'))
-                return '60vmax'
+                return '59.5vmax'
             if(props.stackname.includes('tableau1'))
-                return '60vmax'
+                return '59.5vmax'
             if(props.stackname.includes('tableau2'))
-                return '60vmax'
+                return '59.5vmax'
             if(props.stackname.includes('tableau3'))
-                return '60vmax'
+                return '59.5vmax'
         }
       
         if(!props.player) {
             if(props.stackname.includes('foundation0'))
-                return '41.5vmax'
+                return '40.8vmax'
             if(props.stackname.includes('foundation1'))
-                return '41.5vmax'
+                return '40.8vmax'
             if(props.stackname.includes('foundation2'))
-                return '41.5vmax'
+                return '40.8vmax'
             if(props.stackname.includes('foundation3'))
-                return '41.5vmax'
+                return '40.8vmax'
         }
         if(props.player) {
             if(props.stackname.includes('foundation0'))
@@ -376,13 +376,13 @@ function Stack (props) {
     function rightValue () {
         if(props.player) {
             if(props.stackname.includes('tableau0'))
-                return '59.8vmax'
+                return '-36vmax'
             if(props.stackname.includes('tableau1'))
-                return '59.8vmax'
+                return '-36vmax'
             if(props.stackname.includes('tableau2'))
-                return '59.8vmax'
+                return '-36vmax'
             if(props.stackname.includes('tableau3'))
-                return '59.8vmax'
+                return '-36vmax'
         }
     }
     function backgroundcolor() {
@@ -412,7 +412,7 @@ function Stack (props) {
             style = {{
                 border: '.01vmax  solid Silver',
                 backgroundColor: backgroundcolor(),
-                position : 'fixed',
+                position : 'absolute',
                 left : leftValue(),
                 right : rightValue(),
                 top : topValues(),
