@@ -437,11 +437,12 @@ function Stack (props) {
                 overflow:'hidden',
                 paddingLeft : '.5vmax',
                 paddingRight : '.5vmax',
-                paddingTop : '.01vmin',
-                paddingBottom : '.01vmin',
-                width : 2.6 + (props.stacktype != 'pile' ? (props.stack.length>0?(props.stack.length*2.5) : 2.5) : 2.5 )+'vmax' ,
+                paddingTop : 'auto',
+                paddingBottom : 'auto',
+                minWidth : '5.1vmax',
                 height : '7.6vmax',
                 maxHeight : '15vmin',
+
             }}> 
             {props.stack.map( (card,index) => 
                 <Card 
@@ -634,15 +635,15 @@ function Card (props) {
                 position : 'inherit',
                 fontWeight: 'bold',
                 cursor: cursor ()  ,
-                borderRadius: '10px',
+                borderRadius: '7px',
                 padding : '.4vmax',
                 position : props.stack.includes('stock') || props.stack.includes('foundation') || props.stack.includes('waste') ?'absolute':'',
-                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.6vmax':'0' : props.stack.includes('tableau') && ! props.playerStack && ! props.uppermost? '-2.6vmax':'0',
-                marginLeft : props.stack.includes('tableau')  && props.playerStack ? !props.uppermost ? '-2.6vmax' :'0' : '0',
+                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-4.3vmin':'0' : props.stack.includes('tableau') && ! props.playerStack && ! props.uppermost? '-4.3vmin':'0',
+                marginLeft : props.stack.includes('tableau')  && props.playerStack ? !props.uppermost ? '-4.3vmin' :'0' : '0',
                 height: height(),
                 width: width(),
                 maxHeight : '11vmin',
-                
+                maxWidth : '8.0vmin',
                 zIndex : '1',
                 background : backgroundImage(),
                 backgroundSize : props.card.faceup ? 'contain' :'',
