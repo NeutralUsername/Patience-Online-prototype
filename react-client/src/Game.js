@@ -130,31 +130,46 @@ export default class Game extends React.Component{
                         position: 'absolute',
                         textAlign:'center',
                     }}>
-                    <div  style = {{
-                        position: 'relative',
-                        top : '75vmin',
-                        left : '47.7vmax',
-                        fontSize : '1.5vmax',
+                    <div style = {{
+                        position: 'fixed',
                         textAlign:'center',
-                        minWidth : '4vmax'
-                        }}>{this.state.playertimer.toFixed(0)}
-                    </div>
-                    <div  style = {{
-                        position: 'relative',
-                        top : '17vmin',
-                        left : '47.7vmax',
-                        fontSize : '1.5vmax',
-                        textAlign :'center',
-                        minWidth : '4vmax'
-                        }}>{this.state.opponenttimer.toFixed(0)}
+                        top : '77vmin',
+                        left : '48.2vmax',
+                    }}>
+                        <div  style = {{
+                            position: 'relative',
+                            fontSize : '1.5vmax',
+                            textAlign:'center',
+                            minWidth : '4vmax'
+                            }}>{this.state.playertimer.toFixed(0)}
+                        </div>
+                    </div >
+                    <div style = {{
+                        position: 'fixed',
+                        textAlign:'center',
+                        top : '21vmin',
+                        left : '48.2vmax',
+                    }}>
+                        <div  style = {{
+                            position: 'relative',
+                            fontSize : '1.5vmax',
+                            textAlign :'center',
+                            minWidth : '4vmax'
+                            }}>{this.state.opponenttimer.toFixed(0)}
+                        </div>
                     </div>
                     <div  style = {{
                         position: 'fixed',
-                        marginTop : '88vmin',
-                        marginLeft : '0vmax',
-                        }}><button>
-                            End Game
-                        </button>
+                        textAlign:'center',
+                        top : '95vmin',
+                        left : '1vmax',
+                    }}>
+                        <div  style = {{
+                            position: 'fixed',
+                            }}><button>
+                                End Game
+                            </button>
+                        </div>
                     </div>
                     <Stack 
                         stack = {this.state[this.props.playercolor+"malus"]} 
