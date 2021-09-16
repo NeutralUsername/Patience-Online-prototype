@@ -133,19 +133,19 @@ export default class Game extends React.Component{
                     <div  style = {{
                         position: 'relative',
                         top : '75vmin',
-                        left : '48.8vmax',
+                        left : '47.7vmax',
                         fontSize : '1.5vmax',
                         textAlign:'center',
-                        minWidth : '1.8vmax'
+                        minWidth : '4vmax'
                         }}>{this.state.playertimer.toFixed(0)}
                     </div>
                     <div  style = {{
                         position: 'relative',
                         top : '17vmin',
-                        left : '48.8vmax',
+                        left : '47.7vmax',
                         fontSize : '1.5vmax',
                         textAlign :'center',
-                        minWidth : '1.8vmax'
+                        minWidth : '4vmax'
                         }}>{this.state.opponenttimer.toFixed(0)}
                     </div>
                     <div  style = {{
