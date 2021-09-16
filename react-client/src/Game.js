@@ -439,12 +439,11 @@ function Stack (props) {
                 paddingRight : '.5vmax',
                 paddingTop : 'auto',
                 paddingBottom : 'auto',
-                minWidth : '5.1vmax',
+               
                 height : '7.6vmax',
                 maxHeight : '15vmin',
-
             }}> 
-            {props.stack.map( (card,index) => 
+            {props.stack.length ? props.stack.map( (card,index) => 
                 <Card 
                     key = {card.number+" "+(index === (props.stack.length-1))+" "+GameContext.isturn+" "+!GameContext.stockflipped}
                     card = {card}
@@ -453,7 +452,21 @@ function Stack (props) {
                     uppermost = {index === (props.stack.length-1)}
                     onClick = {props.onDrop}
                 ></Card>
-            )}
+            ) : <div style = {{
+                    fontSize: '1.5vmax',
+                    lineHeight :'1.5vmax',
+                    position : 'inherit',
+                    fontWeight: 'bold',
+                    padding : '.4vmax',
+                    position :'',
+                    height: 6+"vmax",
+                    width: 4+"vmax",
+                    maxHeight : '11vmin',
+                    maxWidth : '8.0vmin',
+                    zIndex : '1',
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "center center",
+            }}></div>}
         </ul>
     )
 }
@@ -613,12 +626,6 @@ function Card (props) {
             }
         }
     }
-    function height () {
-        return 6+"vmax"
-    }
-    function width () {
-        return 4+"vmax"
-    }
     return (
         <div 
             onDragStart ={e=> {
@@ -637,11 +644,11 @@ function Card (props) {
                 cursor: cursor ()  ,
                 borderRadius: '7px',
                 padding : '.4vmax',
-                position : props.stack.includes('stock') || props.stack.includes('foundation') || props.stack.includes('waste') ?'absolute':'',
+                position :'',
                 marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-4.3vmin':'0' : props.stack.includes('tableau') && ! props.playerStack && ! props.uppermost? '-4.3vmin':'0',
                 marginLeft : props.stack.includes('tableau')  && props.playerStack ? !props.uppermost ? '-4.3vmin' :'0' : '0',
-                height: height(),
-                width: width(),
+                height: 6+"vmax",
+                width: 4+"vmax",
                 maxHeight : '11vmin',
                 maxWidth : '8.0vmin',
                 zIndex : '1',
@@ -652,7 +659,8 @@ function Card (props) {
                 backgroundColor : 'white',
                 opacity: props.card.faceup ? isdragging ? 0.3 : 1 : 1,
                 color: props.card.suit === '♥' || props.card.suit === '♦'?'red':'black',
-                border: '.15vmax  solid black',            
+                border: '2px  solid black',    
+                        
             }}
             className = {'card '+"cards-"+ props.stack+' '+ props.card.color +' '+ (props.card.faceup ? 'faceup' : 'facedown')+ (props.card.faceup ? ' '+props.card.suit : '') +(props.card.faceup ? ' '+ props.card.value : '')} >
               

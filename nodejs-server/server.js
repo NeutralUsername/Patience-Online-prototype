@@ -255,26 +255,33 @@ async function startGame (red, black, options) {
 
 function prepareStackForClient (stack) {
     var clientStack =  JSON.parse(JSON.stringify(stack));
-    if( clientStack.cards.length> 0) 
+    if( clientStack.cards.length> 0) {
+        if(clientStack.type === "pile")
+        clientStack.cards = [clientStack.cards.pop()]
         for(card of  clientStack.cards) {
             if(!card.faceup) {
                 delete card.suit
                 delete card.value
             }
         }
+    }
+       
     return clientStack
 }
 
 function prepareStateForClient (state) {
     var clientState = JSON.parse(JSON.stringify(state));
     Object.keys( clientState.stacks).map(stack=> {
-        if( clientState.stacks[stack].cards.length> 0) 
+        if( clientState.stacks[stack].cards.length> 0) {
+            if(clientState.stacks[stack].type === "pile")
+            clientState.stacks[stack].cards = [clientState.stacks[stack].cards.pop()]
             for(card of  clientState.stacks[stack].cards) {
                 if(!card.faceup) {
                     delete card.suit
                     delete card.value
                 }
             }
+        }
      })
     return clientState
  }
