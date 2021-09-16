@@ -15,7 +15,7 @@ export default class Options extends React.Component {
             throwOnWaste : true,
             throwOnMalus : true,
             variant : "Patience",
-            timePerPlayer : 1800,
+            timePerPlayer : 900,
             roomName : '',
             roomPassword : '',
             pendingRooms : [],
