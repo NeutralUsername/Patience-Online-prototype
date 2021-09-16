@@ -351,16 +351,7 @@ function Stack (props) {
             if(props.stackname.includes('tableau3'))
                 return '60vmax'
         }
-        if(props.player) {
-            if(props.stackname.includes('tableau0'))
-                return '29vmax'
-            if(props.stackname.includes('tableau1'))
-                return '29vmax'
-            if(props.stackname.includes('tableau2'))
-                return '29vmax'
-            if(props.stackname.includes('tableau3'))
-                return '29vmax'
-        }
+      
         if(!props.player) {
             if(props.stackname.includes('foundation0'))
                 return '41.5vmax'
@@ -383,7 +374,16 @@ function Stack (props) {
         }
     }
     function rightValue () {
-   
+        if(props.player) {
+            if(props.stackname.includes('tableau0'))
+                return '59.8vmax'
+            if(props.stackname.includes('tableau1'))
+                return '59.8vmax'
+            if(props.stackname.includes('tableau2'))
+                return '59.8vmax'
+            if(props.stackname.includes('tableau3'))
+                return '59.8vmax'
+        }
     }
     function backgroundcolor() {
         if ( GameContext.lastmovefrom)  

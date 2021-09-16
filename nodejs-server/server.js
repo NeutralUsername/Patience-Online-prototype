@@ -247,7 +247,10 @@ async function startGame (red, black, options) {
             }
         }
     }
+    
     game.playertimer = setInterval(timer(game),1000 );
+    
+    
 }
 
 function prepareStackForClient (stack) {
