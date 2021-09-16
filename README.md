@@ -1,4 +1,4 @@
-![ui game](https://user-images.githubusercontent.com/39095721/133604724-ce34a486-1f5e-4b3c-a5d0-15a95890a943.JPG)
+![ui game](https://user-images.githubusercontent.com/39095721/133636418-ce07f765-8c75-478a-9183-b5f06ea045db.JPG)
 
 
 gregaire is a 2 player solitaire type card game.
