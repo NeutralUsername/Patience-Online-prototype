@@ -311,28 +311,28 @@ function Stack (props) {
     function topValues (){
         if(!props.player) {
             if(props.stackname.includes('malus'))
-                return '0vmin'
+                return '-1vmin'
             if(props.stackname.includes('stock'))
-                return '0vmin'
+                return '-1vmin'
             if(props.stackname.includes('waste'))
-                return '0vmin'
+                return '-1vmin'
         }
         if(props.player) {
             if(props.stackname.includes('malus'))
-                return '82vmin'
+                return '81vmin'
             if(props.stackname.includes('stock'))
-                return '82vmin'
+                return '81vmin'
             if(props.stackname.includes('waste'))
-                return '82vmin'
+                return '81vmin'
         }
         if(props.stackname.includes('tableau0') || props.stackname.includes('foundation0'))
-            return '17vmin'
+            return '16vmin'
         if(props.stackname.includes('tableau1')|| props.stackname.includes('foundation1'))
-            return '33vmin'
+            return '32vmin'
         if(props.stackname.includes('tableau2')|| props.stackname.includes('foundation2'))
-            return '49vmin'
+            return '48vmin'
         if(props.stackname.includes('tableau3')|| props.stackname.includes('foundation3'))
-            return '65vmin'
+            return '64vmin'
     }
     function leftValue() {
         if(props.stackname.includes('stock'))
@@ -425,7 +425,8 @@ function Stack (props) {
                 paddingTop : '.01vmin',
                 paddingBottom : '.01vmin',
                 width : 2.6 + (props.stacktype != 'pile' ? (props.stack.length>0?(props.stack.length*2.5) : 2.5) : 2.5 )+'vmax' ,
-                height : '14vmin',
+                height : '7.6vmax',
+                maxHeight : '15vmin',
             }}> 
             {props.stack.map( (card,index) => 
                 <Card 
@@ -465,12 +466,7 @@ function Card (props) {
     function handleClick() {
         GameContext.socket.emit('actionFlipREQ', {gameid : GameContext.id , stack: props.stack})
     }
-    function height () {
-        return 10+"vmin"
-    }
-    function width () {
-        return 4+"vmax"
-    }
+ 
     function cursor () {
         if( (GameContext.stockflipped && ! props.stack.includes('stock') ) || !props.uppermost || props.stack.includes('foundation')  || props.stack.includes(GameContext.opponentcolor+"waste") || props.stack.includes(GameContext.opponentcolor+"malus")|| props.stack.includes(GameContext.opponentcolor+"stock") ||  props.stack.includes(GameContext.playercolor+"waste")  || ! GameContext.isturn )
             return "cursor"
@@ -480,7 +476,7 @@ function Card (props) {
             return "grab"
     }
 
-    function backGroundImage() {
+    function backgroundImage() {
         if(!props.card.faceup)
             if(props.card.color ==='red')
                 return 'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-red-sticker-1600042082.903987.png")'
@@ -601,7 +597,12 @@ function Card (props) {
             }
         }
     }
-
+    function height () {
+        return 6+"vmax"
+    }
+    function width () {
+        return 4+"vmax"
+    }
     return (
         <div 
             onDragStart ={e=> {
@@ -618,15 +619,17 @@ function Card (props) {
                 position : 'inherit',
                 fontWeight: 'bold',
                 cursor: cursor ()  ,
-                borderRadius: '.7vmax',
+                borderRadius: '10px',
                 padding : '.4vmax',
                 position : props.stack.includes('stock') || props.stack.includes('foundation') || props.stack.includes('waste') ?'absolute':'',
                 marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.6vmax':'0' : props.stack.includes('tableau') && ! props.playerStack && ! props.uppermost? '-2.6vmax':'0',
                 marginLeft : props.stack.includes('tableau')  && props.playerStack ? !props.uppermost ? '-2.6vmax' :'0' : '0',
                 height: height(),
                 width: width(),
+                maxHeight : '11vmin',
+                
                 zIndex : '1',
-                background : backGroundImage(),
+                background : backgroundImage(),
                 backgroundSize : props.card.faceup ? 'contain' :'',
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center center",

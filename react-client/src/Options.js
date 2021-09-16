@@ -224,71 +224,6 @@ function TableauSize(props) {
     )
 
 }
-function ThrowOnWaste (props) {
-    function handleChange (event) {
-        props.onChange (event.target.checked);
-    }
-    return (
-        <div className = {"throwonWaste"} >
-            <label htmlFor = "throwonWaste-cb" >
-                Throw on Opponent Waste Pile
-            </label>
-            <input
-                checked = { props.throwOnWaste}
-                onChange = {handleChange}
-                id = {"throwonWastecb"}
-                type = {"checkbox"}
-            ></input>
-        </div>
-    )
-}
-function ThrowOnMalus (props) {
-    function handleChange (event) {
-        props.onChange (event.target.checked);
-    }
-    return (
-        <div className = {"throwonmalus"} >
-            <label htmlFor = "throwmaluscb" >
-                Throw on Opponent Malus
-            </label>
-            <input
-                checked = { props.throwOnMalus}
-                onChange = {handleChange}
-                id = {"throwmaluscb"}
-                type = {"checkbox"}
-            ></input>
-        </div>
-        )
-}
-function Variant (props) {
-    function handleChange (event) {
-        props.onChange (event.target.value);
-    }
-    return (
-        <div className = {"variant"} >
-            <label>
-                Patience Variant
-            </label>
-            <input
-                name = 'variant'
-                value = 'Patience'
-                type = {"radio"}
-                onChange = {handleChange}
-                checked = {props.variant === "Patience"}
-            ></input>
-            <label>
-                Klondike Variant
-            </label>
-            <input
-                name = 'variant'
-                value = 'Klondike'
-                type = {"radio"}
-                onChange = {handleChange}
-                checked = {props.variant === "Klondike"}
-            ></input>
-        </div>
-    )
-}
 function TimedPlayers (props) {
     function handleValueChange (event) {
         props.onValueChange (event.target.value);
@@ -343,19 +278,6 @@ function  Room (props) {
                 onChange = {handleRoomPasswordChange}
                 value = { props.roomPassword}
             ></input>
-        </div>
-    )
-}
-function AI (props) {
-    return (
-        <div className = {"ai"} >
-            <label>
-                vs. AI
-            </label>
-            <button
-                onClick = {props.handleClick} >
-                Start
-            </button>
         </div>
     )
 }
