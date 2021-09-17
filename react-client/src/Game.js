@@ -68,12 +68,13 @@ export default class Game extends React.Component{
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {
                 GameContext.stockflipped = false
-                GameContext.isturn = data.turncolor === GameContext.playercolor ? true : false
-                if( ! (data.stacks[0].name.includes('stock') &&  data.stacks[1].name.includes('waste'))) 
+              
+                if( !GameContext.isturn ) 
                  {
                     GameContext.lastmovefrom = data.stacks[0].name
                     GameContext.lastmoveto = data.stacks[1].name
                 }
+                GameContext.isturn = data.turncolor === GameContext.playercolor ? true : false
                 this.setState({[data.stacks[0].name] : data.stacks[0].cards})
                 this.setState({[data.stacks[1].name] : data.stacks[1].cards})
             }
@@ -106,16 +107,20 @@ export default class Game extends React.Component{
         });
         this.props.socket.on("gameEndedRES", data => {
             if (this.state.mounted) {
+                alert("the winner is " + data.result)
                 return (
                     ReactDOM.render (
                         <Options
-                            status = {"other player disconnected. aborted game"}      
+                            status = {"the winner is " + data.result}      
                         ></Options>,
                         document.getElementById ('root')
                     )
                 )
             }
         });
+        this.props.socket.on("surrenderHandshakeRES", data => {
+            
+        })
     }
     
     componentWillUnmount() {
@@ -129,6 +134,7 @@ export default class Game extends React.Component{
                     style = {{
                         position: 'absolute',
                         textAlign:'center',
+                        backgroundColor : '#EDEBE9'
                     }}>
                     <div style = {{
                         position: 'fixed',
@@ -405,21 +411,22 @@ function Stack (props) {
             if(GameContext.lastmovefrom != GameContext.lastmoveto) {
                 if(!GameContext.isturn)
                     if(props.stackname === GameContext.lastmovefrom)
-                        return '#e7fffe' 
+                        return '#baffc4' 
                 if(!GameContext.isturn)
                     if(props.stackname ===GameContext.lastmoveto)
-                        return  '#00ffef'
+                        return  '#6af77d'
             }
             else if(props.stackname === GameContext.lastmovefrom)
                 if(GameContext.stockflipped)
                     return '#ff6770 '
                 
         if(((props.stackname === GameContext.playercolor+"stock" ||props.stackname === GameContext.playercolor+"waste"||props.stackname === GameContext.playercolor+"malus") && GameContext.isturn )) 
-            return '#c0ffb4 '
+            return '#91d3ff '
         else if ((props.stackname === GameContext.opponentcolor+"stock" ||props.stackname ===  GameContext.opponentcolor+"waste"||props.stackname ===  GameContext.opponentcolor+"malus"  )&& !GameContext.isturn ) 
-            return '#fdffb4'
-        return '#EEEEEE'
+            return '#91d3ff'
+        return '#d7d3cd'
     }
+    //#d7d3cd
     return (
         <ul 
             ref={drop}
@@ -645,8 +652,10 @@ function Card (props) {
                 borderRadius: '7px',
                 padding : '.4vmax',
                 position :'',
-                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-4.3vmin':'0' : props.stack.includes('tableau') && ! props.playerStack && ! props.uppermost? '-4.3vmin':'0',
-                marginLeft : props.stack.includes('tableau')  && props.playerStack ? !props.uppermost ? '-4.3vmin' :'0' : '0',
+                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.9vmax':'0' : props.stack.includes('tableau') && ! props.playerStack && ! props.uppermost? '-2.9vmax':'0',
+                marginLeft : props.stack.includes('tableau')  && props.playerStack ? !props.uppermost ? '-2.9vmax' :'0' : '0',
+                
+                
                 height: 6+"vmax",
                 width: 4+"vmax",
                 maxHeight : '11vmin',
