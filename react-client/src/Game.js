@@ -425,19 +425,19 @@ function Stack (props) {
             if(GameContext.lastmovefrom != GameContext.lastmoveto) {
                 if(!GameContext.isturn)
                     if(props.stackname === GameContext.lastmovefrom)
-                        return '#80ff80' 
+                        return '#EE82EE'
                 if(!GameContext.isturn)
                     if(props.stackname ===GameContext.lastmoveto)
-                        return  '#80ff80'
+                        return  '#EE82EE'
             }
             else if(props.stackname === GameContext.lastmovefrom)
                 if(GameContext.stockflipped)
                     return '#ff6770 '
                 
         if(((props.stackname === GameContext.playercolor+"stock" ||props.stackname === GameContext.playercolor+"waste"||props.stackname === GameContext.playercolor+"malus") && GameContext.isturn )) 
-            return '#91d3ff '
+            return '#90EE90'
         else if ((props.stackname === GameContext.opponentcolor+"stock" ||props.stackname ===  GameContext.opponentcolor+"waste"||props.stackname ===  GameContext.opponentcolor+"malus"  )&& !GameContext.isturn ) 
-            return '#91d3ff'
+            return '#90EE90'
         return '#f1debe'
     }
     //#d7d3cd
