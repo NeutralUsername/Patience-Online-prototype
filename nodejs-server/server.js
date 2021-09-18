@@ -74,8 +74,6 @@ io.on ('connection', function (socket) {
 
     socket.on ('actionMoveREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
-        if(!game)
-            return
         var actorcolor = socket.id ===game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
         var turncolor = game.state.turncolor
         var movingCardData = data.card
@@ -83,6 +81,8 @@ io.on ('connection', function (socket) {
         var opponentcolor = socket.id === game.props.red ? "black" : socket.id ===game.props.black ? 'red': ''
         var stackFrom = game.state.stacks[data.card.stack]
 
+        if(!game)
+            return
         if(actorcolor != turncolor)
             return
         if(data.to === turncolor + 'stock' )
@@ -222,38 +222,6 @@ async function startGame (red, black, options) {
     io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     if(black != 'AI') 
         io.to(black).emit ('startGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
-
-    function timer (game) {
-        return  () => {
-            game.state[game.state.turncolor+'timer'] = (game.state[game.state.turncolor+'timer']*1000 - 1000)/1000
-            io.to(game.props.red).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
-            if(black != 'AI') 
-                io.to(game.props.black).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
-            
-            if(!game.state[game.state.turncolor+"timer"]){
-                var opponentcolor = game.state.turncolor === 'red' ? 'black' : 'red'
-                if(game.state[opponentcolor+"timer"]) {
-                    var card = game.state.stacks[game.state.turncolor+"stock"].cards.pop()
-                    card.faceup = 1
-                    game.state.stacks[game.state.turncolor+"waste"].cards.push(card)
-                    db.insertAction(game.props.id, card.color, card.suit, card.value, game.state.turncolor+"stock",  game.state.redtimer, game.state.blacktimer, game.state.turncolor, game.state.turn)
-                    db.insertAction(game.props.id, card.color, card.suit, card.value, game.state.turncolor+"waste", game.state.redtimer, game.state.blacktimer, game.state.turncolor, game.state.turn)
-                    game.state.turntableaumove = false
-                    io.to(game.props.red).emit('actionMoveRES', {stacks : [prepareStackForClient(game.state.stacks[game.state.turncolor+"stock"]) , prepareStackForClient(game.state.stacks[game.state.turncolor+"waste"])], turncolor : opponentcolor, turntableaumove : false})
-                    if(game.props.black != 'AI')
-                        io.to(game.props.black).emit('actionMoveRES', {stacks : [prepareStackForClient(game.state.stacks[game.state.turncolor+"stock"]) , prepareStackForClient(game.state.stacks[game.state.turncolor+"waste"])], turncolor : opponentcolor, turntableaumove : false})
-                    game.state.turncolor = opponentcolor
-                }
-                else {
-                    var winner = game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"red" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "black" : "draw"
-                    endGame(game)
-                    io.to(game.props.red).emit ('gameEndedRES', { result : winner});
-                    if(black != 'AI') 
-                        io.to(game.props.black).emit ('gameEndedRES', { result : winner}); 
-                }       
-            }
-        }
-    }
     game.playertimer = setInterval(timer(game),1000 );
 }
 
@@ -295,6 +263,38 @@ function prepareStateForClient (state) {
      })
     return clientState
  }
+
+function timer (game) {
+    return  () => {
+        game.state[game.state.turncolor+'timer'] = (game.state[game.state.turncolor+'timer']*1000 - 1000)/1000
+        io.to(game.props.red).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
+        if(game.props.black != 'AI') 
+            io.to(game.props.black).emit ('updateTimerRES', { redtimer: game.state.redtimer, blacktimer : game.state.blacktimer });
+        
+        if(!game.state[game.state.turncolor+"timer"]){
+            var opponentcolor = game.state.turncolor === 'red' ? 'black' : 'red'
+            if(game.state[opponentcolor+"timer"]) {
+                var card = game.state.stacks[game.state.turncolor+"stock"].cards.pop()
+                card.faceup = 1
+                game.state.stacks[game.state.turncolor+"waste"].cards.push(card)
+                db.insertAction(game.props.id, card.color, card.suit, card.value, game.state.turncolor+"stock",  game.state.redtimer, game.state.blacktimer, game.state.turncolor, game.state.turn)
+                db.insertAction(game.props.id, card.color, card.suit, card.value, game.state.turncolor+"waste", game.state.redtimer, game.state.blacktimer, game.state.turncolor, game.state.turn)
+                game.state.turntableaumove = false
+                io.to(game.props.red).emit('actionMoveRES', {stacks : [prepareStackForClient(game.state.stacks[game.state.turncolor+"stock"]) , prepareStackForClient(game.state.stacks[game.state.turncolor+"waste"])], turncolor : opponentcolor, turntableaumove : false})
+                if(game.props.black != 'AI')
+                    io.to(game.props.black).emit('actionMoveRES', {stacks : [prepareStackForClient(game.state.stacks[game.state.turncolor+"stock"]) , prepareStackForClient(game.state.stacks[game.state.turncolor+"waste"])], turncolor : opponentcolor, turntableaumove : false})
+                game.state.turncolor = opponentcolor
+            }
+            else {
+                var winner = game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"red" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "black" : "draw"
+                endGame(game)
+                io.to(game.props.red).emit ('gameEndedRES', { result : winner});
+                if(game.props.black != 'AI') 
+                    io.to(game.props.black).emit ('gameEndedRES', { result : winner}); 
+            }       
+        }
+    }
+}
 
 function removePendingRoom(roomkey)  {
     if (getPendingRoom (roomkey)) {

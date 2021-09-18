@@ -152,13 +152,13 @@ export default class Game extends React.Component{
                             border : '1px solid black',
                             borderRadius : '5px',
                             backgroundColor : 'white'
-                            }}>{this.state.playertimer.toFixed(0)}
+                            }}> {parseInt(this.state.playertimer/60)} : {this.state.playertimer % 60 === 0 ? "00" : (this.state.playertimer-parseInt(this.state.playertimer/60)*60)} 
                         </div>
                         <div  style = {{
                             marginTop : '10px',
                             display : 'inline-block',  
                             padding : '.5vmax',
-                            //backgroundColor : '#FF8C00',
+                           // backgroundColor : '#FF8C00',
                             borderRadius : '10px'
                             }}><button>
                                 Abort
@@ -179,7 +179,7 @@ export default class Game extends React.Component{
                             border : '1px solid black',
                             borderRadius : '5px',
                             backgroundColor : 'white'
-                            }}>{this.state.opponenttimer.toFixed(0)}
+                            }}>{parseInt(this.state.opponenttimer/60)} : {this.state.opponenttimer % 60 === 0 ? "00" : (this.state.opponenttimer-parseInt(this.state.opponenttimer/60)*60)} 
                         </div>
                     </div>
                     <div  style = {{

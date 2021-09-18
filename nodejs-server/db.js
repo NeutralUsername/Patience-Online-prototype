@@ -25,6 +25,12 @@ module.exports = {
             function (err, result) {
                 console.log("created DB")
                 insertTablesAndDataIntoDB() 
+                dbCon = mysql.createConnection({
+                  host:     "localhost",
+                  user:     "gregaire",
+                  password: "password",
+                  database: "gregaire",
+                });
             }
           );
       }); 
@@ -293,7 +299,6 @@ function insertTablesAndDataIntoDB() {
     function (err, result) {
       if (err) throw err;
         console.log("Inserted Tables")
-        console.log("**Restart Server**")
     }
   );
 }
