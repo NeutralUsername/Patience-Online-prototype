@@ -76,7 +76,7 @@ export default class Game extends React.Component{
                     GameContext.lastmoveto = data.stacks[1].name
                 }
                 GameContext.isturn = data.turncolor === GameContext.playercolor ? true : false
-                GameContext.tableaumove = data.tableaumove
+                GameContext.tableaumove = data.turntableaumove
                 this.setState({[data.stacks[0].name] : data.stacks[0].cards})
                 this.setState({[data.stacks[1].name] : data.stacks[1].cards})
             }
@@ -467,7 +467,7 @@ function Stack (props) {
             }}> 
             {props.stack.length ? props.stack.map( (card,index) => 
                 <Card 
-                    key = {card.number+" "+(index === (props.stack.length-1))+" "+GameContext.isturn+" "+!GameContext.stockflipped}
+                    key = {card.number+" "+(index === (props.stack.length-1))+" "+GameContext.isturn+" "+!GameContext.stockflipped + GameContext.tableaumove}
                     card = {card}
                     stack = {props.stackname}
                     playerStack = {props.player}
