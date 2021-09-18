@@ -389,23 +389,23 @@ function Stack (props) {
       
         if(props.player) {
             if(props.stackname.includes('foundation0'))
-                return '41.3vmax'
+                return '42.3vmax'
             if(props.stackname.includes('foundation1'))
-                return '41.3vmax'
+                return '42.3vmax'
             if(props.stackname.includes('foundation2'))
-                return '41.3vmax'
+                return '42.3vmax'
             if(props.stackname.includes('foundation3'))
-                return '41.3vmax'
+                return '42.3vmax'
         }
         if(!props.player) {
             if(props.stackname.includes('foundation0'))
-                return '52vmax'
+                return '51vmax'
             if(props.stackname.includes('foundation1'))
-                return '52vmax'
+                return '51vmax'
             if(props.stackname.includes('foundation2'))
-                return '52vmax'
+                return '51vmax'
             if(props.stackname.includes('foundation3'))
-                return '52vmax'
+                return '51vmax'
         }
     }
     function rightValue () {
@@ -677,7 +677,7 @@ function Card (props) {
                 maxWidth : '8.0vmin',
                 zIndex : '1',
                 background : backgroundImage(),
-                backgroundSize : props.card.faceup ? 'contain' :'',
+                backgroundSize :  'contain' ,
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center center",
                 backgroundColor : 'white',

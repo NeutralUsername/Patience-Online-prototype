@@ -105,7 +105,7 @@ io.on ('connection', function (socket) {
                 else
                     return
             if(data.to === opponentcolor + "malus")
-                if(stackTo.cards.length > 25)
+                if(stackTo.cards.length > 28)
                     return
             if(data.to.includes('foundation') ) 
                 if ( stackUppermostCard.suit != movingCardData.suit )
@@ -128,8 +128,7 @@ io.on ('connection', function (socket) {
                 if(movingCardData.value != 1)
                     return 
             if(data.to === opponentcolor+'waste')
-                if(!stackTo.length)
-                    return
+                return
         }
         if(stackFrom.name.includes('foundation')) {
             if(game.state.turntableaumove)
@@ -165,11 +164,12 @@ io.on ('connection', function (socket) {
         if(game.props.black != 'AI')
             io.to(game.props.black).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turncolor : game.state.turncolor,  turntableaumove : game.state.turntableaumove})
 
-        if(stackFrom.name.includes('malus')) 
+        if(stackFrom.name === actorcolor+"malus") 
             if(!stackFrom.cards.length) {
-                io.to(game.props.red).emit('gameEndedRES', {result : determineWinner(game)})
+                endGame(game)
+                io.to(game.props.red).emit('gameEndedRES', {result : actorcolor})
                 if(game.props.black != 'AI')
-                    io.to(game.props.black).emit('gameEndedRES', {result : determineWinner(game)})
+                    io.to(game.props.black).emit('gameEndedRES', {result : actorcolor})
             }
     }) 
 
@@ -201,9 +201,7 @@ io.on ('connection', function (socket) {
         removePendingRoom (socket.id);
         var game = activeGames.find(game => game.props.red === socket.id || game.props.black === socket.id)
         if(game) {
-            clearInterval(game.playertimer);
-            var gameindex = activeGames.findIndex(game => game.props.red === socket.id || game.props.black === socket.id)
-            activeGames.splice(gameindex,1)
+            endGame(game)
             if(game.props.red === socket.id) {
                 if(game.props.black != 'AI')
                     io.to(game.props.black).emit('gameAbortedRES')
@@ -246,10 +244,12 @@ async function startGame (red, black, options) {
                         io.to(game.props.black).emit('actionMoveRES', {stacks : [prepareStackForClient(game.state.stacks[game.state.turncolor+"stock"]) , prepareStackForClient(game.state.stacks[game.state.turncolor+"waste"])], turncolor : opponentcolor, turntableaumove : false})
                     game.state.turncolor = opponentcolor
                 }
-                else {    
-                    io.to(game.props.red).emit ('gameEndedRES', { result : determineWinner(game)});
+                else {
+                    var winner = game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"red" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "black" : "draw"
+                    endGame(game)
+                    io.to(game.props.red).emit ('gameEndedRES', { result : winner});
                     if(black != 'AI') 
-                        io.to(game.props.black).emit ('gameEndedRES', { result : determineWinner(game)}); 
+                        io.to(game.props.black).emit ('gameEndedRES', { result : winner}); 
                 }       
             }
         }
@@ -257,11 +257,12 @@ async function startGame (red, black, options) {
     game.playertimer = setInterval(timer(game),1000 );
 }
 
-function determineWinner (game) {
+function endGame (game) {
     if(game.playertimer)
         clearInterval(game.playertimer);
-    return game.state.stacks.redmalus.cards.length > game.state.stacks.blackmalus.cards.length ? 'red' : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? 'black' : 'draw'
-}
+    var gameindex = activeGames.findIndex(x => x.props.id === game.props.id )
+    activeGames.splice(gameindex,1)
+ }
 
 function prepareStackForClient (stack) {
     var clientStack =  JSON.parse(JSON.stringify(stack));
@@ -275,7 +276,6 @@ function prepareStackForClient (stack) {
             }
         }
     }
-       
     return clientStack
 }
 
@@ -297,10 +297,10 @@ function prepareStateForClient (state) {
  }
 
 function removePendingRoom(roomkey)  {
-        if (getPendingRoom (roomkey)) {
-            pendingOnlineRooms.splice (pendingOnlineRooms.findIndex (e => e.roomkey == roomkey), 1);
-            updateClientPendingRooms ();
-        }
+    if (getPendingRoom (roomkey)) {
+        pendingOnlineRooms.splice (pendingOnlineRooms.findIndex (e => e.roomkey == roomkey), 1);
+        updateClientPendingRooms ();
+    }
 }
 
 function getPendingRoom (roomkey) {

@@ -10,7 +10,7 @@ export default class Options extends React.Component {
         console.log(socket)
         super (props);
         this.state = {
-            malusSize : 14,
+            malusSize : 20,
             tableauSize : 3,
             throwOnWaste : true,
             throwOnMalus : true,
