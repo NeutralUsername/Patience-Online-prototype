@@ -425,10 +425,10 @@ function Stack (props) {
             if(GameContext.lastmovefrom != GameContext.lastmoveto) {
                 if(!GameContext.isturn)
                     if(props.stackname === GameContext.lastmovefrom)
-                        return '#EE82EE'
+                        return '#FFA07A'
                 if(!GameContext.isturn)
                     if(props.stackname ===GameContext.lastmoveto)
-                        return  '#EE82EE'
+                        return  '#FFA07A'
             }
             else if(props.stackname === GameContext.lastmovefrom)
                 if(GameContext.stockflipped)
