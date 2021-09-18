@@ -139,43 +139,54 @@ export default class Game extends React.Component{
                     <div style = {{
                         position: 'fixed',
                         textAlign:'center',
-                        top : '77vmin',
-                        left : '48.2vmax',
+                        top : '87vmin',
+                        left : '28.9vmax',
+                        
                     }}>
                         <div  style = {{
-                            position: 'relative',
                             fontSize : '1.5vmax',
                             textAlign:'center',
-                            minWidth : '4vmax'
+                            minWidth : '4vmax',
+                            border : '2px solid black',
+                            borderRadius : '5px',
+                            
                             }}>{this.state.playertimer.toFixed(0)}
+                        </div>
+                        <div  style = {{
+                            marginTop : '10px',
+                            display : 'inline-block',  
+                            padding : '.5vmax',
+                            backgroundColor : '#FF8C00',
+                            borderRadius : '10px'
+                            }}><button>
+                                Abort
+                            </button>
                         </div>
                     </div >
                     <div style = {{
                         position: 'fixed',
                         textAlign:'center',
-                        top : '21vmin',
-                        left : '48.2vmax',
+                        top : '10vmin',
+                        left : '28.9vmax',
                     }}>
                         <div  style = {{
                             position: 'relative',
                             fontSize : '1.5vmax',
                             textAlign :'center',
-                            minWidth : '4vmax'
+                            minWidth : '4vmax',
+                            border : '2px solid black',
+                            borderRadius : '5px'
                             }}>{this.state.opponenttimer.toFixed(0)}
                         </div>
                     </div>
                     <div  style = {{
                         position: 'fixed',
                         textAlign:'center',
-                        top : '95vmin',
-                        left : '1vmax',
+                        top : '92vmin',
+                        left : '28.5vmax',
+                        
                     }}>
-                        <div  style = {{
-                            position: 'fixed',
-                            }}><button>
-                                End Game
-                            </button>
-                        </div>
+                      
                     </div>
                     <Stack 
                         stack = {this.state[this.props.playercolor+"malus"]} 
@@ -411,10 +422,10 @@ function Stack (props) {
             if(GameContext.lastmovefrom != GameContext.lastmoveto) {
                 if(!GameContext.isturn)
                     if(props.stackname === GameContext.lastmovefrom)
-                        return '#baffc4' 
+                        return '#80ff80' 
                 if(!GameContext.isturn)
                     if(props.stackname ===GameContext.lastmoveto)
-                        return  '#6af77d'
+                        return  '#80ff80'
             }
             else if(props.stackname === GameContext.lastmovefrom)
                 if(GameContext.stockflipped)
@@ -424,7 +435,7 @@ function Stack (props) {
             return '#91d3ff '
         else if ((props.stackname === GameContext.opponentcolor+"stock" ||props.stackname ===  GameContext.opponentcolor+"waste"||props.stackname ===  GameContext.opponentcolor+"malus"  )&& !GameContext.isturn ) 
             return '#91d3ff'
-        return '#d7d3cd'
+        return '#f1debe'
     }
     //#d7d3cd
     return (
@@ -432,7 +443,8 @@ function Stack (props) {
             ref={drop}
             className ={props.stacktype+" "+props.stackname}  
             style = {{
-                border: '.01vmax  solid Silver',
+                border: '1px  solid #636363',
+                borderRadius : '2px',
                 backgroundColor: backgroundcolor(),
                 position : 'absolute',
                 left : leftValue(),
