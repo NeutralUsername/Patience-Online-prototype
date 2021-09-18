@@ -17,6 +17,7 @@ var GameContext = {
     lastmoveto : {},
     stockflipped : {},
     socket : {},
+    tableaumove : {},
 }
 
 export default class Game extends React.Component{
@@ -33,6 +34,7 @@ export default class Game extends React.Component{
         GameContext.lastmoveto = {}
         GameContext.stockflipped = false
         GameContext.socket = props.socket
+        GameContext.tableaumove = false
         this.state = {
             redmalus : props.initialState.stacks.redmalus.cards,
             redstock : props.initialState.stacks.redstock.cards,
@@ -68,13 +70,13 @@ export default class Game extends React.Component{
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {
                 GameContext.stockflipped = false
-              
                 if( !GameContext.isturn ) 
                  {
                     GameContext.lastmovefrom = data.stacks[0].name
                     GameContext.lastmoveto = data.stacks[1].name
                 }
                 GameContext.isturn = data.turncolor === GameContext.playercolor ? true : false
+                GameContext.tableaumove = data.tableaumove
                 this.setState({[data.stacks[0].name] : data.stacks[0].cards})
                 this.setState({[data.stacks[1].name] : data.stacks[1].cards})
             }
@@ -147,16 +149,16 @@ export default class Game extends React.Component{
                             fontSize : '1.5vmax',
                             textAlign:'center',
                             minWidth : '4vmax',
-                            border : '2px solid black',
+                            border : '1px solid black',
                             borderRadius : '5px',
-                            
+                            backgroundColor : 'white'
                             }}>{this.state.playertimer.toFixed(0)}
                         </div>
                         <div  style = {{
                             marginTop : '10px',
                             display : 'inline-block',  
                             padding : '.5vmax',
-                            backgroundColor : '#FF8C00',
+                            //backgroundColor : '#FF8C00',
                             borderRadius : '10px'
                             }}><button>
                                 Abort
@@ -174,8 +176,9 @@ export default class Game extends React.Component{
                             fontSize : '1.5vmax',
                             textAlign :'center',
                             minWidth : '4vmax',
-                            border : '2px solid black',
-                            borderRadius : '5px'
+                            border : '1px solid black',
+                            borderRadius : '5px',
+                            backgroundColor : 'white'
                             }}>{this.state.opponenttimer.toFixed(0)}
                         </div>
                     </div>
@@ -516,7 +519,7 @@ function Card (props) {
     }
  
     function cursor () {
-        if( (GameContext.stockflipped && ! props.stack.includes('stock') ) || !props.uppermost || props.stack.includes('foundation')  || props.stack.includes(GameContext.opponentcolor+"waste") || props.stack.includes(GameContext.opponentcolor+"malus")|| props.stack.includes(GameContext.opponentcolor+"stock") ||  props.stack.includes(GameContext.playercolor+"waste")  || ! GameContext.isturn )
+        if( (GameContext.stockflipped && ! props.stack.includes('stock') ) || !props.uppermost || props.stack.includes('foundation') && GameContext.tableaumove || props.stack.includes(GameContext.opponentcolor+"waste") || props.stack.includes(GameContext.opponentcolor+"malus")|| props.stack.includes(GameContext.opponentcolor+"stock") ||  props.stack.includes(GameContext.playercolor+"waste")  || ! GameContext.isturn )
             return "cursor"
         else if(props.stack.includes(GameContext.playercolor+"stock") && !props.card.faceup)
             return "grabbing"
@@ -648,7 +651,7 @@ function Card (props) {
     return (
         <div 
             onDragStart ={e=> {
-                if( GameContext.stockflipped && ! props.stack.includes('stock') || !props.uppermost  || props.stack.includes(GameContext.opponentcolor+"waste") || props.stack.includes('foundation')  || props.stack.includes(GameContext.opponentcolor+"malus")||
+                if( GameContext.stockflipped && ! props.stack.includes('stock') || !props.uppermost  || props.stack.includes(GameContext.opponentcolor+"waste") || props.stack.includes('foundation') && GameContext.tableaumove || props.stack.includes(GameContext.opponentcolor+"malus")||
                         props.stack.includes(GameContext.opponentcolor+"stock") ||  props.stack.includes(GameContext.playercolor+"waste")  || ! GameContext.isturn  ||
                         (props.stack === GameContext.playercolor+"stock" && !props.card.faceup))
                     e.preventDefault()
@@ -680,7 +683,7 @@ function Card (props) {
                 backgroundColor : 'white',
                 opacity: props.card.faceup ? isdragging ? 0.3 : 1 : 1,
                 color: props.card.suit === '♥' || props.card.suit === '♦'?'red':'black',
-                border: '2px  solid black',    
+                border: '1px  solid grey',    
                         
             }}
             className = {'card '+"cards-"+ props.stack+' '+ props.card.color +' '+ (props.card.faceup ? 'faceup' : 'facedown')+ (props.card.faceup ? ' '+props.card.suit : '') +(props.card.faceup ? ' '+ props.card.value : '')} >
