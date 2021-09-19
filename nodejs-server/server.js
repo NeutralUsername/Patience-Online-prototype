@@ -5,15 +5,13 @@ var express = require ('express'),
     app = express (),
     port = process.env.PORT || 3000
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
-/*
-app.use(cors())
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
+
+const io = require("socket.io")(server, {
+    cors: {
+      origin: "http://localhost:3000/",
+      methods: ["GET", "POST"]
+    }
   });
-  */
-const io = require ('socket.io') (server);
 const { RateLimiterMemory } = require ('rate-limiter-flexible');
 const rateLimiter = new RateLimiterMemory ({
     points: 1,
@@ -155,6 +153,7 @@ io.on ('connection', function (socket) {
                 }
             }
         }
+        game.state.abortrequest = false
         if(stackFrom.cards.length) 
             if (stackFrom.name != turncolor+'stock' )
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
@@ -185,7 +184,7 @@ io.on ('connection', function (socket) {
             return
         if(!data.stack.includes('stock'))
             return
-       
+        game.state.abortrequest = false
         var stack = game.state.stacks[data.stack]
         stack.cards[stack.cards.length-1].faceup = 1;
         db.insertAction(game.props.id, stack.cards[stack.cards.length-1].color, stack.cards[stack.cards.length-1].suit, stack.cards[stack.cards.length-1].value,  data.stack, game.state.redtimer, game.state.blacktimer, actorcolor, game.state.turn)
@@ -194,8 +193,36 @@ io.on ('connection', function (socket) {
         if(game.props.black != 'AI')
             io.to(game.props.black).emit('actionFlipRES', clientStack)
     })
-    socket.on ('endGameREQ' , function ( data) {
-       
+    socket.on ('abortREQ' , function ( data) {
+        var game = activeGames.find(game => game.props.id === data.gameid)
+        var actorcolor = socket.id ===game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
+        var opponentcolor = actorcolor === 'red' ? 'black' : 'red'
+        if(!game.state.abortrequest) {
+            if(game.state.turncolor === actorcolor) {
+                if(!game.state[opponentcolor+"timer"]) {
+                    endGame(game)
+                    var winner = game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"red" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "black" : "draw"
+                    io.to(game.props.red).emit('gameEndedRES', {result : winner})
+                    if(game.props.black != 'AI')
+                        io.to(game.props.black).emit('gameEndedRES', {result : winner})
+                }
+                else {
+                    game.state.abortrequest = actorcolor
+                    io.to(game.props.red).emit('updateAbortRES')
+                    if(game.props.black != 'AI')
+                        io.to(game.props.black).emit('updateAbortRES')
+                }
+            } 
+        }
+        else {
+            if(game.state.abortrequest != actorcolor) {
+                endGame(game)
+                var winner = game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"red" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "black" : "draw"
+                io.to(game.props.red).emit('gameEndedRES', {result : winner})
+                if(game.props.black != 'AI')
+                    io.to(game.props.black).emit('gameEndedRES', {result : winner})
+            }
+        }
     })
     socket.on ('disconnect', function () {
         removePendingRoom (socket.id);
@@ -258,6 +285,8 @@ function prepareStateForClient (state) {
                     delete card.suit
                     delete card.value
                 }
+                else
+                    delete card.color
             }
         }
      })

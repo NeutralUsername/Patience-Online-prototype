@@ -192,6 +192,7 @@ function game(gameid, redid, blackid, stacks, startcolor, timePerPlayer) {
       stacks : stacks,
       turn :  1,
       turntableaumove : false,
+      abortrequest : false,
       turncolor : startcolor,
       redtimer : timePerPlayer,
       blacktimer : timePerPlayer,

@@ -60,9 +60,9 @@ export default class Game extends React.Component{
             blackfoundation3 : props.initialState.stacks.blackfoundation3.cards,
             mounted : false,
             playertimer: props.initialState.redtimer,  //doesnt matter which one since value is initially the same 
-            opponenttimer: props.initialState.redtimer
+            opponenttimer: props.initialState.redtimer,
+            abortrequest : false 
         };
-      
     }
     
     componentDidMount() {
@@ -70,6 +70,7 @@ export default class Game extends React.Component{
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {
                 GameContext.stockflipped = false
+
                 if( !GameContext.isturn ) 
                  {
                     GameContext.lastmovefrom = data.stacks[0].name
@@ -77,25 +78,35 @@ export default class Game extends React.Component{
                 }
                 GameContext.isturn = data.turncolor === GameContext.playercolor ? true : false
                 GameContext.tableaumove = data.turntableaumove
+                if(this.state.abortrequest)
+                    this.setState({abortrequest : false})
                 this.setState({[data.stacks[0].name] : data.stacks[0].cards})
                 this.setState({[data.stacks[1].name] : data.stacks[1].cards})
             }
-        });
+        })
         this.props.socket.on("actionFlipRES", data => {
             if (this.state.mounted) {
                 GameContext.lastmovefrom = data.name
                 GameContext.lastmoveto = GameContext.lastmovefrom
                 GameContext.stockflipped = true
+                if(this.state.abortrequest)
+                    this.setState({abortrequest : false})
                 this.setState({[data.name] : data.cards})
             }
-        });
+        })
         this.props.socket.on("updateTimerRES", data => {
             if (this.state.mounted) {
                 this.setState({ playertimer: data[GameContext.playercolor+'timer'] })
                 this.setState({ opponenttimer: data[GameContext.opponentcolor+'timer'] })
             }
-        });
-        this.props.socket.on("gameAbortedRES", data => {
+        })
+        this.props.socket.on("updateAbortRES", () => {
+            if (this.state.mounted) {
+                if(!this.state.abortrequest)
+                    this.setState({abortrequest : true})
+            }
+        })
+        this.props.socket.on("gameAbortedRES", () => {
             if (this.state.mounted) {
                 return (
                     ReactDOM.render (
@@ -106,29 +117,29 @@ export default class Game extends React.Component{
                     )
                 )
             }
-        });
+        })
         this.props.socket.on("gameEndedRES", data => {
             if (this.state.mounted) {
                 alert("the winner is " + data.result)
                 return (
                     ReactDOM.render (
                         <Options
-                            status = {"the winner is " + data.result}      
+                            status = {"the winner is: " + data.result}      
                         ></Options>,
                         document.getElementById ('root')
                     )
                 )
             }
-        });
-        this.props.socket.on("surrenderHandshakeRES", data => {
-            
         })
     }
     
+
+
     componentWillUnmount() {
         this.setState({mounted : false})
     }
     render(){
+    
         return (
             <DndProvider backend={HTML5Backend}>
                 <div 
@@ -152,15 +163,16 @@ export default class Game extends React.Component{
                             border : '1px solid black',
                             borderRadius : '5px',
                             backgroundColor : 'white'
-                            }}> {parseInt(this.state.playertimer/60)} : {this.state.playertimer % 60 === 0 ? "00" : (this.state.playertimer-parseInt(this.state.playertimer/60)*60)} 
+                            }}> {parseInt(this.state.playertimer/60)} : {this.state.playertimer % 60 <10 && this.state.playertimer % 60 >= 0  ? "0"+(this.state.playertimer-parseInt(this.state.playertimer/60)*60) : (this.state.playertimer-parseInt(this.state.playertimer/60)*60)} 
                         </div>
                         <div  style = {{
                             marginTop : '10px',
                             display : 'inline-block',  
                             padding : '.5vmax',
-                           // backgroundColor : '#FF8C00',
+                            backgroundColor : this.state.abortrequest ? '#FF8C00' :"",
                             borderRadius : '10px'
-                            }}><button>
+                            }}><button
+                                onClick = {() => GameContext.socket.emit('abortREQ', {gameid : GameContext.id})}>
                                 Abort
                             </button>
                         </div>
@@ -179,7 +191,7 @@ export default class Game extends React.Component{
                             border : '1px solid black',
                             borderRadius : '5px',
                             backgroundColor : 'white'
-                            }}>{parseInt(this.state.opponenttimer/60)} : {this.state.opponenttimer % 60 === 0 ? "00" : (this.state.opponenttimer-parseInt(this.state.opponenttimer/60)*60)} 
+                            }}>{parseInt(this.state.opponenttimer/60)} : {this.state.opponenttimer % 60 <10 && this.state.opponenttimer % 60 >= 0  ? "0"+(this.state.opponenttimer-parseInt(this.state.opponenttimer/60)*60) : (this.state.opponenttimer-parseInt(this.state.opponenttimer/60)*60)}           
                         </div>
                     </div>
                     <div  style = {{
@@ -676,7 +688,7 @@ function Card (props) {
                 maxHeight : '11vmin',
                 maxWidth : '8.0vmin',
                 zIndex : '1',
-                background : backgroundImage(),
+                backgroundImage : backgroundImage(),
                 backgroundSize :  'contain' ,
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center center",
@@ -686,7 +698,7 @@ function Card (props) {
                 border: '1px  solid grey',    
                         
             }}
-            className = {'card '+"cards-"+ props.stack+' '+ props.card.color +' '+ (props.card.faceup ? 'faceup' : 'facedown')+ (props.card.faceup ? ' '+props.card.suit : '') +(props.card.faceup ? ' '+ props.card.value : '')} >
+            className = {'card '+"cards-"+ props.stack+' '+ props.card.color?props.card.color:"faceup" +' '+ (props.card.faceup ? 'faceup' : 'facedown')+ (props.card.faceup ? ' '+props.card.suit : '') +(props.card.faceup ? ' '+ props.card.value : '')} >
               
         </div>
     )
