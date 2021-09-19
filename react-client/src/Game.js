@@ -169,11 +169,11 @@ export default class Game extends React.Component{
                             marginTop : '10px',
                             display : 'inline-block',  
                             padding : '.5vmax',
-                            backgroundColor : this.state.abortrequest ? '#FF8C00' :"",
+                            backgroundColor : this.state.abortrequest ? 'red' :"",
                             borderRadius : '10px'
                             }}><button
                                 onClick = {() => GameContext.socket.emit('abortREQ', {gameid : GameContext.id})}>
-                                Abort
+                                End early
                             </button>
                         </div>
                     </div >
