@@ -9,9 +9,6 @@ var GameContext = {
     id : {},
     playercolor : {},
     opponentcolor : {},
-    throwOnWaste : {},
-    throwOnMalus : {},
-    variant : {},
     isturn : {},
     lastmovefrom : {},
     lastmoveto : {},
@@ -26,9 +23,6 @@ export default class Game extends React.Component{
         GameContext.id = props.id
         GameContext.playercolor = props.playercolor
         GameContext.opponentcolor = props.opponentcolor
-        GameContext.throwOnWaste = props.throwOnWaste
-        GameContext.throwOnMalus = props.throwOnMalus
-        GameContext.variant = props.variant
         GameContext.isturn = props.initialState.turncolor === props.playercolor
         GameContext.lastmovefrom = {}
         GameContext.lastmoveto = {}
@@ -132,9 +126,6 @@ export default class Game extends React.Component{
             }
         })
     }
-    
-
-
     componentWillUnmount() {
         this.setState({mounted : false})
     }
@@ -173,7 +164,7 @@ export default class Game extends React.Component{
                             borderRadius : '10px'
                             }}><button
                                 onClick = {() => GameContext.socket.emit('abortREQ', {gameid : GameContext.id})}>
-                                End early
+                                Quit
                             </button>
                         </div>
                     </div >
@@ -199,9 +190,7 @@ export default class Game extends React.Component{
                         textAlign:'center',
                         top : '92vmin',
                         left : '28.5vmax',
-                        
                     }}>
-                      
                     </div>
                     <Stack 
                         stack = {this.state[this.props.playercolor+"malus"]} 
@@ -346,15 +335,11 @@ function Stack (props) {
         drop: monitor => {
             handleDrop(monitor, props.stackname);
         },
-      //  hover: monitor => {
-      //      console.log(monitor)
-      // },
     }))
     function handleDrop(card, stack) {
         if(card.stack != stack)
             GameContext.socket.emit('actionMoveREQ', {gameid : GameContext.id , card : card, to : stack})
     }
-    
     function topValues (){
         if(!props.player) {
             if(props.stackname.includes('malus'))
@@ -452,7 +437,6 @@ function Stack (props) {
             return '#90EE90'
         return '#f1debe'
     }
-    //#d7d3cd
     return (
         <ul 
             ref={drop}
@@ -680,9 +664,7 @@ function Card (props) {
                 padding : '.4vmax',
                 position :'',
                 marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.9vmax':'0' : props.stack.includes('tableau') && ! props.playerStack && ! props.uppermost? '-2.9vmax':'0',
-                marginLeft : props.stack.includes('tableau')  && props.playerStack ? !props.uppermost ? '-2.9vmax' :'0' : '0',
-                
-                
+                marginLeft : props.stack.includes('tableau')  && props.playerStack ? !props.uppermost ? '-2.9vmax' :'0' : '0', 
                 height: 6+"vmax",
                 width: 4+"vmax",
                 maxHeight : '11vmin',
@@ -695,8 +677,7 @@ function Card (props) {
                 backgroundColor : 'white',
                 opacity: props.card.faceup ? isdragging ? 0.3 : 1 : 1,
                 color: props.card.suit === '♥' || props.card.suit === '♦'?'red':'black',
-                border: '1px  solid grey',    
-                        
+                border: '1px  solid grey',                         
             }}
             className = {'card '+"cards-"+ props.stack+' '+ props.card.color?props.card.color:"faceup" +' '+ (props.card.faceup ? 'faceup' : 'facedown')+ (props.card.faceup ? ' '+props.card.suit : '') +(props.card.faceup ? ' '+ props.card.value : '')} >
               
