@@ -2,7 +2,6 @@ var mysql = require ('mysql2');
 var dbCon ;
 
 module.exports = {
-
   tryCreateDB : async function () {
     if(await dbExists("gregaire")) 
       return;
@@ -12,17 +11,13 @@ module.exports = {
           user:     "gregaire",
           password: "password",
       });
-      createDBcon.connect(function(err) {
-          if (err) throw err;
-          createDBcon.query("CREATE DATABASE IF NOT EXISTS gregaire", 
-            function (err, result) {
-                console.log("created DB")
-                createDBcon.end()
-                insertTablesAndDataIntoDB() 
-               
-            }
-          )
-      })
+      createDBcon.query("CREATE DATABASE IF NOT EXISTS gregaire", 
+        function (err, result) {
+            console.log("created DB")
+            createDBcon.end()
+            insertTablesAndDataIntoDB()     
+        }
+      )
     }
   },
   insertAction : async function (gameid, cardcolor, suit, value, stack, redtimer, blacktimer, player, turn) {      
@@ -48,7 +43,6 @@ module.exports = {
   },
   initGame : async function (red, black, options, timeStarted) {
     return new Promise (async function (resolve) {
-
       dbCon = mysql.createConnection({
         host:     "localhost",
         user:     "gregaire",

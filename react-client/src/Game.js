@@ -64,9 +64,7 @@ export default class Game extends React.Component{
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {
                 GameContext.stockflipped = false
-
-                if( !GameContext.isturn ) 
-                 {
+                if( !GameContext.isturn ) {
                     GameContext.lastmovefrom = data.stacks[0].name
                     GameContext.lastmoveto = data.stacks[1].name
                 }

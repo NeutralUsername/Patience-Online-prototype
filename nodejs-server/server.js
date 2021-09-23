@@ -161,8 +161,7 @@ io.on ('connection', function (socket) {
         io.to(game.props.red).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turncolor : game.state.turncolor, turntableaumove : game.state.turntableaumove})
         if(game.props.black != 'AI')
             io.to(game.props.black).emit('actionMoveRES', {stacks : [clientStackFrom ,clientStackTo], turncolor : game.state.turncolor,  turntableaumove : game.state.turntableaumove})
-    
-    
+            
         if(stackFrom.name === actorcolor+"malus") 
             if(!stackFrom.cards.length) {
                 endGame(game)
