@@ -48,7 +48,7 @@ export default class Options extends React.Component {
                 return (
                     ReactDOM.render (
                         <Game
-                            id = {data.props.id}
+                            id = {data.id}
                             playercolor = {data.color}
                             opponentcolor = {data.color === 'red' ? 'black' : 'red'}
                             initialState = {data.initialState}

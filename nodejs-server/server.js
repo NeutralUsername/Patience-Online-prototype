@@ -251,9 +251,9 @@ io.on ('connection', function (socket) {
         if(game) {
             var color = socket.id === game.props.red ? 'red' :  'black' 
             game.props[color] = ""
-            if(  (! game.props.red) && (! game.props.black) ) {
-                endGame(game)
-            }
+            // if(  (! game.props.red) && (! game.props.black) ) {
+            //     endGame(game)
+            // }
         }
     });
 });
@@ -268,9 +268,9 @@ async function startGame (red, black, options) {
     }
     game.props.redip = io.sockets.sockets.get(red).handshake.address.slice(7)
     game.props.blackip = io.sockets.sockets.get(black).handshake.address.slice(7)
-    io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
+    io.to (red).emit ('startGameRES', { color : 'red', id : game.props.id, initialState : prepareStateForClient(game.state)});
     if(black != 'AI') 
-        io.to(black).emit ('startGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
+        io.to(black).emit ('startGameRES', {color : 'black', id : game.props.id, initialState : prepareStateForClient(game.state)}) ;
     game.playertimer = setInterval(timer(game),1000 );
 }
 

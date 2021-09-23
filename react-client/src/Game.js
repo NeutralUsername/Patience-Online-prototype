@@ -53,8 +53,8 @@ export default class Game extends React.Component{
             blackfoundation2 : props.initialState.stacks.blackfoundation2.cards,
             blackfoundation3 : props.initialState.stacks.blackfoundation3.cards,
             mounted : false,
-            playertimer: props.initialState.redtimer,  //doesnt matter which one since value is initially the same 
-            opponenttimer: props.initialState.redtimer,
+            playertimer: props.initialState[props.playercolor+"timer"],
+            opponenttimer: props.initialState[props.opponentcolor+"timer"],
             abortrequest : false 
         };
     }
