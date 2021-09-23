@@ -14,7 +14,7 @@ var GameContext = {
     lastmoveto : {},
     stockflipped : {},
     socket : {},
-    tableaumove : {},
+    turntableaumove : {},
 }
  // injectGlobalHook.js:1648 Fetch API cannot load webpack:///./src/Game.js?. URL scheme "webpack" is not supported. error is caused by react-dnd. no noticeable effects besides the error in the console when i select drag/dropable components in  the react components viewer 
 export default class Game extends React.Component{
@@ -28,7 +28,7 @@ export default class Game extends React.Component{
         GameContext.lastmoveto = {}
         GameContext.stockflipped = props.initialState.stockflipped
         GameContext.socket = props.socket
-        GameContext.tableaumove = props.initialState.turntableaumove
+        GameContext.turntableaumove = props.initialState.turntableaumove
         this.state = {
             redmalus : props.initialState.stacks.redmalus.cards,
             redstock : props.initialState.stacks.redstock.cards,
@@ -69,7 +69,7 @@ export default class Game extends React.Component{
                     GameContext.lastmoveto = data.stacks[1].name
                 }
                 GameContext.isturn = data.turncolor === GameContext.playercolor ? true : false
-                GameContext.tableaumove = data.turntableaumove
+                GameContext.turntableaumove = data.turntableaumove
                 if(this.state.abortrequest)
                     this.setState({abortrequest : false})
                 this.setState({[data.stacks[0].name] : data.stacks[0].cards})
@@ -463,7 +463,7 @@ function Stack (props) {
             }}> 
             {props.cards.length ? props.cards.map( (card,index) => 
                 <Card 
-                    key = {index+props.stackname+" "+(index === (props.cards.length-1))+" "+GameContext.isturn+" "+!GameContext.stockflipped + GameContext.tableaumove}
+                    key = {index+props.stackname+" "+(index === (props.cards.length-1))+" "+GameContext.isturn+" "+!GameContext.stockflipped + GameContext.turntableaumove}
                     card = {card}
                     stackname = {props.stackname}
                     playerStack = {props.player}
@@ -512,7 +512,7 @@ function Card (props) {
     function cursor () {
         if( (GameContext.stockflipped && ! props.stackname.includes('stock') ) 
         || !props.uppermost 
-        || props.stackname.includes('foundation') && GameContext.tableaumove 
+        || props.stackname.includes('foundation') && GameContext.turntableaumove 
         || props.stackname.includes(GameContext.opponentcolor+"waste") 
         || props.stackname.includes(GameContext.opponentcolor+"malus")
         || props.stackname.includes(GameContext.opponentcolor+"stock") 
@@ -595,7 +595,7 @@ function Card (props) {
             onDragStart ={e=> {
                 if( GameContext.stockflipped && ! props.stackname.includes('stock') 
                 || !props.uppermost  || props.stackname.includes(GameContext.opponentcolor+"waste") 
-                || props.stackname.includes('foundation') && GameContext.tableaumove 
+                || props.stackname.includes('foundation') && GameContext.turntableaumove 
                 || props.stackname.includes(GameContext.opponentcolor+"malus")
                 || props.stackname.includes(GameContext.opponentcolor+"stock") 
                 || props.stackname.includes(GameContext.playercolor+"waste") 

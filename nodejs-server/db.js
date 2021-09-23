@@ -179,6 +179,8 @@ function game(gameid, redid, blackid, stacks, startcolor, timePerPlayer) {
       id : gameid,
       red : redid,
       black : blackid,
+      redip : "",
+      blackip : "",
     },
     state : {
       stacks : stacks,
