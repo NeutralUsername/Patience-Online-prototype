@@ -115,10 +115,11 @@ io.on ('connection', function (socket) {
         }
         if(stackFrom.name.includes('foundation')) 
             if(game.state.turntableaumove) return
+            
             else
                 game.state.turntableaumove = true
         var movingCard = stackFrom.cards.pop()
-        db.insertAction(game.props.id, movingCard.color, movingCard.suit, movingCard.value, data.to, game.state.redtimer, game.state.blacktimer, actorcolor, game.state.turn)
+        db.insertAction(game.props.id, movingCard.color, movingCard.suit, movingCard.value, data.stackto, game.state.redtimer, game.state.blacktimer, actorcolor, game.state.turn)
         stackTo.cards.push( movingCard )
         
         if(stackFrom.name === turncolor+'stock') {
