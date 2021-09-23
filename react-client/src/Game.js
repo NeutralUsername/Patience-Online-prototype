@@ -333,12 +333,12 @@ function Stack (props) {
     const [{ hover }, drop] = useDrop(() => ({
         accept: "card",
         drop: monitor => {
-            handleDrop(monitor, props.stackname);
+            handleDrop(monitor.stackname, props.stackname);
         },
     }))
-    function handleDrop(card, stackname) {
-        if(card.stackname != stackname)
-            GameContext.socket.emit('actionMoveREQ', {gameid : GameContext.id , card : card, to : stackname})
+    function handleDrop(stackfrom, stackto) {
+        if(stackfrom != stackto)
+            GameContext.socket.emit('actionMoveREQ', {gameid : GameContext.id , stackfrom : stackfrom, stackto : stackto})
     }
     function topValues (){
         if(!props.player) {
@@ -496,8 +496,6 @@ function Card (props) {
         const [{ isDragging }, drag] = useDrag(() => ({
             type: "card",
             item : {
-                suit : props.card.suit, 
-                value : props.card.value, 
                 stackname : props.stack
             } ,
             collect: (monitor) => ({
@@ -512,132 +510,79 @@ function Card (props) {
     }
  
     function cursor () {
-        if( (GameContext.stockflipped && ! props.stack.includes('stock') ) || !props.uppermost || props.stack.includes('foundation') && GameContext.tableaumove || props.stack.includes(GameContext.opponentcolor+"waste") || props.stack.includes(GameContext.opponentcolor+"malus")|| props.stack.includes(GameContext.opponentcolor+"stock") ||  props.stack.includes(GameContext.playercolor+"waste")  || ! GameContext.isturn )
+        if( (GameContext.stockflipped && ! props.stack.includes('stock') ) 
+                || !props.uppermost || props.stack.includes('foundation') && GameContext.tableaumove 
+                || props.stack.includes(GameContext.opponentcolor+"waste") || props.stack.includes(GameContext.opponentcolor+"malus")
+                || props.stack.includes(GameContext.opponentcolor+"stock") ||  props.stack.includes(GameContext.playercolor+"waste")  
+                || ! GameContext.isturn ) 
             return "cursor"
-        else if(props.stack.includes(GameContext.playercolor+"stock") && !props.card.faceup)
-            return "grabbing"
-        else
-            return "grab"
+        else if(props.stack.includes(GameContext.playercolor+"stock") && !props.card.faceup) return "grabbing"
+        else return "grab"
     }
 
     function backgroundImage() {
         if(!props.card.faceup)
-            if(props.card.color ==='red')
-                return 'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-red-sticker-1600042082.903987.png")'
-            else
-                return 'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-blue-sticker-1600041775.9919636.png")'
+            if(props.card.color ==='red') return 'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-red-sticker-1600042082.903987.png")'
+            else return 'url("https://dejpknyizje2n.cloudfront.net/marketplace/products/playing-cards-back-design-in-blue-sticker-1600041775.9919636.png")'
         else {
             if(props.card.suit === "♠") {
-                if(props.card.value === "1")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Cards-A-Spade.svg/500px-Cards-A-Spade.svg.png")'
-                if(props.card.value === "2")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Cards-2-Spade.svg/500px-Cards-2-Spade.svg.png")'
-                if(props.card.value === "3")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Cards-3-Spade.svg/500px-Cards-3-Spade.svg.png")'
-                if(props.card.value === "4")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Cards-4-Spade.svg/500px-Cards-4-Spade.svg.png")'
-                if(props.card.value === "5")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Cards-5-Spade.svg/500px-Cards-5-Spade.svg.png")'
-                if(props.card.value === "6")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Cards-6-Spade.svg/500px-Cards-6-Spade.svg.png")'
-                if(props.card.value === "7")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Cards-7-Spade.svg/500px-Cards-7-Spade.svg.png")'
-                if(props.card.value === "8")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Cards-8-Spade.svg/500px-Cards-8-Spade.svg.png")'
-                if(props.card.value === "9")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Cards-9-Spade.svg/500px-Cards-9-Spade.svg.png")'
-                if(props.card.value === "10")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Cards-10-Spade.svg/500px-Cards-10-Spade.svg.png")'
-                if(props.card.value === "11")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Cards-J-Spade.svg/500px-Cards-J-Spade.svg.png")'
-                if(props.card.value === "12")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Cards-Q-Spade.svg/500px-Cards-Q-Spade.svg.png")'
-                if(props.card.value === "13")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Cards-K-Spade.svg/500px-Cards-K-Spade.svg.png")'  
+                if(props.card.value === "1") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Cards-A-Spade.svg/500px-Cards-A-Spade.svg.png")'
+                if(props.card.value === "2") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Cards-2-Spade.svg/500px-Cards-2-Spade.svg.png")'
+                if(props.card.value === "3") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Cards-3-Spade.svg/500px-Cards-3-Spade.svg.png")'
+                if(props.card.value === "4") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Cards-4-Spade.svg/500px-Cards-4-Spade.svg.png")'
+                if(props.card.value === "5") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Cards-5-Spade.svg/500px-Cards-5-Spade.svg.png")'
+                if(props.card.value === "6") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Cards-6-Spade.svg/500px-Cards-6-Spade.svg.png")'
+                if(props.card.value === "7") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Cards-7-Spade.svg/500px-Cards-7-Spade.svg.png")'
+                if(props.card.value === "8") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Cards-8-Spade.svg/500px-Cards-8-Spade.svg.png")'
+                if(props.card.value === "9") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Cards-9-Spade.svg/500px-Cards-9-Spade.svg.png")'
+                if(props.card.value === "10") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Cards-10-Spade.svg/500px-Cards-10-Spade.svg.png")'
+                if(props.card.value === "11") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Cards-J-Spade.svg/500px-Cards-J-Spade.svg.png")'
+                if(props.card.value === "12") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Cards-Q-Spade.svg/500px-Cards-Q-Spade.svg.png")'
+                if(props.card.value === "13") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Cards-K-Spade.svg/500px-Cards-K-Spade.svg.png")'  
             }
             if(props.card.suit === "♥") {
-                if(props.card.value === "1")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cards-A-Heart.svg/500px-Cards-A-Heart.svg.png")'
-                if(props.card.value === "2")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Cards-2-Heart.svg/500px-Cards-2-Heart.svg.png")'
-                if(props.card.value === "3")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Cards-3-Heart.svg/500px-Cards-3-Heart.svg.png")'
-                if(props.card.value === "4")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Cards-4-Heart.svg/500px-Cards-4-Heart.svg.png")'
-                if(props.card.value === "5")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Cards-5-Heart.svg/500px-Cards-5-Heart.svg.png")'
-                if(props.card.value === "6")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Cards-6-Heart.svg/500px-Cards-6-Heart.svg.png")'
-                if(props.card.value === "7")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Cards-7-Heart.svg/500px-Cards-7-Heart.svg.png")'
-                if(props.card.value === "8")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Cards-8-Heart.svg/500px-Cards-8-Heart.svg.png")'
-                if(props.card.value === "9")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Cards-9-Heart.svg/500px-Cards-9-Heart.svg.png")'
-                if(props.card.value === "10")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Cards-10-Heart.svg/500px-Cards-10-Heart.svg.png")'
-                if(props.card.value === "11")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Cards-J-Heart.svg/500px-Cards-J-Heart.svg.png")'
-                if(props.card.value === "12")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Cards-Q-Heart.svg/500px-Cards-Q-Heart.svg.png")'
-                if(props.card.value === "13")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Cards-K-Heart.svg/500px-Cards-K-Heart.svg.png")'  
+                if(props.card.value === "1") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cards-A-Heart.svg/500px-Cards-A-Heart.svg.png")'
+                if(props.card.value === "2") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Cards-2-Heart.svg/500px-Cards-2-Heart.svg.png")'
+                if(props.card.value === "3") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Cards-3-Heart.svg/500px-Cards-3-Heart.svg.png")'
+                if(props.card.value === "4") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Cards-4-Heart.svg/500px-Cards-4-Heart.svg.png")'
+                if(props.card.value === "5") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Cards-5-Heart.svg/500px-Cards-5-Heart.svg.png")'
+                if(props.card.value === "6") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Cards-6-Heart.svg/500px-Cards-6-Heart.svg.png")'
+                if(props.card.value === "7") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Cards-7-Heart.svg/500px-Cards-7-Heart.svg.png")'
+                if(props.card.value === "8") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Cards-8-Heart.svg/500px-Cards-8-Heart.svg.png")'
+                if(props.card.value === "9") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Cards-9-Heart.svg/500px-Cards-9-Heart.svg.png")'
+                if(props.card.value === "10") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Cards-10-Heart.svg/500px-Cards-10-Heart.svg.png")'
+                if(props.card.value === "11") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Cards-J-Heart.svg/500px-Cards-J-Heart.svg.png")'
+                if(props.card.value === "12") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Cards-Q-Heart.svg/500px-Cards-Q-Heart.svg.png")'
+                if(props.card.value === "13") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Cards-K-Heart.svg/500px-Cards-K-Heart.svg.png")'  
             }
             if(props.card.suit === "♦") {
-                if(props.card.value === "1")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Cards-A-Diamond.svg/500px-Cards-A-Diamond.svg.png")'
-                if(props.card.value === "2")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Cards-2-Diamond.svg/500px-Cards-2-Diamond.svg.png")'
-                if(props.card.value === "3")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Cards-3-Diamond.svg/500px-Cards-3-Diamond.svg.png")'
-                if(props.card.value === "4")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Cards-4-Diamond.svg/500px-Cards-4-Diamond.svg.png")'
-                if(props.card.value === "5")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Cards-5-Diamond.svg/500px-Cards-5-Diamond.svg.png")'
-                if(props.card.value === "6")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Cards-6-Diamond.svg/500px-Cards-6-Diamond.svg.png")'
-                if(props.card.value === "7")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Cards-7-Diamond.svg/500px-Cards-7-Diamond.svg.png")'
-                if(props.card.value === "8")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Cards-8-Diamond.svg/500px-Cards-8-Diamond.svg.png")'
-                if(props.card.value === "9")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Cards-9-Diamond.svg/500px-Cards-9-Diamond.svg.png")'
-                if(props.card.value === "10")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Cards-10-Diamond.svg/500px-Cards-10-Diamond.svg.png")'
-                if(props.card.value === "11")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Cards-J-Diamond.svg/500px-Cards-J-Diamond.svg.png")'
-                if(props.card.value === "12")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Cards-Q-Diamond.svg/500px-Cards-Q-Diamond.svg.png")'
-                if(props.card.value === "13")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Cards-K-Diamond.svg/500px-Cards-K-Diamond.svg.png")'  
+                if(props.card.value === "1") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Cards-A-Diamond.svg/500px-Cards-A-Diamond.svg.png")'
+                if(props.card.value === "2") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Cards-2-Diamond.svg/500px-Cards-2-Diamond.svg.png")'
+                if(props.card.value === "3") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Cards-3-Diamond.svg/500px-Cards-3-Diamond.svg.png")'
+                if(props.card.value === "4") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Cards-4-Diamond.svg/500px-Cards-4-Diamond.svg.png")'
+                if(props.card.value === "5") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Cards-5-Diamond.svg/500px-Cards-5-Diamond.svg.png")'
+                if(props.card.value === "6") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Cards-6-Diamond.svg/500px-Cards-6-Diamond.svg.png")'
+                if(props.card.value === "7") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Cards-7-Diamond.svg/500px-Cards-7-Diamond.svg.png")'
+                if(props.card.value === "8") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Cards-8-Diamond.svg/500px-Cards-8-Diamond.svg.png")'
+                if(props.card.value === "9") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Cards-9-Diamond.svg/500px-Cards-9-Diamond.svg.png")'
+                if(props.card.value === "10") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Cards-10-Diamond.svg/500px-Cards-10-Diamond.svg.png")'
+                if(props.card.value === "11") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Cards-J-Diamond.svg/500px-Cards-J-Diamond.svg.png")'
+                if(props.card.value === "12") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Cards-Q-Diamond.svg/500px-Cards-Q-Diamond.svg.png")'
+                if(props.card.value === "13") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Cards-K-Diamond.svg/500px-Cards-K-Diamond.svg.png")'  
             }
-            if(props.card.suit === "♣") {
-                if(props.card.value === "1")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Cards-A-Club.svg/500px-Cards-A-Club.svg.png")'
-                if(props.card.value === "2")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Cards-2-Club.svg/500px-Cards-2-Club.svg.png")'
-                if(props.card.value === "3")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Cards-3-Club.svg/500px-Cards-3-Club.svg.png")'
-                if(props.card.value === "4")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Cards-4-Club.svg/500px-Cards-4-Club.svg.png")'
-                if(props.card.value === "5")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Cards-5-Club.svg/500px-Cards-5-Club.svg.png")'
-                if(props.card.value === "6")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Cards-6-Club.svg/500px-Cards-6-Club.svg.png")'
-                if(props.card.value === "7")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Cards-7-Club.svg/500px-Cards-7-Club.svg.png")'
-                if(props.card.value === "8")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Cards-8-Club.svg/500px-Cards-8-Club.svg.png")'
-                if(props.card.value === "9")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Cards-9-Club.svg/500px-Cards-9-Club.svg.png")'
-                if(props.card.value === "10")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Cards-10-Club.svg/500px-Cards-10-Club.svg.png")'
-                if(props.card.value === "11")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Cards-J-Club.svg/500px-Cards-J-Club.svg.png")'
-                if(props.card.value === "12")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Cards-Q-Club.svg/500px-Cards-Q-Club.svg.png")'
-                if(props.card.value === "13")
-                    return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Cards-K-Club.svg/500px-Cards-K-Club.svg.png")'  
+            if(props.card.suit === "♣") { if(props.card.value === "1") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Cards-A-Club.svg/500px-Cards-A-Club.svg.png")'
+                if(props.card.value === "2") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Cards-2-Club.svg/500px-Cards-2-Club.svg.png")'
+                if(props.card.value === "3") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Cards-3-Club.svg/500px-Cards-3-Club.svg.png")'
+                if(props.card.value === "4") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Cards-4-Club.svg/500px-Cards-4-Club.svg.png")'
+                if(props.card.value === "5") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Cards-5-Club.svg/500px-Cards-5-Club.svg.png")'
+                if(props.card.value === "6") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Cards-6-Club.svg/500px-Cards-6-Club.svg.png")'
+                if(props.card.value === "7") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Cards-7-Club.svg/500px-Cards-7-Club.svg.png")'
+                if(props.card.value === "8") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Cards-8-Club.svg/500px-Cards-8-Club.svg.png")'
+                if(props.card.value === "9") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Cards-9-Club.svg/500px-Cards-9-Club.svg.png")'
+                if(props.card.value === "10") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Cards-10-Club.svg/500px-Cards-10-Club.svg.png")'
+                if(props.card.value === "11") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Cards-J-Club.svg/500px-Cards-J-Club.svg.png")'
+                if(props.card.value === "12") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Cards-Q-Club.svg/500px-Cards-Q-Club.svg.png")'
+                if(props.card.value === "13") return 'url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Cards-K-Club.svg/500px-Cards-K-Club.svg.png")'  
             }
         }
     }
@@ -671,8 +616,7 @@ function Card (props) {
                 color: props.card.suit === '♥' || props.card.suit === '♦'?'red':'black',
                 border: '1px  solid grey',                         
             }}
-        >
-              
+        >        
         </div>
     )
 }

@@ -63,7 +63,7 @@ io.on ('connection', function (socket) {
             console.log ("flood protection => join pending Room");
         }   
     });
-
+  
     socket.on ('roomPasswordRES' , function ( data) {
         if(data.password != undefined)
             if (getPendingRoom (data.roomkey).options.roomPassword === data.password) 
@@ -74,13 +74,12 @@ io.on ('connection', function (socket) {
         var game = activeGames.find(game => game.props.id === data.gameid)
         var actorcolor = socket.id ===game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
         var turncolor = game.state.turncolor
-        var movingCardData = data.card
-        var stackTo =  game.state.stacks[data.to]
+        var stackFrom = game.state.stacks[data.stackfrom]
+        var movingCardData = stackFrom.cards[stackFrom.cards.length - 1 ]
+        var stackTo =  game.state.stacks[data.stackto]
         var stackToLength = stackTo.cards.length
         var opponentcolor = socket.id === game.props.red ? "black" : socket.id ===game.props.black ? 'red': ''
-        var stackFrom = game.state.stacks[data.card.stackname]
         
-
         if(!game) return
         if(actorcolor != turncolor) return
         if(data.to === turncolor + 'stock' ) return 
@@ -89,30 +88,30 @@ io.on ('connection', function (socket) {
             if(data.card.stackname != turncolor+'stock') return 
         if(data.to === opponentcolor + 'stock' ) return 
         if(stackToLength){
-            var stackUppermostCard = stackTo.cards[stackToLength - 1 ]
+            var stackToUppermostCard = stackTo.cards[stackToLength - 1 ]
             if(data.to === opponentcolor + 'malus' || data.to === opponentcolor + 'waste' ) 
-                if ( stackUppermostCard.suit === movingCardData.suit ) {
-                    if ( parseInt(stackUppermostCard.value) != parseInt(movingCardData.value) + 1 )
-                        if ( parseInt(stackUppermostCard.value) != parseInt(movingCardData.value) - 1 ) return
+                if ( stackToUppermostCard.suit === movingCardData.suit ) {
+                    if ( parseInt(stackToUppermostCard.value) != parseInt(movingCardData.value) + 1 )
+                        if ( parseInt(stackToUppermostCard.value) != parseInt(movingCardData.value) - 1 ) return
                 }
                 else return
-            if(data.to === opponentcolor + "malus")
+            if(data.stackto === opponentcolor + "malus")
                 if(stackToLength > 28) return
-            if(data.to.includes('foundation') ) 
-                if ( stackUppermostCard.suit != movingCardData.suit ) return
-                else if ( stackUppermostCard.value != movingCardData.value-1 ) return
-            if(data.to.includes('tableau')) {
-                if( (stackUppermostCard.value -1 ) != movingCardData.value ) return
+            if(data.stackto.includes('foundation') ) 
+                if ( stackToUppermostCard.suit != movingCardData.suit ) return
+                else if ( stackToUppermostCard.value != movingCardData.value-1 ) return
+            if(data.stackto.includes('tableau')) {
+                if( (stackToUppermostCard.value -1 ) != movingCardData.value ) return
                 if(movingCardData.suit === '♥' || movingCardData.suit === '♦') 
-                    if(stackUppermostCard.suit  === '♥' || stackUppermostCard.suit  === '♦'  ) return
+                    if(stackToUppermostCard.suit  === '♥' || stackToUppermostCard.suit  === '♦'  ) return
                 if(movingCardData.suit === '♠' || movingCardData.suit === '♣')
-                    if(stackUppermostCard.suit  === '♠' || stackUppermostCard.suit  === '♣' ) return
+                    if(stackToUppermostCard.suit  === '♠' || stackToUppermostCard.suit  === '♣' ) return
             }
         }
         else {
-            if(data.to.includes('foundation') )
+            if(data.stackto.includes('foundation') )
                 if(movingCardData.value != 1) return 
-            if(data.to === opponentcolor+'waste') return
+            if(data.stackto === opponentcolor+'waste') return
         }
         if(stackFrom.name.includes('foundation')) {
             if(game.state.turntableaumove) return
