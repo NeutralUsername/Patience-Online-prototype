@@ -193,133 +193,133 @@ export default class Game extends React.Component{
                     }}>
                     </div>
                     <Stack 
-                        stack = {this.state[this.props.playercolor+"malus"]} 
+                        cards = {this.state[this.props.playercolor+"malus"]} 
                         stackname = {this.props.playercolor+"malus"}
                         stacktype = "sequence"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.playercolor+"stock"]} 
+                        cards = {this.state[this.props.playercolor+"stock"]} 
                         stackname = {this.props.playercolor+"stock"}
                         stacktype = "pile"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.playercolor+"waste"]} 
+                        cards = {this.state[this.props.playercolor+"waste"]} 
                         stackname = {this.props.playercolor+"waste"}
                         stacktype = "pile"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.playercolor+"tableau0"]} 
+                        cards = {this.state[this.props.playercolor+"tableau0"]} 
                         stackname = {this.props.playercolor+"tableau0"}
                         stacktype = "sequence"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.playercolor+"foundation0"]}
+                        cards = {this.state[this.props.playercolor+"foundation0"]}
                         stackname = {this.props.playercolor+"foundation0"}
                         stacktype = "pile" 
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.opponentcolor+"tableau0"]} 
+                        cards = {this.state[this.props.opponentcolor+"tableau0"]} 
                         stackname = {this.props.opponentcolor+"tableau0"}
                         stacktype = "sequence"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.opponentcolor+"foundation0"]} 
+                        cards = {this.state[this.props.opponentcolor+"foundation0"]} 
                         stackname = {this.props.opponentcolor+"foundation0"}
                         stacktype = "pile"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.playercolor+"tableau1"]} 
+                        cards = {this.state[this.props.playercolor+"tableau1"]} 
                         stackname = {this.props.playercolor+"tableau1"}
                         stacktype = "sequence"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.playercolor+"foundation1"]} 
+                        cards = {this.state[this.props.playercolor+"foundation1"]} 
                         stackname = {this.props.playercolor+"foundation1"}
                         stacktype = "pile"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.opponentcolor+"tableau1"]} 
+                        cards = {this.state[this.props.opponentcolor+"tableau1"]} 
                         stackname = {this.props.opponentcolor+"tableau1"}
                         stacktype = "sequence"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.opponentcolor+"foundation1"]} 
+                        cards = {this.state[this.props.opponentcolor+"foundation1"]} 
                         stackname = {this.props.opponentcolor+"foundation1"}
                         stacktype = "pile"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.playercolor+"tableau2"]} 
+                        cards = {this.state[this.props.playercolor+"tableau2"]} 
                         stackname = {this.props.playercolor+"tableau2"}
                         stacktype = "sequence"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.playercolor+"foundation2"]} 
+                        cards = {this.state[this.props.playercolor+"foundation2"]} 
                         stackname = {this.props.playercolor+"foundation2"}
                         stacktype = "pile"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.opponentcolor+"tableau2"]} 
+                        cards = {this.state[this.props.opponentcolor+"tableau2"]} 
                         stackname = {this.props.opponentcolor+"tableau2"}
                         stacktype = "sequence"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.opponentcolor+"foundation2"]} 
+                        cards = {this.state[this.props.opponentcolor+"foundation2"]} 
                         stackname = {this.props.opponentcolor+"foundation2"}
                         stacktype = "pile"
                         player = {false}
                     ></Stack>
                      <Stack 
-                        stack = {this.state[this.props.playercolor+"tableau3"]} 
+                        cards = {this.state[this.props.playercolor+"tableau3"]} 
                         stackname = {this.props.playercolor+"tableau3"}
                         stacktype = "sequence"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.playercolor+"foundation3"]} 
+                        cards = {this.state[this.props.playercolor+"foundation3"]} 
                         stackname = {this.props.playercolor+"foundation3"}
                         stacktype = "pile"
                         player = {true}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.opponentcolor+"tableau3"]} 
+                        cards = {this.state[this.props.opponentcolor+"tableau3"]} 
                         stackname = {this.props.opponentcolor+"tableau3"}
                         stacktype = "sequence"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.opponentcolor+"foundation3"]} 
+                        cards = {this.state[this.props.opponentcolor+"foundation3"]} 
                         stackname = {this.props.opponentcolor+"foundation3"}
                         stacktype = "pile"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.opponentcolor+"waste"]} 
+                        cards = {this.state[this.props.opponentcolor+"waste"]} 
                         stackname = {this.props.opponentcolor+"waste"}
                         stacktype = "pile"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.opponentcolor+"stock"]} 
+                        cards = {this.state[this.props.opponentcolor+"stock"]} 
                         stackname = {this.props.opponentcolor+"stock"}
                         stacktype = "pile"
                         player = {false}
                     ></Stack>
                     <Stack 
-                        stack = {this.state[this.props.opponentcolor+"malus"]} 
+                        cards = {this.state[this.props.opponentcolor+"malus"]} 
                         stackname = {this.props.opponentcolor+"malus"}
                         stacktype = "sequence"
                         player = {false}
@@ -336,9 +336,9 @@ function Stack (props) {
             handleDrop(monitor, props.stackname);
         },
     }))
-    function handleDrop(card, stack) {
-        if(card.stack != stack)
-            GameContext.socket.emit('actionMoveREQ', {gameid : GameContext.id , card : card, to : stack})
+    function handleDrop(card, stackname) {
+        if(card.stackname != stackname)
+            GameContext.socket.emit('actionMoveREQ', {gameid : GameContext.id , card : card, to : stackname})
     }
     function topValues (){
         if(!props.player) {
@@ -461,13 +461,13 @@ function Stack (props) {
                 height : '7.6vmax',
                 maxHeight : '15vmin',
             }}> 
-            {props.stack.length ? props.stack.map( (card,index) => 
+            {props.cards.length ? props.cards.map( (card,index) => 
                 <Card 
-                    key = {card.number+" "+(index === (props.stack.length-1))+" "+GameContext.isturn+" "+!GameContext.stockflipped + GameContext.tableaumove}
+                    key = {index+props.stackname+" "+(index === (props.cards.length-1))+" "+GameContext.isturn+" "+!GameContext.stockflipped + GameContext.tableaumove}
                     card = {card}
                     stack = {props.stackname}
                     playerStack = {props.player}
-                    uppermost = {index === (props.stack.length-1)}
+                    uppermost = {index === (props.cards.length-1)}
                     onClick = {props.onDrop}
                 ></Card>
             ) : <div style = {{
@@ -496,12 +496,9 @@ function Card (props) {
         const [{ isDragging }, drag] = useDrag(() => ({
             type: "card",
             item : {
-                color : props.card.color, 
-                faceup : props.card.faceup, 
-                number : props.card.number, 
                 suit : props.card.suit, 
                 value : props.card.value, 
-                stack : props.stack
+                stackname : props.stack
             } ,
             collect: (monitor) => ({
                 isDragging: !!monitor.isDragging(),
@@ -655,14 +652,9 @@ function Card (props) {
             ref = { dragRef } 
             onClick = {()=> props.stack === GameContext.playercolor+'stock' && !props.card.faceup && GameContext.isturn ? handleClick(): ''}
             style={{
-                fontSize: '1.5vmax',
-                lineHeight :'1.5vmax',
-                position : 'inherit',
-                fontWeight: 'bold',
                 cursor: cursor ()  ,
                 borderRadius: '7px',
                 padding : '.4vmax',
-                position :'',
                 marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.9vmax':'0' : props.stack.includes('tableau') && ! props.playerStack && ! props.uppermost? '-2.9vmax':'0',
                 marginLeft : props.stack.includes('tableau')  && props.playerStack ? !props.uppermost ? '-2.9vmax' :'0' : '0', 
                 height: 6+"vmax",
@@ -672,14 +664,14 @@ function Card (props) {
                 zIndex : '1',
                 backgroundImage : backgroundImage(),
                 backgroundSize :  'contain' ,
-                backgroundRepeat: "no-repeat",
                 backgroundPosition: "center center",
                 backgroundColor : 'white',
-                opacity: props.card.faceup ? isdragging ? 0.3 : 1 : 1,
+                backgroundRepeat : "no-repeat",
+                opacity:  isdragging ? 0.3 : 1,
                 color: props.card.suit === '♥' || props.card.suit === '♦'?'red':'black',
                 border: '1px  solid grey',                         
             }}
-            className = {'card '+"cards-"+ props.stack+' '+ props.card.color?props.card.color:"faceup" +' '+ (props.card.faceup ? 'faceup' : 'facedown')+ (props.card.faceup ? ' '+props.card.suit : '') +(props.card.faceup ? ' '+ props.card.value : '')} >
+        >
               
         </div>
     )

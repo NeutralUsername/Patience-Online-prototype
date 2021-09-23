@@ -76,61 +76,46 @@ io.on ('connection', function (socket) {
         var turncolor = game.state.turncolor
         var movingCardData = data.card
         var stackTo =  game.state.stacks[data.to]
+        var stackToLength = stackTo.cards.length
         var opponentcolor = socket.id === game.props.red ? "black" : socket.id ===game.props.black ? 'red': ''
-        var stackFrom = game.state.stacks[data.card.stack]
+        var stackFrom = game.state.stacks[data.card.stackname]
+        
 
-        if(!game)
-            return
-        if(actorcolor != turncolor)
-            return
-        if(data.to === turncolor + 'stock' )
-            return 
-        if(data.to === turncolor + 'malus' )
-            return 
+        if(!game) return
+        if(actorcolor != turncolor) return
+        if(data.to === turncolor + 'stock' ) return 
+        if(data.to === turncolor + 'malus' ) return 
         if(data.to === turncolor + 'waste' )
-            if(data.card.stack != turncolor+'stock')
-                return 
-        if(data.to === opponentcolor + 'stock' )
-             return 
-        if(stackTo.cards.length){
-            var stackUppermostCard = stackTo.cards[stackTo.cards.length - 1 ]
+            if(data.card.stackname != turncolor+'stock') return 
+        if(data.to === opponentcolor + 'stock' ) return 
+        if(stackToLength){
+            var stackUppermostCard = stackTo.cards[stackToLength - 1 ]
             if(data.to === opponentcolor + 'malus' || data.to === opponentcolor + 'waste' ) 
                 if ( stackUppermostCard.suit === movingCardData.suit ) {
                     if ( parseInt(stackUppermostCard.value) != parseInt(movingCardData.value) + 1 )
-                        if ( parseInt(stackUppermostCard.value) != parseInt(movingCardData.value) - 1 )
-                            return
+                        if ( parseInt(stackUppermostCard.value) != parseInt(movingCardData.value) - 1 ) return
                 }
-                else
-                    return
+                else return
             if(data.to === opponentcolor + "malus")
-                if(stackTo.cards.length > 28)
-                    return
+                if(stackToLength > 28) return
             if(data.to.includes('foundation') ) 
-                if ( stackUppermostCard.suit != movingCardData.suit )
-                    return
-                else if ( stackUppermostCard.value != movingCardData.value-1 )
-                    return
+                if ( stackUppermostCard.suit != movingCardData.suit ) return
+                else if ( stackUppermostCard.value != movingCardData.value-1 ) return
             if(data.to.includes('tableau')) {
-                if( (stackUppermostCard.value -1 ) != movingCardData.value )
-                    return
+                if( (stackUppermostCard.value -1 ) != movingCardData.value ) return
                 if(movingCardData.suit === '♥' || movingCardData.suit === '♦') 
-                    if(stackUppermostCard.suit  === '♥' || stackUppermostCard.suit  === '♦'  )
-                        return
+                    if(stackUppermostCard.suit  === '♥' || stackUppermostCard.suit  === '♦'  ) return
                 if(movingCardData.suit === '♠' || movingCardData.suit === '♣')
-                    if(stackUppermostCard.suit  === '♠' || stackUppermostCard.suit  === '♣' )
-                        return
+                    if(stackUppermostCard.suit  === '♠' || stackUppermostCard.suit  === '♣' ) return
             }
         }
         else {
             if(data.to.includes('foundation') )
-                if(movingCardData.value != 1)
-                    return 
-            if(data.to === opponentcolor+'waste')
-                return
+                if(movingCardData.value != 1) return 
+            if(data.to === opponentcolor+'waste') return
         }
         if(stackFrom.name.includes('foundation')) {
-            if(game.state.turntableaumove)
-                return
+            if(game.state.turntableaumove) return
             else
                 game.state.turntableaumove = true
         }

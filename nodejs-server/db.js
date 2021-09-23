@@ -146,12 +146,10 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
       blackfoundation3 : {cards : [], type : 'pile', name : 'blackfoundation3'},
     };    
     var actions = [];
-    var cardcounter = 0
     for(var player = 0; player < 2 ; player++) {
       var counter = 0;
       for(var malussize = 0 ; malussize < malusSize; malussize++) {
         var card = player === 0 ? redDeck[counter++] : blackDeck[counter++] ;
-        card.number = cardcounter++
         if(malussize === malusSize-1)
           card.faceup = true
         stacks[((player === 0) ? ('redmalus') : ('blackmalus'))].cards.push(card)
@@ -161,7 +159,6 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
       for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
         for(var tableausize = 0 ; tableausize < tableauSize; tableausize++) {
           var card = player === 0 ? redDeck[counter++]  : blackDeck[counter++] ;
-          card.number = cardcounter++
           if(tableausize === tableauSize-1)
             card.faceup = true
           stacks[((player === 0 ) ? 'redtableau'+tableaunr: 'blacktableau'+tableaunr)].cards.push(card)
@@ -170,7 +167,6 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
       }
       for(var stock = 0 ; stock <  52 -malusSize - 4*tableauSize ; stock ++ ) {
         var card = player === 0 ? redDeck[counter++]  : blackDeck[counter++] ;
-        card.number = cardcounter++
         stacks[((player === 0) ? ('redstock') : ('blackstock'))].cards.push(card)
         actions.push( [0,  gameid, card.color,  card.suit, card.value ,((player === 0) ? ('redstock') : ('blackstock')), ((player === 0) ? ('red') : ('black')),  0, timePerPlayer,  timePerPlayer] )
       }
