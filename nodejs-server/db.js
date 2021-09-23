@@ -15,7 +15,7 @@ module.exports = {
         function (err, result) {
             console.log("created DB")
             createDBcon.end()
-            insertTablesAndDataIntoDB()     
+            insertTablesIntoDB()     
         }
       )
     }
@@ -233,29 +233,29 @@ function shuffle (array) {
 }
 function dbExists(name) {
   return new Promise ((resolve) => {
-    var createDBcon = mysql.createConnection({
+    var existsDBcon = mysql.createConnection({
         host:     "localhost",
         user:     "gregaire",
         password: "password",
     });
 
-    createDBcon.query("SHOW DATABASES LIKE '"+name+"';", 
+    existsDBcon.query("SHOW DATABASES LIKE '"+name+"';", 
       function (err, result) {
-        createDBcon.end()
+        existsDBcon.end()
         resolve( result.length);
       }
     )
     
   })
 }
-function insertTablesAndDataIntoDB() {
-  var dbCon = mysql.createConnection({
+function insertTablesIntoDB() {
+  var insertDBCon= mysql.createConnection({
     host:     "localhost",
     user:     "gregaire",
     password: "password",
     database: "gregaire"
   });
-  dbCon.query("CREATE TABLE IF NOT EXISTS options ("
+  insertDBCon.query("CREATE TABLE IF NOT EXISTS options ("
     +"id            INT AUTO_INCREMENT PRIMARY KEY, "
     +"malussize     INT, "
     +"tableausize   INT, "
@@ -269,7 +269,7 @@ function insertTablesAndDataIntoDB() {
       if (err) throw err;
     }
   );
-  dbCon.query("CREATE TABLE IF NOT EXISTS games ("
+  insertDBCon.query("CREATE TABLE IF NOT EXISTS games ("
     +"id                   INT AUTO_INCREMENT PRIMARY KEY, "
     +"optionid             INT, "
     +"redid                VARCHAR(20), "
@@ -280,7 +280,7 @@ function insertTablesAndDataIntoDB() {
       if (err) throw err;
     }
   );
-  dbCon.query("CREATE TABLE IF NOT EXISTS actions ("
+  insertDBCon.query("CREATE TABLE IF NOT EXISTS actions ("
     +"id                   INT AUTO_INCREMENT PRIMARY KEY, "
     +"gameid               INT, "
     +"cardcolor            VARCHAR(5), "
@@ -294,7 +294,7 @@ function insertTablesAndDataIntoDB() {
     +"CONSTRAINT  `game`   FOREIGN KEY (`gameid`)    REFERENCES `games`(`id`)) ",
     function (err, result) {
       if (err) throw err;
-        dbCon.end()
+        insertDBCon.end()
         console.log("Inserted Tables")
     }
   );

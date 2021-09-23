@@ -25,7 +25,6 @@ const activeGames = [];
 
 io.on ('connection', function (socket) {
 
-    updateClientPendingRooms ();
     var clientActiveGames = activeGames.filter(xyz => xyz.props.redip === socket.handshake.address.slice(7) || xyz.props.blackip === socket.handshake.address.slice(7))
     if(clientActiveGames.length) {
         for(game of clientActiveGames) {
@@ -46,6 +45,7 @@ io.on ('connection', function (socket) {
         }
     }
 
+    updateClientPendingRooms ()
     socket.on ('startAIgameREQ', async function (data) {
         try {
             await rateLimiter.consume (socket.handshake.address);
@@ -177,7 +177,6 @@ io.on ('connection', function (socket) {
                     }
                 }
         }
-        
         if(stackFrom.cards.length) 
             if (stackFrom.name != turncolor+'stock' )
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
@@ -264,10 +263,10 @@ io.on ('connection', function (socket) {
 
 async function startGame (red, black, options) {
     removePendingRoom (red);
-    black != 'AI' ? removePendingRoom (black):'';
+    black != 'AI' ? removePendingRoom (black) : '';
     updateClientPendingRooms (); 
     for(var i = 0; i< 1; i++) {
-        activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
+        activeGames.push( game = await db.initGame (red, black, options, new Date() ));
         console.log(game.props.id)
     }
     game.props.redip = io.sockets.sockets.get(red).handshake.address.slice(7)
