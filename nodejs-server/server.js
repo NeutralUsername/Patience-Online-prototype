@@ -261,6 +261,7 @@ async function startGame (red, black, options) {
     updateClientPendingRooms (); 
     for(var i = 0; i< 1; i++) {
         activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
+        console.log(game.props.id)
     }
     io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     if(black != 'AI') 

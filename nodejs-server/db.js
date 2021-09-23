@@ -1,15 +1,8 @@
 var mysql = require ('mysql2');
 var dbCon ;
-Promise.resolve(dbExists("gregaire")).then(async data => {
-  if(data)
-  dbCon = mysql.createConnection({
-    host:     "localhost",
-    user:     "gregaire",
-    password: "password",
-    database: "gregaire",
-  });
-})
+
 module.exports = {
+
   tryCreateDB : async function () {
     if(await dbExists("gregaire")) 
       return;
@@ -24,19 +17,21 @@ module.exports = {
           createDBcon.query("CREATE DATABASE IF NOT EXISTS gregaire", 
             function (err, result) {
                 console.log("created DB")
+                createDBcon.end()
                 insertTablesAndDataIntoDB() 
-                dbCon = mysql.createConnection({
-                  host:     "localhost",
-                  user:     "gregaire",
-                  password: "password",
-                  database: "gregaire",
-                });
+               
             }
-          );
-      }); 
+          )
+      })
     }
   },
-  insertAction : async function (gameid, cardcolor, suit, value, stack, redtimer, blacktimer, player, turn) {
+  insertAction : async function (gameid, cardcolor, suit, value, stack, redtimer, blacktimer, player, turn) {      
+    dbCon = mysql.createConnection({
+      host:     "localhost",
+      user:     "gregaire",
+      password: "password",
+      database: "gregaire",
+    });
     dbCon.query ("INSERT INTO actions VALUES ("
       +"0, "
       +gameid+" ,"
@@ -49,18 +44,25 @@ module.exports = {
       +redtimer+" ,"
       +blacktimer+" )" 
     )    
+    dbCon.end()
   },
   initGame : async function (red, black, options, timeStarted) {
     return new Promise (async function (resolve) {
+
+      dbCon = mysql.createConnection({
+        host:     "localhost",
+        user:     "gregaire",
+        password: "password",
+        database: "gregaire",
+      });
       var sqlTimeStarted = sqlCompatibleDate(timeStarted);
       var reddeck = shuffle(freshDeck("red"))
       var blackdeck = shuffle(freshDeck("black"))
       var startcolor = shuffle([0,1])[0] ? 'red' : 'black'
-
       var optionsid = await insertOrFindOptions(options)  
       var gameid = await insertGame( red , black , optionsid , sqlTimeStarted )
       var stacks = await insertActions(gameid, reddeck, blackdeck, options.malusSize, options.tableauSize, options.timePerPlayer)
-
+      dbCon.end()
       resolve ( game(gameid, red, black, stacks, startcolor, options.timePerPlayer) )
     })
   }
@@ -243,14 +245,14 @@ function dbExists(name) {
         user:     "gregaire",
         password: "password",
     });
-    createDBcon.connect(function(err) {
-      if (err) throw err;
-        createDBcon.query("SHOW DATABASES LIKE '"+name+"';", 
-          function (err, result) {
-            resolve( result.length);
-          }
-        );
-    }); 
+
+    createDBcon.query("SHOW DATABASES LIKE '"+name+"';", 
+      function (err, result) {
+        createDBcon.end()
+        resolve( result.length);
+      }
+    )
+    
   })
 }
 function insertTablesAndDataIntoDB() {
@@ -299,6 +301,7 @@ function insertTablesAndDataIntoDB() {
     +"CONSTRAINT  `game`   FOREIGN KEY (`gameid`)    REFERENCES `games`(`id`)) ",
     function (err, result) {
       if (err) throw err;
+        dbCon.end()
         console.log("Inserted Tables")
     }
   );
