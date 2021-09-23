@@ -51,9 +51,6 @@ export default class Options extends React.Component {
                             id = {data.props.id}
                             playercolor = {data.color}
                             opponentcolor = {data.color === 'red' ? 'black' : 'red'}
-                            throwOnWaste = {data.props.throwOnWaste}
-                            throwOnMalus = {data.props.throwOnMalus}
-                            variant = {data.props.variant}
                             initialState = {data.initialState}
                             socket = {socket}          
                         ></Game>,

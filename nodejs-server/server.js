@@ -23,7 +23,28 @@ const pendingOnlineRooms = [];
 const activeGames = [];
 
 io.on ('connection', function (socket) {
+
     updateClientPendingRooms ();
+    var clientActiveGames = activeGames.filter(xyz => xyz.props.redip === socket.handshake.address.slice(7) || xyz.props.blackip === socket.handshake.address.slice(7))
+    if(clientActiveGames.length) {
+        for(game of clientActiveGames) {
+            if( ! game.props.red) {
+                if(game.props.redip === socket.handshake.address.slice(7) ) {
+                    game.props.red = socket.id
+                    io.to (socket.id).emit ('startGameRES', { color : "red", props : game.props, initialState : prepareStateForClient(game.state)});
+                    break
+                }
+            }
+            if( ! game.props.black) {
+                if(game.props.blackip === socket.handshake.address.slice(7) ) {
+                    game.props.black = socket.id
+                    io.to (socket.id).emit ('startGameRES', { color : "black", props : game.props, initialState : prepareStateForClient(game.state)});
+                    break
+                }
+            }
+        }
+    }
+
     socket.on ('startAIgameREQ', async function (data) {
         try {
             await rateLimiter.consume (socket.handshake.address);
@@ -228,13 +249,11 @@ io.on ('connection', function (socket) {
         removePendingRoom (socket.id);
         var game = activeGames.find(game => game.props.red === socket.id || game.props.black === socket.id)
         if(game) {
-            endGame(game)
-            if(game.props.red === socket.id) {
-                if(game.props.black != 'AI')
-                    io.to(game.props.black).emit('gameAbortedRES')
+            var color = socket.id === game.props.red ? 'red' :  'black' 
+            game.props[color] = ""
+            if(  (! game.props.red) && (! game.props.black) ) {
+                endGame(game)
             }
-            else
-                io.to(game.props.red).emit('gameAbortedRES')
         }
     });
 });
@@ -247,6 +266,8 @@ async function startGame (red, black, options) {
         activeGames.push( game = await db.initGame (red, black, options, new Date()  ));
         console.log(game.props.id)
     }
+    game.props.redip = io.sockets.sockets.get(red).handshake.address.slice(7)
+    game.props.blackip = io.sockets.sockets.get(black).handshake.address.slice(7)
     io.to (red).emit ('startGameRES', { color : 'red', props : game.props, initialState : prepareStateForClient(game.state)});
     if(black != 'AI') 
         io.to(black).emit ('startGameRES', {color : 'black', props : game.props, initialState : prepareStateForClient(game.state)}) ;
@@ -345,27 +366,16 @@ function updateClientPendingRooms () {
     io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms});
 }
 
-function AInextturn(game) {
+function AInextMove(game) {
     var turncolor = game.state.turncolor
     var playermalus = games.state.stacks[turncolor+"malus"]
     var malusUppermostCard = playermalus.cards[playermalus.cards.length-1]
     
+    '♥'
 
+    '♦'
+
+    '♠' 
+
+    '♣'
 }
-
-function AIcardflip(game) {
-    var turncolor = game.state.turncolor
-    var playermalus = games.state.stacks[turncolor+"malus"]
-    var malusUppermostCard = playermalus.cards[playermalus.cards.length-1]
-    
-
-}
-
-
-'♥'
-
-'♦'
-
-'♠' 
-
-'♣'
