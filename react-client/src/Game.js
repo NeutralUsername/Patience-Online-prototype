@@ -72,7 +72,7 @@ var GameContext = {
                 }
                 GameContext.isturn = data.turncolor === GameContext.playercolor ? true : false
                 GameContext.turntableaumove = data.turntableaumove
-                
+                GameContext.stockflipped = false
                 if(this.state.abortrequest)
                     this.setState({abortrequest : false})
                 this.setState({[data.stacks[0].name] : data.stacks[0].cards})
@@ -83,7 +83,7 @@ var GameContext = {
             if (this.state.mounted) {
                 GameContext.lastmovefrom = data.name
                 GameContext.lastmoveto = GameContext.lastmovefrom
-               
+                GameContext.stockflipped = true
                 if(this.state.abortrequest)
                     this.setState({abortrequest : false})
                 this.setState({[data.name] : data.cards})
