@@ -79,9 +79,9 @@ io.on ('connection', function (socket) {
         var stackTo =  game.state.stacks[data.stackto]
         var stackToLength = stackTo.cards.length
         var opponentcolor = socket.id === game.props.red ? "black" : socket.id ===game.props.black ? 'red': ''
-        
         if(!game) return
         if(actorcolor != turncolor) return
+        if( ! (data.stackfrom.includes("tableau") || data.stackfrom.includes("foundation") || data.stackfrom === actorcolor+"stock" || data.stackfrom === actorcolor+"malus") ) return
         if(data.to === turncolor + 'stock' ) return 
         if(data.to === turncolor + 'malus' ) return 
         if(data.to === turncolor + 'waste' )
@@ -113,14 +113,14 @@ io.on ('connection', function (socket) {
                 if(movingCardData.value != 1) return 
             if(data.stackto === opponentcolor+'waste') return
         }
-        if(stackFrom.name.includes('foundation')) {
+        if(stackFrom.name.includes('foundation')) 
             if(game.state.turntableaumove) return
             else
                 game.state.turntableaumove = true
-        }
         var movingCard = stackFrom.cards.pop()
         db.insertAction(game.props.id, movingCard.color, movingCard.suit, movingCard.value, data.to, game.state.redtimer, game.state.blacktimer, actorcolor, game.state.turn)
         stackTo.cards.push( movingCard )
+        
         if(stackFrom.name === turncolor+'stock') {
             if( stackTo.name === turncolor+'waste') {
                 if( ! game.state.stacks[opponentcolor+"stock"].cards.length) {
@@ -256,8 +256,7 @@ async function startGame (red, black, options) {
 function endGame (game) {
     if(game.playertimer)
         clearInterval(game.playertimer);
-    var gameindex = activeGames.findIndex(x => x.props.id === game.props.id )
-    activeGames.splice(gameindex,1)
+    activeGames.splice( activeGames.findIndex(x => x.props.id === game.props.id ) , 1 )
  }
 
 function prepareStackForClient (stack) {
@@ -312,10 +311,10 @@ function timer (game) {
                 db.insertAction(game.props.id, card.color, card.suit, card.value, game.state.turncolor+"stock",  game.state.redtimer, game.state.blacktimer, game.state.turncolor, game.state.turn)
                 db.insertAction(game.props.id, card.color, card.suit, card.value, game.state.turncolor+"waste", game.state.redtimer, game.state.blacktimer, game.state.turncolor, game.state.turn)
                 game.state.turntableaumove = false
-                io.to(game.props.red).emit('actionMoveRES', {stacks : [prepareStackForClient(game.state.stacks[game.state.turncolor+"stock"]) , prepareStackForClient(game.state.stacks[game.state.turncolor+"waste"])], turncolor : opponentcolor, turntableaumove : false})
-                if(game.props.black != 'AI')
-                    io.to(game.props.black).emit('actionMoveRES', {stacks : [prepareStackForClient(game.state.stacks[game.state.turncolor+"stock"]) , prepareStackForClient(game.state.stacks[game.state.turncolor+"waste"])], turncolor : opponentcolor, turntableaumove : false})
                 game.state.turncolor = opponentcolor
+                io.to(game.props.red).emit('actionMoveRES', {stacks : [prepareStackForClient(game.state.stacks[game.state.turncolor+"stock"]) , prepareStackForClient(game.state.stacks[game.state.turncolor+"waste"])], turncolor : game.state.turncolor, turntableaumove : false})
+                if(game.props.black != 'AI')
+                    io.to(game.props.black).emit('actionMoveRES', {stacks : [prepareStackForClient(game.state.stacks[game.state.turncolor+"stock"]) , prepareStackForClient(game.state.stacks[game.state.turncolor+"waste"])], turncolor : game.state.turncolor, turntableaumove : false})
             }
             else {
                 var winner = game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"black" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "red" : "draw"

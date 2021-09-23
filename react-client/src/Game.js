@@ -330,7 +330,7 @@ export default class Game extends React.Component{
     }
 } 
 function Stack (props) {
-    const [{ hover }, drop] = useDrop(() => ({
+    const [{  }, drop] = useDrop(() => ({
         accept: "card",
         drop: monitor => {
             handleDrop(monitor.stackname, props.stackname);
@@ -465,7 +465,7 @@ function Stack (props) {
                 <Card 
                     key = {index+props.stackname+" "+(index === (props.cards.length-1))+" "+GameContext.isturn+" "+!GameContext.stockflipped + GameContext.tableaumove}
                     card = {card}
-                    stack = {props.stackname}
+                    stackname = {props.stackname}
                     playerStack = {props.player}
                     uppermost = {index === (props.cards.length-1)}
                     onClick = {props.onDrop}
@@ -496,7 +496,7 @@ function Card (props) {
         const [{ isDragging }, drag] = useDrag(() => ({
             type: "card",
             item : {
-                stackname : props.stack
+                stackname : props.stackname
             } ,
             collect: (monitor) => ({
                 isDragging: !!monitor.isDragging(),
@@ -506,17 +506,22 @@ function Card (props) {
         isdragging = isDragging
     }
     function handleClick() {
-        GameContext.socket.emit('actionFlipREQ', {gameid : GameContext.id , stack: props.stack})
+        GameContext.socket.emit('actionFlipREQ', {gameid : GameContext.id , stack: props.stackname})
     }
  
     function cursor () {
-        if( (GameContext.stockflipped && ! props.stack.includes('stock') ) 
-                || !props.uppermost || props.stack.includes('foundation') && GameContext.tableaumove 
-                || props.stack.includes(GameContext.opponentcolor+"waste") || props.stack.includes(GameContext.opponentcolor+"malus")
-                || props.stack.includes(GameContext.opponentcolor+"stock") ||  props.stack.includes(GameContext.playercolor+"waste")  
-                || ! GameContext.isturn ) 
+        console.log(GameContext.tableaumove)
+        if( (GameContext.stockflipped && ! props.stackname.includes('stock') ) 
+        || !props.uppermost 
+        || props.stackname.includes('foundation') && GameContext.tableaumove 
+        || props.stackname.includes(GameContext.opponentcolor+"waste") 
+        || props.stackname.includes(GameContext.opponentcolor+"malus")
+        || props.stackname.includes(GameContext.opponentcolor+"stock") 
+        ||  props.stackname.includes(GameContext.playercolor+"waste")  
+        || ! GameContext.isturn
+        )  
             return "cursor"
-        else if(props.stack.includes(GameContext.playercolor+"stock") && !props.card.faceup) return "grabbing"
+        else if(props.stackname.includes(GameContext.playercolor+"stock") && !props.card.faceup) return "grabbing"
         else return "grab"
     }
 
@@ -589,19 +594,25 @@ function Card (props) {
     return (
         <div 
             onDragStart ={e=> {
-                if( GameContext.stockflipped && ! props.stack.includes('stock') || !props.uppermost  || props.stack.includes(GameContext.opponentcolor+"waste") || props.stack.includes('foundation') && GameContext.tableaumove || props.stack.includes(GameContext.opponentcolor+"malus")||
-                        props.stack.includes(GameContext.opponentcolor+"stock") ||  props.stack.includes(GameContext.playercolor+"waste")  || ! GameContext.isturn  ||
-                        (props.stack === GameContext.playercolor+"stock" && !props.card.faceup))
+                if( GameContext.stockflipped && ! props.stackname.includes('stock') 
+                || !props.uppermost  || props.stackname.includes(GameContext.opponentcolor+"waste") 
+                || props.stackname.includes('foundation') && GameContext.tableaumove 
+                || props.stackname.includes(GameContext.opponentcolor+"malus")
+                || props.stackname.includes(GameContext.opponentcolor+"stock") 
+                || props.stackname.includes(GameContext.playercolor+"waste") 
+                || ! GameContext.isturn  
+                || (props.stackname === GameContext.playercolor+"stock" && !props.card.faceup)
+                )
                     e.preventDefault()
             }}
             ref = { dragRef } 
-            onClick = {()=> props.stack === GameContext.playercolor+'stock' && !props.card.faceup && GameContext.isturn ? handleClick(): ''}
+            onClick = {()=> props.stackname === GameContext.playercolor+'stock' && !props.card.faceup && GameContext.isturn ? handleClick(): ''}
             style={{
                 cursor: cursor ()  ,
                 borderRadius: '7px',
                 padding : '.4vmax',
-                marginRight : !props.stack.includes('tableau') ? !props.uppermost ?'-2.9vmax':'0' : props.stack.includes('tableau') && ! props.playerStack && ! props.uppermost? '-2.9vmax':'0',
-                marginLeft : props.stack.includes('tableau')  && props.playerStack ? !props.uppermost ? '-2.9vmax' :'0' : '0', 
+                marginRight : !props.stackname.includes('tableau') ? !props.uppermost ?'-2.9vmax':'0' : props.stackname.includes('tableau') && ! props.playerStack && ! props.uppermost? '-2.9vmax':'0',
+                marginLeft : props.stackname.includes('tableau')  && props.playerStack ? !props.uppermost ? '-2.9vmax' :'0' : '0', 
                 height: 6+"vmax",
                 width: 4+"vmax",
                 maxHeight : '11vmin',
