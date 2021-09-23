@@ -104,6 +104,7 @@ io.on ('connection', function (socket) {
         var opponentcolor = socket.id === game.props.red ? "black" : socket.id ===game.props.black ? 'red': ''
         if(actorcolor != turncolor) return
         if( ! (data.stackfrom.includes("tableau") || data.stackfrom.includes("foundation") || data.stackfrom === actorcolor+"stock" || data.stackfrom === actorcolor+"malus") ) return
+        if(game.state.stockflipped && data.stackfrom != actorcolor+"stock" && data.stackto != actorcolor+"waste") return
         if(data.to === turncolor + 'stock' ) return 
         if(data.to === turncolor + 'malus' ) return 
         if(data.to === turncolor + 'waste' )
@@ -159,13 +160,13 @@ io.on ('connection', function (socket) {
                     if(game.props.black != 'AI')
                         io.to(game.props.black).emit('actionMoveRES', {stacks : [clientOpponentStock ,clientOpponentWaste], turncolor : game.state.turncolor,  turntableaumove : game.state.turntableaumove})
                 }
-                game.state.stockflipped = false
                 game.state.turntableaumove = false
                 game.state.turn++
                 if(game.state.turncolor === 'red' ? game.state.blacktimer > 0 : game.state.redtimer > 0)
                     game.state.turncolor = game.state.turncolor === 'red' ? 'black' : 'red'
             }
             else
+                game.state.stockflipped = false
                 if(!stackFrom.cards.length) {
                     var wasteSize = game.state.stacks[turncolor+"waste"].cards.length
                     for(var i = 0 ; i< wasteSize; i++) {
