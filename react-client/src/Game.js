@@ -508,7 +508,6 @@ function Card (props) {
     }
  
     function cursor () {
-        console.log(GameContext.tableaumove)
         if( (GameContext.stockflipped && ! props.stackname.includes('stock') ) 
         || !props.uppermost 
         || props.stackname.includes('foundation') && GameContext.tableaumove 

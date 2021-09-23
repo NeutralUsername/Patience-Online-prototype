@@ -31,14 +31,14 @@ io.on ('connection', function (socket) {
             if( ! game.props.red) {
                 if(game.props.redip === socket.handshake.address.slice(7) ) {
                     game.props.red = socket.id
-                    io.to (socket.id).emit ('startGameRES', { color : "red", props : game.props, initialState : prepareStateForClient(game.state)});
+                    io.to (socket.id).emit ('startGameRES', { color : "red", id : game.props.id, initialState : prepareStateForClient(game.state)});
                     break
                 }
             }
             if( ! game.props.black) {
                 if(game.props.blackip === socket.handshake.address.slice(7) ) {
                     game.props.black = socket.id
-                    io.to (socket.id).emit ('startGameRES', { color : "black", props : game.props, initialState : prepareStateForClient(game.state)});
+                    io.to (socket.id).emit ('startGameRES', { color : "black", id : game.props.id, initialState : prepareStateForClient(game.state)});
                     break
                 }
             }
