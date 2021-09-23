@@ -65,13 +65,23 @@ var GameContext = {
         this.setState({mounted : true})
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {
-                
+
                 if( !GameContext.isturn ) {
                     GameContext.lastmovefrom = data.stacks[0].name
                     GameContext.lastmoveto = data.stacks[1].name
                 }
-                GameContext.isturn = data.turncolor === GameContext.playercolor ? true : false
-                GameContext.turntableaumove = data.turntableaumove
+              
+                if(data.stacks[0].name.includes("stock") && data.stacks[1].name.includes("waste")) {
+                    GameContext.turntableaumove = false
+                    if(data.stacks[0].name.includes(GameContext.playercolor) && data.stacks[1].name.includes(GameContext.playercolor) ) 
+                        GameContext.isturn = false
+                    else
+                        GameContext.isturn = true
+                }
+                if(data.stacks[0].name.includes("foundation") ) { 
+                   GameContext.turntableaumove = true
+                }
+                        
                 GameContext.stockflipped = false
                 if(this.state.abortrequest)
                     this.setState({abortrequest : false})
