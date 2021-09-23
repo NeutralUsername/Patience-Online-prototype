@@ -17,20 +17,18 @@ var GameContext = {
     turntableaumove : {},
 }
  // injectGlobalHook.js:1648 Fetch API cannot load webpack:///./src/Game.js?. URL scheme "webpack" is not supported. error is caused by react-dnd. no noticeable effects besides the error in the console when i select drag/dropable components in  the react components viewer 
-
- //i can refactor the frontend so that i only send true or false as response to move requests. only on reconnects clients reseive the whole state/stacks
  export default class Game extends React.Component{
     constructor(props) {
         super(props); 
         GameContext.id = props.id
+        GameContext.socket = props.socket
         GameContext.playercolor = props.playercolor
         GameContext.opponentcolor = props.opponentcolor
         GameContext.isturn = props.initialState.turncolor === props.playercolor
+        GameContext.stockflipped = props.initialState.stockflipped
+        GameContext.turntableaumove = props.initialState.turntableaumove
         GameContext.lastmovefrom = {}
         GameContext.lastmoveto = {}
-        GameContext.stockflipped = props.initialState.stockflipped
-        GameContext.socket = props.socket
-        GameContext.turntableaumove = props.initialState.turntableaumove
         this.state = {
             redmalus : props.initialState.stacks.redmalus.cards,
             redstock : props.initialState.stacks.redstock.cards,
