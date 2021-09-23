@@ -16,7 +16,7 @@ var GameContext = {
     socket : {},
     tableaumove : {},
 }
-
+ // injectGlobalHook.js:1648 Fetch API cannot load webpack:///./src/Game.js?. URL scheme "webpack" is not supported. error is caused by react-dnd. no noticeable effects besides the error in the console when i select drag/dropable components in  the react components viewer 
 export default class Game extends React.Component{
     constructor(props) {
         super(props); 
@@ -26,9 +26,9 @@ export default class Game extends React.Component{
         GameContext.isturn = props.initialState.turncolor === props.playercolor
         GameContext.lastmovefrom = {}
         GameContext.lastmoveto = {}
-        GameContext.stockflipped = false
+        GameContext.stockflipped = props.initialState.stockflipped
         GameContext.socket = props.socket
-        GameContext.tableaumove = false
+        GameContext.tableaumove = props.initialState.turntableaumove
         this.state = {
             redmalus : props.initialState.stacks.redmalus.cards,
             redstock : props.initialState.stacks.redstock.cards,
@@ -55,7 +55,7 @@ export default class Game extends React.Component{
             mounted : false,
             playertimer: props.initialState[props.playercolor+"timer"],
             opponenttimer: props.initialState[props.opponentcolor+"timer"],
-            abortrequest : false 
+            abortrequest : props.initialState.abortrequest
         };
     }
     
@@ -425,9 +425,11 @@ function Stack (props) {
                     if(props.stackname ===GameContext.lastmoveto)
                         return  '#FFA07A'
             }
-            else if(props.stackname === GameContext.lastmovefrom)
-                if(GameContext.stockflipped)
-                    return '#ff6770 '
+                if(GameContext.stockflipped) {
+                        if(props.stackname === (GameContext.isturn ? GameContext.playercolor + ("stock") : GameContext.opponentcolor+"stock"))
+                            return '#ff6770 '
+                }
+                  
                 
         if(((props.stackname === GameContext.playercolor+"stock" ||props.stackname === GameContext.playercolor+"waste"||props.stackname === GameContext.playercolor+"malus") && GameContext.isturn )) 
             return '#90EE90'

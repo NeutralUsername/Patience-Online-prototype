@@ -185,6 +185,7 @@ function game(gameid, redid, blackid, stacks, startcolor, timePerPlayer) {
       turn :  1,
       turntableaumove : false,
       abortrequest : false,
+      stockflipped : false,
       turncolor : startcolor,
       redtimer : timePerPlayer,
       blacktimer : timePerPlayer,

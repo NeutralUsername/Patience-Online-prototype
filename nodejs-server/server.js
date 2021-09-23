@@ -19,6 +19,7 @@ const rateLimiter = new RateLimiterMemory ({
 });
 var db = require('./db.js');
 db.tryCreateDB()
+
 const pendingOnlineRooms = [];
 const activeGames = [];
 
@@ -93,6 +94,7 @@ io.on ('connection', function (socket) {
 
     socket.on ('actionMoveREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
+        if(!game) return
         var actorcolor = socket.id ===game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
         var turncolor = game.state.turncolor
         var stackFrom = game.state.stacks[data.stackfrom]
@@ -100,7 +102,6 @@ io.on ('connection', function (socket) {
         var stackTo =  game.state.stacks[data.stackto]
         var stackToLength = stackTo.cards.length
         var opponentcolor = socket.id === game.props.red ? "black" : socket.id ===game.props.black ? 'red': ''
-        if(!game) return
         if(actorcolor != turncolor) return
         if( ! (data.stackfrom.includes("tableau") || data.stackfrom.includes("foundation") || data.stackfrom === actorcolor+"stock" || data.stackfrom === actorcolor+"malus") ) return
         if(data.to === turncolor + 'stock' ) return 
@@ -158,6 +159,7 @@ io.on ('connection', function (socket) {
                     if(game.props.black != 'AI')
                         io.to(game.props.black).emit('actionMoveRES', {stacks : [clientOpponentStock ,clientOpponentWaste], turncolor : game.state.turncolor,  turntableaumove : game.state.turntableaumove})
                 }
+                game.state.stockflipped = false
                 game.state.turntableaumove = false
                 game.state.turn++
                 if(game.state.turncolor === 'red' ? game.state.blacktimer > 0 : game.state.redtimer > 0)
@@ -195,17 +197,14 @@ io.on ('connection', function (socket) {
 
     socket.on ('actionFlipREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
-        if(!game)
-            return
+        if(!game) return
         var actorcolor = socket.id === game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
         var turncolor = game.state.turncolor 
-        if(actorcolor != turncolor)
-            return 
-        if(!data.stack.includes(turncolor))
-            return
-        if(!data.stack.includes('stock'))
-            return
+        if(actorcolor != turncolor) return 
+        if(!data.stack.includes(turncolor)) return
+        if(!data.stack.includes('stock')) return
         game.state.abortrequest = false
+        game.state.stockflipped = true
         var stack = game.state.stacks[data.stack]
         stack.cards[stack.cards.length-1].faceup = 1;
         db.insertAction(game.props.id, stack.cards[stack.cards.length-1].color, stack.cards[stack.cards.length-1].suit, stack.cards[stack.cards.length-1].value,  data.stack, game.state.redtimer, game.state.blacktimer, actorcolor, game.state.turn)
@@ -216,6 +215,7 @@ io.on ('connection', function (socket) {
     })
     socket.on ('abortREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
+        if(!game) return
         var actorcolor = socket.id ===game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
         var opponentcolor = actorcolor === 'red' ? 'black' : 'red'
         if(!game.state.abortrequest) {
@@ -251,7 +251,7 @@ io.on ('connection', function (socket) {
         if(game) {
             var color = socket.id === game.props.red ? 'red' :  'black' 
             game.props[color] = ""
-            // if(  (! game.props.red) && (! game.props.black) ) {
+            // if ( (! game.props.red) && (! game.props.black) ) {
             //     endGame(game)
             // }
         }
