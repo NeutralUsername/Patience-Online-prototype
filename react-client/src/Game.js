@@ -471,9 +471,9 @@ function Stack (props) {
     function legalMove(movingCard, UppermostCard) {
         if( ! (movingCard.stackname.includes("tableau") || movingCard.stackname.includes("foundation") || movingCard.stackname === GameContext.playercolor+"stock" || movingCard.stackname === GameContext.playercolor+"malus") ) return false
       
-        if( !movingCard.stackname.includes("tableau") && UppermostCard.stackname.includes('foundation') && movingCard.value != 1) return false
-        if( !movingCard.stackname.includes("tableau") && UppermostCard.stackname === GameContext.opponentcolor+"waste") return false
-        if( !movingCard.stackname.includes("tableau") && UppermostCard.stackname === GameContext.opponentcolor+"malus") return false
+        // if( !movingCard.stackname.includes("tableau") && UppermostCard.stackname.includes('foundation') ) return false
+        // if( !movingCard.stackname.includes("tableau") && UppermostCard.stackname === GameContext.opponentcolor+"waste") return false
+        // if( !movingCard.stackname.includes("tableau") && UppermostCard.stackname === GameContext.opponentcolor+"malus") return false
      
         if(GameContext.stockflipped && movingCard.stackname != GameContext.playercolor+"stock" && UppermostCard.stackname != GameContext.playercolor+"waste") return false
         if(movingCard.stackname.includes('foundation') && (UppermostCard.stackname === GameContext.opponentcolor+"malus" || UppermostCard.stackname === GameContext.opponentcolor+"waste")) return false
