@@ -140,11 +140,43 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
       blackfoundation3 : {cards : [], type : 'pile', name : 'blackfoundation3'},
     };    
     var actions = [];
+    var reshufflecounter = 0
     for(var player = 0; player < 2 ; player++) {
-      var counter = 0;
-      for(var malussize = 0 ; malussize < malusSize; malussize++) {
-        var card = player === 0 ? redDeck[counter++] : blackDeck[counter++] ;
-        if(malussize === malusSize-1)
+      for(var malussizeCounter = 0 ; malussizeCounter < malusSize; malussizeCounter++) {
+      
+        if (malussizeCounter < 5)
+          while(player === 0 ?( redDeck[redDeck.length-1].value <= 11 ): (blackDeck[blackDeck.length-1].value <= 11 )) {
+            console.log(reshufflecounter++)
+            player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
+          } 
+        if (malussizeCounter >= 5 && malussizeCounter < 8) 
+          while(player === 0 ? !(redDeck[redDeck.length-1].value >= 9 && redDeck[redDeck.length-1].value <= 11) : blackDeck[blackDeck.length-1].value >= 4 && blackDeck[blackDeck.length-1].value <= 6 ) {
+            console.log(reshufflecounter++)
+            player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
+          } 
+        if (malussizeCounter >= 8 && malussizeCounter < 11) 
+          while(player === 0 ? !(redDeck[redDeck.length-1].value >= 7 && redDeck[redDeck.length-1].value <= 9) : blackDeck[blackDeck.length-1].value >= 4 && blackDeck[blackDeck.length-1].value <= 6 ) {
+            console.log(reshufflecounter++)
+            player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
+          } 
+        if (malussizeCounter >= 11 && malussizeCounter < 14) 
+          while(player === 0 ? !(redDeck[redDeck.length-1].value >= 5 && redDeck[redDeck.length-1].value <= 7) : blackDeck[blackDeck.length-1].value >= 4 && blackDeck[blackDeck.length-1].value <= 6 ) {
+            console.log(reshufflecounter++)
+            player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
+          } 
+        if (malussizeCounter >= 14 && malussizeCounter < 17) 
+          while(player === 0 ? !(redDeck[redDeck.length-1].value >= 3 && redDeck[redDeck.length-1].value <= 5) : blackDeck[blackDeck.length-1].value >= 4 && blackDeck[blackDeck.length-1].value <= 6 ) {
+            console.log(reshufflecounter++)
+            player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
+          } 
+        if (malussizeCounter >= 17) 
+          while(player === 0 ? !(redDeck[redDeck.length-1].value >= 1 && redDeck[redDeck.length-1].value <= 3) : blackDeck[blackDeck.length-1].value >= 4 && blackDeck[blackDeck.length-1].value <= 6 ) {
+            console.log(reshufflecounter++)
+            player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
+          } 
+        var card = player === 0 ? redDeck.pop(): blackDeck.pop() ;
+        console.log(malussizeCounter, card)
+        if(malussizeCounter === malusSize-1)
           card.faceup = true
         stacks[((player === 0) ? ('redmalus') : ('blackmalus'))].cards.push(card)
         actions.push( [0, gameid, card.color, card.suit, card.value ,((player === 0) ? ('redmalus') : ('blackmalus')), ((player === 0) ? ('red') : ('black')),  0, timePerPlayer, timePerPlayer] )  
@@ -152,7 +184,7 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
       
       for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
         for(var tableausize = 0 ; tableausize < tableauSize; tableausize++) {
-          var card = player === 0 ? redDeck[counter++]  : blackDeck[counter++] ;
+          var card = player === 0 ? redDeck.pop(): blackDeck.pop() ;
           if(tableausize === tableauSize-1)
             card.faceup = true
           stacks[((player === 0 ) ? 'redtableau'+tableaunr: 'blacktableau'+tableaunr)].cards.push(card)
@@ -160,7 +192,7 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
         } 
       }
       for(var stock = 0 ; stock <  52 -malusSize - 4*tableauSize ; stock ++ ) {
-        var card = player === 0 ? redDeck[counter++]  : blackDeck[counter++] ;
+        var card = player === 0 ? redDeck.pop(): blackDeck.pop() ;
         stacks[((player === 0) ? ('redstock') : ('blackstock'))].cards.push(card)
         actions.push( [0,  gameid, card.color,  card.suit, card.value ,((player === 0) ? ('redstock') : ('blackstock')), ((player === 0) ? ('red') : ('black')),  0, timePerPlayer,  timePerPlayer] )
       }
@@ -265,7 +297,7 @@ function insertTablesIntoDB() {
     +"timeperplayer INT, "
     +"roomname      VARCHAR(20), "
     +"roompassword  VARCHAR(20))",
-    function (err, result) {
+    function (err) {
       if (err) throw err;
     }
   );
@@ -276,7 +308,7 @@ function insertTablesIntoDB() {
     +"blackid              VARCHAR(20), "
     +"startedtime          DATETIME, "
     +"CONSTRAINT `option`  FOREIGN KEY (`optionid`)    REFERENCES `options`(`id`))", 
-    function (err, result) {
+    function (err) {
       if (err) throw err;
     }
   );
@@ -292,7 +324,7 @@ function insertTablesIntoDB() {
     +"redtimer             DECIMAL(6,2), "
     +"blacktimer           DECIMAL(6,2), "
     +"CONSTRAINT  `game`   FOREIGN KEY (`gameid`)    REFERENCES `games`(`id`)) ",
-    function (err, result) {
+    function (err) {
       if (err) throw err;
         insertDBCon.end()
         console.log("Inserted Tables")
