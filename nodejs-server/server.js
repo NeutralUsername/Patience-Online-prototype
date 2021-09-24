@@ -106,6 +106,8 @@ io.on ('connection', function (socket) {
         if(actorcolor != turncolor) return
         if( ! (data.stackfrom.includes("tableau") || data.stackfrom.includes("foundation") || data.stackfrom === actorcolor+"stock" || data.stackfrom === actorcolor+"malus") ) return
         if(game.state.stockflipped && data.stackfrom != actorcolor+"stock" && data.stackto != actorcolor+"waste") return
+        if(data.stackfrom === actorcolor+"stock" && data.stackto.includes('foundation')) return
+        if(data.stackfrom.includes('tableau') && (data.stackto === opponentcolor+"malus" || data.stackto === opponentcolor+"waste")) return
         if(data.stackto === turncolor + 'stock' ) return 
         if(data.stackto === turncolor + 'malus' ) return 
         if(data.stackto === turncolor + 'waste' )
@@ -137,11 +139,11 @@ io.on ('connection', function (socket) {
                 if(movingCardData.value != 1) return 
             if(data.stackto === opponentcolor+'waste') return
         }
-        if(stackFrom.name.includes('foundation')) 
-            if(game.state.turntableaumove) return
+        // if(stackFrom.name.includes('foundation')) 
+        //     if(game.state.turntableaumove) return
             
-            else
-                game.state.turntableaumove = true
+        //     else
+        //         game.state.turntableaumove = true
         var movingCard = stackFrom.cards.pop()
         db.insertAction(game.props.id, movingCard.color, movingCard.suit, movingCard.value, data.stackto, game.state.redtimer, game.state.blacktimer, actorcolor, game.state.turn)
         stackTo.cards.push( movingCard )
@@ -162,7 +164,7 @@ io.on ('connection', function (socket) {
                     if(game.props.black != 'AI')
                         io.to(game.props.black).emit('actionMoveRES', {stacks : [clientOpponentStock ,clientOpponentWaste]})
                 }
-                game.state.turntableaumove = false
+                // game.state.turntableaumove = false
                 game.state.turn++
                 if(game.state.turncolor === 'red' ? game.state.blacktimer > 0 : game.state.redtimer > 0)
                     game.state.turncolor = game.state.turncolor === 'red' ? 'black' : 'red'
@@ -341,7 +343,7 @@ function timer (game) {
                
                 db.insertAction(game.props.id, card.color, card.suit, card.value, game.state.turncolor+"stock",  game.state.redtimer, game.state.blacktimer, game.state.turncolor, game.state.turn)
                 db.insertAction(game.props.id, card.color, card.suit, card.value, game.state.turncolor+"waste", game.state.redtimer, game.state.blacktimer, game.state.turncolor, game.state.turn)
-                game.state.turntableaumove = false
+                // game.state.turntableaumove = false
                 game.state.turncolor = opponentcolor
             }
             else {

@@ -3,6 +3,36 @@ body{
   background-color : #EDEBE9
 }
 
+.surrenderButton {
+  background-color:#9d9bc2; /* Green */
+  border: none;
+  color: #dcdee0;
+  
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: .6vmax;
+  margin-top:  1vmax;
+}
+
+.surrenderButton:hover {background-color: #9d9bc2}
+.surrenderButton:active {background-color: #b2afdb; box-shadow: 0 2px #000000; transform: translateY((2px));}
+
+.wrapButton {
+  background-color:#393847 ; /* Green */
+  border: none;
+  color: #dcdee0;
+  
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: .8vmax;
+}
+
+.wrapButton:hover {background-color: #393847}
+.wrapButton:active {background-color: #54526b; box-shadow: 0 2px #000000; transform: translateY((2px));}
+
+
 .pendingrooms-roomname {
   background: none!important;
   border: none;

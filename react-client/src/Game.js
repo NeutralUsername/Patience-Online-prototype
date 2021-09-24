@@ -70,14 +70,14 @@ var GameContext = {
                 }
               
                 if(data.stacks[0].name.includes("stock") && data.stacks[1].name.includes("waste")) {
-                    GameContext.turntableaumove = false
+                    // GameContext.turntableaumove = false
                     if(data.stacks[0].name.includes(GameContext.playercolor) && data.stacks[1].name.includes(GameContext.playercolor) ) 
                         GameContext.isturn = false
                     else
                         GameContext.isturn = true
                 }
                 if(data.stacks[0].name.includes("foundation") ) { 
-                   GameContext.turntableaumove = true
+                //    GameContext.turntableaumove = true
                 }
                         
                 GameContext.stockflipped = false
@@ -153,7 +153,8 @@ var GameContext = {
                         position: 'fixed',
                         textAlign:'center',
                         top : '87vmin',
-                        left : '28.9vmax',
+                        left : '28.85vmax',
+                        display : 'block',  
                         
                     }}>
                         <div  style = {{
@@ -161,20 +162,30 @@ var GameContext = {
                             textAlign:'center',
                             minWidth : '4vmax',
                             border : '1px solid black',
-                            borderRadius : '5px',
-                            backgroundColor : 'white'
-                            }}> {parseInt(this.state.playertimer/60)} : {this.state.playertimer % 60 <10 && this.state.playertimer % 60 >= 0  ? "0"+(this.state.playertimer-parseInt(this.state.playertimer/60)*60) : (this.state.playertimer-parseInt(this.state.playertimer/60)*60)} 
+                            borderRadius : '3px',
+                            backgroundColor : 'white',
+                            letterSpacing : '2px'
+                            }}> {parseInt(this.state.playertimer/60) < 10 ? "0"+parseInt(this.state.playertimer/60) : parseInt(this.state.playertimer/60) }:{this.state.playertimer % 60 <10 && this.state.playertimer % 60 >= 0  ? "0"+(this.state.playertimer-parseInt(this.state.playertimer/60)*60) : (this.state.playertimer-parseInt(this.state.playertimer/60)*60)} 
                         </div>
                         <div  style = {{
-                            marginTop : '10px',
-                            display : 'inline-block',  
-                            padding : '.5vmax',
-                            backgroundColor : this.state.abortrequest ? 'red' :"",
-                            borderRadius : '10px'
-                            }}><button
+                            marginTop : '.15vmax',
+                            paddingTop :'.3vmax',
+                            paddingBottom : '.35vmax',
+                            paddingLeft : '.3vmax',
+                            paddingRight : '.3vmax',
+                            backgroundColor : this.state.abortrequest ? '#ff7a7a' :"",
+                            
+                            }}>
+                            <button  className = {"wrapButton"}
                                 onClick = {() => GameContext.socket.emit('abortREQ', {gameid : GameContext.id})}>
-                                Quit
+                                end early
                             </button>
+                        </div>
+                        <div >
+                            <button className = {"surrenderButton"}
+                                onClick = {() => GameContext.socket.emit('surrenderREQ', {gameid : GameContext.id})}>
+                                surrender
+                            </button>  
                         </div>
                     </div >
                     <div style = {{
@@ -189,9 +200,10 @@ var GameContext = {
                             textAlign :'center',
                             minWidth : '4vmax',
                             border : '1px solid black',
-                            borderRadius : '5px',
-                            backgroundColor : 'white'
-                            }}>{parseInt(this.state.opponenttimer/60)} : {this.state.opponenttimer % 60 <10 && this.state.opponenttimer % 60 >= 0  ? "0"+(this.state.opponenttimer-parseInt(this.state.opponenttimer/60)*60) : (this.state.opponenttimer-parseInt(this.state.opponenttimer/60)*60)}           
+                            borderRadius : '3px',
+                            backgroundColor : 'white',
+                            letterSpacing : '2px'
+                            }}>{parseInt(this.state.opponenttimer/60) < 10 ? "0"+parseInt(this.state.opponenttimer/60) : parseInt(this.state.opponenttimer/60) }:{this.state.opponenttimer % 60 <10 && this.state.opponenttimer % 60 >= 0  ? "0"+(this.state.opponenttimer-parseInt(this.state.opponenttimer/60)*60) : (this.state.opponenttimer-parseInt(this.state.opponenttimer/60)*60)}           
                         </div>
                     </div>
                     <div  style = {{
@@ -339,11 +351,16 @@ var GameContext = {
     }
 } 
 function Stack (props) {
-    const [{  }, drop] = useDrop(() => ({
+    const [hoverStack, sethoverStack] = useState("");
+    const [{ isOver,isDragging }, drop] = useDrop(() => ({
         accept: "card",
         drop: monitor => {
             handleDrop(monitor.stackname, props.stackname);
         },
+ 
+        collect: (monitor) => ({
+            isOver:  !!monitor.isOver(),
+        }),
     }))
     function handleDrop(stackfrom, stackto) {
         if(stackfrom != stackto)
@@ -431,10 +448,10 @@ function Stack (props) {
             if(GameContext.lastmovefrom != GameContext.lastmoveto) {
                 if(!GameContext.isturn)
                     if(props.stackname === GameContext.lastmovefrom)
-                        return '#FFA07A'
+                        return '#b58965'
                 if(!GameContext.isturn)
                     if(props.stackname ===GameContext.lastmoveto)
-                        return  '#FFA07A'
+                        return  '#b58965'
             }
                 if(GameContext.stockflipped) {
                         if(props.stackname === (GameContext.isturn ? GameContext.playercolor + ("stock") : GameContext.opponentcolor+"stock"))
@@ -446,6 +463,8 @@ function Stack (props) {
             return '#90EE90'
         else if ((props.stackname === GameContext.opponentcolor+"stock" ||props.stackname ===  GameContext.opponentcolor+"waste"||props.stackname ===  GameContext.opponentcolor+"malus"  )&& !GameContext.isturn ) 
             return '#90EE90'
+        if(isOver )
+            return '#b58965'
         return '#f1debe'
     }
     return (
