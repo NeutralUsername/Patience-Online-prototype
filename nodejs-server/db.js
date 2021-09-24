@@ -144,11 +144,21 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
     for(var player = 0; player < 2 ; player++) {
       for(var malussizeCounter = 0 ; malussizeCounter < malusSize; malussizeCounter++) {
       
+        while ( player === 0 ?  redDeck[redDeck.length-1].value === "1" : blackDeck[blackDeck.length-1].value === "1" ) {
+          console.log(reshufflecounter++)
+          player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
+        } 
+
         if (malussizeCounter < 11)
           while ( player === 0 ?  redDeck[redDeck.length-1].value < 7 : blackDeck[blackDeck.length-1].value < 7 ) {
             console.log(reshufflecounter++)
             player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
-          } 
+        } 
+        if (malussizeCounter > 10)
+        while ( player === 0 ?  redDeck[redDeck.length-1].value > 9 : blackDeck[blackDeck.length-1].value > 9 ) {
+          console.log(reshufflecounter++)
+          player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
+        } 
       
         var card = player === 0 ? redDeck.pop(): blackDeck.pop() ;
         if(malussizeCounter === malusSize-1)

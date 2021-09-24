@@ -16,7 +16,8 @@ var GameContext = {
     socket : {},
     turntableaumove : {},
 }
- // injectGlobalHook.js:1648 Fetch API cannot load webpack:///./src/Game.js?. URL scheme "webpack" is not supported. error is caused by react-dnd. no noticeable effects besides the error in the console when i select drag/dropable components in  the react components viewer 
+// when ending turn while 0 time left CLIENT will change turn 
+// injectGlobalHook.js:1648 Fetch API cannot load webpack:///./src/Game.js?. URL scheme "webpack" is not supported. error is caused by react-dnd. no noticeable effects besides the error in the console when i select drag/dropable components in  the react components viewer 
  export default class Game extends React.Component{
     constructor(props) {
         super(props); 
@@ -468,8 +469,10 @@ function Stack (props) {
         return '#f1debe'
     }
     function legalMove(movingCard, UppermostCard) {
-       
         if( ! (movingCard.stackname.includes("tableau") || movingCard.stackname.includes("foundation") || movingCard.stackname === GameContext.playercolor+"stock" || movingCard.stackname === GameContext.playercolor+"malus") ) return false
+        if( !movingCard.stackname.includes("tableau") && UppermostCard.stackname.includes('foundation') && movingCard.value != 1) return false
+        if( !movingCard.stackname.includes("tableau") && UppermostCard.stackname === GameContext.opponentcolor+"waste") return false
+         if( !movingCard.stackname.includes("tableau") && UppermostCard.stackname === GameContext.opponentcolor+"malus") return false
         if(GameContext.stockflipped && movingCard.stackname != GameContext.playercolor+"stock" && UppermostCard.stackname != GameContext.playercolor+"waste") return false
         if(movingCard.stackname.includes('foundation') && (UppermostCard.stackname === GameContext.opponentcolor+"malus" || UppermostCard.stackname === GameContext.opponentcolor+"waste")) return false
         if(UppermostCard.stackname === GameContext.playercolor + 'stock' ) return  false

@@ -104,6 +104,9 @@ io.on ('connection', function (socket) {
         
         if(actorcolor != turncolor) return
         if( ! (data.stackfrom.includes("tableau") || data.stackfrom.includes("foundation") || data.stackfrom === actorcolor+"stock" || data.stackfrom === actorcolor+"malus") ) return
+        if( !data.stackfrom.includes("tableau")  && data.stackto.includes('foundation') && movingCardData.value != 1) return
+        if( !data.stackfrom.includes("tableau") && data.stackto === opponentcolor+"waste") return
+        if( !data.stackfrom.includes("tableau") && data.stackto === opponentcolor+"malus") return
         if(game.state.stockflipped && data.stackfrom != actorcolor+"stock" && data.stackto != actorcolor+"waste") return  
         if(data.stackfrom.includes('foundation') && (data.stackto === opponentcolor+"malus" || data.stackto === opponentcolor+"waste")) return
         if(data.stackto === turncolor + 'stock' ) return 

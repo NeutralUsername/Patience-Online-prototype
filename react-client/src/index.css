@@ -12,10 +12,10 @@ body{
   text-decoration: none;
   display: inline-block;
   font-size: .6vmax;
-  margin-top:  1vmax;
+  
 }
 
-.surrenderButton:hover {background-color: #9d9bc2}
+.surrenderButton:hover {background-color: #b2afdb}
 .surrenderButton:active {background-color: #b2afdb; box-shadow: 0 2px #000000; transform: translateY((2px));}
 
 .wrapButton {
@@ -29,7 +29,7 @@ body{
   font-size: .8vmax;
 }
 
-.wrapButton:hover {background-color: #393847}
+.wrapButton:hover {background-color: #54526b}
 .wrapButton:active {background-color: #54526b; box-shadow: 0 2px #000000; transform: translateY((2px));}
 
 
