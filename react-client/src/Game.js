@@ -455,9 +455,7 @@ function Stack (props) {
                 if(GameContext.stockflipped) {
                         if(props.stackname === (GameContext.isturn ? GameContext.playercolor + ("stock") : GameContext.opponentcolor+"stock"))
                             return '#ff6770 '
-                }
-                  
-                
+                }       
         if(((props.stackname === GameContext.playercolor+"stock" ||props.stackname === GameContext.playercolor+"waste"||props.stackname === GameContext.playercolor+"malus") && GameContext.isturn )) 
             if(isOver && legalMove(hover, {stackname : props.stackname, suit : props.cards.length ? props.cards[props.cards.length-1].suit : undefined, value : props.cards.length ? props.cards[props.cards.length-1].value : undefined } ))
                 return "#A6B176"
@@ -473,7 +471,6 @@ function Stack (props) {
        
         if( ! (movingCard.stackname.includes("tableau") || movingCard.stackname.includes("foundation") || movingCard.stackname === GameContext.playercolor+"stock" || movingCard.stackname === GameContext.playercolor+"malus") ) return false
         if(GameContext.stockflipped && movingCard.stackname != GameContext.playercolor+"stock" && UppermostCard.stackname != GameContext.playercolor+"waste") return false
-      
         if(movingCard.stackname.includes('foundation') && (UppermostCard.stackname === GameContext.opponentcolor+"malus" || UppermostCard.stackname === GameContext.opponentcolor+"waste")) return false
         if(UppermostCard.stackname === GameContext.playercolor + 'stock' ) return  false
         if(UppermostCard.stackname === GameContext.playercolor + 'malus' ) return  false
@@ -527,7 +524,6 @@ function Stack (props) {
                 paddingRight : '.5vmax',
                 paddingTop : 'auto',
                 paddingBottom : 'auto',
-               
                 height : '7.6vmax',
                 maxHeight : '15vmin',
             }}> 
@@ -694,7 +690,7 @@ function Card (props) {
                 backgroundPosition: "center center",
                 backgroundColor : 'white',
                 backgroundRepeat : "no-repeat",
-                opacity:  isdragging ? 0.3 : 1,
+                opacity:  isdragging ? 0.5 : 1,
                 color: props.card.suit === '♥' || props.card.suit === '♦'?'red':'black',
                 border: '1px  solid grey',                         
             }}
