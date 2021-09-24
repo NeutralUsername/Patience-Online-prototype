@@ -351,15 +351,14 @@ var GameContext = {
     }
 } 
 function Stack (props) {
-    const [hoverStack, sethoverStack] = useState("");
-    const [{ isOver,isDragging }, drop] = useDrop(() => ({
+    const [{ isOver,hover }, drop] = useDrop(() => ({
         accept: "card",
         drop: monitor => {
             handleDrop(monitor.stackname, props.stackname);
         },
- 
         collect: (monitor) => ({
             isOver:  !!monitor.isOver(),
+            hover : monitor.getItem()
         }),
     }))
     function handleDrop(stackfrom, stackto) {
@@ -460,12 +459,53 @@ function Stack (props) {
                   
                 
         if(((props.stackname === GameContext.playercolor+"stock" ||props.stackname === GameContext.playercolor+"waste"||props.stackname === GameContext.playercolor+"malus") && GameContext.isturn )) 
-            return '#90EE90'
+            if(isOver && legalMove(hover, {stackname : props.stackname, suit : props.cards.length ? props.cards[props.cards.length-1].suit : undefined, value : props.cards.length ? props.cards[props.cards.length-1].value : undefined } ))
+                return "#A6B176"
+            else
+                return '#90EE90'
         else if ((props.stackname === GameContext.opponentcolor+"stock" ||props.stackname ===  GameContext.opponentcolor+"waste"||props.stackname ===  GameContext.opponentcolor+"malus"  )&& !GameContext.isturn ) 
             return '#90EE90'
-        if(isOver )
+        if(isOver && legalMove(hover, {stackname : props.stackname, suit : props.cards.length ? props.cards[props.cards.length-1].suit : undefined, value : props.cards.length ? props.cards[props.cards.length-1].value : undefined } ) )
             return '#b58965'
         return '#f1debe'
+    }
+    function legalMove(movingCard, UppermostCard) {
+       
+        if( ! (movingCard.stackname.includes("tableau") || movingCard.stackname.includes("foundation") || movingCard.stackname === GameContext.playercolor+"stock" || movingCard.stackname === GameContext.playercolor+"malus") ) return false
+        if(GameContext.stockflipped && movingCard.stackname != GameContext.playercolor+"stock" && UppermostCard.stackname != GameContext.playercolor+"waste") return false
+      
+        if(movingCard.stackname.includes('foundation') && (UppermostCard.stackname === GameContext.opponentcolor+"malus" || UppermostCard.stackname === GameContext.opponentcolor+"waste")) return false
+        if(UppermostCard.stackname === GameContext.playercolor + 'stock' ) return  false
+        if(UppermostCard.stackname === GameContext.playercolor + 'malus' ) return  false
+        if(UppermostCard.stackname === GameContext.playercolor + 'waste' )
+            if(movingCard.stackname != GameContext.playercolor+'stock') return  false
+        if(UppermostCard.stackname === GameContext.opponentcolor + 'stock' ) return  false
+        if(UppermostCard.value){
+            if(UppermostCard.stackname === GameContext.opponentcolor + 'malus' || UppermostCard.stackname === GameContext.opponentcolor + 'waste' )  
+                if ( UppermostCard.suit === movingCard.suit ) {
+                    if ( parseInt(UppermostCard.value) != parseInt(movingCard.value) + 1 )
+                        if ( parseInt(UppermostCard.value) != parseInt(movingCard.value) - 1 ) return false
+                }
+                else return false
+            if(UppermostCard.stackname === GameContext.opponentcolor + "malus")
+                if(props.cards.length > 28) return false
+            if(UppermostCard.stackname.includes('foundation') ) 
+                if ( UppermostCard.suit != movingCard.suit ) return false
+                else if ( UppermostCard.value != movingCard.value-1 ) return false
+            if(UppermostCard.stackname.includes('tableau')) {
+                if( (UppermostCard.value -1 ) != movingCard.value ) return false
+                if(movingCard.suit === '♥' || movingCard.suit === '♦') 
+                    if(UppermostCard.suit  === '♥' || UppermostCard.suit  === '♦'  ) return false
+                if(movingCard.suit === '♠' || movingCard.suit === '♣')
+                    if(UppermostCard.suit  === '♠' || UppermostCard.suit  === '♣' ) return false
+            }
+        }
+        else {
+            if(UppermostCard.stackname.includes('foundation') )
+                if(movingCard.value != 1) return false
+            if(UppermostCard.stackname === GameContext.opponentcolor+'waste') return false
+        }
+        return true
     }
     return (
         <ul 
@@ -526,7 +566,9 @@ function Card (props) {
         const [{ isDragging }, drag] = useDrag(() => ({
             type: "card",
             item : {
-                stackname : props.stackname
+                stackname : props.stackname,
+                suit : props.card.suit,
+                value :props.card.value
             } ,
             collect: (monitor) => ({
                 isDragging: !!monitor.isDragging(),
