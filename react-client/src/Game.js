@@ -446,8 +446,7 @@ function Stack (props) {
         if(((props.stackname === GameContext.playercolor+"stock" ||props.stackname === GameContext.playercolor+"waste"||props.stackname === GameContext.playercolor+"malus") && GameContext.isturn )) 
             if(isOver && legalMove(hover, {stackname : props.stackname, suit : props.cards.length ? props.cards[props.cards.length-1].suit : undefined, value : props.cards.length ? props.cards[props.cards.length-1].value : undefined } ))
                 return "#A6B176"
-            else
-                return '#90EE90'
+            else return '#90EE90'
         else if ((props.stackname === GameContext.opponentcolor+"stock" ||props.stackname ===  GameContext.opponentcolor+"waste"||props.stackname ===  GameContext.opponentcolor+"malus"  )&& !GameContext.isturn ) 
             return '#90EE90'
         if(isOver && legalMove(hover, {stackname : props.stackname, suit : props.cards.length ? props.cards[props.cards.length-1].suit : undefined, value : props.cards.length ? props.cards[props.cards.length-1].value : undefined } ) )
@@ -663,8 +662,9 @@ function Card (props) {
                 cursor: cursor ()  ,
                 borderRadius: '7px',
                 padding : '.4vmax',
-                marginRight : !props.stackname.includes('tableau') ? !props.uppermost ?'-2.9vmax':'0' : props.stackname.includes('tableau') && ! props.playerStack && ! props.uppermost? '-2.9vmax':'0',
-                marginLeft : props.stackname.includes('tableau')  && props.playerStack ? !props.uppermost ? '-2.9vmax' :'0' : '0', 
+                
+                marginRight : !props.stackname.includes('tableau') ? !props.uppermost ?'max(-2.9vmax, -5.5vmin)':'0' : props.stackname.includes('tableau') && ! props.playerStack && ! props.uppermost? 'max(-2.9vmax, -5.5vmin)':'0',
+                marginLeft : props.stackname.includes('tableau')  && props.playerStack ? !props.uppermost ? 'max(-2.9vmax, -5.5vmin)' :'0' : '0', 
                 height: 6+"vmax",
                 width: 4+"vmax",
                 maxHeight : '11vmin',
