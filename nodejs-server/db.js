@@ -20,7 +20,7 @@ module.exports = {
       )
     }
   },
-  insertAction : async function (gameid, cardcolor, suit, value, stack, redtimer, blacktimer, player, turn) {      
+  insertAction : async function (gameid, cardcolor, suit, value, stack, redtimer, blacktimer, turn) {      
     dbCon = mysql.createConnection({
       host:     "localhost",
       user:     "gregaire",
@@ -34,7 +34,6 @@ module.exports = {
       +"'"+suit+"'"+" ,"
       +"'"+value+"'"+" ,"
       +"'"+stack+"'"+" ,"
-      +"'"+player+"'"+" ,"
       +turn+" ,"
       +redtimer+" ,"
       +blacktimer+" )" 
@@ -54,7 +53,7 @@ module.exports = {
       var blackdeck = shuffle(freshDeck("black"))
       var startcolor = shuffle([0,1])[0] ? 'red' : 'black'
       var optionsid = await insertOrFindOptions(options)  
-      var gameid = await insertGame( red , black , optionsid , sqlTimeStarted )
+      var gameid = await insertGame( red , black , optionsid , sqlTimeStarted, startcolor )
       var stacks = await insertActions(gameid, reddeck, blackdeck, options.malusSize, options.tableauSize, options.timePerPlayer)
       dbCon.end()
       resolve ( game(gameid, red, black, stacks, startcolor, options.timePerPlayer) )
@@ -98,13 +97,14 @@ function insertOrFindOptions(options) {
   })
 }
 
-function insertGame(red, black, optionsid, timestarted) {
+function insertGame(red, black, optionsid, timestarted, startcolor) {
   return new Promise (async function (resolve) {
     dbCon.query ("INSERT INTO games VALUES ( "
     +      "0"          + " ,"
     +      optionsid + ", "
     + "'"+red+ "'" + ", "
     + "'"+ black + "'"    + ", "
+    + "'"+ startcolor + "'"    + ", "
     + "'"+ timestarted + "'"  + ");", 
       async function (err, game) { if (err) throw err;
         resolve(game.insertId)
@@ -161,7 +161,7 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
         if(malussizeCounter === malusSize-1)
           card.faceup = true
         stacks[((player === 0) ? ('redmalus') : ('blackmalus'))].cards.push(card)
-        actions.push( [0, gameid, card.color, card.suit, card.value ,((player === 0) ? ('redmalus') : ('blackmalus')), ((player === 0) ? ('red') : ('black')),  0, timePerPlayer, timePerPlayer] )  
+        actions.push( [0, gameid, card.color, card.suit, card.value ,((player === 0) ? ('redmalus') : ('blackmalus')),  0, timePerPlayer, timePerPlayer] )  
       }  
       
       for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
@@ -176,16 +176,16 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
           if(tableausize === tableauSize-1)
             card.faceup = true
           stacks[((player === 0 ) ? 'redtableau'+tableaunr: 'blacktableau'+tableaunr)].cards.push(card)
-          actions.push( [ 0,  gameid,  card.color,  card.suit, card.value , ((player === 0 ) ? 'redtableau'+tableaunr: 'blacktableau'+tableaunr),((player === 0) ? ('red') : ('black')),  0, timePerPlayer,  timePerPlayer] )
+          actions.push( [ 0,  gameid,  card.color,  card.suit, card.value , ((player === 0 ) ? 'redtableau'+tableaunr: 'blacktableau'+tableaunr),  0, timePerPlayer,  timePerPlayer] )
         } 
       }
       for(var stock = 0 ; stock <  52 -malusSize - 4*tableauSize ; stock ++ ) {
         var card = player === 0 ? redDeck.pop(): blackDeck.pop() ;
         stacks[((player === 0) ? ('redstock') : ('blackstock'))].cards.push(card)
-        actions.push( [0,  gameid, card.color,  card.suit, card.value ,((player === 0) ? ('redstock') : ('blackstock')), ((player === 0) ? ('red') : ('black')),  0, timePerPlayer,  timePerPlayer] )
+        actions.push( [0,  gameid, card.color,  card.suit, card.value ,((player === 0) ? ('redstock') : ('blackstock')),  0, timePerPlayer,  timePerPlayer] )
       }
     } 
-    dbCon.query ("INSERT INTO actions (id, gameid, cardcolor,suit,value, stack, player, turn, redtimer, blacktimer) VALUES ?", [actions],
+    dbCon.query ("INSERT INTO actions (id, gameid, cardcolor,suit,value, stack, turn, redtimer, blacktimer) VALUES ?", [actions],
       function (err, result) { if (err) throw err;
         resolve (stacks);
       }
@@ -294,6 +294,7 @@ function insertTablesIntoDB() {
     +"optionid             INT, "
     +"redid                VARCHAR(20), "
     +"blackid              VARCHAR(20), "
+    +"startcolor           VARCHAR(5), "
     +"startedtime          DATETIME, "
     +"CONSTRAINT `option`  FOREIGN KEY (`optionid`)    REFERENCES `options`(`id`))", 
     function (err) {
@@ -307,7 +308,6 @@ function insertTablesIntoDB() {
     +"suit                 VARCHAR(1), "
     +"value                VARCHAR(2), "
     +"stack                VARCHAR(20), "
-    +"player               VARCHAR(20), "
     +"turn                 INT, "
     +"redtimer             DECIMAL(6,2), "
     +"blacktimer           DECIMAL(6,2), "

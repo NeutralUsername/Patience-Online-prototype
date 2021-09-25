@@ -64,37 +64,26 @@ var GameContext = {
         this.setState({mounted : true})
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {
-                if(data.stacks[0].name === data.stacks[1].name)
-                    GameContext.stockflipped = true
+                GameContext.stockflipped = data.stockflipped
                 GameContext.lastmovefrom = ""
                 GameContext.lastmoveto = ""
-                if( !GameContext.isturn ) {
+                
+                if( !data.turncolor != GameContext.playercolor &&! data.stacks[0].name.includes('stock') && ! data.stacks[0].name.includes('waste') ) {
                     GameContext.lastmovefrom = data.stacks[0].name
                     GameContext.lastmoveto = data.stacks[1].name
                 }
               
-                if(data.stacks[0].name.includes("stock") && data.stacks[1].name.includes("waste")) {
-                    // GameContext.turntableaumove = false
-                    if(data.stacks[0].name.includes(GameContext.playercolor) && data.stacks[1].name.includes(GameContext.playercolor) ) {
-                        if(this.state.opponenttimer)
-                            GameContext.isturn = false
-                    }
-                    else
-                        if(this.state.playertimer)
-                            GameContext.isturn = true
-                }
+                GameContext.isturn = data.turncolor === GameContext.playercolor ? true : false
 
                 if(data.stacks[0].name.includes("foundation") ) { 
-                //    GameContext.turntableaumove = true
+                    //    GameContext.turntableaumove = true
                 }
               
                 if(this.state.abortrequest)
                     this.setState({abortrequest : false})
                 this.setState({[data.stacks[0].name] : data.stacks[0].cards})
-                if(  data.stacks[0].name != data.stacks[1].name) { 
-                    GameContext.stockflipped = false
+                if(  data.stacks[0].name != data.stacks[1].name) 
                     this.setState({[data.stacks[1].name] : data.stacks[1].cards})
-                }
             }
         })
         this.props.socket.on("actionFlipRES", data => {
