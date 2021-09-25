@@ -79,7 +79,8 @@ var GameContext = {
                             GameContext.isturn = false
                     }
                     else
-                        GameContext.isturn = true
+                        if(this.state.playertimer)
+                            GameContext.isturn = true
                 }
 
                 if(data.stacks[0].name.includes("foundation") ) { 

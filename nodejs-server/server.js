@@ -1,5 +1,3 @@
-var cors = require('cors')
-
 const server = require ('http').Server(app);
 var express = require ('express'),
     app = express (),
@@ -24,27 +22,17 @@ const pendingOnlineRooms = [];
 const activeGames = [];
 io.on ('connection', function (socket) {
     var clientActiveGames = activeGames.filter(xyz => xyz.props.redip === socket.handshake.address|| xyz.props.blackip === socket.handshake.address)
-    if(clientActiveGames.length) {
-        for(game of clientActiveGames) {
-            if( ! game.props.red) 
-                if(game.props.redip === socket.handshake.address ) {
-                    game.props.red = socket.id
-                    
-                    var clientState = JSON.parse(JSON.stringify(game.state));
-                    prepareStacksForClient(clientState.stacks)
-                    
-                    io.to (socket.id).emit ('startGameRES', { color : "red", id : game.props.id, initialState : clientState});
-                    break
-                }
-            if( ! game.props.black) 
-                if(game.props.blackip === socket.handshake.address ) {
-                    game.props.black = socket.id
-                    io.to (socket.id).emit ('startGameRES', { color : "black", id : game.props.id, initialState : prepareStacksForClient(game.state)});
-                    break
-                }
-        }
-    }
-
+    if(clientActiveGames.length) 
+        for(game of clientActiveGames) 
+            for( color of ["red", "black"]) 
+                if( ! game.props[color]) 
+                    if(game.props[color+"ip"] === socket.handshake.address ) {
+                        game.props[color] = socket.id
+                        var clientState = JSON.parse(JSON.stringify(game.state));
+                        prepareStacksForClient(clientState.stacks)
+                        io.to (socket.id).emit ('startGameRES', { color : color, id : game.props.id, initialState : clientState});
+                        break
+                    }
     updateClientPendingRooms ()
     socket.on ('startAIgameREQ', async function (data) {
         try {
@@ -93,6 +81,7 @@ io.on ('connection', function (socket) {
     })
 
     socket.on ('actionMoveREQ' , function ( data) {
+        //check if move is valid
         var game = activeGames.find(game => game.props.id === data.gameid)
         if(!game) return
         var actorcolor = socket.id ===game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
@@ -143,48 +132,39 @@ io.on ('connection', function (socket) {
             
         //     else
         //         game.state.turntableaumove = true
-        var movingCard = stackFrom.cards.pop()
-         stackTo.cards.push( movingCard )
+
+         // if move is valid standard calls
+        stackTo.cards.push( stackFrom.cards.pop() ) 
         game.state.stockflipped = false
         game.state.abortrequest = false
-        if(stackFrom.name === turncolor+'stock') {
-            if( stackTo.name === turncolor+'waste') {
-                if( ! game.state.stacks[opponentcolor+"stock"].cards.length) {
-                    var wasteSize = game.state.stacks[opponentcolor+"waste"].cards.length
-                    for(var i = 0 ; i< wasteSize; i++) {
-                        var card = game.state.stacks[opponentcolor+"waste"].cards.pop()
-                        card.faceup = 0
-                        game.state.stacks[opponentcolor+"stock"].cards.push(card);
-                    }
-                    actionToClients(game, opponentcolor+"stock", opponentcolor+"waste", "nodb")
-                }
-                // game.state.turntableaumove = false
-            }
-            else
-                if(!stackFrom.cards.length) {
-                    var wasteSize = game.state.stacks[turncolor+"waste"].cards.length
-                    for(var i = 0 ; i< wasteSize; i++) {
-                        var card = game.state.stacks[turncolor+"waste"].cards.pop()
-                        card.faceup = 0
-                        game.state.stacks[turncolor+"stock"].cards.push(card);
-                    }
-                }
-        }
         if(stackFrom.cards.length) 
             if (stackFrom.name != turncolor+'stock' )
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
-
         actionToClients(game, data.stackfrom, data.stackto)
-        
-        if(data.stackfrom === actorcolor+"stock" && data.stackto === actorcolor+"waste") {
-            game.state.turn++
-            if(game.state.turncolor === 'red' ? game.state.blacktimer > 0 : game.state.redtimer > 0)
-                game.state.turncolor = game.state.turncolor === 'red' ? 'black' : 'red' 
-        }
-        if(stackFrom.name === actorcolor+"malus") 
+       
+
+        if(stackFrom.name === turncolor+'stock')   //if stock is empty
+            if(!stackFrom.cards.length) {
+                var wasteSize = game.state.stacks[turncolor+"waste"].cards.length
+                for(var i = 0 ; i< wasteSize; i++) {
+                    var card = game.state.stacks[turncolor+"waste"].cards.pop()
+                    card.faceup = 0
+                    game.state.stacks[turncolor+"stock"].cards.push(card);
+                }
+                actionToClients(game, turncolor+"stock", turncolor+"waste", "nodb")
+            }
+                
+        if(stackFrom.name === actorcolor+"malus") // if malus card moved determine if game ended
             if(!stackFrom.cards.length) {
                 endGame(game, actorcolor)
             }
+
+        if(data.stackfrom === actorcolor+"stock" && data.stackto === actorcolor+"waste") { //if turn changed
+            game.state.turn++
+            if(game.state[opponentcolor+"timer"] > 0)
+                game.state.turncolor = game.state.turncolor === 'red' ? 'black' : 'red' 
+        }
+       
     }) 
 
     socket.on ('actionFlipREQ' , function ( data) {
@@ -199,10 +179,8 @@ io.on ('connection', function (socket) {
         game.state.abortrequest = false
         game.state.stockflipped = true
         var stack = game.state.stacks[data.stack]
-        var stackUppermostCard = stack.cards[stack.cards.length-1]
-        stackUppermostCard.faceup = 1;
+        stack.cards[stack.cards.length-1].faceup = 1;
         actionToClients(game, data.stack, data.stack )
-
     })
     socket.on ('abortREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
@@ -298,11 +276,13 @@ function timer (game) {
         if(!game.state[game.state.turncolor+"timer"]){
             var opponentcolor = game.state.turncolor === 'red' ? 'black' : 'red'
             if(game.state[opponentcolor+"timer"]) {
-                var card = game.state.stacks[game.state.turncolor+"stock"].cards[game.state.stacks[game.state.turncolor+"stock"].cards.length-1]
+                var stock = game.state.stacks[game.state.turncolor+"stock"]
+                var card = stock.cards[stock.cards.length-1]
+                game.state.abortrequest = false
                 card.faceup = 1
                 actionToClients(game, game.state.turncolor+"stock", game.state.turncolor+"stock")
-                game.state.stacks[game.state.turncolor+"stock"].cards.pop()
-                game.state.stacks[game.state.turncolor+"waste"].cards.push(card)
+                game.state.stacks[game.state.turncolor+"waste"].cards.push(stock.cards.pop())
+                game.state.stockflipped = false
                 actionToClients(game, game.state.turncolor+"stock", game.state.turncolor+"waste")
                 // game.state.turntableaumove = false
                 game.state.turncolor = opponentcolor
@@ -345,9 +325,9 @@ function updateClientPendingRooms () {
     io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms});
 }
 
-function AInextMove(game) {
-    var turncolor = game.state.turncolor
-    var playermalus = games.state.stacks[turncolor+"malus"]
-    var malusUppermostCard = playermalus.cards[playermalus.cards.length-1]
-    '♥' ,'♦', '♠', '♣'
-}
+// function AInextMove(game) {
+//     var turncolor = game.state.turncolor
+//     var playermalus = games.state.stacks[turncolor+"malus"]
+//     var malusUppermostCard = playermalus.cards[playermalus.cards.length-1]
+//     '♥' ,'♦', '♠', '♣'
+// }
