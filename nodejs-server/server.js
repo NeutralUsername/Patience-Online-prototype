@@ -33,7 +33,8 @@ io.on ('connection', function (socket) {
                         io.to (socket.id).emit ('startGameRES', { color : color, id : game.props.id, initialState : clientState});
                         break
                     }
-    updateClientPendingRooms ()
+    io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms}) 
+    
     socket.on ('startAIgameREQ', async function (data) {
         try {
             await rateLimiter.consume (socket.handshake.address);
@@ -52,7 +53,7 @@ io.on ('connection', function (socket) {
                 roomkey : socket.id,
                 options : data.options
             });
-            updateClientPendingRooms ();
+            io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms}) 
         }        
         catch (rejRes) {
             console.log ("flood protection => new pending Room");
@@ -81,10 +82,9 @@ io.on ('connection', function (socket) {
     })
 
     socket.on ('actionMoveREQ' , function ( data) {
-        //check if move is valid
         var game = activeGames.find(game => game.props.id === data.gameid)
         if(!game) return
-        var actorcolor = socket.id ===game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
+        var actorcolor = socket.id === game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
         var turncolor = game.state.turncolor
         if(actorcolor != turncolor) return
         var stackFrom = game.state.stacks[data.stackfrom]
@@ -92,7 +92,6 @@ io.on ('connection', function (socket) {
         var stackTo =  game.state.stacks[data.stackto]
         var stackToLength = stackTo.cards.length
         var opponentcolor = socket.id === game.props.red ? "black" : socket.id ===game.props.black ? 'red': ''
-        
         if( ! (data.stackfrom.includes("tableau") || data.stackfrom.includes("foundation") || data.stackfrom === actorcolor+"stock" || data.stackfrom === actorcolor+"malus") ) return
         if(game.state.stockflipped && data.stackfrom != actorcolor+"stock" && data.stackto != actorcolor+"waste") return  
         if(data.stackfrom.includes('foundation') && (data.stackto === opponentcolor+"malus" || data.stackto === opponentcolor+"waste")) return
@@ -142,25 +141,23 @@ io.on ('connection', function (socket) {
         }
         if(stackFrom.cards.length) 
             if (stackFrom.name != turncolor+'stock' )
-                stackFrom.cards[stackFrom.cards.length-1].faceup = 1
-        if(stackFrom.name === actorcolor+"malus") // if malus card moved determine if game ended
-            if(!stackFrom.cards.length) 
-                endGame(game, actorcolor)       
+                stackFrom.cards[stackFrom.cards.length-1].faceup = 1   
         actionToClients(game, data.stackfrom, data.stackto)
 
-        if(data.stackfrom === actorcolor+"stock")  //iif move from stock
-            if(data.stackto === actorcolor+"waste") { //if turn changed
+        if(stackFrom.name === actorcolor+"malus") 
+            if(!stackFrom.cards.length) 
+                endGame(game, actorcolor)    
+        if(data.stackfrom === actorcolor+"stock") 
+            if(data.stackto === actorcolor+"waste") { 
                 if(game.state[opponentcolor+"timer"] > 0) {
-                    if(!game.state.stacks[opponentcolor+"stock"].cards.length)   //if opponent stock turned empty from last stock -> waste move
+                    if(!game.state.stacks[opponentcolor+"stock"].cards.length)   
                         flipWasteStack(game, opponentcolor)
                 }
-                else
-                    if(!game.state.stacks[actorcolor+"stock"].cards.length)   //if opponent stock turned empty from last stock -> waste move
-                        flipWasteStack(game, actorcolor)
+                else if(!game.state.stacks[actorcolor+"stock"].cards.length)   
+                    flipWasteStack(game, actorcolor)
             }
-            else 
-                if(!stackFrom.cards.length) 
-                    flipWasteStack(game, actorcolor)     
+            else if(!stackFrom.cards.length) 
+                flipWasteStack(game, actorcolor)     
     }) 
 
     socket.on ('actionFlipREQ' , function ( data) {
@@ -184,10 +181,9 @@ io.on ('connection', function (socket) {
         var actorcolor = socket.id ===game.props.red ? "red" : socket.id ===game.props.black ? 'black': ''
         var opponentcolor = actorcolor === 'red' ? 'black' : 'red'
         if(!game.state.abortrequest) {
-            if(game.state.turncolor === actorcolor) {
+            if(game.state.turncolor === actorcolor) 
                 if(!game.state[opponentcolor+"timer"]) {
-                    var winner = game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"black" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "red" : "draw"
-                    endGame(game, winner)
+                    endGame(game, game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"black" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "red" : "draw")
                 }
                 else {
                     game.state.abortrequest = actorcolor
@@ -195,13 +191,10 @@ io.on ('connection', function (socket) {
                     if(game.props.black != 'AI')
                         io.to(game.props.black).emit('updateAbortRES')
                 }
-            } 
         }
         else {
-            if(game.state.abortrequest != actorcolor) {
-                var winner = game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"black" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "red" : "draw"
-                endGame(game, winner)
-            }
+            if(game.state.abortrequest != actorcolor) 
+                endGame(game, game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"black" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "red" : "draw")
         }
     })
     socket.on ('surrenderREQ' , function ( data) {
@@ -224,7 +217,7 @@ io.on ('connection', function (socket) {
 async function startGame (red, black, options) {
     removePendingRoom (red);
     black != 'AI' ? removePendingRoom (black) : '';
-    updateClientPendingRooms (); 
+    io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms}) 
     for(var i = 0; i< 1; i++) {
         activeGames.push( game = await db.initGame (red, black, options, new Date() ));
         console.log(game.props.id)
@@ -247,6 +240,7 @@ function endGame (game, winner) {
     if(game.props.black != 'AI')
         io.to(game.props.black).emit('gameEndedRES', {result : winner})
  }
+
 function prepareStacksForClient (stacks) {
     Object.keys( stacks).map(stack=> {
         if( stacks[stack].cards.length> 0) {
@@ -257,12 +251,12 @@ function prepareStacksForClient (stacks) {
                     delete card.suit
                     delete card.value
                 }
-                else
-                    delete card.color
+                else delete card.color
         }
     })
     return stacks
  }
+
 function timer (game) {
     return  () => {
         game.state[game.state.turncolor+'timer'] = (game.state[game.state.turncolor+'timer']*1000 - 1000)/1000
@@ -286,10 +280,7 @@ function timer (game) {
                 actionToClients(game, playercolor+"stock", playercolor+"waste") 
                 // game.state.turntableaumove = false
             }
-            else {
-                var winner = game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"black" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "red" : "draw"
-                endGame(game, winner)
-            }       
+            else endGame(game, game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"black" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "red" : "draw")    
         }
     }
 }
@@ -302,26 +293,22 @@ function actionToClients(game, nameStack1, nameStack2, modifier){
     if(game.props.black != 'AI')
       io.to(game.props.black).emit('actionMoveRES', {stacks : clientStacks, turncolor : game.state.turncolor, stockflipped : game.state.stockflipped})
     if(modifier != "nodb")
-        db.insertAction(game.props.id, movedCard.color, movedCard.suit, movedCard.value, nameStack2, game.state.redtimer, game.state.blacktimer,  nameStack1.includes("stock") && nameStack2.includes("waste") ? game.state.turn-1 : game.state.turn)
+        db.insertAction(game.props.id, movedCard.color, movedCard.suit, movedCard.value, nameStack2, game.state.redtimer, game.state.blacktimer,  !nameStack1.includes(game.state.turncolor) && !nameStack2.includes(game.state.turncolor) ? game.state.turn-1 : game.state.turn)
 }
 
 function removePendingRoom(roomkey)  {
     if (getPendingRoom (roomkey)) {
         pendingOnlineRooms.splice (pendingOnlineRooms.findIndex (e => e.roomkey == roomkey), 1);
-        updateClientPendingRooms ();
+        io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms}) 
     }
 }
 
 function getPendingRoom (roomkey) {
     if (pendingOnlineRooms.find (e => e.roomkey === roomkey) )
         return pendingOnlineRooms.find (e => e.roomkey === roomkey);
-    else
-        return false;
+    else return false;
 }
 
-function updateClientPendingRooms () {
-    io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms});
-}
 
 function flipWasteStack(game,color){
     var wasteSize = game.state.stacks[color+"waste"].cards.length

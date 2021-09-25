@@ -16,7 +16,6 @@ var GameContext = {
     socket : {},
     turntableaumove : {},
 }
-// when ending turn while 0 time left CLIENT will change turn 
 // injectGlobalHook.js:1648 Fetch API cannot load webpack:///./src/Game.js?. URL scheme "webpack" is not supported. error is caused by react-dnd. no noticeable effects besides the error in the console when i select drag/dropable components in  the react components viewer 
  export default class Game extends React.Component{
     constructor(props) {
@@ -67,33 +66,19 @@ var GameContext = {
                 GameContext.stockflipped = data.stockflipped
                 GameContext.lastmovefrom = ""
                 GameContext.lastmoveto = ""
-                
+                GameContext.isturn = data.turncolor === GameContext.playercolor ? true : false
                 if( !data.turncolor != GameContext.playercolor &&! data.stacks[0].name.includes('stock') && ! data.stacks[0].name.includes('waste') ) {
                     GameContext.lastmovefrom = data.stacks[0].name
                     GameContext.lastmoveto = data.stacks[1].name
                 }
-              
-                GameContext.isturn = data.turncolor === GameContext.playercolor ? true : false
-
-                if(data.stacks[0].name.includes("foundation") ) { 
-                    //    GameContext.turntableaumove = true
-                }
-              
+                // if(data.stacks[0].name.includes("foundation") ) { 
+                //     GameContext.turntableaumove = true
+                // }
                 if(this.state.abortrequest)
                     this.setState({abortrequest : false})
                 this.setState({[data.stacks[0].name] : data.stacks[0].cards})
                 if(  data.stacks[0].name != data.stacks[1].name) 
                     this.setState({[data.stacks[1].name] : data.stacks[1].cards})
-            }
-        })
-        this.props.socket.on("actionFlipRES", data => {
-            if (this.state.mounted) {
-                GameContext.lastmovefrom = data.name
-                GameContext.lastmoveto = GameContext.lastmovefrom
-                GameContext.stockflipped = true
-                if(this.state.abortrequest)
-                    this.setState({abortrequest : false})
-                this.setState({[data.name] : data.cards})
             }
         })
         this.props.socket.on("updateTimerRES", data => {
