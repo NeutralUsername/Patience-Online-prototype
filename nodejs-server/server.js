@@ -140,30 +140,45 @@ io.on ('connection', function (socket) {
         if(stackFrom.cards.length) 
             if (stackFrom.name != turncolor+'stock' )
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
-        actionToClients(game, data.stackfrom, data.stackto)
+       
        
 
-        if(stackFrom.name === turncolor+'stock')   //if stock is empty
-            if(!stackFrom.cards.length) {
-                var wasteSize = game.state.stacks[turncolor+"waste"].cards.length
-                for(var i = 0 ; i< wasteSize; i++) {
-                    var card = game.state.stacks[turncolor+"waste"].cards.pop()
-                    card.faceup = 0
-                    game.state.stacks[turncolor+"stock"].cards.push(card);
+        if(data.stackfrom === actorcolor+"stock") { //iif move from stock
+            if(data.stackto === actorcolor+"waste") { //if turn changed
+                game.state.turn++
+                if(game.state[opponentcolor+"timer"] > 0) {
+                    game.state.turncolor = game.state.turncolor === 'red' ? 'black' : 'red' 
+                    
+                    if(!game.state.stacks[opponentcolor+"stock"].cards.length) {  //if opponent stock turned empty from last stock -> waste move
+                        var wasteSize = game.state.stacks[opponentcolor+"waste"].cards.length
+                        for(var i = 0 ; i< wasteSize; i++) {
+                            var card = game.state.stacks[opponentcolor+"waste"].cards.pop()
+                            card.faceup = 0
+                            game.state.stacks[opponentcolor+"stock"].cards.push(card);
+                        }
+                        actionToClients(game, opponentcolor+"stock", opponentcolor+"waste", "nodb")
+                    }
                 }
-                actionToClients(game, turncolor+"stock", turncolor+"waste", "nodb")
             }
-                
+            else {
+                if(!stackFrom.cards.length) {
+                    var wasteSize = game.state.stacks[actorcolor+"waste"].cards.length
+                    for(var i = 0 ; i< wasteSize; i++) {
+                        var card = game.state.stacks[actorcolor+"waste"].cards.pop()
+                        card.faceup = 0
+                        game.state.stacks[actorcolor+"stock"].cards.push(card);
+                    }
+                    actionToClients(game, actorcolor+"stock", actorcolor+"waste", "nodb")
+                }
+            }
+        }
+        actionToClients(game, data.stackfrom, data.stackto)
         if(stackFrom.name === actorcolor+"malus") // if malus card moved determine if game ended
             if(!stackFrom.cards.length) {
                 endGame(game, actorcolor)
             }
 
-        if(data.stackfrom === actorcolor+"stock" && data.stackto === actorcolor+"waste") { //if turn changed
-            game.state.turn++
-            if(game.state[opponentcolor+"timer"] > 0)
-                game.state.turncolor = game.state.turncolor === 'red' ? 'black' : 'red' 
-        }
+      
        
     }) 
 

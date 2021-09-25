@@ -64,7 +64,8 @@ var GameContext = {
         this.setState({mounted : true})
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {
-
+                if(data.stacks[0].name === data.stacks[1].name)
+                    GameContext.stockflipped = true
                 GameContext.lastmovefrom = ""
                 GameContext.lastmoveto = ""
                 if( !GameContext.isturn ) {
@@ -86,12 +87,14 @@ var GameContext = {
                 if(data.stacks[0].name.includes("foundation") ) { 
                 //    GameContext.turntableaumove = true
                 }
-                        
-                GameContext.stockflipped = false
+              
                 if(this.state.abortrequest)
                     this.setState({abortrequest : false})
                 this.setState({[data.stacks[0].name] : data.stacks[0].cards})
-                this.setState({[data.stacks[1].name] : data.stacks[1].cards})
+                if(  data.stacks[0].name != data.stacks[1].name) { 
+                    GameContext.stockflipped = false
+                    this.setState({[data.stacks[1].name] : data.stacks[1].cards})
+                }
             }
         })
         this.props.socket.on("actionFlipRES", data => {
