@@ -132,8 +132,6 @@ io.on ('connection', function (socket) {
             
         //     else
         //         game.state.turntableaumove = true
-
-         // if move is valid standard calls
         stackTo.cards.push( stackFrom.cards.pop() ) 
         game.state.stockflipped = false
         game.state.abortrequest = false
@@ -141,56 +139,28 @@ io.on ('connection', function (socket) {
             game.state.turn++
             if(game.state[opponentcolor+"timer"] > 0)
                 game.state.turncolor = opponentcolor 
-           
         }
         if(stackFrom.cards.length) 
             if (stackFrom.name != turncolor+'stock' )
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1
+        if(stackFrom.name === actorcolor+"malus") // if malus card moved determine if game ended
+            if(!stackFrom.cards.length) 
+                endGame(game, actorcolor)       
         actionToClients(game, data.stackfrom, data.stackto)
 
-        if(data.stackfrom === actorcolor+"stock") { //iif move from stock
+        if(data.stackfrom === actorcolor+"stock")  //iif move from stock
             if(data.stackto === actorcolor+"waste") { //if turn changed
                 if(game.state[opponentcolor+"timer"] > 0) {
-                    if(!game.state.stacks[opponentcolor+"stock"].cards.length) {  //if opponent stock turned empty from last stock -> waste move
-                        var wasteSize = game.state.stacks[opponentcolor+"waste"].cards.length
-                        for(var i = 0 ; i< wasteSize; i++) {
-                            var card = game.state.stacks[opponentcolor+"waste"].cards.pop()
-                            card.faceup = 0
-                            game.state.stacks[opponentcolor+"stock"].cards.push(card);
-                        }
-                        actionToClients(game, opponentcolor+"stock", opponentcolor+"waste", "nodb")
-                    }
+                    if(!game.state.stacks[opponentcolor+"stock"].cards.length)   //if opponent stock turned empty from last stock -> waste move
+                        flipWasteStack(game, opponentcolor)
                 }
-                else{
-                    if(!game.state.stacks[actorcolor+"stock"].cards.length) {  //if opponent stock turned empty from last stock -> waste move
-                        var wasteSize = game.state.stacks[actorcolor+"waste"].cards.length
-                        for(var i = 0 ; i< wasteSize; i++) {
-                            var card = game.state.stacks[actorcolor+"waste"].cards.pop()
-                            card.faceup = 0
-                            game.state.stacks[actorcolor+"stock"].cards.push(card);
-                        }
-                        actionToClients(game, actorcolor+"stock", actorcolor+"waste", "nodb")
-                    }
-                }
+                else
+                    if(!game.state.stacks[actorcolor+"stock"].cards.length)   //if opponent stock turned empty from last stock -> waste move
+                        flipWasteStack(game, actorcolor)
             }
-            else {
-                if(!stackFrom.cards.length) {
-                    var wasteSize = game.state.stacks[actorcolor+"waste"].cards.length
-                    for(var i = 0 ; i< wasteSize; i++) {
-                        var card = game.state.stacks[actorcolor+"waste"].cards.pop()
-                        card.faceup = 0
-                        game.state.stacks[actorcolor+"stock"].cards.push(card);
-                    }
-                    actionToClients(game, actorcolor+"stock", actorcolor+"waste", "nodb")
-                }
-            }
-        }
-
-        
-        if(stackFrom.name === actorcolor+"malus") // if malus card moved determine if game ended
-            if(!stackFrom.cards.length) {
-                endGame(game, actorcolor)
-            }
+            else 
+                if(!stackFrom.cards.length) 
+                    flipWasteStack(game, actorcolor)     
     }) 
 
     socket.on ('actionFlipREQ' , function ( data) {
@@ -305,18 +275,15 @@ function timer (game) {
             if(game.state[opponentcolor+"timer"]) {
                 var stock = game.state.stacks[game.state.turncolor+"stock"]
                 var card = stock.cards[stock.cards.length-1]
-                game.state.abortrequest = false
                 card.faceup = 1
                 actionToClients(game, game.state.turncolor+"stock", game.state.turncolor+"stock")
-
                 stock.cards.pop()
                 game.state.stacks[game.state.turncolor+"waste"].cards.push(card)
+                game.state.abortrequest = false
                 game.state.stockflipped = false
                 game.state.turncolor = opponentcolor
                 game.state.turn++
-                actionToClients(game, playercolor+"stock", playercolor+"waste")
-
-                
+                actionToClients(game, playercolor+"stock", playercolor+"waste") 
                 // game.state.turntableaumove = false
             }
             else {
@@ -356,9 +323,20 @@ function updateClientPendingRooms () {
     io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms});
 }
 
+function flipWasteStack(game,color){
+    var wasteSize = game.state.stacks[color+"waste"].cards.length
+    for(var i = 0 ; i< wasteSize; i++) {
+        var card = game.state.stacks[color+"waste"].cards.pop()
+        card.faceup = 0
+        game.state.stacks[color+"stock"].cards.push(card);
+    }
+    actionToClients(game, color+"stock", color+"waste", "nodb")
+}
+
 // function AInextMove(game) {
 //     var turncolor = game.state.turncolor
 //     var playermalus = games.state.stacks[turncolor+"malus"]
 //     var malusUppermostCard = playermalus.cards[playermalus.cards.length-1]
 //     '♥' ,'♦', '♠', '♣'
 // }
+
