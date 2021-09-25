@@ -3,7 +3,6 @@ var express = require ('express'),
     app = express (),
     port = process.env.PORT || 3000
 server.listen(port, () => console.log(`Nodejs Server listening on port ${port}!`));
-
 const io = require("socket.io")(server, {
     cors: {
       origin: "http://localhost:3000/",
@@ -17,9 +16,9 @@ const rateLimiter = new RateLimiterMemory ({
 });
 var db = require('./db.js');
 db.tryCreateDB()
-
 const pendingOnlineRooms = [];
 const activeGames = [];
+
 io.on ('connection', function (socket) {
     var clientActiveGames = activeGames.filter(xyz => xyz.props.redip === socket.handshake.address|| xyz.props.blackip === socket.handshake.address)
     if(clientActiveGames.length) 
@@ -175,6 +174,7 @@ io.on ('connection', function (socket) {
         stack.cards[stack.cards.length-1].faceup = 1;
         actionToClients(game, data.stack, data.stack )
     })
+
     socket.on ('abortREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
         if(!game) return
@@ -197,6 +197,7 @@ io.on ('connection', function (socket) {
                 endGame(game, game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"black" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "red" : "draw")
         }
     })
+
     socket.on ('surrenderREQ' , function ( data) {
         var game = activeGames.find(game => game.props.id === data.gameid)
         if(!game) return
@@ -204,6 +205,7 @@ io.on ('connection', function (socket) {
         var opponentcolor = actorcolor === 'red' ? 'black' : 'red'
         endGame(game, opponentcolor)
     })
+    
     socket.on ('disconnect', function () {
         removePendingRoom (socket.id);
         var game = activeGames.find(game => game.props.red === socket.id || game.props.black === socket.id)

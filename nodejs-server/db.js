@@ -1,17 +1,21 @@
 var mysql = require ('mysql2');
+var dbHost = "localhost"
+var dbUser = "gregaire"
+var dbPassword = "password"
+var dbName = "gregaire"
 var dbCon ;
 
 module.exports = {
   tryCreateDB : async function () {
-    if(await dbExists("gregaire")) 
+    if(await dbExists(dbName)) 
       return;
     else {
       var createDBcon = mysql.createConnection({
-          host:     "localhost",
-          user:     "gregaire",
-          password: "password",
+          host:     dbHost,
+          user:     dbUser,
+          password: dbPassword,
       });
-      createDBcon.query("CREATE DATABASE IF NOT EXISTS gregaire", 
+      createDBcon.query("CREATE DATABASE IF NOT EXISTS "+dbName, 
         function (err, result) {
             console.log("created DB")
             createDBcon.end()
@@ -22,10 +26,10 @@ module.exports = {
   },
   insertAction : async function (gameid, cardcolor, suit, value, stack, redtimer, blacktimer, turn) {      
     dbCon = mysql.createConnection({
-      host:     "localhost",
-      user:     "gregaire",
-      password: "password",
-      database: "gregaire",
+      host:     dbHost,
+      user:     dbUser,
+      password: dbPassword,
+      database: dbName,
     });
     dbCon.query ("INSERT INTO actions VALUES ("
       +"0, "
@@ -43,10 +47,10 @@ module.exports = {
   initGame : async function (red, black, options, timeStarted) {
     return new Promise (async function (resolve) {
       dbCon = mysql.createConnection({
-        host:     "localhost",
-        user:     "gregaire",
-        password: "password",
-        database: "gregaire",
+        host:     dbHost,
+        user:     dbUser,
+        password: dbPassword,
+        database: dbName,
       });
       var sqlTimeStarted = sqlCompatibleDate(timeStarted);
       var reddeck = shuffle(freshDeck("red"))
@@ -166,12 +170,6 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
       
       for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
         for(var tableausize = 0 ; tableausize < tableauSize; tableausize++) {
-
-          // while ( player === 0 ?  redDeck[redDeck.length-1].value === "1" : blackDeck[blackDeck.length-1].value === "1" ) {
-          //   console.log(reshufflecounter++)
-          //   player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
-          // } 
-
           var card = player === 0 ? redDeck.pop(): blackDeck.pop() ;
           if(tableausize === tableauSize-1)
             card.faceup = true
@@ -254,9 +252,9 @@ function shuffle (array) {
 function dbExists(name) {
   return new Promise ((resolve) => {
     var existsDBcon = mysql.createConnection({
-        host:     "localhost",
-        user:     "gregaire",
-        password: "password",
+        host:     dbHost,
+        user:     dbUser,
+        password: dbPassword,
     });
 
     existsDBcon.query("SHOW DATABASES LIKE '"+name+"';", 
@@ -265,15 +263,14 @@ function dbExists(name) {
         resolve( result.length);
       }
     )
-    
   })
 }
 function insertTablesIntoDB() {
   var insertDBCon= mysql.createConnection({
-    host:     "localhost",
-    user:     "gregaire",
-    password: "password",
-    database: "gregaire"
+        host:     dbHost,
+        user:     dbUser,
+        password: dbPassword,
+        database: dbName
   });
   insertDBCon.query("CREATE TABLE IF NOT EXISTS options ("
     +"id            INT AUTO_INCREMENT PRIMARY KEY, "
