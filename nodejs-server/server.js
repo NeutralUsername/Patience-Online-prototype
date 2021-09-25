@@ -94,7 +94,6 @@ io.on ('connection', function (socket) {
         var opponentcolor = socket.id === game.props.red ? "black" : socket.id ===game.props.black ? 'red': ''
         if( ! (data.stackfrom.includes("tableau") || data.stackfrom.includes("foundation") || data.stackfrom === actorcolor+"stock" || data.stackfrom === actorcolor+"malus") ) return
         if(game.state.stockflipped && data.stackfrom != actorcolor+"stock" && data.stackto != actorcolor+"waste") return  
-        if(data.stackfrom.includes('foundation') && (data.stackto === opponentcolor+"malus" || data.stackto === opponentcolor+"waste")) return
         if(data.stackto === turncolor + 'stock' ) return 
         if(data.stackto === turncolor + 'malus' ) return 
         if(data.stackto === turncolor + 'waste' )
@@ -126,16 +125,16 @@ io.on ('connection', function (socket) {
                 if(movingCardData.value != 1) return 
             if(data.stackto === opponentcolor+'waste') return
         }
-        // if(stackFrom.name.includes('foundation')) 
-        //     if(game.state.turntableaumove) return
+        if(stackFrom.name.includes('foundation')) 
+            if(game.state.turntableaumove) return
             
-        //     else
-        //         game.state.turntableaumove = true
-        stackTo.cards.push( stackFrom.cards.pop() ) 
+            else
+                game.state.turntableaumove = true
+        stackTo.cards.push( stackFrom.cards.pop() )          
         game.state.stockflipped = false
         game.state.abortrequest = false
         if(data.stackfrom === actorcolor+"stock" && data.stackto === actorcolor+"waste") {
-            game.state.turn++
+            game.state.turntableaumove = false
             if(game.state[opponentcolor+"timer"] > 0)
                 game.state.turncolor = opponentcolor 
         }
@@ -149,6 +148,7 @@ io.on ('connection', function (socket) {
                 endGame(game, actorcolor)    
         if(data.stackfrom === actorcolor+"stock") 
             if(data.stackto === actorcolor+"waste") { 
+                game.state.turn++
                 if(game.state[opponentcolor+"timer"] > 0) {
                     if(!game.state.stacks[opponentcolor+"stock"].cards.length)   
                         flipWasteStack(game, opponentcolor)
@@ -269,16 +269,18 @@ function timer (game) {
             if(game.state[opponentcolor+"timer"]) {
                 var stock = game.state.stacks[game.state.turncolor+"stock"]
                 var card = stock.cards[stock.cards.length-1]
-                card.faceup = 1
-                actionToClients(game, game.state.turncolor+"stock", game.state.turncolor+"stock")
+                if(!card.faceup) {
+                    card.faceup = 1
+                    actionToClients(game, game.state.turncolor+"stock", game.state.turncolor+"stock")
+                }
                 stock.cards.pop()
                 game.state.stacks[game.state.turncolor+"waste"].cards.push(card)
                 game.state.abortrequest = false
                 game.state.stockflipped = false
                 game.state.turncolor = opponentcolor
-                game.state.turn++
+                game.state.turntableaumove = false
                 actionToClients(game, playercolor+"stock", playercolor+"waste") 
-                // game.state.turntableaumove = false
+                game.state.turn++
             }
             else endGame(game, game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"black" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "red" : "draw")    
         }
@@ -293,7 +295,7 @@ function actionToClients(game, nameStack1, nameStack2, modifier){
     if(game.props.black != 'AI')
       io.to(game.props.black).emit('actionMoveRES', {stacks : clientStacks, turncolor : game.state.turncolor, stockflipped : game.state.stockflipped})
     if(modifier != "nodb")
-        db.insertAction(game.props.id, movedCard.color, movedCard.suit, movedCard.value, nameStack2, game.state.redtimer, game.state.blacktimer,  !nameStack1.includes(game.state.turncolor) && !nameStack2.includes(game.state.turncolor) ? game.state.turn-1 : game.state.turn)
+        db.insertAction(game.props.id, movedCard.color, movedCard.suit, movedCard.value, nameStack2, game.state.redtimer, game.state.blacktimer,  game.state.turn)
 }
 
 function removePendingRoom(roomkey)  {
@@ -308,7 +310,6 @@ function getPendingRoom (roomkey) {
         return pendingOnlineRooms.find (e => e.roomkey === roomkey);
     else return false;
 }
-
 
 function flipWasteStack(game,color){
     var wasteSize = game.state.stacks[color+"waste"].cards.length

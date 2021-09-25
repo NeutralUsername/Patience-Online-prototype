@@ -63,34 +63,37 @@ var GameContext = {
         this.setState({mounted : true})
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {
+                if(data.stacks[0].name.includes('stock') &&  data.stacks[1].name.includes('waste')) {
+                    console.log("tes")
+                    GameContext.turntableaumove = false
+                }
                 GameContext.stockflipped = data.stockflipped
                 GameContext.lastmovefrom = ""
                 GameContext.lastmoveto = ""
                 GameContext.isturn = data.turncolor === GameContext.playercolor ? true : false
-                if( !data.turncolor != GameContext.playercolor &&! data.stacks[0].name.includes('stock') && ! data.stacks[0].name.includes('waste') ) {
+                if( ! data.stacks[0].name.includes('stock') && ! data.stacks[1].name.includes('waste') ) {
                     GameContext.lastmovefrom = data.stacks[0].name
                     GameContext.lastmoveto = data.stacks[1].name
                 }
-                // if(data.stacks[0].name.includes("foundation") ) { 
-                //     GameContext.turntableaumove = true
-                // }
-                if(this.state.abortrequest)
-                    this.setState({abortrequest : false})
+                if( data.stacks[0].name.includes("foundation") ) 
+                    GameContext.turntableaumove = true
+                if( this.state.abortrequest)
+                    this.setState ({abortrequest : false})
                 this.setState({[data.stacks[0].name] : data.stacks[0].cards})
-                if(  data.stacks[0].name != data.stacks[1].name) 
+                if( data.stacks[0].name != data.stacks[1].name) 
                     this.setState({[data.stacks[1].name] : data.stacks[1].cards})
             }
         })
         this.props.socket.on("updateTimerRES", data => {
-            if (this.state.mounted) {
+            if( this.state.mounted) {
                 this.setState({ playertimer: data[GameContext.playercolor+'timer'] })
                 this.setState({ opponenttimer: data[GameContext.opponentcolor+'timer'] })
             }
         })
         this.props.socket.on("updateAbortRES", () => {
-            if (this.state.mounted) {
-                if(!this.state.abortrequest)
-                    this.setState({abortrequest : true})
+            if( this.state.mounted) {
+                if( !this.state.abortrequest)
+                     this.setState({abortrequest : true})
             }
         })
         this.props.socket.on("gameAbortedRES", () => {
@@ -454,7 +457,6 @@ function Stack (props) {
     function legalMove(movingCard, UppermostCard) {
         if( ! (movingCard.stackname.includes("tableau") || movingCard.stackname.includes("foundation") || movingCard.stackname === GameContext.playercolor+"stock" || movingCard.stackname === GameContext.playercolor+"malus") ) return false
         if(GameContext.stockflipped && movingCard.stackname != GameContext.playercolor+"stock" && UppermostCard.stackname != GameContext.playercolor+"waste") return false
-        if(movingCard.stackname.includes('foundation') && (UppermostCard.stackname === GameContext.opponentcolor+"malus" || UppermostCard.stackname === GameContext.opponentcolor+"waste")) return false
         if(UppermostCard.stackname === GameContext.playercolor + 'stock' ) return  false
         if(UppermostCard.stackname === GameContext.playercolor + 'malus' ) return  false
         if(UppermostCard.stackname === GameContext.playercolor + 'waste' )
