@@ -65,6 +65,8 @@ var GameContext = {
         this.props.socket.on("actionMoveRES", data => {
             if (this.state.mounted) {
 
+                GameContext.lastmovefrom = ""
+                GameContext.lastmoveto = ""
                 if( !GameContext.isturn ) {
                     GameContext.lastmovefrom = data.stacks[0].name
                     GameContext.lastmoveto = data.stacks[1].name
@@ -72,11 +74,14 @@ var GameContext = {
               
                 if(data.stacks[0].name.includes("stock") && data.stacks[1].name.includes("waste")) {
                     // GameContext.turntableaumove = false
-                    if(data.stacks[0].name.includes(GameContext.playercolor) && data.stacks[1].name.includes(GameContext.playercolor) ) 
-                        GameContext.isturn = false
+                    if(data.stacks[0].name.includes(GameContext.playercolor) && data.stacks[1].name.includes(GameContext.playercolor) ) {
+                        if(this.state.opponenttimer)
+                            GameContext.isturn = false
+                    }
                     else
                         GameContext.isturn = true
                 }
+
                 if(data.stacks[0].name.includes("foundation") ) { 
                 //    GameContext.turntableaumove = true
                 }
@@ -470,11 +475,6 @@ function Stack (props) {
     }
     function legalMove(movingCard, UppermostCard) {
         if( ! (movingCard.stackname.includes("tableau") || movingCard.stackname.includes("foundation") || movingCard.stackname === GameContext.playercolor+"stock" || movingCard.stackname === GameContext.playercolor+"malus") ) return false
-      
-        // if( !movingCard.stackname.includes("tableau") && UppermostCard.stackname.includes('foundation') ) return false
-        // if( !movingCard.stackname.includes("tableau") && UppermostCard.stackname === GameContext.opponentcolor+"waste") return false
-        // if( !movingCard.stackname.includes("tableau") && UppermostCard.stackname === GameContext.opponentcolor+"malus") return false
-     
         if(GameContext.stockflipped && movingCard.stackname != GameContext.playercolor+"stock" && UppermostCard.stackname != GameContext.playercolor+"waste") return false
         if(movingCard.stackname.includes('foundation') && (UppermostCard.stackname === GameContext.opponentcolor+"malus" || UppermostCard.stackname === GameContext.opponentcolor+"waste")) return false
         if(UppermostCard.stackname === GameContext.playercolor + 'stock' ) return  false

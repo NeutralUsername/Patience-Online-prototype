@@ -167,10 +167,10 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
       for(var tableaunr = 0 ; tableaunr < 4 ; tableaunr ++) {
         for(var tableausize = 0 ; tableausize < tableauSize; tableausize++) {
 
-          while ( player === 0 ?  redDeck[redDeck.length-1].value === "1" : blackDeck[blackDeck.length-1].value === "1" ) {
-            console.log(reshufflecounter++)
-            player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
-          } 
+          // while ( player === 0 ?  redDeck[redDeck.length-1].value === "1" : blackDeck[blackDeck.length-1].value === "1" ) {
+          //   console.log(reshufflecounter++)
+          //   player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
+          // } 
 
           var card = player === 0 ? redDeck.pop(): blackDeck.pop() ;
           if(tableausize === tableauSize-1)
