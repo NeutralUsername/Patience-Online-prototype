@@ -1,21 +1,10 @@
-import React,{useState} from 'react';
-import socketIOClient from 'socket.io-client';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { useDrag, DndProvider, useDrop  } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import Options from './Options';
 
-var GameContext = {
-    id : {},
-    playercolor : {},
-    opponentcolor : {},
-    isturn : {},
-    lastmovefrom : {},
-    lastmoveto : {},
-    stockflipped : {},
-    socket : {},
-    turntableaumove : {},
-}
+var GameContext = {}
 // injectGlobalHook.js:1648 Fetch API cannot load webpack:///./src/Game.js?. URL scheme "webpack" is not supported. error is caused by react-dnd. no noticeable effects besides the error in the console when i select drag/dropable components in  the react components viewer 
  export default class Game extends React.Component{
     constructor(props) {
@@ -232,16 +221,21 @@ function Stack (props) {
             if(props.stackname.includes('malus')) return '-1vmin'
             if(props.stackname.includes('stock')) return '-1vmin'
             if(props.stackname.includes('waste')) return '-1vmin'
+            if(props.stackname.includes('tableau0')|| props.stackname.includes('foundation0')) return '64vmin'
+            if(props.stackname.includes('tableau1')|| props.stackname.includes('foundation1')) return '48vmin'
+            if(props.stackname.includes('tableau2')|| props.stackname.includes('foundation2')) return '32vmin'
+            if(props.stackname.includes('tableau3')|| props.stackname.includes('foundation3')) return '16vmin'
         }
         if(props.player) {
             if(props.stackname.includes('malus')) return '81vmin'
             if(props.stackname.includes('stock'))  return '81vmin'
             if(props.stackname.includes('waste'))  return '81vmin'
+            if(props.stackname.includes('tableau0')|| props.stackname.includes('foundation0')) return '16vmin'
+            if(props.stackname.includes('tableau1')|| props.stackname.includes('foundation1')) return '32vmin'
+            if(props.stackname.includes('tableau2')|| props.stackname.includes('foundation2')) return '48vmin'
+            if(props.stackname.includes('tableau3')|| props.stackname.includes('foundation3')) return '64vmin'
         }
-        if(props.stackname.includes('tableau0')|| props.stackname.includes('foundation0')) return '16vmin'
-        if(props.stackname.includes('tableau1')|| props.stackname.includes('foundation1')) return '32vmin'
-        if(props.stackname.includes('tableau2')|| props.stackname.includes('foundation2')) return '48vmin'
-        if(props.stackname.includes('tableau3')|| props.stackname.includes('foundation3')) return '64vmin'
+    
     }
     function leftValue() {
         if(props.stackname.includes('stock')) return '20.5vmax'
@@ -284,10 +278,9 @@ function Stack (props) {
                     if(props.stackname ===GameContext.lastmoveto)
                         return  '#b58965'
             }
-                if(GameContext.stockflipped) {
-                        if(props.stackname === (GameContext.isturn ? GameContext.playercolor + ("stock") : GameContext.opponentcolor+"stock"))
-                            return '#ff6770 '
-                }       
+        if(GameContext.stockflipped) 
+                if(props.stackname === (GameContext.isturn ? GameContext.playercolor + ("stock") : GameContext.opponentcolor+"stock"))
+                    return '#ff6770 '       
         if(((props.stackname === GameContext.playercolor+"stock" ||props.stackname === GameContext.playercolor+"waste"||props.stackname === GameContext.playercolor+"malus") && GameContext.isturn )) 
             if(isOver && legalMove(hover, {stackname : props.stackname, suit : props.cards.length ? props.cards[props.cards.length-1].suit : undefined, value : props.cards.length ? props.cards[props.cards.length-1].value : undefined } ))
                 return "#A6B176"
@@ -348,11 +341,9 @@ function Stack (props) {
                 display: 'flex',
                 alignItems :'center',
                 flexDirection: props.player && props.stackname.includes("tableau") ? 'row-reverse' : '',
-                overflow:'hidden',
+                overflow : 'hidden',
                 paddingLeft : '.5vmax',
                 paddingRight : '.5vmax',
-                paddingTop : 'auto',
-                paddingBottom : 'auto',
                 height : '7.6vmax',
                 maxHeight : '15vmin',
             }}> 
@@ -401,10 +392,6 @@ function Card (props) {
         }))
         dragRef = drag;
         isdragging = isDragging
-    }
-
-    function handleClick() {
-        GameContext.socket.emit('actionFlipREQ', {gameid : GameContext.id , stack: props.stackname})
     }
  
     function cursor () {
@@ -503,7 +490,7 @@ function Card (props) {
                     e.preventDefault()
             }}
             ref = { dragRef } 
-            onClick = {()=> props.stackname === GameContext.playercolor+'stock' && !props.card.faceup && GameContext.isturn ? handleClick(): ''}
+            onClick = {()=> props.stackname === GameContext.playercolor+'stock' && !props.card.faceup && GameContext.isturn ?  GameContext.socket.emit('actionFlipREQ', {gameid : GameContext.id , stack: props.stackname}): ''}
             style={{
                 cursor: cursor ()  ,
                 borderRadius: '7px',
@@ -515,11 +502,7 @@ function Card (props) {
                 maxHeight : '11vmin',
                 maxWidth : '8.0vmin',
                 zIndex : '1',
-                backgroundImage : backgroundImage(),
-                backgroundSize :  'contain' ,
-                backgroundPosition: "center center",
-                backgroundColor : 'white',
-                backgroundRepeat : "no-repeat",
+                background : "center / contain no-repeat "+backgroundImage()+" white",
                 opacity:  isdragging ? 0.5 : 1,
                 color: props.card.suit === '♥' || props.card.suit === '♦'?'red':'black',
                 border: '1px  solid grey',                         
