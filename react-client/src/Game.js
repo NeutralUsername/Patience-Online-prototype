@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { useDrag, DndProvider, useDrop  } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import Options from './Options';
-
 var GameContext = {}
 // injectGlobalHook.js:1648 Fetch API cannot load webpack:///./src/Game.js?. URL scheme "webpack" is not supported. error is caused by react-dnd. no noticeable effects besides the error in the console when i select drag/dropable components in  the react components viewer 
  export default class Game extends React.Component{
@@ -47,7 +46,6 @@ var GameContext = {}
             abortrequest : props.initialState.abortrequest
         };
     }
-    
     componentDidMount() {
         this.setState({mounted : true})
         this.props.socket.on("actionMoveRES", data => {
@@ -80,10 +78,9 @@ var GameContext = {}
             }
         })
         this.props.socket.on("updateAbortRES", () => {
-            if( this.state.mounted) {
+            if( this.state.mounted) 
                 if( !this.state.abortrequest)
-                     this.setState({abortrequest : true})
-            }
+                     this.setState({abortrequest : true})   
         })
         this.props.socket.on("gameAbortedRES", () => {
             if (this.state.mounted) {
@@ -213,116 +210,115 @@ function Stack (props) {
         }),
     }))
     function handleDrop(stackfrom, stackto) {
-        if(stackfrom != stackto)
+        if (stackfrom != stackto)
             GameContext.socket.emit('actionMoveREQ', {gameid : GameContext.id , stackfrom : stackfrom, stackto : stackto})
     }
     function topValues (){
-        if(!props.player) {
-            if(props.stackname.includes('malus')) return '-1vmin'
-            if(props.stackname.includes('stock')) return '-1vmin'
-            if(props.stackname.includes('waste')) return '-1vmin'
-            if(props.stackname.includes('tableau0')|| props.stackname.includes('foundation0')) return '64vmin'
-            if(props.stackname.includes('tableau1')|| props.stackname.includes('foundation1')) return '48vmin'
-            if(props.stackname.includes('tableau2')|| props.stackname.includes('foundation2')) return '32vmin'
-            if(props.stackname.includes('tableau3')|| props.stackname.includes('foundation3')) return '16vmin'
+        if (!props.player) {
+            if (props.stackname.includes('malus')) return '-1vmin'
+            if (props.stackname.includes('stock')) return '-1vmin'
+            if (props.stackname.includes('waste')) return '-1vmin'
+            if (props.stackname.includes('tableau0') || props.stackname.includes('foundation0')) return '64vmin'
+            if (props.stackname.includes('tableau1') || props.stackname.includes('foundation1')) return '48vmin'
+            if (props.stackname.includes('tableau2') || props.stackname.includes('foundation2')) return '32vmin'
+            if (props.stackname.includes('tableau3') || props.stackname.includes('foundation3')) return '16vmin'
         }
-        if(props.player) {
-            if(props.stackname.includes('malus')) return '81vmin'
-            if(props.stackname.includes('stock'))  return '81vmin'
-            if(props.stackname.includes('waste'))  return '81vmin'
-            if(props.stackname.includes('tableau0')|| props.stackname.includes('foundation0')) return '16vmin'
-            if(props.stackname.includes('tableau1')|| props.stackname.includes('foundation1')) return '32vmin'
-            if(props.stackname.includes('tableau2')|| props.stackname.includes('foundation2')) return '48vmin'
-            if(props.stackname.includes('tableau3')|| props.stackname.includes('foundation3')) return '64vmin'
+        if (props.player) {
+            if (props.stackname.includes('malus')) return '81vmin'
+            if (props.stackname.includes('stock'))  return '81vmin'
+            if (props.stackname.includes('waste'))  return '81vmin'
+            if (props.stackname.includes('tableau0') || props.stackname.includes('foundation0')) return '16vmin'
+            if (props.stackname.includes('tableau1') || props.stackname.includes('foundation1')) return '32vmin'
+            if (props.stackname.includes('tableau2') || props.stackname.includes('foundation2')) return '48vmin'
+            if (props.stackname.includes('tableau3') || props.stackname.includes('foundation3')) return '64vmin'
         }
-    
     }
     function leftValue() {
-        if(props.stackname.includes('stock')) return '20.5vmax'
-        if(props.stackname.includes('malus')) return '34.5vmax'
-        if(props.stackname.includes('waste')) return '12.5vmax'   
-        if(!props.player) {
-            if(props.stackname.includes('tableau0')) return '59.5vmax'
-            if(props.stackname.includes('tableau1')) return '59.5vmax'
-            if(props.stackname.includes('tableau2')) return '59.5vmax'
-            if(props.stackname.includes('tableau3')) return '59.5vmax'
+        if (props.stackname.includes('stock')) return '20.5vmax'
+        if (props.stackname.includes('malus')) return '34.5vmax'
+        if (props.stackname.includes('waste')) return '12.5vmax'   
+        if (!props.player) {
+            if (props.stackname.includes('tableau0')) return '59.5vmax'
+            if (props.stackname.includes('tableau1')) return '59.5vmax'
+            if (props.stackname.includes('tableau2')) return '59.5vmax'
+            if (props.stackname.includes('tableau3')) return '59.5vmax'
         }
-        if(props.player) {
-            if(props.stackname.includes('foundation0')) return '42.3vmax'
-            if(props.stackname.includes('foundation1')) return '42.3vmax'
-            if(props.stackname.includes('foundation2')) return '42.3vmax'
-            if(props.stackname.includes('foundation3')) return '42.3vmax'
+        if (props.player) {
+            if (props.stackname.includes('foundation0')) return '42.3vmax'
+            if (props.stackname.includes('foundation1')) return '42.3vmax'
+            if (props.stackname.includes('foundation2')) return '42.3vmax'
+            if (props.stackname.includes('foundation3')) return '42.3vmax'
         }
-        if(!props.player) {
-            if(props.stackname.includes('foundation0')) return '51vmax'
-            if(props.stackname.includes('foundation1')) return '51vmax'
-            if(props.stackname.includes('foundation2')) return '51vmax'
-            if(props.stackname.includes('foundation3')) return '51vmax'
+        if (!props.player) {
+            if (props.stackname.includes('foundation0')) return '51vmax'
+            if (props.stackname.includes('foundation1')) return '51vmax'
+            if (props.stackname.includes('foundation2')) return '51vmax'
+            if (props.stackname.includes('foundation3')) return '51vmax'
         }
     }
     function rightValue () {
-        if(props.player) {
-            if(props.stackname.includes('tableau0')) return '-40vmax'
-            if(props.stackname.includes('tableau1')) return '-40vmax'
-            if(props.stackname.includes('tableau2')) return '-40vmax'
-            if(props.stackname.includes('tableau3')) return '-40vmax'
+        if (props.player) {
+            if (props.stackname.includes('tableau0')) return '-40vmax'
+            if (props.stackname.includes('tableau1')) return '-40vmax'
+            if (props.stackname.includes('tableau2')) return '-40vmax'
+            if (props.stackname.includes('tableau3')) return '-40vmax'
         }
     }
     function backgroundcolor() {
         if ( GameContext.lastmovefrom)  
-            if(GameContext.lastmovefrom != GameContext.lastmoveto) {
-                if(!GameContext.isturn)
-                    if(props.stackname === GameContext.lastmovefrom) 
+            if (GameContext.lastmovefrom != GameContext.lastmoveto) {
+                if (!GameContext.isturn)
+                    if (props.stackname === GameContext.lastmovefrom) 
                         return '#b58965'
-                if(!GameContext.isturn)
-                    if(props.stackname ===GameContext.lastmoveto)
+                if (!GameContext.isturn)
+                    if (props.stackname ===GameContext.lastmoveto)
                         return  '#b58965'
             }
-        if(GameContext.stockflipped) 
-                if(props.stackname === (GameContext.isturn ? GameContext.playercolor + ("stock") : GameContext.opponentcolor+"stock"))
+        if (GameContext.stockflipped) 
+                if (props.stackname === (GameContext.isturn ? GameContext.playercolor + ("stock") : GameContext.opponentcolor+"stock"))
                     return '#ff6770 '       
-        if(((props.stackname === GameContext.playercolor+"stock" ||props.stackname === GameContext.playercolor+"waste"||props.stackname === GameContext.playercolor+"malus") && GameContext.isturn )) 
-            if(isOver && legalMove(hover, {stackname : props.stackname, suit : props.cards.length ? props.cards[props.cards.length-1].suit : undefined, value : props.cards.length ? props.cards[props.cards.length-1].value : undefined } ))
+        if (((props.stackname === GameContext.playercolor+"stock" ||props.stackname === GameContext.playercolor+"waste"||props.stackname === GameContext.playercolor+"malus") && GameContext.isturn )) 
+            if (isOver && legalMove(hover, {stackname : props.stackname, suit : props.cards.length ? props.cards[props.cards.length-1].suit : undefined, value : props.cards.length ? props.cards[props.cards.length-1].value : undefined } ))
                 return "#A6B176"
             else return '#90EE90'
         else if ((props.stackname === GameContext.opponentcolor+"stock" ||props.stackname ===  GameContext.opponentcolor+"waste"||props.stackname ===  GameContext.opponentcolor+"malus"  )&& !GameContext.isturn ) 
             return '#90EE90'
-        if(isOver && legalMove(hover, {stackname : props.stackname, suit : props.cards.length ? props.cards[props.cards.length-1].suit : undefined, value : props.cards.length ? props.cards[props.cards.length-1].value : undefined } ) )
+        if (isOver && legalMove(hover, {stackname : props.stackname, suit : props.cards.length ? props.cards[props.cards.length-1].suit : undefined, value : props.cards.length ? props.cards[props.cards.length-1].value : undefined } ) )
             return '#b58965'
         return '#f1debe'
     }
     function legalMove(movingCard, UppermostCard) {
-        if( ! (movingCard.stackname.includes("tableau") || movingCard.stackname.includes("foundation") || movingCard.stackname === GameContext.playercolor+"stock" || movingCard.stackname === GameContext.playercolor+"malus") ) return false
-        if(GameContext.stockflipped && movingCard.stackname != GameContext.playercolor+"stock" && UppermostCard.stackname != GameContext.playercolor+"waste") return false
-        if(UppermostCard.stackname === GameContext.playercolor + 'stock' ) return  false
-        if(UppermostCard.stackname === GameContext.playercolor + 'malus' ) return  false
-        if(UppermostCard.stackname === GameContext.playercolor + 'waste' )
-            if(movingCard.stackname != GameContext.playercolor+'stock') return  false
-        if(UppermostCard.stackname === GameContext.opponentcolor + 'stock' ) return  false
-        if(UppermostCard.value){
-            if(UppermostCard.stackname === GameContext.opponentcolor + 'malus' || UppermostCard.stackname === GameContext.opponentcolor + 'waste' )  
-                if ( UppermostCard.suit === movingCard.suit ) {
-                    if ( parseInt(UppermostCard.value) != parseInt(movingCard.value) + 1 )
-                        if ( parseInt(UppermostCard.value) != parseInt(movingCard.value) - 1 ) return false
+        if ( ! (movingCard.stackname.includes("tableau") || movingCard.stackname.includes("foundation") || movingCard.stackname === GameContext.playercolor+"stock" || movingCard.stackname === GameContext.playercolor+"malus") ) return false
+        if (GameContext.stockflipped && movingCard.stackname != GameContext.playercolor+"stock" && UppermostCard.stackname != GameContext.playercolor+"waste") return false
+        if (UppermostCard.stackname === GameContext.playercolor + 'stock' ) return  false
+        if (UppermostCard.stackname === GameContext.playercolor + 'malus' ) return  false
+        if (UppermostCard.stackname === GameContext.playercolor + 'waste' )
+            if (movingCard.stackname != GameContext.playercolor+'stock') return  false
+        if (UppermostCard.stackname === GameContext.opponentcolor + 'stock' ) return  false
+        if (UppermostCard.value){
+            if (UppermostCard.stackname === GameContext.opponentcolor + 'malus' || UppermostCard.stackname === GameContext.opponentcolor + 'waste' )  
+                if (UppermostCard.suit === movingCard.suit ) {
+                    if (parseInt(UppermostCard.value) != parseInt(movingCard.value) + 1 )
+                        if (parseInt(UppermostCard.value) != parseInt(movingCard.value) - 1 ) return false
                 }
                 else return false
-            if(UppermostCard.stackname === GameContext.opponentcolor + "malus")
-                if(props.cards.length > 28) return false
-            if(UppermostCard.stackname.includes('foundation') ) 
-                if ( UppermostCard.suit != movingCard.suit ) return false
-                else if ( UppermostCard.value != movingCard.value-1 ) return false
+            if (UppermostCard.stackname === GameContext.opponentcolor + "malus")
+                if (props.cards.length > 28) return false
+            if (UppermostCard.stackname.includes('foundation') ) 
+                if (UppermostCard.suit != movingCard.suit ) return false
+                else if (UppermostCard.value != movingCard.value-1 ) return false
             if(UppermostCard.stackname.includes('tableau')) {
-                if( (UppermostCard.value -1 ) != movingCard.value ) return false
-                if(movingCard.suit === '♥' || movingCard.suit === '♦') 
-                    if(UppermostCard.suit  === '♥' || UppermostCard.suit  === '♦'  ) return false
-                if(movingCard.suit === '♠' || movingCard.suit === '♣')
-                    if(UppermostCard.suit  === '♠' || UppermostCard.suit  === '♣' ) return false
+                if ((UppermostCard.value -1 ) != movingCard.value ) return false
+                if (movingCard.suit === '♥' || movingCard.suit === '♦') 
+                    if (UppermostCard.suit  === '♥' || UppermostCard.suit  === '♦'  ) return false
+                if (movingCard.suit === '♠' || movingCard.suit === '♣')
+                    if (UppermostCard.suit  === '♠' || UppermostCard.suit  === '♣' ) return false
             }
         }
         else {
-            if(UppermostCard.stackname.includes('foundation') )
-                if(movingCard.value != 1) return false
-            if(UppermostCard.stackname === GameContext.opponentcolor+'waste') return false
+            if (UppermostCard.stackname.includes('foundation') )
+                if (movingCard.value != 1) return false
+            if (UppermostCard.stackname === GameContext.opponentcolor+'waste') return false
         }
         return true
     }
@@ -376,8 +372,6 @@ function Stack (props) {
 }
 
 function Card (props) {
-    var dragRef ;
-    var isdragging;
     if(props.card.faceup && props.uppermost && GameContext.isturn){
         const [{ isDragging }, drag] = useDrag(() => ({
             type: "card",
@@ -390,8 +384,8 @@ function Card (props) {
                 isDragging: !!monitor.isDragging(),
             })
         }))
-        dragRef = drag;
-        isdragging = isDragging
+        var dragRef  = drag;
+        var isdragging = isDragging
     }
  
     function cursor () {

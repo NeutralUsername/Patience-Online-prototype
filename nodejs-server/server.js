@@ -205,7 +205,7 @@ io.on ('connection', function (socket) {
         var opponentcolor = actorcolor === 'red' ? 'black' : 'red'
         endGame(game, opponentcolor)
     })
-    
+
     socket.on ('disconnect', function () {
         removePendingRoom (socket.id);
         var game = activeGames.find(game => game.props.red === socket.id || game.props.black === socket.id)
@@ -295,7 +295,7 @@ function actionToClients(game, nameStack1, nameStack2, modifier){
     prepareStacksForClient(clientStacks)
     io.to(game.props.red).emit('actionMoveRES', {stacks : clientStacks, turncolor : game.state.turncolor, stockflipped : game.state.stockflipped})
     if(game.props.black != 'AI')
-      io.to(game.props.black).emit('actionMoveRES', {stacks : clientStacks, turncolor : game.state.turncolor, stockflipped : game.state.stockflipped})
+        io.to(game.props.black).emit('actionMoveRES', {stacks : clientStacks, turncolor : game.state.turncolor, stockflipped : game.state.stockflipped})
     if(modifier != "nodb")
         db.insertAction(game.props.id, movedCard.color, movedCard.suit, movedCard.value, nameStack2, game.state.redtimer, game.state.blacktimer,  game.state.turn)
 }
