@@ -126,7 +126,6 @@ var GameContext = {
         this.setState({mounted : false})
     }
     render(){
-    
         return (
             <DndProvider backend={HTML5Backend}>
                 <div 
@@ -156,8 +155,7 @@ var GameContext = {
                             paddingBottom : '.35vmax',
                             paddingLeft : '.3vmax',
                             paddingRight : '.3vmax',
-                            backgroundColor : this.state.abortrequest ? '#ff7a7a' :"",
-                            
+                            backgroundColor : this.state.abortrequest ? '#ff7a7a' :"", 
                             }}>
                             <button  className = {"wrapButton"}
                                 onClick = {() => GameContext.socket.emit('abortREQ', {gameid : GameContext.id})}>
@@ -240,7 +238,7 @@ function Stack (props) {
             if(props.stackname.includes('stock'))  return '81vmin'
             if(props.stackname.includes('waste'))  return '81vmin'
         }
-        if(props.stackname.includes('tableau0') || props.stackname.includes('foundation0')) return '16vmin'
+        if(props.stackname.includes('tableau0')|| props.stackname.includes('foundation0')) return '16vmin'
         if(props.stackname.includes('tableau1')|| props.stackname.includes('foundation1')) return '32vmin'
         if(props.stackname.includes('tableau2')|| props.stackname.includes('foundation2')) return '48vmin'
         if(props.stackname.includes('tableau3')|| props.stackname.includes('foundation3')) return '64vmin'
@@ -255,7 +253,6 @@ function Stack (props) {
             if(props.stackname.includes('tableau2')) return '59.5vmax'
             if(props.stackname.includes('tableau3')) return '59.5vmax'
         }
-      
         if(props.player) {
             if(props.stackname.includes('foundation0')) return '42.3vmax'
             if(props.stackname.includes('foundation1')) return '42.3vmax'
@@ -272,7 +269,7 @@ function Stack (props) {
     function rightValue () {
         if(props.player) {
             if(props.stackname.includes('tableau0')) return '-40vmax'
-            if(props.stackname.includes('tableau1'))  return '-40vmax'
+            if(props.stackname.includes('tableau1')) return '-40vmax'
             if(props.stackname.includes('tableau2')) return '-40vmax'
             if(props.stackname.includes('tableau3')) return '-40vmax'
         }
@@ -405,6 +402,7 @@ function Card (props) {
         dragRef = drag;
         isdragging = isDragging
     }
+
     function handleClick() {
         GameContext.socket.emit('actionFlipREQ', {gameid : GameContext.id , stack: props.stackname})
     }
