@@ -133,25 +133,21 @@ var GameContext = {
                     className="game"
                     style = {{
                         position: 'absolute',
-                        textAlign:'center',
-                        backgroundColor : '#EDEBE9'
                     }}>
                     <div style = {{
                         position: 'fixed',
                         textAlign:'center',
                         top : '87vmin',
                         left : '28.85vmax',
-                        display : 'block',  
-                        
+                        display : 'block',   
                     }}>
                         <div  style = {{
                             fontSize : '1.5vmax',
-                            textAlign:'center',
                             minWidth : '4vmax',
                             border : '1px solid black',
                             borderRadius : '3px',
                             backgroundColor : 'white',
-                            letterSpacing : '2px'
+                            letterSpacing : '1px'
                             }}> {parseInt(this.state.playertimer/60) < 10 ? "0"+parseInt(this.state.playertimer/60) : parseInt(this.state.playertimer/60) }:{this.state.playertimer % 60 <10 && this.state.playertimer % 60 >= 0  ? "0"+(this.state.playertimer-parseInt(this.state.playertimer/60)*60) : (this.state.playertimer-parseInt(this.state.playertimer/60)*60)} 
                         </div>
                         <div  style = {{
@@ -182,156 +178,37 @@ var GameContext = {
                         left : '28.9vmax',
                     }}>
                         <div  style = {{
-                            position: 'relative',
                             fontSize : '1.5vmax',
-                            textAlign :'center',
                             minWidth : '4vmax',
                             border : '1px solid black',
                             borderRadius : '3px',
                             backgroundColor : 'white',
-                            letterSpacing : '2px'
+                            letterSpacing : '1px'
                             }}>{parseInt(this.state.opponenttimer/60) < 10 ? "0"+parseInt(this.state.opponenttimer/60) : parseInt(this.state.opponenttimer/60) }:{this.state.opponenttimer % 60 <10 && this.state.opponenttimer % 60 >= 0  ? "0"+(this.state.opponenttimer-parseInt(this.state.opponenttimer/60)*60) : (this.state.opponenttimer-parseInt(this.state.opponenttimer/60)*60)}           
                         </div>
                     </div>
-                    <div  style = {{
-                        position: 'fixed',
-                        textAlign:'center',
-                        top : '92vmin',
-                        left : '28.5vmax',
-                    }}>
-                    </div>
-                    <Stack 
-                        cards = {this.state[this.props.playercolor+"malus"]} 
-                        stackname = {this.props.playercolor+"malus"}
-                        stacktype = "sequence"
-                        player = {true}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.playercolor+"stock"]} 
-                        stackname = {this.props.playercolor+"stock"}
-                        stacktype = "pile"
-                        player = {true}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.playercolor+"waste"]} 
-                        stackname = {this.props.playercolor+"waste"}
-                        stacktype = "pile"
-                        player = {true}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.playercolor+"tableau0"]} 
-                        stackname = {this.props.playercolor+"tableau0"}
-                        stacktype = "sequence"
-                        player = {true}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.playercolor+"foundation0"]}
-                        stackname = {this.props.playercolor+"foundation0"}
-                        stacktype = "pile" 
-                        player = {true}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.opponentcolor+"tableau0"]} 
-                        stackname = {this.props.opponentcolor+"tableau0"}
-                        stacktype = "sequence"
-                        player = {false}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.opponentcolor+"foundation0"]} 
-                        stackname = {this.props.opponentcolor+"foundation0"}
-                        stacktype = "pile"
-                        player = {false}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.playercolor+"tableau1"]} 
-                        stackname = {this.props.playercolor+"tableau1"}
-                        stacktype = "sequence"
-                        player = {true}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.playercolor+"foundation1"]} 
-                        stackname = {this.props.playercolor+"foundation1"}
-                        stacktype = "pile"
-                        player = {true}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.opponentcolor+"tableau1"]} 
-                        stackname = {this.props.opponentcolor+"tableau1"}
-                        stacktype = "sequence"
-                        player = {false}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.opponentcolor+"foundation1"]} 
-                        stackname = {this.props.opponentcolor+"foundation1"}
-                        stacktype = "pile"
-                        player = {false}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.playercolor+"tableau2"]} 
-                        stackname = {this.props.playercolor+"tableau2"}
-                        stacktype = "sequence"
-                        player = {true}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.playercolor+"foundation2"]} 
-                        stackname = {this.props.playercolor+"foundation2"}
-                        stacktype = "pile"
-                        player = {true}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.opponentcolor+"tableau2"]} 
-                        stackname = {this.props.opponentcolor+"tableau2"}
-                        stacktype = "sequence"
-                        player = {false}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.opponentcolor+"foundation2"]} 
-                        stackname = {this.props.opponentcolor+"foundation2"}
-                        stacktype = "pile"
-                        player = {false}
-                    ></Stack>
-                     <Stack 
-                        cards = {this.state[this.props.playercolor+"tableau3"]} 
-                        stackname = {this.props.playercolor+"tableau3"}
-                        stacktype = "sequence"
-                        player = {true}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.playercolor+"foundation3"]} 
-                        stackname = {this.props.playercolor+"foundation3"}
-                        stacktype = "pile"
-                        player = {true}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.opponentcolor+"tableau3"]} 
-                        stackname = {this.props.opponentcolor+"tableau3"}
-                        stacktype = "sequence"
-                        player = {false}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.opponentcolor+"foundation3"]} 
-                        stackname = {this.props.opponentcolor+"foundation3"}
-                        stacktype = "pile"
-                        player = {false}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.opponentcolor+"waste"]} 
-                        stackname = {this.props.opponentcolor+"waste"}
-                        stacktype = "pile"
-                        player = {false}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.opponentcolor+"stock"]} 
-                        stackname = {this.props.opponentcolor+"stock"}
-                        stacktype = "pile"
-                        player = {false}
-                    ></Stack>
-                    <Stack 
-                        cards = {this.state[this.props.opponentcolor+"malus"]} 
-                        stackname = {this.props.opponentcolor+"malus"}
-                        stacktype = "sequence"
-                        player = {false}
-                    ></Stack>
+                    <Stack cards = {this.state[this.props.playercolor+"malus"]} stackname = {this.props.playercolor+"malus"} stacktype = "sequence" player = {true} ></Stack>
+                    <Stack cards = {this.state[this.props.playercolor+"stock"]} stackname = {this.props.playercolor+"stock"} stacktype = "pile"     player = {true} ></Stack>
+                    <Stack cards = {this.state[this.props.playercolor+"waste"]} stackname = {this.props.playercolor+"waste"} stacktype = "pile"     player = {true} ></Stack>
+                    <Stack cards = {this.state[this.props.playercolor+"tableau0"]} stackname = {this.props.playercolor+"tableau0"} stacktype = "sequence" player = {true} ></Stack>
+                    <Stack cards = {this.state[this.props.playercolor+"foundation0"]} stackname = {this.props.playercolor+"foundation0"} stacktype = "pile" player = {true} ></Stack>
+                    <Stack cards = {this.state[this.props.opponentcolor+"tableau0"]} stackname = {this.props.opponentcolor+"tableau0"} stacktype = "sequence" player = {false} ></Stack>
+                    <Stack cards = {this.state[this.props.opponentcolor+"foundation0"]} stackname = {this.props.opponentcolor+"foundation0"} stacktype = "pile" player = {false} ></Stack>
+                    <Stack cards = {this.state[this.props.playercolor+"tableau1"]} stackname = {this.props.playercolor+"tableau1"} stacktype = "sequence" player = {true} ></Stack>
+                    <Stack cards = {this.state[this.props.playercolor+"foundation1"]} stackname = {this.props.playercolor+"foundation1"} stacktype = "pile" player = {true} ></Stack>
+                    <Stack cards = {this.state[this.props.opponentcolor+"tableau1"]} stackname = {this.props.opponentcolor+"tableau1"} stacktype = "sequence" player = {false} ></Stack>
+                    <Stack cards = {this.state[this.props.opponentcolor+"foundation1"]} stackname = {this.props.opponentcolor+"foundation1"} stacktype = "pile" player = {false} ></Stack>
+                    <Stack cards = {this.state[this.props.playercolor+"tableau2"]} stackname = {this.props.playercolor+"tableau2"} stacktype = "sequence" player = {true} ></Stack>
+                    <Stack cards = {this.state[this.props.playercolor+"foundation2"]} stackname = {this.props.playercolor+"foundation2"} stacktype = "pile" player = {true} ></Stack>
+                    <Stack cards = {this.state[this.props.opponentcolor+"tableau2"]} stackname = {this.props.opponentcolor+"tableau2"} stacktype = "sequence" player = {false} ></Stack>
+                    <Stack cards = {this.state[this.props.opponentcolor+"foundation2"]} stackname = {this.props.opponentcolor+"foundation2"} stacktype = "pile" player = {false} ></Stack>
+                    <Stack cards = {this.state[this.props.playercolor+"tableau3"]} stackname = {this.props.playercolor+"tableau3"} stacktype = "sequence" player = {true} ></Stack>
+                    <Stack cards = {this.state[this.props.playercolor+"foundation3"]} stackname = {this.props.playercolor+"foundation3"} stacktype = "pile" player = {true} ></Stack>
+                    <Stack cards = {this.state[this.props.opponentcolor+"tableau3"]} stackname = {this.props.opponentcolor+"tableau3"} stacktype = "sequence" player = {false} ></Stack>
+                    <Stack cards = {this.state[this.props.opponentcolor+"foundation3"]} stackname = {this.props.opponentcolor+"foundation3"} stacktype = "pile" player = {false} ></Stack>
+                    <Stack cards = {this.state[this.props.opponentcolor+"waste"]} stackname = {this.props.opponentcolor+"waste"} stacktype = "pile" player = {false} ></Stack>
+                    <Stack cards = {this.state[this.props.opponentcolor+"stock"]} stackname = {this.props.opponentcolor+"stock"} stacktype = "pile" player = {false} ></Stack>
+                    <Stack cards = {this.state[this.props.opponentcolor+"malus"]} stackname = {this.props.opponentcolor+"malus"} stacktype = "sequence" player = {false} ></Stack>
                 </div>
             </DndProvider>
         )
@@ -354,86 +231,57 @@ function Stack (props) {
     }
     function topValues (){
         if(!props.player) {
-            if(props.stackname.includes('malus'))
-                return '-1vmin'
-            if(props.stackname.includes('stock'))
-                return '-1vmin'
-            if(props.stackname.includes('waste'))
-                return '-1vmin'
+            if(props.stackname.includes('malus')) return '-1vmin'
+            if(props.stackname.includes('stock')) return '-1vmin'
+            if(props.stackname.includes('waste')) return '-1vmin'
         }
         if(props.player) {
-            if(props.stackname.includes('malus'))
-                return '81vmin'
-            if(props.stackname.includes('stock'))
-                return '81vmin'
-            if(props.stackname.includes('waste'))
-                return '81vmin'
+            if(props.stackname.includes('malus')) return '81vmin'
+            if(props.stackname.includes('stock'))  return '81vmin'
+            if(props.stackname.includes('waste'))  return '81vmin'
         }
-        if(props.stackname.includes('tableau0') || props.stackname.includes('foundation0'))
-            return '16vmin'
-        if(props.stackname.includes('tableau1')|| props.stackname.includes('foundation1'))
-            return '32vmin'
-        if(props.stackname.includes('tableau2')|| props.stackname.includes('foundation2'))
-            return '48vmin'
-        if(props.stackname.includes('tableau3')|| props.stackname.includes('foundation3'))
-            return '64vmin'
+        if(props.stackname.includes('tableau0') || props.stackname.includes('foundation0')) return '16vmin'
+        if(props.stackname.includes('tableau1')|| props.stackname.includes('foundation1')) return '32vmin'
+        if(props.stackname.includes('tableau2')|| props.stackname.includes('foundation2')) return '48vmin'
+        if(props.stackname.includes('tableau3')|| props.stackname.includes('foundation3')) return '64vmin'
     }
     function leftValue() {
-        if(props.stackname.includes('stock'))
-            return '20.5vmax'
-        if(props.stackname.includes('malus'))
-            return '34.5vmax'
-        if(props.stackname.includes('waste'))
-            return '12.5vmax'   
+        if(props.stackname.includes('stock')) return '20.5vmax'
+        if(props.stackname.includes('malus')) return '34.5vmax'
+        if(props.stackname.includes('waste')) return '12.5vmax'   
         if(!props.player) {
-            if(props.stackname.includes('tableau0'))
-                return '59.5vmax'
-            if(props.stackname.includes('tableau1'))
-                return '59.5vmax'
-            if(props.stackname.includes('tableau2'))
-                return '59.5vmax'
-            if(props.stackname.includes('tableau3'))
-                return '59.5vmax'
+            if(props.stackname.includes('tableau0')) return '59.5vmax'
+            if(props.stackname.includes('tableau1')) return '59.5vmax'
+            if(props.stackname.includes('tableau2')) return '59.5vmax'
+            if(props.stackname.includes('tableau3')) return '59.5vmax'
         }
       
         if(props.player) {
-            if(props.stackname.includes('foundation0'))
-                return '42.3vmax'
-            if(props.stackname.includes('foundation1'))
-                return '42.3vmax'
-            if(props.stackname.includes('foundation2'))
-                return '42.3vmax'
-            if(props.stackname.includes('foundation3'))
-                return '42.3vmax'
+            if(props.stackname.includes('foundation0')) return '42.3vmax'
+            if(props.stackname.includes('foundation1')) return '42.3vmax'
+            if(props.stackname.includes('foundation2')) return '42.3vmax'
+            if(props.stackname.includes('foundation3')) return '42.3vmax'
         }
         if(!props.player) {
-            if(props.stackname.includes('foundation0'))
-                return '51vmax'
-            if(props.stackname.includes('foundation1'))
-                return '51vmax'
-            if(props.stackname.includes('foundation2'))
-                return '51vmax'
-            if(props.stackname.includes('foundation3'))
-                return '51vmax'
+            if(props.stackname.includes('foundation0')) return '51vmax'
+            if(props.stackname.includes('foundation1')) return '51vmax'
+            if(props.stackname.includes('foundation2')) return '51vmax'
+            if(props.stackname.includes('foundation3')) return '51vmax'
         }
     }
     function rightValue () {
         if(props.player) {
-            if(props.stackname.includes('tableau0'))
-                return '-40vmax'
-            if(props.stackname.includes('tableau1'))
-                return '-40vmax'
-            if(props.stackname.includes('tableau2'))
-                return '-40vmax'
-            if(props.stackname.includes('tableau3'))
-                return '-40vmax'
+            if(props.stackname.includes('tableau0')) return '-40vmax'
+            if(props.stackname.includes('tableau1'))  return '-40vmax'
+            if(props.stackname.includes('tableau2')) return '-40vmax'
+            if(props.stackname.includes('tableau3')) return '-40vmax'
         }
     }
     function backgroundcolor() {
         if ( GameContext.lastmovefrom)  
             if(GameContext.lastmovefrom != GameContext.lastmoveto) {
                 if(!GameContext.isturn)
-                    if(props.stackname === GameContext.lastmovefrom)
+                    if(props.stackname === GameContext.lastmovefrom) 
                         return '#b58965'
                 if(!GameContext.isturn)
                     if(props.stackname ===GameContext.lastmoveto)
@@ -662,7 +510,6 @@ function Card (props) {
                 cursor: cursor ()  ,
                 borderRadius: '7px',
                 padding : '.4vmax',
-                
                 marginRight : !props.stackname.includes('tableau') ? !props.uppermost ?'max(-2.9vmax, -5.5vmin)':'0' : props.stackname.includes('tableau') && ! props.playerStack && ! props.uppermost? 'max(-2.9vmax, -5.5vmin)':'0',
                 marginLeft : props.stackname.includes('tableau')  && props.playerStack ? !props.uppermost ? 'max(-2.9vmax, -5.5vmin)' :'0' : '0', 
                 height: 6+"vmax",
