@@ -303,7 +303,7 @@ function Stack (props) {
                 }
                 else return false
             if (UppermostCard.stackname === GameContext.opponentcolor + "malus")
-                if (props.cards.length > 28) return false
+                if (props.cards.length > 20) return false
             if (UppermostCard.stackname.includes('foundation') ) 
                 if (UppermostCard.suit != movingCard.suit ) return false
                 else if (UppermostCard.value != movingCard.value-1 ) return false

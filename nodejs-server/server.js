@@ -107,7 +107,7 @@ io.on ('connection', function (socket) {
                 }
                 else return
             if(data.stackto === opponentcolor + "malus")
-                if(stackToLength > 28) return
+                if(stackToLength > 20) return
             if(data.stackto.includes('foundation') ) 
                 if ( stackToUppermostCard.suit != movingCardData.suit ) return
                 else if ( stackToUppermostCard.value != movingCardData.value-1 ) return
@@ -247,7 +247,7 @@ function prepareStacksForClient (stacks) {
     Object.keys( stacks).map(stack=> {
         if( stacks[stack].cards.length> 0) {
             if(stacks[stack].type === "pile")
-            stacks[stack].cards = [stacks[stack].cards.pop()]
+                stacks[stack].cards = [stacks[stack].cards.pop()]
             for(card of  stacks[stack].cards) 
                 if(!card.faceup) {
                     delete card.suit
