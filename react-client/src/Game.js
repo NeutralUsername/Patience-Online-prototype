@@ -228,6 +228,7 @@ function Stack (props) {
     }
     
     function validActionToTableau (actionCard, uppermostCard) {
+        console.log(actionCard, uppermostCard)
         if(uppermostCard.suit) {
             if(suitColor(actionCard.suit) != suitColor(uppermostCard.suit)) 
                 if(actionCard.value === uppermostCard.value - 1)
@@ -237,6 +238,7 @@ function Stack (props) {
     }
     
     function validActionToFoundation (actionCard, uppermostCard) {
+        console.log(actionCard, uppermostCard)
         if(uppermostCard.suit) {
             if(actionCard.suit === uppermostCard.suit) 
                 if( (actionCard.value === uppermostCard.value + 1) ) 
@@ -324,7 +326,7 @@ function Stack (props) {
         if (UppermostCard.stackname === GameContext.playercolor + 'stock' ) return  false
         if (UppermostCard.stackname === GameContext.playercolor + 'malus' ) return  false
         if (UppermostCard.stackname === GameContext.playercolor + 'waste' && movingCard.stackname != GameContext.playercolor+'stock') return false
-        if(UppermostCard.stackname === GameContext.opponentcolor + "malus" && props.cards.length > 24) returnfalse
+        if(UppermostCard.stackname === GameContext.opponentcolor + "malus" && props.cards.length > 24) return false
         if(UppermostCard.stackname === GameContext.opponentcolor + 'stock' ) return false
         if(UppermostCard.stackname === GameContext.opponentcolor + 'malus' || UppermostCard.stackname === GameContext.opponentcolor + 'waste' )  if( ! validActionToOpponent(movingCard, UppermostCard)) return false
         if(UppermostCard.stackname.includes('foundation') )  if( ! validActionToFoundation(movingCard, UppermostCard)) return false
@@ -356,7 +358,7 @@ function Stack (props) {
             }}> 
             {props.cards.length ? props.cards.map( (card,index) => 
                 <Card 
-                    key = {index+props.stackname+" "+(index === (props.cards.length-1))+" "+GameContext.isturn+" "+!GameContext.stockflipped + GameContext.turnfoundationmove}
+                    key = {index+props.stackname+" "+card.suit+card.value+" "+GameContext.isturn+" "+!GameContext.stockflipped +" "+GameContext.turnfoundationmove}
                     card = {card}
                     stackname = {props.stackname}
                     playerStack = {props.player}

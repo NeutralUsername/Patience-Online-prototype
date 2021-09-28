@@ -150,32 +150,22 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
 
         if (malussizeCounter < 4)
           while(player === 0 ?( redDeck[redDeck.length-1].value < 12 ): (blackDeck[blackDeck.length-1].value < 12 )) {
-            console.log(reshufflecounter++)
+            console.log(reshufflecounter++ +" malus reshuffle")
             player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
           } 
         if (malussizeCounter >= 4 && malussizeCounter < 8) 
           while(player === 0 ? !(redDeck[redDeck.length-1].value >= 10 && redDeck[redDeck.length-1].value <= 11) : !(blackDeck[blackDeck.length-1].value >= 10 && blackDeck[blackDeck.length-1].value <= 11 )) {
-            console.log(reshufflecounter++)
+            console.log(reshufflecounter++ +" malus reshuffle")
             player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
           } 
         if (malussizeCounter >= 8 && malussizeCounter < 12) 
           while(player === 0 ? !(redDeck[redDeck.length-1].value >= 7 && redDeck[redDeck.length-1].value <= 9) : !(blackDeck[blackDeck.length-1].value >= 7 && blackDeck[blackDeck.length-1].value <= 9 )) {
-            console.log(reshufflecounter++)
+            console.log(reshufflecounter++ +" malus reshuffle")
             player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
           } 
-        if (malussizeCounter >= 12 && malussizeCounter < 16) 
-          while(player === 0 ? !(redDeck[redDeck.length-1].value >= 4 && redDeck[redDeck.length-1].value <= 6) : !(blackDeck[blackDeck.length-1].value >= 4 && blackDeck[blackDeck.length-1].value <= 6)) {
-            console.log(reshufflecounter++)
-            player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
-          } 
-        if (malussizeCounter >= 16 ) 
-        while(player === 0 ? !(redDeck[redDeck.length-1].value >= 1 && redDeck[redDeck.length-1].value <= 3) : !(blackDeck[blackDeck.length-1].value >= 1 && blackDeck[blackDeck.length-1].value <= 3 )) {
-          console.log(reshufflecounter++)
-          player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
-          } 
-        if (malussizeCounter === malusSize-1 ) 
-          while(player === 0 ?  !(redDeck[redDeck.length-1].value >= 2 && redDeck[redDeck.length-1].value <= 3)  : !(blackDeck[blackDeck.length-1].value >= 2 && blackDeck[blackDeck.length-1].value <= 3 ) || (blackDeck[blackDeck.length-1].suit === stacks.redmalus.cards[19].suit && (blackDeck[blackDeck.length-1].value ===  stacks.redmalus.cards[19].value-1 || blackDeck[blackDeck.length-1].value ===  stacks.redmalus.cards[19].value+1) ) ) {
-            console.log(reshufflecounter++)
+        if (malussizeCounter >= 12) 
+          while(player === 0 ? !(redDeck[redDeck.length-1].value >= 2 && redDeck[redDeck.length-1].value <= 6) : !(blackDeck[blackDeck.length-1].value >= 2 && blackDeck[blackDeck.length-1].value <= 6)) {
+            console.log(reshufflecounter++ +" malus reshuffle")
             player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
           } 
 
@@ -190,7 +180,7 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
 
           if (tableausize === tableauSize-1 ) 
             while(player === 0 ? redDeck[redDeck.length-1].value === 1 : blackDeck[blackDeck.length-1].value === 1  ) {
-              console.log(reshufflecounter++)
+              console.log(reshufflecounter++ +" tableau reshuffle ")
               player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
             } 
 
