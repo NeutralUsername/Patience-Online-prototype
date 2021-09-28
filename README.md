@@ -1,21 +1,26 @@
-![ui game](https://user-images.githubusercontent.com/39095721/134721594-38d153e3-48af-45ae-b75c-bb3c708161d6.JPG)
+![ui game](https://user-images.githubusercontent.com/39095721/135104829-df4cffcc-dfca-475b-b010-4df97f663124.JPG)
 
+gregaire is a 2 player solitaire type card game played in alternating turns.
 
-gregaire is a 2 player solitaire type card game.
+both player have a full standard 52-card-deck.
 
-it consists of two 52 card decks and is played in alternating turns against each other.
+at the beginning of the game each player deals 20 of his cards in sequential order as the "malus" and 4 x 3 cards as the "tableau".
 
-at the beginning of the game each player receives X malus cards. the player that is first able to play all of his malus cards wins.
+the starting player is randomly determined.
 
-each turn players try to stack cards from the malus and tableau to the foundation. if no possible move is found the player repeatedly flips the upper most card of his stock and tries to play it. if no possible move is found the card goes to the waste and the turn ends.
+**WIP**
+
 
 only one card can be moved at once.
 
-- on the foundation cards are stacked from ace to king with all cards being the same suit (heart 1, heart 2, heart 3,...)
-- on the tableau cards are stacked from highest to lowest value with repeating colors (black Q, red J, black 10, red 9,...)
-- cards can also be stacked on the opponents malus and waste with the same suit and colors and the value being 1 higher or lower (spades 3, spades 2, spades 3, spades 4,....)
+- to move a card on a "tableau" card, the suit colors need to be the opposite of each other and the card to be moved has a lower value by 1. 
+if a tableau slot is empty every card can be placed there
 
+- to move a card on a "foundation" card, the suits need to be similar and the card to be moved has a higher value by 1. 
+if a foundation slot is empty every card with ace value can be placed there
 
+- to move a card on an opponents "malus" or "waste" card, the suits need to be similar and the card to be moved has a higher OR lower value by 1. 
+if either slot is empty, no card can be placed there
 
 _______
 install mysql, nodejs; 
