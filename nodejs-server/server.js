@@ -258,6 +258,7 @@ function validActionToFoundation (actionCard, uppermostCard) {
 
 function applyActionToGame(game, stackfromName, stacktoName) {
     var opponentcolor = game.state.turncolor === 'red' ? 'black' : 'red'
+    var playercolor = game.state.turncolor
     game.state.stacks[stacktoName].cards.push(game.state.stacks[stackfromName].cards.pop())
     if( ! stackfromName.includes('stock'))
         if(game.state.stacks[stackfromName].cards.length)
@@ -270,22 +271,22 @@ function applyActionToGame(game, stackfromName, stacktoName) {
     else game.state.stockflipped = false
     if(stackfromName.includes('foundation'))
         game.state.turnfoundationmove = true
-    if(stackfromName.includes('stock') && stacktoName.includes('waste')){
+    if(stackfromName === playercolor+ ('stock') && stacktoName === playercolor+('waste')){
         game.state.turnfoundationmove = false
         if(game.state[opponentcolor+"timer"] > 0)
             game.state.turncolor = opponentcolor
     }
     actionToClients(game, stackfromName, stacktoName)
-    if( ! game.state.stacks[game.state.turncolor+"malus"].cards.length)
-        endGame(game,game.state.turncolor)
-    if(stackfromName.includes('stock'))
-        if(stacktoName === opponentcolor+"waste") {1
+    if( ! game.state.stacks[playercolor+"malus"].cards.length)
+        endGame(game, playercolor)
+    if(stackfromName === playercolor + ('stock'))
+        if(stacktoName === playercolor + "waste") {
             game.state.turn++
             if(game.state[opponentcolor+"timer"] > 0) {
                 if( ! game.state.stacks[opponentcolor+"stock"].cards.length)
                     flipWasteStack(game,opponentcolor)
             }
-            else if ( ! game.state.stacks[game.state.turncolor+"stock"].cards.length)
+            else if ( ! game.state.stacks[playercolor+"stock"].cards.length)
                 flipWasteStack(game,game.state.turncolor)
         }
         else if ( ! game.state.stacks[stackfromName].cards.length)
@@ -360,7 +361,5 @@ function AInextAction(game ) {
     var blacktableau0UppermostCard = blackfoundation0.cards.length ? blackfoundation0.cards[game.state.stacks.blackfoundation0.cards.length-1] : ""
     var blacktableau1UppermostCard = blackfoundation1.cards.length ? blackfoundation1.cards[game.state.stacks.blackfoundation1.cards.length-1] : ""
     var blacktableau2UppermostCard = blackfoundation2.cards.length ? blackfoundation2.cards[game.state.stacks.blackfoundation2.cards.length-1] : ""
-    var blacktableau3UppermostCard = blackfoundation3.cards.length ? blackfoundation3.cards[game.state.stacks.blackfoundation3.cards.length-1] : ""
-
-     
+    var blacktableau3UppermostCard = blackfoundation3.cards.length ? blackfoundation3.cards[game.state.stacks.blackfoundation3.cards.length-1] : ""   
 }
