@@ -1,5 +1,4 @@
-![ui game](https://user-images.githubusercontent.com/39095721/134721594-38d153e3-48af-45ae-b75c-bb3c708161d6.JPG)
-
+![ui game](https://user-images.githubusercontent.com/39095721/135104829-df4cffcc-dfca-475b-b010-4df97f663124.JPG)
 
 gregaire is a 2 player solitaire type card game played in alternating turns.
 
