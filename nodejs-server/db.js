@@ -36,7 +36,7 @@ module.exports = {
       +gameid+" ,"
       +"'"+cardcolor+"'"+" ,"
       +"'"+suit+"'"+" ,"
-      +"'"+value+"'"+" ,"
+      +value+" ,"
       +"'"+stack+"'"+" ,"
       +turn+" ,"
       +redtimer+" ,"
@@ -148,33 +148,33 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
     for(var player = 0; player < 2 ; player++) {
       for(var malussizeCounter = 0 ; malussizeCounter < malusSize; malussizeCounter++) {
 
-        if (malussizeCounter < 5)
-          while(player === 0 ?( redDeck[redDeck.length-1].value <= 11 ): (blackDeck[blackDeck.length-1].value <= 11 )) {
+        if (malussizeCounter < 4)
+          while(player === 0 ?( redDeck[redDeck.length-1].value < 12 ): (blackDeck[blackDeck.length-1].value < 12 )) {
             console.log(reshufflecounter++)
             player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
           } 
-        if (malussizeCounter >= 5 && malussizeCounter < 8) 
-          while(player === 0 ? !(redDeck[redDeck.length-1].value >= 9 && redDeck[redDeck.length-1].value <= 13) : !(blackDeck[blackDeck.length-1].value >= 9 && blackDeck[blackDeck.length-1].value <= 13 )) {
+        if (malussizeCounter >= 4 && malussizeCounter < 8) 
+          while(player === 0 ? !(redDeck[redDeck.length-1].value >= 10 && redDeck[redDeck.length-1].value <= 11) : !(blackDeck[blackDeck.length-1].value >= 10 && blackDeck[blackDeck.length-1].value <= 11 )) {
             console.log(reshufflecounter++)
             player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
           } 
-        if (malussizeCounter >= 8 && malussizeCounter < 11) 
-          while(player === 0 ? !(redDeck[redDeck.length-1].value >= 7 && redDeck[redDeck.length-1].value <= 11) : !(blackDeck[blackDeck.length-1].value >= 7 && blackDeck[blackDeck.length-1].value <= 11) ) {
+        if (malussizeCounter >= 8 && malussizeCounter < 12) 
+          while(player === 0 ? !(redDeck[redDeck.length-1].value >= 7 && redDeck[redDeck.length-1].value <= 9) : !(blackDeck[blackDeck.length-1].value >= 7 && blackDeck[blackDeck.length-1].value <= 9 )) {
             console.log(reshufflecounter++)
             player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
           } 
-        if (malussizeCounter >= 11 && malussizeCounter < 14) 
-          while(player === 0 ? !(redDeck[redDeck.length-1].value >= 5 && redDeck[redDeck.length-1].value <= 9) : !(blackDeck[blackDeck.length-1].value >= 5 && blackDeck[blackDeck.length-1].value <= 9 )) {
+        if (malussizeCounter >= 12 && malussizeCounter < 16) 
+          while(player === 0 ? !(redDeck[redDeck.length-1].value >= 4 && redDeck[redDeck.length-1].value <= 6) : !(blackDeck[blackDeck.length-1].value >= 4 && blackDeck[blackDeck.length-1].value <= 6)) {
             console.log(reshufflecounter++)
             player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
           } 
-        if (malussizeCounter >= 14 ) 
-          while(player === 0 ? redDeck[redDeck.length-1].value > 6 : blackDeck[blackDeck.length-1].value > 6 ) {
-            console.log(reshufflecounter++)
-            player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
+        if (malussizeCounter >= 16 ) 
+        while(player === 0 ? !(redDeck[redDeck.length-1].value >= 1 && redDeck[redDeck.length-1].value <= 3) : !(blackDeck[blackDeck.length-1].value >= 1 && blackDeck[blackDeck.length-1].value <= 3 )) {
+          console.log(reshufflecounter++)
+          player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
           } 
         if (malussizeCounter === malusSize-1 ) 
-          while(player === 0 ? redDeck[redDeck.length-1].value === "1" || redDeck[redDeck.length-1].value > 6  : blackDeck[blackDeck.length-1].value === "1" || blackDeck[blackDeck.length-1].value > 6 || (blackDeck[blackDeck.length-1].suit === stacks.redmalus.cards[19].suit && (blackDeck[blackDeck.length-1].value ===  stacks.redmalus.cards[19].value-1 || blackDeck[blackDeck.length-1].value ===  stacks.redmalus.cards[19].value+1) ) ) {
+          while(player === 0 ?  !(redDeck[redDeck.length-1].value >= 2 && redDeck[redDeck.length-1].value <= 3)  : !(blackDeck[blackDeck.length-1].value >= 2 && blackDeck[blackDeck.length-1].value <= 3 ) || (blackDeck[blackDeck.length-1].suit === stacks.redmalus.cards[19].suit && (blackDeck[blackDeck.length-1].value ===  stacks.redmalus.cards[19].value-1 || blackDeck[blackDeck.length-1].value ===  stacks.redmalus.cards[19].value+1) ) ) {
             console.log(reshufflecounter++)
             player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
           } 
@@ -189,7 +189,7 @@ function insertActions(gameid, redDeck, blackDeck, malusSize, tableauSize, timeP
         for(var tableausize = 0 ; tableausize < tableauSize; tableausize++) {
 
           if (tableausize === tableauSize-1 ) 
-            while(player === 0 ? redDeck[redDeck.length-1].value === "1" : blackDeck[blackDeck.length-1].value === "1"  ) {
+            while(player === 0 ? redDeck[redDeck.length-1].value === 1 : blackDeck[blackDeck.length-1].value === 1  ) {
               console.log(reshufflecounter++)
               player === 0 ? redDeck = shuffle(redDeck) : blackDeck = shuffle(blackDeck)
             } 
@@ -227,7 +227,7 @@ function game(gameid, redid, blackid, stacks, startcolor, timePerPlayer) {
     state : {
       stacks : stacks,
       turn :  1,
-      turntableaumove : false,
+      turnfoundationmove : false,
       abortrequest : false,
       stockflipped : false,
       turncolor : startcolor,
@@ -256,7 +256,7 @@ class Card {
 }
 function freshDeck (color) {
   const Suits = ["♥", "♦", "♠", "♣"];
-  const Values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13"];
+  const Values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
   return Suits.flatMap(suit => {
     return Values.map(value => {
       return new Card (color, suit, value)
@@ -326,7 +326,7 @@ function insertTablesIntoDB() {
     +"gameid               INT, "
     +"cardcolor            VARCHAR(5), "
     +"suit                 VARCHAR(1), "
-    +"value                VARCHAR(2), "
+    +"value                INT, "
     +"stack                VARCHAR(20), "
     +"turn                 INT, "
     +"redtimer             DECIMAL(6,2), "

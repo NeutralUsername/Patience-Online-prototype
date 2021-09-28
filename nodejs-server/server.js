@@ -91,49 +91,27 @@ io.on ('connection', function (socket) {
         var stackTo =  game.state.stacks[data.stackto]
         var stackToLength = stackTo.cards.length
         var opponentcolor = socket.id === game.props.red ? "black" : socket.id ===game.props.black ? 'red': ''
+        var stackToUppermostCard = stackTo.cards.length ? stackTo.cards[stackToLength - 1 ] : ""
+
         if( ! (data.stackfrom.includes("tableau") || data.stackfrom.includes("foundation") || data.stackfrom === actorcolor+"stock" || data.stackfrom === actorcolor+"malus") ) return
         if(game.state.stockflipped && data.stackfrom != actorcolor+"stock" && data.stackto != actorcolor+"waste") return  
         if(data.stackto === turncolor + 'stock' ) return 
         if(data.stackto === turncolor + 'malus' ) return 
-        if(data.stackto === turncolor + 'waste' )
-            if(data.stackfrom != turncolor+'stock') return 
+        if(data.stackto === turncolor + 'waste' && data.stackfrom != turncolor+'stock') return
+        if(data.stackto === opponentcolor + "malus" && stackToLength > 24) return
         if(data.stackto === opponentcolor + 'stock' ) return 
-        if(stackToLength){
-            var stackToUppermostCard = stackTo.cards[stackToLength - 1 ]
-            if(data.stackto === opponentcolor + 'malus' || data.stackto === opponentcolor + 'waste' )  
-                if ( stackToUppermostCard.suit === movingCardData.suit ) {
-                    if ( parseInt(stackToUppermostCard.value) != parseInt(movingCardData.value) + 1 )
-                        if ( parseInt(stackToUppermostCard.value) != parseInt(movingCardData.value) - 1 ) return
-                }
-                else return
-            if(data.stackto === opponentcolor + "malus")
-                if(stackToLength > 20) return
-            if(data.stackto.includes('foundation') ) 
-                if ( stackToUppermostCard.suit != movingCardData.suit ) return
-                else if ( stackToUppermostCard.value != movingCardData.value-1 ) return
-            if(data.stackto.includes('tableau')) {
-                if( (stackToUppermostCard.value -1 ) != movingCardData.value ) return
-                if(movingCardData.suit === '♥' || movingCardData.suit === '♦') 
-                    if(stackToUppermostCard.suit  === '♥' || stackToUppermostCard.suit  === '♦'  ) return
-                if(movingCardData.suit === '♠' || movingCardData.suit === '♣')
-                    if(stackToUppermostCard.suit  === '♠' || stackToUppermostCard.suit  === '♣' ) return
-            }
-        }
-        else {
-            if(data.stackto.includes('foundation') )
-                if(movingCardData.value != 1) return 
-            if(data.stackto === opponentcolor+'waste') return
-        }
-        if(stackFrom.name.includes('foundation')) 
-            if(game.state.turntableaumove) return
-            
+        if(data.stackto === opponentcolor + 'malus' || data.stackto === opponentcolor + 'waste' )  if( ! validActionToOpponent(movingCardData, stackToUppermostCard)) return
+        if(data.stackto.includes('foundation') )  if( ! validActionToFoundation(movingCardData, stackToUppermostCard)) return
+        if(data.stackto.includes('tableau'))  if( ! validActionToTableau(movingCardData, stackToUppermostCard)) return 
+        if(stackFrom.name.includes('foundation') )
+            if(game.state.turnfoundationmove ) return
             else
-                game.state.turntableaumove = true
+                game.state.turnfoundationmove = true
         stackTo.cards.push( stackFrom.cards.pop() )          
         game.state.stockflipped = false
         game.state.abortrequest = false
         if(data.stackfrom === actorcolor+"stock" && data.stackto === actorcolor+"waste") {
-            game.state.turntableaumove = false
+            game.state.turnfoundationmove = false
             if(game.state[opponentcolor+"timer"] > 0)
                 game.state.turncolor = opponentcolor 
         }
@@ -141,7 +119,6 @@ io.on ('connection', function (socket) {
             if (stackFrom.name != turncolor+'stock' )
                 stackFrom.cards[stackFrom.cards.length-1].faceup = 1   
         actionToClients(game, data.stackfrom, data.stackto)
-
         if(stackFrom.name === actorcolor+"malus") 
             if(!stackFrom.cards.length) 
                 endGame(game, actorcolor)    
@@ -182,9 +159,8 @@ io.on ('connection', function (socket) {
         var opponentcolor = actorcolor === 'red' ? 'black' : 'red'
         if(!game.state.abortrequest) {
             if(game.state.turncolor === actorcolor) 
-                if(!game.state[opponentcolor+"timer"]) {
+                if(!game.state[opponentcolor+"timer"]) 
                     endGame(game, game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"black" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "red" : "draw")
-                }
                 else {
                     game.state.abortrequest = actorcolor
                     io.to(game.props.red).emit('updateAbortRES')
@@ -192,10 +168,9 @@ io.on ('connection', function (socket) {
                         io.to(game.props.black).emit('updateAbortRES')
                 }
         }
-        else {
+        else 
             if(game.state.abortrequest != actorcolor) 
                 endGame(game, game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"black" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "red" : "draw")
-        }
     })
 
     socket.on ('surrenderREQ' , function ( data) {
@@ -222,7 +197,7 @@ async function startGame (red, black, options) {
     io.sockets.emit ('UpdatePendingRoomsRES' , { pendingRooms : pendingOnlineRooms}) 
     for(var i = 0; i< 1; i++) {
         activeGames.push( game = await db.initGame (red, black, options, new Date() ));
-        console.log(game.props.id)
+        console.log("gameid: "+game.props.id)
     }
     game.props.redip = io.sockets.sockets.get(red).handshake.address
     game.props.blackip = io.sockets.sockets.get(black).handshake.address
@@ -280,7 +255,7 @@ function timer (game) {
                 game.state.abortrequest = false
                 game.state.stockflipped = false
                 game.state.turncolor = opponentcolor
-                game.state.turntableaumove = false
+                game.state.turnfoundationmove = false
                 actionToClients(game, playercolor+"stock", playercolor+"waste") 
                 game.state.turn++
             }
@@ -323,10 +298,82 @@ function flipWasteStack(game,color){
     actionToClients(game, color+"stock", color+"waste", "nodb")
 }
 
-// function AInextMove(game) {
-//     var turncolor = game.state.turncolor
-//     var playermalus = games.state.stacks[turncolor+"malus"]
-//     var malusUppermostCard = playermalus.cards[playermalus.cards.length-1]
-//     '♥' ,'♦', '♠', '♣'
-// }
+ function AInextAction(game ) {
+    var turnfoundationmove = game.state.turnfoundationmove
+    var abortrequest = game.state.abortrequest
+    var stockflipped = game.state.stockflipped
+
+    var playercolor = game.state.turncolor
+    var playermalus = games.state.stacks[playercolor+"malus"]
+    var playermalusUppermostCard = playermalus.cards.length ? playermalus.cards[playermalus.cards.length-1] : ""
+
+    var opponentcolor = game.state.turncolor === 'red' ? 'black' : 'red'
+    var opponentmalus = game.state.stacks[opponentcolor+"malus"]
+    var opponentwaste = game.state.stacks[opponentcolor+"waste"]
+    var opponentmalusUppermostCard = opponentmalus.cards.length ? opponentmalus.cards[opponentmalus.cards.length-1] : ""
+    var opponentwasteUppermostCard = opponentwaste.cards.length ? opponentwaste.cards[opponentwaste.cards.length-1] : ""
+
+    var redtableau0 = game.state.stacks.redtableau0
+    var redtableau1 = game.state.stacks.redtableau1
+    var redtableau2 = game.state.stacks.redtableau2
+    var redtableau3 = game.state.stacks.redtableau3
+    var blacktableau0 = game.state.stacks.blacktableau0
+    var blacktableau1 = game.state.stacks.blacktableau1
+    var blacktableau2 = game.state.stacks.blacktableau2
+    var blacktableau3 = game.state.stacks.blacktableau3
+    var redtableau0UppermostCard = redtableau0.cards.length ? redtableau0.cards[game.state.stacks.redtableau0.cards.length-1] : ""
+    var redtableau1UppermostCard = redtableau1.cards.length ? redtableau1.cards[game.state.stacks.redtableau1.cards.length-1] : ""
+    var redtableau2UppermostCard = redtableau2.cards.length ? redtableau2.cards[game.state.stacks.redtableau2.cards.length-1] : ""
+    var redtableau3UppermostCard = redtableau3.cards.length ? redtableau3.cards[game.state.stacks.redtableau3.cards.length-1] : ""
+    var blacktableau0UppermostCard = blacktableau0.cards.length ? blacktableau0.cards[game.state.stacks.blacktableau0.cards.length-1] : ""
+    var blacktableau1UppermostCard = blacktableau1.cards.length ? blacktableau1.cards[game.state.stacks.blacktableau1.cards.length-1] : ""
+    var blacktableau2UppermostCard = blacktableau2.cards.length ? blacktableau2.cards[game.state.stacks.blacktableau2.cards.length-1] : ""
+    var blacktableau3UppermostCard = blacktableau3.cards.length ? blacktableau3.cards[game.state.stacks.blacktableau3.cards.length-1] : ""
+
+    var redfoundation0 = game.state.stacks.redfoundation0
+    var redfoundation1 = game.state.stacks.redfoundation1
+    var redfoundation2 = game.state.stacks.redfoundation2
+    var redfoundation3 = game.state.stacks.redfoundation3
+    var blackfoundation0 = game.state.stacks.blackfoundation0
+    var blackfoundation1 = game.state.stacks.blackfoundation1
+    var blackfoundation2 = game.state.stacks.blackfoundation2
+    var blackfoundation3 = game.state.stacks.blackfoundation3
+    var redfoundation0UppermostCard = redfoundation0.cards.length ? redfoundation0.cards[game.state.stacks.redfoundation0.cards.length-1] : ""
+    var redfoundation1UppermostCard = redfoundation1.cards.length ? redfoundation1.cards[game.state.stacks.redfoundation1.cards.length-1] : ""
+    var redfoundation2UppermostCard = redfoundation2.cards.length ? redfoundation2.cards[game.state.stacks.redfoundation2.cards.length-1] : ""
+    var redfoundation3UppermostCard = redfoundation3.cards.length ? redfoundation3.cards[game.state.stacks.redfoundation3.cards.length-1] : ""
+    var blacktableau0UppermostCard = blackfoundation0.cards.length ? blackfoundation0.cards[game.state.stacks.blackfoundation0.cards.length-1] : ""
+    var blacktableau1UppermostCard = blackfoundation1.cards.length ? blackfoundation1.cards[game.state.stacks.blackfoundation1.cards.length-1] : ""
+    var blacktableau2UppermostCard = blackfoundation2.cards.length ? blackfoundation2.cards[game.state.stacks.blackfoundation2.cards.length-1] : ""
+    var blacktableau3UppermostCard = blackfoundation3.cards.length ? blackfoundation3.cards[game.state.stacks.blackfoundation3.cards.length-1] : ""
+
+     
+}
+
+function suitColor(suit) {
+    if( suit === '♥' || suit === '♦') return "red"
+    else if( suit === '♠' || suit === '♣') return "black"       
+}
+function validActionToOpponent (actionCard, uppermostCard) {
+    if(uppermostCard) 
+        if(actionCard.suit === uppermostCard.suit) 
+            if( (actionCard.value === uppermostCard.value+1) || (actionCard.value === uppermostCard.value-1) ) 
+                return true
+}
+function validActionToTableau (actionCard, uppermostCard) {
+    if(uppermostCard) {
+        if(suitColor(actionCard.suit) != suitColor(uppermostCard.suit)) 
+            if(actionCard.value === uppermostCard.value - 1)
+                return true
+    }
+    else return true
+}
+function validActionToFoundation (actionCard, uppermostCard) {
+    if(uppermostCard) {
+        if(actionCard.suit === uppermostCard.suit) 
+            if( (actionCard.value === uppermostCard.value + 1) ) 
+                return true
+    }
+    else if(actionCard.value === 1) return true
+}
 
