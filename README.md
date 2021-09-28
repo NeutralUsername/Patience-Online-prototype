@@ -14,11 +14,14 @@ the starting player is randomly determined.
 
 only one card can be moved at once.
 
-- to move a card on a "tableau" card, the suit colors need to be the opposite of each other and the card to be moved has a lower value by 1. if a tableau slot is empty every card can be placed there
+- to move a card on a "tableau" card, the suit colors need to be the opposite of each other and the card to be moved has a lower value by 1. 
+if a tableau slot is empty every card can be placed there
 
-- to move a card on a "foundation" card, the suits need to be similar and the card to be moved has a higher value by 1. if a foundation slot is empty every card with ace value can be placed there
+- to move a card on a "foundation" card, the suits need to be similar and the card to be moved has a higher value by 1. 
+if a foundation slot is empty every card with ace value can be placed there
 
-- to move a card on an opponents "malus" or "waste" card, the suits need to be similar and the card to be moved has a higher OR lower value by 1. if either slot is empty, no card can be placed there
+- to move a card on an opponents "malus" or "waste" card, the suits need to be similar and the card to be moved has a higher OR lower value by 1. 
+if either slot is empty, no card can be placed there
 
 _______
 install mysql, nodejs; 
