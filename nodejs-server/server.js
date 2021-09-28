@@ -66,8 +66,7 @@ io.on ('connection', function (socket) {
                 if (getPendingRoom (data.roomkey)) 
                     if (getPendingRoom (data.roomkey).options.roomPassword.length) 
                         socket.emit ('roomPasswordREQ', {roomkey : data.roomkey});
-                    else 
-                        startGame (data.roomkey, socket.id, getPendingRoom (data.roomkey).options );
+                    else startGame (data.roomkey, socket.id, getPendingRoom (data.roomkey).options );
         }    
         catch (rejRes) {
             console.log ("flood protection => join pending Room");
@@ -133,9 +132,8 @@ io.on ('connection', function (socket) {
                         io.to(game.props.black).emit('updateAbortRES')
                 }
         }
-        else 
-            if(game.state.abortrequest != actorcolor) 
-                endGame(game, game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"black" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "red" : "draw")
+        else if(game.state.abortrequest != actorcolor) 
+            endGame(game, game.state.stacks.redmalus.cards.length >  game.state.stacks.blackmalus.cards.length ?"black" : game.state.stacks.blackmalus.cards.length > game.state.stacks.redmalus.cards.length ? "red" : "draw")
     })
 
     socket.on ('surrenderREQ' , function ( data) {
