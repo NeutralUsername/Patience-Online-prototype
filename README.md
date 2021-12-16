@@ -8,7 +8,7 @@ at the beginning of the game each player deals 20 of his cards in sequential ord
 
 the starting player is randomly determined.
 
-**WIP**
+**Readme WIP**
 
 
 only one card can be moved at once.
